@@ -1,0 +1,42 @@
+﻿body {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+h3 {
+    margin: 10px;
+}
+
+.wrapper {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff
+}
+
+.login-form {
+    width: 28%;
+    height: 30%;
+    box-shadow: 2px 3px 16px 0px #565656;
+    background-color: #efefef;
+    border-radius: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+    .login-form input {
+        margin: 5px;
+        width: 55%;
+        height: 10%;
+    }
+
+    .login-form button {
+        margin: 5px;
+        width: 56%;
+        height: 13%;
+    }

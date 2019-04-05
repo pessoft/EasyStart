@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель администратора</title>
+    @Styles.Render("~/admin-login/css")
+</head>
+<body>
+    <div class="wrapper">
+        <div class="login-form">
+            <h3>Панель администратора</h3>
+            <input type="text" name="login" id="login" value="" placeholder="Введите логин" />
+            <input type="password" name="password" id="password" value="" placeholder="Введите пароль" />
+            <button id="action-login" onclick="Login();">Войти</button>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/adminscript")
+</body>
+</html>
