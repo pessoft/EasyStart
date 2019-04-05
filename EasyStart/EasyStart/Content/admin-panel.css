@@ -2,16 +2,200 @@
     display: block;
     margin: 0;
     padding: 0;
+    font-family: 'Russo One', sans-serif;
+    font-size: 1em;
+    height:100vh;
 }
 
 .header-menu {
     width: 100%;
-    height: 10%;
-    background-color: #000000;
+    height: 5vh;
+    background-color: #2d2b2b;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .menu-item {
-    margin-left: 10%;
+    margin-left: 1%;
     color: #ffffff;
-    font-weight: 600;
+}
+
+    .menu-item:hover {
+        cursor: pointer;
+        color: #6eb2f5;
+        transition: 200ms ease-in;
+    }
+
+.hide {
+    display: none !important;
+}
+
+.menu-item-active {
+    color: #6eb2f5;
+}
+
+.content {
+    width: 100%;
+    height:100%;
+}
+
+#products {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+.category,
+.product {
+    width: 70%;
+    height: 98%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 2%;
+    flex-direction:column;
+}
+
+.category {
+    border-right: 1px solid #2d2b2b;
+    width: 30%;
+}
+
+.header-product {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+}
+
+.header-product-text {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.header-product-add {
+    font-size: 0.9em;
+}
+
+    .header-product-add:hover {
+        cursor: pointer;
+        color: #6eb2f5;
+        transition: 100ms ease-in;
+    }
+dialog {
+    border: none;
+    box-shadow: 1px 1px 10px 0px;
+    border-radius: 2px;
+}
+
+.header-dialog {
+    margin-bottom: 4%;
+    text-align: center;
+    font-size: 1.15em;
+}
+
+.enter-dialog-data {
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+}
+
+    .enter-dialog-data input {
+        min-width: 282px;
+        min-height: 20px;
+        font-size: 0.8em;
+        padding-left: 2px;
+    }
+
+    .enter-dialog-data textarea {
+        min-width: 280px;
+        min-height: 130px;
+        resize: none;
+        margin-top: 2%;
+        font-size: 1em;
+    }
+
+.dialog-menu {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8%;
+}
+
+    .dialog-menu button {
+        margin-left: 3px;
+        min-height: 25px;
+    }
+
+.add-image-product {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-top: 1%;
+}
+
+.preview-image {
+    width: 285px;
+    height: 285px;
+    border: 1px solid #828080;
+}
+
+.dialog-image-upload {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    font-size: 0.8em;
+    text-align: center;
+    color: #565656;
+}
+
+.dialog-image-upload:hover {
+    cursor:pointer;
+}
+
+.preview-image {
+    width: 282px;
+    height: 282px;
+    border: 1px solid #828080;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.preview-image img{
+    width:100%;
+}
+
+.product-price {
+    display:flex;
+    justify-content:flex-start;
+    align-items:center;
+    flex-direction:row;
+    min-width: 280px;
+    margin-top: 2%;
+}
+
+.loader {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: #4a48486e;
+}
+
+.loader img{
+    width: 150px;
 }

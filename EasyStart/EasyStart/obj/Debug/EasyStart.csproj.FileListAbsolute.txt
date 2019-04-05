@@ -76,8 +76,8 @@ C:\pess\EasyStart\EasyStart\EasyStart\bin\ru\System.Web.Razor.resources.dll
 C:\pess\EasyStart\EasyStart\EasyStart\bin\ru\System.Web.WebPages.resources.dll
 C:\pess\EasyStart\EasyStart\EasyStart\bin\ru\System.Web.WebPages.Deployment.resources.dll
 C:\pess\EasyStart\EasyStart\EasyStart\bin\ru\System.Web.WebPages.Razor.resources.dll
-C:\pess\EasyStart\EasyStart\EasyStart\obj\Debug\EasyStart.csprojAssemblyReference.cache
 C:\pess\EasyStart\EasyStart\EasyStart\obj\Debug\EasyStart.csproj.CoreCompileInputs.cache
 C:\pess\EasyStart\EasyStart\EasyStart\obj\Debug\EasyStart.csproj.CopyComplete
 C:\pess\EasyStart\EasyStart\EasyStart\obj\Debug\EasyStart.dll
 C:\pess\EasyStart\EasyStart\EasyStart\obj\Debug\EasyStart.pdb
+C:\pess\EasyStart\EasyStart\EasyStart\obj\Debug\EasyStart.csprojAssemblyReference.cache
