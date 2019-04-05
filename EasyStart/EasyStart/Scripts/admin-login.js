@@ -20,9 +20,3 @@
 
     $.post("/Home/Login", loginData, successCallBack(successFunc, null));
  }
-
-function successCallBack(func, loader) {
-    return function (data) {
-        func(data, loader);
-    }
-}

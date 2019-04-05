@@ -8,10 +8,20 @@
     @Styles.Render("~/admin-login/css")
 </head>
 <body>
-    <div class="header-menu"></div>
-    <div class="content"></div>
+    <div class="header-menu">
+        <div class="menu-item" target-id="order">Заказы</div>
+        <div class="menu-item" target-id="history">История заказов</div>
+        <div class="menu-item" target-id="products">Товары</div>
+        <div class="menu-item logout">Выйти</div>
+    </div>
+    <div class="content">
+        <div class="section" id="order"></div>
+        <div class="section" id="history"></div>
+        <div class="section" id="products"></div>
+    </div>
 
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/adminscript")
+    @Scripts.Render("~/bundles/main")
+    @Scripts.Render("~/bundles/admin-panel")
 </body>
 </html>
