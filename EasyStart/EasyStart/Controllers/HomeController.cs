@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+//using System.Web.Security;
 
 namespace EasyStart.Controllers
 {
@@ -17,11 +18,24 @@ namespace EasyStart.Controllers
         [HttpPost]
         public JsonResult Login(LoginDataModel loginData)
         {
-            var qwe = loginData;
             var result = new JsonResultModel
             {
                 Success = true,
                 URL = Url.Action("AdminPanel", "Admin")
+            };
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult Logout()
+        {
+            //FormsAuthentication.SignOut();
+
+            var result = new JsonResultModel
+            {
+                Success = true,
+                URL = Url.Action("AdminLogin", "Home")
             };
 
             return Json(result);

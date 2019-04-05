@@ -2,6 +2,9 @@
     display: block;
     margin: 0;
     padding: 0;
+    font-family: 'Russo One', sans-serif;
+    font-size: 1em;
+    color: #2d2b2b;
 }
 
 h3 {
@@ -18,7 +21,7 @@ h3 {
 }
 
 .login-form {
-    width: 28%;
+    width: 22%;
     height: 30%;
     box-shadow: 2px 3px 16px 0px #565656;
     background-color: #efefef;
@@ -40,3 +43,4 @@ h3 {
         width: 56%;
         height: 13%;
     }
+
