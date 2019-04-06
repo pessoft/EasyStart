@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasyStart.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -12,6 +13,42 @@ namespace EasyStart.Controllers
         public ActionResult AdminPanel()
         {
             return View();
+        }
+
+        [HttpPost]
+        public JsonResult UploadImage()
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                foreach (string file in Request.Files)
+                {
+                    var upload = Request.Files[file];
+
+                    if (upload != null)
+                    {
+                        string fileName = System.IO.Path.GetFileName(upload.FileName);
+                        string ext = fileName.Substring(fileName.LastIndexOf("."));
+                        string newFileName = String.Format(@"{0}{1}", System.Guid.NewGuid(), ext);
+
+                        upload.SaveAs(Server.MapPath("~/images/" + newFileName));
+
+                        result.Success = true;
+                        result.URL = $"../images/{newFileName}";
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result.ErrorMEssage = "При загрузки изображения что то пошло не так";
+            }
+            
+            return Json(result);
         }
     }
 }
