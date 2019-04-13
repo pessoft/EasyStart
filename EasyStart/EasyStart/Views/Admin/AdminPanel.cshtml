@@ -46,7 +46,7 @@
             <datalist id="city">
                 @foreach (var cityPair in ViewBag.City)
                 {
-                <option value="@cityPair.Key">@cityPair.Value</option>
+                <option city-id="@cityPair.Key">@cityPair.Value</option>
                 }
             </datalist>
             <input type="text" placeholder="Улица" pvalue="" />

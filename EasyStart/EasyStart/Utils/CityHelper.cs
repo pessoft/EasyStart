@@ -14,7 +14,7 @@ namespace EasyStart.Utils
         {
             try
             {
-                var city = File.ReadAllText("~/Resource/City.json");
+                var city = File.ReadAllText(System.Web.HttpContext.Current.Server.MapPath("~/Resource/City.json"));
                 City = JsonConvert.DeserializeObject<Dictionary<int, string>>(city);
             }
             catch (Exception ex)
