@@ -137,6 +137,7 @@
     <Compile Include="Models\LoginDataModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\CityHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\admin-login.css" />
@@ -154,6 +155,7 @@
     <Content Include="Scripts\admin-panel.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Resource\City.json" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

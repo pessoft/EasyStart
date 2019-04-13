@@ -1,4 +1,5 @@
 ﻿using EasyStart.Models;
+using EasyStart.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace EasyStart.Controllers
         // GET: Admin
         public ActionResult AdminPanel()
         {
+            ViewBag.City = CityHelper.City;
             return View();
         }
 

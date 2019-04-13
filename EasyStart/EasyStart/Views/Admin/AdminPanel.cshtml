@@ -14,7 +14,8 @@
         <div class="menu-item menu-item-active" target-id="order">Заказы</div>
         <div class="menu-item" target-id="history">История заказов</div>
         <div class="menu-item" target-id="products">Товары</div>
-        <div class="menu-item" target-id="adress">Адреса</div>
+        <div class="menu-item" target-id="partial">Отделения</div>
+        <div class="menu-item" target-id="setting">Настройки</div>
         <div class="menu-item logout" onclick="Logout()">Выйти</div>
     </div>
     <div class="content">
@@ -38,7 +39,20 @@
                 </div>
             </div>
         </div>
-        <div class="section hide" id="adress"></div>
+        <div class="section hide" id="partial"></div>
+        <div class="section hide" id="setting">
+            <div>Адрес отделения</div>
+            <input list="city" name="cars" type="text" placeholder="Город">
+            <datalist id="city">
+                @foreach (var cityPair in ViewBag.City)
+                {
+                <option value="@cityPair.Key">@cityPair.Value</option>
+                }
+            </datalist>
+            <input type="text" placeholder="Улица" pvalue="" />
+            <input type="text" placeholder="Дом" pvalue="" />
+            <button>Сохранить</button>
+        </div>
     </div>
 
     <dialog id="addCategoryDialog">
