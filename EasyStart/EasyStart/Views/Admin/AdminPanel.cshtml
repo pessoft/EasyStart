@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css?family=Russo+One" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <title>Панель администратора</title>
     @Styles.Render("~/admin-panel/css")
@@ -14,7 +14,7 @@
         <div class="menu-item menu-item-active" target-id="order">Заказы</div>
         <div class="menu-item" target-id="history">История заказов</div>
         <div class="menu-item" target-id="products">Товары</div>
-        <div class="menu-item" target-id="partial">Отделения</div>
+        <div class="menu-item" target-id="branch">Отделения</div>
         <div class="menu-item" target-id="setting">Настройки</div>
         <div class="menu-item logout" onclick="Logout()">Выйти</div>
     </div>
@@ -39,19 +39,30 @@
                 </div>
             </div>
         </div>
-        <div class="section hide" id="partial"></div>
+        <div class="section hide" id="branch">
+            <div class="branch-header">Отделения</div>
+            <div class="branch-header-add" id="add-branch">
+                <i class="fas fa-plus"></i>
+                Добавить отделение
+            </div>
+        </div>
         <div class="section hide" id="setting">
-            <div>Адрес отделения</div>
-            <input list="city" name="cars" type="text" placeholder="Город">
-            <datalist id="city">
+            <div class="setting-header">Настройка отделения</div>
+            <input list="setting-city-list" id="setting-city" type="text" placeholder="Город">
+            <datalist id="setting-city-list">
                 @foreach (var cityPair in ViewBag.City)
                 {
-                <option city-id="@cityPair.Key">@cityPair.Value</option>
+                    <option city-id="@cityPair.Key" value="@cityPair.Value" />
                 }
             </datalist>
-            <input type="text" placeholder="Улица" pvalue="" />
-            <input type="text" placeholder="Дом" pvalue="" />
-            <button>Сохранить</button>
+            <input type="text" id="setting-street" placeholder="Улица" pvalue="" />
+            <input type="text" id="setting-home" placeholder="Дом" pvalue="" />
+            <input type="number" placeholder="Время открытия" id="time-open" min="0" max="24" step="0.1" />
+            <input type="number" placeholder="Время закрытия" id="time-close" min="0" max="24" step="0.1" />
+            <input type="number" placeholder="Стоймость доставки" id="price-delivery" min="0" step="0.1" />
+            <label for="free-delivery">Бесплатная доставка при заказе на сумму от</label>
+            <input type="number" id="free-delivery" min="0" step="0.1" />
+            <button onclick="SaveSetting();">Сохранить</button>
         </div>
     </div>
 
@@ -59,11 +70,11 @@
         <form onsubmit="AddCategory(); return false;">
             <div class="header-dialog">Добавление категории</div>
             <div class="enter-dialog-data">
-                <input required type="text"  id="name-category" placeholder="Введите название категории" />
+                <input required type="text" id="name-category" placeholder="Введите название категории" />
                 <div class="add-image-product">
                     <input type="file" id="add-category-image" accept="image/*" class="hide">
                     <div class="preview-image" onclick="OpenDialogFile('add-category-image')">
-                        <img src="#" alt="your image" class="hide"/>
+                        <img src="#" alt="your image" class="hide" />
                         <div class="dialog-image-upload">
                             <i class="fas fa-upload"></i>
                             Загрузите изображение категории
@@ -72,7 +83,7 @@
                 </div>
             </div>
             <div class="dialog-menu">
-                <button >Добавить</button>
+                <button>Добавить</button>
                 <button onclick="CancelDialog(this)">Отмена</button>
             </div>
         </form>
@@ -86,7 +97,7 @@
                 <div class="product-price">
                     <input type="number" required placeholder="Укажите цену (в рублях)" id="product-price" min="0" step="0.1" />
                 </div>
-                <textarea required placeholder="Введите описание продукта"></textarea>
+                <textarea required id="description-product" placeholder="Введите описание продукта"></textarea>
                 <div class="add-image-product">
                     <input type="file" id="add-product-image" accept="image/*" class="hide">
                     <div class="preview-image" onclick="OpenDialogFile('add-product-image')">
@@ -97,6 +108,29 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="dialog-menu">
+                <button type="submit">Добавить</button>
+                <button onclick="CancelDialog(this)">Отмена</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog id="addBranchDialog">
+        <form onsubmit="AddBranch(); return false;">
+            <div class="header-dialog">Добавление отделения</div>
+            <div class="enter-dialog-data">
+                <label for="login-new-branch">Логин для входа</label>
+                <input required type="text" id="login-new-branch" placeholder="логин" />
+                <label for="password-new-branch">Пароль для входа</label>
+                <input required type="text" id="password-new-branch" placeholder="пароль" />
+                <input list="branch-city-list" id="branch-city" type="text" placeholder="Город отделения">
+                <datalist id="branch-city-list">
+                    @foreach (var cityPair in ViewBag.City)
+                    {
+                        <option city-id="@cityPair.Key" value="@cityPair.Value" />
+                    }
+                </datalist>
             </div>
             <div class="dialog-menu">
                 <button type="submit">Добавить</button>

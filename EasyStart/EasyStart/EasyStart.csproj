@@ -136,6 +136,7 @@
     <Compile Include="Models\JsonResultModel.cs" />
     <Compile Include="Models\LoginDataModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
+    <Compile Include="Models\Setting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\CityHelper.cs" />
   </ItemGroup>

@@ -2,15 +2,15 @@
     display: block;
     margin: 0;
     padding: 0;
-    font-family: 'Russo One', sans-serif;
-    font-size: 1em;
-    height:100vh;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.1em;
+    height: 100vh;
 }
 
 .header-menu {
     width: 100%;
-    height: 5vh;
-    background-color: #2d2b2b;
+    height: 7%;
+    background-color: #0f1e32;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -23,8 +23,9 @@
 
     .menu-item:hover {
         cursor: pointer;
-        color: #6eb2f5;
+        color: #f15151;
         transition: 200ms ease-in;
+        transform: scale(1.015);
     }
 
 .hide {
@@ -32,7 +33,7 @@
 }
 
 .menu-item-active {
-    color: #6eb2f5;
+    color: #79c5e7;
 }
 
 .content {
@@ -81,7 +82,8 @@
     font-size: 0.9em;
 }
 
-    .header-product-add:hover {
+    .header-product-add:hover,
+    .branch-header-add:hover {
         cursor: pointer;
         color: #6eb2f5;
         transition: 100ms ease-in;
@@ -198,4 +200,62 @@ dialog {
 
 .loader img{
     width: 150px;
+}
+
+#setting {
+    width:100%;
+    height:100%;
+    display:flex;
+    justify-content:flex-start;
+    align-items:center;
+    flex-direction:column;
+    margin-top: 1%;
+}
+    .setting-header {
+        font-size: 1.5em;
+        margin-bottom: 1%;
+    }
+
+#setting input {
+    margin-bottom: 1%;
+    width: 250px;
+    height: 25px;
+    padding-left: 3px;
+}
+
+#setting button {
+    margin-bottom: 1%;
+    width: 255px;
+    height: 30px;
+    text-align: center;
+}
+
+label[for=free-delivery] {
+    font-size: 0.65em;
+    color:#828080;
+}
+
+#branch {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 2%;
+}
+
+.branch-header {
+    font-size: 1.3em;
+    margin-bottom: 5px;
+}
+
+
+#addBranchCompanyDialog input {
+    margin-top: 1%
+}
+
+#addBranchCompanyDialog label {
+    font-size: 0.65em;
+    color: #828080;
 }

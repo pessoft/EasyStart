@@ -1,17 +1,19 @@
 ﻿$(document).ready(function () {
+
+    let bindShowModal = function (id, dialogId) {
+        $(`#${id}`).bind("click", function () {
+            let addCategoryDialog = $(`#${dialogId}`);
+            addCategoryDialog.trigger("showModal");
+        });
+    }
+
     $(".menu-item").not(".logout").bind("click", function () {
         SelectMenuItem(this);
     });
 
-    $("#add-category").bind("click", function () {
-        let addCategoryDialog = $("#addCategoryDialog");
-        addCategoryDialog.trigger("showModal");
-    });
-
-    $("#add-product").bind("click", function () {
-        let addProducDialog = $("#addProducDialog");
-        addProducDialog.trigger("showModal");
-    });
+    bindShowModal("add-category", "addCategoryDialog");
+    bindShowModal("add-product", "addProducDialog");
+    bindShowModal("add-branch", "addBranchDialog");
 
     $("input[type=file]").change(function () {
         AddPreviewImage(this);
@@ -36,7 +38,7 @@ function SelectMenuItem(e) {
 }
 
 function CancelDialog(e) {
-    let dialog = $(e).parents("dialog");
+    let dialog = $(e);
 
     dialog.find("input").val("");
     dialog.find("textarea").val("");
@@ -46,14 +48,24 @@ function CancelDialog(e) {
 }
 
 function AddCategory() {
-    let nameCategory = $("#name-category").val();
+    let category = {
+        Name: $("#name-category").val(),
+        Image: "image"
+    }
     AddLoader($("#addCategoryDialog"));
-    CancelDialog($("#name-category"));
+    CancelDialog("#addCategoryDialog");
 }
 
 function AddProduct() {
+    let product = {
+        CategoryId: GetSelectedCategoryId(),
+        Name: $("#name-product"),
+        Price: $("#product-price"),
+        Description: $("#description-product"),
+        Image: "image"
+    }
     AddLoader($("#addProducDialog"));
-    CancelDialog($("#name-category"));
+    CancelDialog("#addProducDialog");
 }
 
 function AddPreviewImage(input) {
@@ -88,4 +100,39 @@ function AddLoader(e) {
 function RemoveLoader(e) {
     let form = $(e).find("form");
     form.find(".loader").remove();
+}
+
+function SaveSetting() {
+
+    let setting = {
+        CityId: $("#setting-city-list option[value='" + $('#setting-city').val() + "']").attr('city-id'),
+        Street: $("#setting-street").val(),
+        HomeNumber: $("#setting-home").val(),
+        PriceDelivery: $("#price-delivery").val(),
+        FreePriceDelivery: $("#free-delivery").val(),
+        TimeOpen: parseFloat($("#time-open").val()).toFixed(2).toString(),
+        TimeClose: parseFloat($("#time-close").val()).toFixed(2),
+    }
+
+    let successFunc = function (result, loader) {
+        if (result.Success) {
+            alert("Настройка сохранена");
+        } else {
+            alert(result.ErrorMessage);
+        }
+    }
+
+    $.post("/Admin/SaveSetting", setting, successCallBack(successFunc, null));
+}
+
+function AddBranch() {
+    let newBranch = {
+        Login: $("#"),
+    } 
+    AddLoader($("#addBranchDialog"));
+    CancelDialog($("#addBranchDialog"));
+}
+
+function GetSelectedCategoryId() {
+    return 0;
 }

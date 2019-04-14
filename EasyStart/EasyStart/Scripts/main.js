@@ -4,3 +4,7 @@ function successCallBack(func, loader) {
         func(data, loader);
     }
 }
+
+function GenerateRandom() {
+    return Math.random().toString(36).slice(-6);
+}

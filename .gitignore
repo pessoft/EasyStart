@@ -115,3 +115,7 @@
 /EasyStart/.vs/EasyStart/v15/Server/sqlite3/storage.ide-shm
 /EasyStart/.vs/EasyStart/v15/Server/sqlite3/storage.ide-wal
 /EasyStart/.vs/config/applicationhost.config
+/EasyStart/EasyStart/bin/roslyn/Microsoft.CodeAnalysis.CSharp.dll
+/EasyStart/EasyStart/obj/Debug/EasyStart.csproj.FileListAbsolute.txt
+/EasyStart/.vs/EasyStart/v15/.suo
+/EasyStart/.vs/EasyStart/v15/Server/sqlite3/storage.ide-wal

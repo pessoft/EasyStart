@@ -52,5 +52,12 @@ namespace EasyStart.Controllers
             
             return Json(result);
         }
+
+        [HttpPost]
+        public JsonResult SaveSetting(Setting setting)
+        {
+            var result = new JsonResultModel();
+            return Json(result);
+        }
     }
 }
