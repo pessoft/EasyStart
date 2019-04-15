@@ -54,6 +54,7 @@ function AddCategory() {
     }
     AddLoader($("#addCategoryDialog"));
     CancelDialog("#addCategoryDialog");
+    $.post("/Admin/AddCategory", category, successCallBack(successFunc, null));
 }
 
 function AddProduct() {
@@ -66,6 +67,7 @@ function AddProduct() {
     }
     AddLoader($("#addProducDialog"));
     CancelDialog("#addProducDialog");
+    $.post("/Admin/AddProduct", product, successCallBack(successFunc, null));
 }
 
 function AddPreviewImage(input) {
@@ -128,9 +130,12 @@ function SaveSetting() {
 function AddBranch() {
     let newBranch = {
         Login: $("#"),
+        Password: $("#"),
+        CityId: $("#branch-city-list option[value='" + $('#branch-city').val() + "']").attr('city-id'),
     } 
     AddLoader($("#addBranchDialog"));
     CancelDialog($("#addBranchDialog"));
+    $.post("/Admin/AddBranch", newBranch, successCallBack(successFunc, null));
 }
 
 function GetSelectedCategoryId() {

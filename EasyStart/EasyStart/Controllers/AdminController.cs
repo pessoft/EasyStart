@@ -59,5 +59,29 @@ namespace EasyStart.Controllers
             var result = new JsonResultModel();
             return Json(result);
         }
+
+        [HttpPost]
+        public JsonResult AddCategory(CategoryModel category)
+        {
+            var result = new JsonResult();
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult AddProduct(ProductModel product)
+        {
+            var result = new JsonResult();
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult AddBranch(ProductModel product)
+        {
+            var result = new JsonResult();
+
+            return Json(result);
+        }
     }
 }

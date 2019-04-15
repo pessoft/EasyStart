@@ -121,9 +121,9 @@
             <div class="header-dialog">Добавление отделения</div>
             <div class="enter-dialog-data">
                 <label for="login-new-branch">Логин для входа</label>
-                <input required type="text" id="login-new-branch" placeholder="логин" />
+                <input required type="text" id="login-new-branch" placeholder="Логин" />
                 <label for="password-new-branch">Пароль для входа</label>
-                <input required type="text" id="password-new-branch" placeholder="пароль" />
+                <input required type="text" id="password-new-branch" placeholder="Пароль" />
                 <input list="branch-city-list" id="branch-city" type="text" placeholder="Город отделения">
                 <datalist id="branch-city-list">
                     @foreach (var cityPair in ViewBag.City)
@@ -134,7 +134,7 @@
             </div>
             <div class="dialog-menu">
                 <button type="submit">Добавить</button>
-                <button onclick="CancelDialog(this)">Отмена</button>
+                <button type="" onclick="CancelDialog(this) return false;">Отмена</button>
             </div>
         </form>
     </dialog>

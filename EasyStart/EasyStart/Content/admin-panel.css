@@ -110,7 +110,7 @@ dialog {
 
     .enter-dialog-data input {
         min-width: 282px;
-        min-height: 20px;
+        min-height: 23px;
         font-size: 0.8em;
         padding-left: 2px;
     }
@@ -219,7 +219,7 @@ dialog {
 #setting input {
     margin-bottom: 1%;
     width: 250px;
-    height: 25px;
+    height: 23px;
     padding-left: 3px;
 }
 
@@ -251,11 +251,15 @@ label[for=free-delivery] {
 }
 
 
-#addBranchCompanyDialog input {
-    margin-top: 1%
+#addBranchDialog input {
+    margin-bottom: 1% ;
+    min-width: 282px;
+    min-height: 23px;
+    font-size: 0.8em;
+    padding-left: 2px;
 }
 
-#addBranchCompanyDialog label {
+#addBranchDialog label {
     font-size: 0.65em;
     color: #828080;
 }
