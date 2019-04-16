@@ -8,7 +8,7 @@
     }
 
     $(".menu-item").not(".logout").bind("click", function () {
-        SelectMenuItem(this);
+        selectMenuItem(this);
     });
 
     bindShowModal("add-category", "addCategoryDialog");
@@ -16,11 +16,11 @@
     bindShowModal("add-branch", "addBranchDialog");
 
     $("input[type=file]").change(function () {
-        AddPreviewImage(this);
+        addPreviewImage(this);
     });
 });
 
-function Logout() {
+function logout() {
     let successFunc = (result) => {
         window.location.href = result.URL;
     }
@@ -28,7 +28,7 @@ function Logout() {
     $.post("/Home/Logout", null, successCallBack(successFunc, null));
 }
 
-function SelectMenuItem(e) {
+function selectMenuItem(e) {
     let $e = $(e);
     let targetId = $e.attr("target-id");
     $(".menu-item").removeClass("menu-item-active");
@@ -37,7 +37,7 @@ function SelectMenuItem(e) {
     $(`#${targetId}`).removeClass("hide");
 }
 
-function CancelDialog(e) {
+function cancelDialog(e) {
     let dialog = $(e);
 
     dialog.find("input").val("");
@@ -47,17 +47,17 @@ function CancelDialog(e) {
     dialog.trigger("close")
 }
 
-function AddCategory() {
+function addCategory() {
     let category = {
         Name: $("#name-category").val(),
         Image: "image"
     }
-    AddLoader($("#addCategoryDialog"));
-    CancelDialog("#addCategoryDialog");
+    addLoader($("#addCategoryDialog"));
+    cancelDialog("#addCategoryDialog");
     $.post("/Admin/AddCategory", category, successCallBack(successFunc, null));
 }
 
-function AddProduct() {
+function addProduct() {
     let product = {
         CategoryId: GetSelectedCategoryId(),
         Name: $("#name-product"),
@@ -65,12 +65,12 @@ function AddProduct() {
         Description: $("#description-product"),
         Image: "image"
     }
-    AddLoader($("#addProducDialog"));
-    CancelDialog("#addProducDialog");
+    addLoader($("#addProducDialog"));
+    cancelDialog("#addProducDialog");
     $.post("/Admin/AddProduct", product, successCallBack(successFunc, null));
 }
 
-function AddPreviewImage(input) {
+function addPreviewImage(input) {
     if (input.files && input.files[0]) {
         let reader = new FileReader();
 
@@ -87,24 +87,24 @@ function AddPreviewImage(input) {
     }
 }
 
-function OpenDialogFile(id) {
+function openDialogFile(id) {
     $(`#${id}`).click();
 }
 
-function AddLoader(e) {
+function addLoader(e) {
     let loader = `<div class="loader"><img src="../images/loader.gif"/><div>`
     let form = $(e).find("form");
 
-    RemoveLoader();
+    removeLoader();
     form.append(loader);
 }
 
-function RemoveLoader(e) {
+function removeLoader(e) {
     let form = $(e).find("form");
     form.find(".loader").remove();
 }
 
-function SaveSetting() {
+function saveSetting() {
 
     let setting = {
         CityId: $("#setting-city-list option[value='" + $('#setting-city').val() + "']").attr('city-id'),
@@ -127,17 +127,17 @@ function SaveSetting() {
     $.post("/Admin/SaveSetting", setting, successCallBack(successFunc, null));
 }
 
-function AddBranch() {
+function addBranch() {
     let newBranch = {
         Login: $("#"),
         Password: $("#"),
         CityId: $("#branch-city-list option[value='" + $('#branch-city').val() + "']").attr('city-id'),
     } 
-    AddLoader($("#addBranchDialog"));
-    CancelDialog($("#addBranchDialog"));
+    addLoader($("#addBranchDialog"));
+    cancelDialog($("#addBranchDialog"));
     $.post("/Admin/AddBranch", newBranch, successCallBack(successFunc, null));
 }
 
-function GetSelectedCategoryId() {
+function getSelectedCategoryId() {
     return 0;
 }

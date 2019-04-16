@@ -1,4 +1,4 @@
-﻿function Login() {
+﻿function login() {
     let login = $("#login").val();
     let password = $("#password").val();
     let successFunc = (result) => {

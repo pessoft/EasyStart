@@ -1,10 +1,12 @@
 ﻿
 function successCallBack(func, loader) {
     return function (data) {
-        func(data, loader);
+        if (func) {
+            func(data, loader);
+        }
     }
 }
 
-function GenerateRandom() {
+function generateRandom() {
     return Math.random().toString(36).slice(-6);
 }
