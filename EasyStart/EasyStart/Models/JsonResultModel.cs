@@ -8,7 +8,7 @@ namespace EasyStart.Models
     public class JsonResultModel
     {
         public bool Success { get; set; }
-        public string ErrorMEssage { get; set; }
+        public string ErrorMessage { get; set; }
         public string URL { get; set; }
     }
 }

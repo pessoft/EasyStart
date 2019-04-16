@@ -1,13 +1,16 @@
-﻿using System;
+﻿using EasyStart.Utils;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
 namespace EasyStart.Models
 {
-    public class Setting
+    public class SettingModel
     {
         public int Id { get; set; }
+        public int BranchId { get; set; }
         public int CityId { get; set; }
         public string Street { get; set; }
         public int HomeNumber { get; set; }
@@ -15,5 +18,19 @@ namespace EasyStart.Models
         public double FreePriceDelivery { get; set; }
         public double TimeOpen { get; set; }
         public double TimeClose { get; set; }
+
+        [NotMapped]
+        public string City
+        {
+            get
+            {
+                if (CityId != 0)
+                {
+                    return CityHelper.City[CityId];
+                }
+
+                return "";
+            }
+        }
     }
 }

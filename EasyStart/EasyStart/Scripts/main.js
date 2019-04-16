@@ -7,6 +7,6 @@ function successCallBack(func, loader) {
     }
 }
 
-function generateRandom() {
+function generateRandomString() {
     return Math.random().toString(36).slice(-6);
 }

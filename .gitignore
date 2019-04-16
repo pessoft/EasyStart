@@ -124,3 +124,9 @@
 /EasyStart/EasyStart/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
 /EasyStart/.vs/EasyStart/v15/Server/sqlite3/storage.ide-shm
 /EasyStart/.vs/EasyStart/v15/Server/sqlite3/storage.ide-wal
+/EasyStart/EasyStart/App_Data/EasyStart.Models.AdminPanelContext.mdf
+/EasyStart/EasyStart/App_Data/EasyStart.Models.AdminPanelContext_log.ldf
+/EasyStart/.vs/EasyStart/v15/.suo
+/EasyStart/.vs/EasyStart/v15/Server/sqlite3/storage.ide
+/EasyStart/.vs/EasyStart/v15/Server/sqlite3/storage.ide-wal
+/EasyStart/EasyStart/EasyStart.csproj.user

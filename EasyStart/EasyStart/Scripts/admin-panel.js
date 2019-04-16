@@ -1,9 +1,13 @@
 ﻿$(document).ready(function () {
 
-    let bindShowModal = function (id, dialogId) {
+    let bindShowModal = function (id, dialogId, additionalFunc) {
         $(`#${id}`).bind("click", function () {
             let addCategoryDialog = $(`#${dialogId}`);
             addCategoryDialog.trigger("showModal");
+
+            if (additionalFunc) {
+                additionalFunc();
+            }
         });
     }
 
@@ -13,12 +17,20 @@
 
     bindShowModal("add-category", "addCategoryDialog");
     bindShowModal("add-product", "addProducDialog");
-    bindShowModal("add-branch", "addBranchDialog");
+    bindShowModal("add-branch", "addBranchDialog", addNewBranchLoginData);
 
     $("input[type=file]").change(function () {
         addPreviewImage(this);
     });
 });
+
+function addNewBranchLoginData() {
+    let login = generateRandomString();
+    let password = generateRandomString();
+
+    $("#login-new-branch").val(login);
+    $("#password-new-branch").val(password);
+}
 
 function logout() {
     let successFunc = (result) => {
@@ -52,9 +64,19 @@ function addCategory() {
         Name: $("#name-category").val(),
         Image: "image"
     }
-    addLoader($("#addCategoryDialog"));
-    cancelDialog("#addCategoryDialog");
-    $.post("/Admin/AddCategory", category, successCallBack(successFunc, null));
+    let loader = new Loader($("#addCategoryDialog form"));
+    let successFunc = function (result, loader) {
+        loader.stop();
+        if (result.Success) {
+            cancelDialog("#addCategoryDialog");
+        } else {
+            alert(result.ErrorMessage);
+        }
+    }
+
+    loader.start();
+    
+    $.post("/Admin/AddCategory", category, successCallBack(successFunc, loader));
 }
 
 function addProduct() {
@@ -65,9 +87,18 @@ function addProduct() {
         Description: $("#description-product"),
         Image: "image"
     }
-    addLoader($("#addProducDialog"));
-    cancelDialog("#addProducDialog");
-    $.post("/Admin/AddProduct", product, successCallBack(successFunc, null));
+    let loader = new Loader($("#addProducDialog  form"));
+    let successFunc = function (result, loader) {
+        loader.stop();
+        if (result.Success) {
+            cancelDialog("#addProducDialog");
+        } else {
+            alert(result.ErrorMessage);
+        }
+    }
+    loader.start();
+
+    $.post("/Admin/AddProduct", product, successCallBack(successFunc, loader));
 }
 
 function addPreviewImage(input) {
@@ -91,22 +122,10 @@ function openDialogFile(id) {
     $(`#${id}`).click();
 }
 
-function addLoader(e) {
-    let loader = `<div class="loader"><img src="../images/loader.gif"/><div>`
-    let form = $(e).find("form");
-
-    removeLoader();
-    form.append(loader);
-}
-
-function removeLoader(e) {
-    let form = $(e).find("form");
-    form.find(".loader").remove();
-}
-
 function saveSetting() {
 
     let setting = {
+        Id: $("#setting").attr("setting-id"),
         CityId: $("#setting-city-list option[value='" + $('#setting-city').val() + "']").attr('city-id'),
         Street: $("#setting-street").val(),
         HomeNumber: $("#setting-home").val(),
@@ -115,8 +134,9 @@ function saveSetting() {
         TimeOpen: parseFloat($("#time-open").val()).toFixed(2).toString(),
         TimeClose: parseFloat($("#time-close").val()).toFixed(2),
     }
-
+    let loader = new Loader($("#setting"));
     let successFunc = function (result, loader) {
+        loader.stop();
         if (result.Success) {
             alert("Настройка сохранена");
         } else {
@@ -124,18 +144,29 @@ function saveSetting() {
         }
     }
 
-    $.post("/Admin/SaveSetting", setting, successCallBack(successFunc, null));
+    loader.start();
+
+    $.post("/Admin/SaveSetting", setting, successCallBack(successFunc, loader));
 }
 
 function addBranch() {
     let newBranch = {
-        Login: $("#"),
-        Password: $("#"),
+        Login: $("#login-new-branch").val(),
+        Password: $("#password-new-branch").val(),
         CityId: $("#branch-city-list option[value='" + $('#branch-city').val() + "']").attr('city-id'),
     } 
-    addLoader($("#addBranchDialog"));
-    cancelDialog($("#addBranchDialog"));
-    $.post("/Admin/AddBranch", newBranch, successCallBack(successFunc, null));
+    let loader = new Loader($("#addBranchDialog form"));
+    let successFunc = function (result, loader) {
+        loader.stop();
+        if (result.Success) {
+            cancelDialog("#addBranchDialog");
+        } else {
+            alert(result.ErrorMessage);
+        }
+    }
+    loader.start();
+   
+    $.post("/Admin/AddBranch", newBranch, successCallBack(successFunc, loader));
 }
 
 function getSelectedCategoryId() {

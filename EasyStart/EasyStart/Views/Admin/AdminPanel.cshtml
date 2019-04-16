@@ -32,7 +32,7 @@
             <i class="fas fa-info"></i>    
             Информация отделения
         </div>
-        <div class="menu-item logout" onclick="Logout()">
+        <div class="menu-item logout" onclick="logout()">
             <i class="fas fa-sign-out-alt"></i>
             Выйти
         </div>
@@ -65,34 +65,34 @@
                 Добавить отделение
             </div>
         </div>
-        <div class="section hide" id="setting">
+        <div class="section hide" id="setting" setting-id="@(ViewBag.Setting != null ? ViewBag.Setting.Id : 0)">
             <div class="setting-header">Настройка отделения</div>
-            <input list="setting-city-list" id="setting-city" type="text" placeholder="Город">
+            <input list="setting-city-list" id="setting-city" value="@(ViewBag.Setting != null ? ViewBag.Setting.City : "")" type="text" placeholder="Город">
             <datalist id="setting-city-list">
                 @foreach (var cityPair in ViewBag.City)
                 {
                     <option city-id="@cityPair.Key" value="@cityPair.Value" />
                 }
             </datalist>
-            <input type="text" id="setting-street" placeholder="Улица" pvalue="" />
-            <input type="text" id="setting-home" placeholder="Дом" pvalue="" />
-            <input type="number" placeholder="Время открытия" id="time-open" min="0" max="24" step="0.1" />
-            <input type="number" placeholder="Время закрытия" id="time-close" min="0" max="24" step="0.1" />
-            <input type="number" placeholder="Стоймость доставки" id="price-delivery" min="0" step="0.1" />
+            <input type="text" id="setting-street" placeholder="Улица" value="@(ViewBag.Setting != null ? ViewBag.Setting.Street : "")" " />
+            <input type="text" id="setting-home" placeholder="Дом" value="@(ViewBag.Setting != null ? ViewBag.Setting.HomeNumber : "")" " />
+            <input type="number" placeholder="Время открытия" id="time-open" min="0" max="24" step="0.1" value="@(ViewBag.Setting != null ? ViewBag.Setting.TimeOpen : "")" />
+            <input type="number" placeholder="Время закрытия" id="time-close" min="0" max="24" step="0.1" value="@(ViewBag.Setting != null ? ViewBag.Setting.TimeClose : "")"/>
+            <input type="number" placeholder="Стоймость доставки" id="price-delivery" min="0" step="0.1" value="@(ViewBag.Setting != null ? ViewBag.Setting.PriceDelivery : "")"/>
             <label for="free-delivery">Бесплатная доставка при заказе на сумму от</label>
-            <input type="number" id="free-delivery" min="0" step="0.1" />
-            <button onclick="SaveSetting();">Сохранить</button>
+            <input type="number" id="free-delivery" min="0" step="0.1" value="@(ViewBag.Setting != null ? ViewBag.Setting.FreePriceDelivery : "")" />
+            <button onclick="saveSetting();">Сохранить</button>
         </div>
     </div>
 
     <dialog id="addCategoryDialog">
-        <form onsubmit="AddCategory(); return false;">
+        <form onsubmit="addCategory(); return false;">
             <div class="header-dialog">Добавление категории</div>
             <div class="enter-dialog-data">
                 <input required type="text" id="name-category" placeholder="Введите название категории" />
                 <div class="add-image-product">
                     <input type="file" id="add-category-image" accept="image/*" class="hide">
-                    <div class="preview-image" onclick="OpenDialogFile('add-category-image')">
+                    <div class="preview-image" onclick="openDialogFile('add-category-image')">
                         <img src="#" alt="your image" class="hide" />
                         <div class="dialog-image-upload">
                             <i class="fas fa-upload"></i>
@@ -103,13 +103,13 @@
             </div>
             <div class="dialog-menu">
                 <button type="submit">Добавить</button>
-                <button type="reset" onclick="CancelDialog($('#addCategoryDialog'))">Отмена</button>
+                <button type="reset" onclick="cancelDialog($('#addCategoryDialog'))">Отмена</button>
             </div>
         </form>
     </dialog>
 
     <dialog id="addProducDialog">
-        <form onsubmit="AddProduct(); return false;">
+        <form onsubmit="addProduct(); return false;">
             <div class="header-dialog">Добавление продукта</div>
             <div class="enter-dialog-data">
                 <input required type="text" id="name-product" placeholder="Введите название продукта" />
@@ -136,13 +136,13 @@
     </dialog>
 
     <dialog id="addBranchDialog">
-        <form onsubmit="AddBranch(); return false;">
+        <form onsubmit="addBranch(); return false;">
             <div class="header-dialog">Добавление отделения</div>
             <div class="enter-dialog-data">
                 <label for="login-new-branch">Логин для входа</label>
-                <input required type="text" id="login-new-branch" placeholder="Логин" />
+                <input required type="text"  disabled id="login-new-branch" placeholder="Логин" />
                 <label for="password-new-branch">Пароль для входа</label>
-                <input required type="text" id="password-new-branch" placeholder="Пароль" />
+                <input required type="text" disabled id="password-new-branch" placeholder="Пароль" />
                 <input list="branch-city-list" id="branch-city" type="text" placeholder="Город отделения">
                 <datalist id="branch-city-list">
                     @foreach (var cityPair in ViewBag.City)
@@ -153,7 +153,7 @@
             </div>
             <div class="dialog-menu">
                 <button type="submit">Добавить</button>
-                <button type="reset" onclick="CancelDialog($('#addBranchDialog'))">Отмена</button>
+                <button type="reset" onclick="cancelDialog($('#addBranchDialog'))">Отмена</button>
             </div>
         </form>
     </dialog>

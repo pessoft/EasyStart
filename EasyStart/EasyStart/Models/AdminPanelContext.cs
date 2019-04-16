@@ -10,5 +10,7 @@ namespace EasyStart.Models
     {
         public DbSet<CategoryModel> Categories { get; set; }
         public DbSet<ProductModel> Products { get; set; }
+        public DbSet<BranchModel> Branches { get; set; }
+        public DbSet<SettingModel> Settings { get; set; }
     }
 }

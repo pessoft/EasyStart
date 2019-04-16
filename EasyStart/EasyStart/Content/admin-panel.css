@@ -61,7 +61,7 @@
 .category,
 .product {
     width: 70%;
-    height: 98%;
+    height: 96%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -70,7 +70,7 @@
 }
 
 .category {
-    border-right: 1px solid #2d2b2b;
+    border-right: 1px solid #8c8c8cab;
     width: 30%;
 }
 

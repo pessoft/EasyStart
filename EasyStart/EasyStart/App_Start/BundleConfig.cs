@@ -16,7 +16,8 @@ namespace EasyStart
                         "~/Scripts/jquery.validate*"));
 
             bundles.Add(new ScriptBundle("~/bundles/main").Include(
-                        "~/Scripts/main.js"));
+                        "~/Scripts/main.js",
+                        "~/Scripts/loader.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/admin-login").Include(
                         "~/Scripts/admin-login.js"));

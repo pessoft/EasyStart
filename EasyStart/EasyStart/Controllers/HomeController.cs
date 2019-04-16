@@ -1,9 +1,11 @@
-﻿using EasyStart.Models;
+﻿using EasyStart.Logic;
+using EasyStart.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 //using System.Web.Security;
 
 namespace EasyStart.Controllers
@@ -12,17 +14,37 @@ namespace EasyStart.Controllers
     {
         public ActionResult AdminLogin()
         {
+
+            var branch = new BranchModel
+            {
+                Login = "login",
+                Password = "password",
+                TypeBranch = Logic.TypeBranch.MainBranch
+            };
+
+            DataWrapper.SaveBranch(branch);
+
             return View();
         }
 
         [HttpPost]
         public JsonResult Login(LoginDataModel loginData)
         {
-            var result = new JsonResultModel
+
+            var branch = DataWrapper.GetBranch(loginData.Login, loginData.Password);
+            var result = new JsonResultModel();
+
+            if (branch != null)
             {
-                Success = true,
-                URL = Url.Action("AdminPanel", "Admin")
-            };
+                FormsAuthentication.SetAuthCookie(branch.Login, true);
+                result.Success = true;
+                result.URL = Url.Action("AdminPanel", "Admin");
+            }
+            else
+            {
+                result.ErrorMessage = "Неверный логин или пароль";
+            }
+
 
             return Json(result);
         }
@@ -30,7 +52,7 @@ namespace EasyStart.Controllers
         [HttpPost]
         public JsonResult Logout()
         {
-            //FormsAuthentication.SignOut();
+            FormsAuthentication.SignOut();
 
             var result = new JsonResultModel
             {
