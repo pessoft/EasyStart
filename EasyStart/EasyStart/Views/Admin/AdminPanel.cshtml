@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -24,12 +25,16 @@
             <i class="fas fa-cart-arrow-down"></i>
             Товары
         </div>
-        <div class="menu-item" target-id="branch">
-            <i class="fas fa-code-branch"></i>
-            Отделения
-        </div>
+        @if (ViewBag.TypeBranch == EasyStart.Logic.TypeBranch.MainBranch)
+        {
+            <div class="menu-item" target-id="branch">
+                <i class="fas fa-code-branch"></i>
+                Отделения
+            </div>
+        }
+
         <div class="menu-item" target-id="setting">
-            <i class="fas fa-info"></i>    
+            <i class="fas fa-info"></i>
             Информация отделения
         </div>
         <div class="menu-item logout" onclick="logout()">
@@ -74,13 +79,13 @@
                     <option city-id="@cityPair.Key" value="@cityPair.Value" />
                 }
             </datalist>
-            <input type="text" id="setting-street" placeholder="Улица" value="@(ViewBag.Setting != null ? ViewBag.Setting.Street : "")" " />
-            <input type="text" id="setting-home" placeholder="Дом" value="@(ViewBag.Setting != null ? ViewBag.Setting.HomeNumber : "")" " />
-            <input type="number" placeholder="Время открытия" id="time-open" min="0" max="24" step="0.1" value="@(ViewBag.Setting != null ? ViewBag.Setting.TimeOpen : "")" />
-            <input type="number" placeholder="Время закрытия" id="time-close" min="0" max="24" step="0.1" value="@(ViewBag.Setting != null ? ViewBag.Setting.TimeClose : "")"/>
-            <input type="number" placeholder="Стоймость доставки" id="price-delivery" min="0" step="0.1" value="@(ViewBag.Setting != null ? ViewBag.Setting.PriceDelivery : "")"/>
+            <input type="text" id="setting-street" placeholder="Улица" value="@(ViewBag.Setting != null ? ViewBag.Setting.Street : "")" "  />
+            <input type="text" id="setting-home" placeholder="Дом" value="@(ViewBag.Setting != null && ViewBag.Setting.HomeNumber!= 0 ? ViewBag.Setting.HomeNumber : "")" "  />
+            <input type="number" placeholder="Время открытия" id="time-open" min="0" max="24" step="0.1" value="@(ViewBag.Setting != null && ViewBag.Setting.TimeOpen!= 0 ? ViewBag.Setting.TimeOpen : "")" />
+            <input type="number" placeholder="Время закрытия" id="time-close" min="0" max="24" step="0.1" value="@(ViewBag.Setting != null && ViewBag.Setting.TimeClose!= 0 ? ViewBag.Setting.TimeClose : "")" />
+            <input type="number" placeholder="Стоймость доставки" id="price-delivery" min="0" step="0.1" value="@(ViewBag.Setting != null && ViewBag.Setting.PriceDelivery!=0 ? ViewBag.Setting.PriceDelivery : "")" />
             <label for="free-delivery">Бесплатная доставка при заказе на сумму от</label>
-            <input type="number" id="free-delivery" min="0" step="0.1" value="@(ViewBag.Setting != null ? ViewBag.Setting.FreePriceDelivery : "")" />
+            <input type="number" id="free-delivery" min="0" step="0.1" value="@(ViewBag.Setting != null && ViewBag.Setting.FreePriceDelivery != 0 ? ViewBag.Setting.FreePriceDelivery : "")" />
             <button onclick="saveSetting();">Сохранить</button>
         </div>
     </div>
@@ -140,7 +145,7 @@
             <div class="header-dialog">Добавление отделения</div>
             <div class="enter-dialog-data">
                 <label for="login-new-branch">Логин для входа</label>
-                <input required type="text"  disabled id="login-new-branch" placeholder="Логин" />
+                <input required type="text" disabled id="login-new-branch" placeholder="Логин" />
                 <label for="password-new-branch">Пароль для входа</label>
                 <input required type="text" disabled id="password-new-branch" placeholder="Пароль" />
                 <input list="branch-city-list" id="branch-city" type="text" placeholder="Город отделения">

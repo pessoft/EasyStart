@@ -24,7 +24,7 @@ namespace EasyStart.Logic
             return setting;
         }
 
-        public static int GetBranchIdBylogin(string login)
+        public static int GetBranchId(string login)
         {
             BranchModel branch = null;
             try
@@ -38,6 +38,22 @@ namespace EasyStart.Logic
             { }
 
             return branch == null ? -1 : branch.Id;
+        }
+
+        public static TypeBranch GetBranchType(int id)
+        {
+            BranchModel branch = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    branch = db.Branches.FirstOrDefault(p => p.Id == id);
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return branch == null ? TypeBranch.SubBranch : branch.TypeBranch;
         }
 
         public static BranchModel GetBranch(string login, string password)

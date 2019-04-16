@@ -16,9 +16,12 @@ namespace EasyStart.Controllers
         [Authorize]
         public ActionResult AdminPanel()
         {
-            var branchId = DataWrapper.GetBranchIdBylogin(User.Identity.Name);
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+            var typeBranch = DataWrapper.GetBranchType(branchId);
+
             ViewBag.City = CityHelper.City;
             ViewBag.Setting = null;
+            ViewBag.TypeBranch = typeBranch;
 
             if (branchId != -1)
             {
@@ -69,7 +72,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SaveSetting(SettingModel setting)
         {
-            var branchId = DataWrapper.GetBranchIdBylogin(User.Identity.Name);
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
             setting.BranchId = branchId;
             var successSave = DataWrapper.SaveSetting(setting);
             var result = new JsonResultModel();
@@ -109,7 +112,7 @@ namespace EasyStart.Controllers
         public JsonResult AddBranch(NewBranchModel newBranch)
         {
             var result = new JsonResultModel();
-            var branchId = DataWrapper.GetBranchIdBylogin(newBranch.Login);
+            var branchId = DataWrapper.GetBranchId(newBranch.Login);
             var branch = new BranchModel
             {
                 Login = newBranch.Login,
@@ -121,7 +124,7 @@ namespace EasyStart.Controllers
             if (branchId == -1)
             {
                 DataWrapper.SaveBranch(branch);
-                branchId = DataWrapper.GetBranchIdBylogin(newBranch.Login);
+                branchId = DataWrapper.GetBranchId(newBranch.Login);
                 var setting = new SettingModel
                 {
                     BranchId = branchId,
