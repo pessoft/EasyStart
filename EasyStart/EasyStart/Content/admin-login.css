@@ -7,8 +7,11 @@
     color: #2d2b2b;
 }
 
-h3 {
+.header {
     margin: 10px;
+    text-align: center;
+    font-size: 1.2em;
+    font-weight:600;
 }
 
 .wrapper {
@@ -21,8 +24,8 @@ h3 {
 }
 
 .login-form {
-    width: 22%;
-    height: 30%;
+    width: 25%;
+    height: 32%;
     box-shadow: 2px 3px 16px 0px #565656;
     background-color: #efefef;
     border-radius: 0px;
@@ -34,13 +37,13 @@ h3 {
 
     .login-form input {
         margin: 5px;
-        width: 55%;
+        width: 65%;
         height: 10%;
     }
 
     .login-form button {
         margin: 5px;
-        width: 56%;
+        width: 66%;
         height: 13%;
     }
 

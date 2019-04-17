@@ -18,11 +18,12 @@ namespace EasyStart.Controllers
         {
             var branchId = DataWrapper.GetBranchId(User.Identity.Name);
             var typeBranch = DataWrapper.GetBranchType(branchId);
-            var converter = new ConverterBranchSetting(
+            var converter = new ConverterBranchSetting();
+            var branchViewvs = converter.GetBranchSettingViews(
                 DataWrapper.GetAllBranch(),
                 DataWrapper.GetAllSettingDictionary(),
                 typeBranch);
-            var branchViewvs = converter.GetBranchSettingViews();
+
             ViewBag.BranchViews = branchViewvs != null && branchViewvs.Any() ? branchViewvs : null;
             ViewBag.City = CityHelper.City;
             ViewBag.Setting = null;
@@ -117,7 +118,16 @@ namespace EasyStart.Controllers
         public JsonResult AddBranch(NewBranchModel newBranch)
         {
             var result = new JsonResultModel();
-            var branchId = DataWrapper.GetBranchId(newBranch.Login);
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+            var typeBranch = DataWrapper.GetBranchType(branchId);
+            var newBranchId = DataWrapper.GetBranchId(newBranch.Login);
+
+            if (typeBranch != TypeBranch.MainBranch)
+            {
+                result.ErrorMessage = "Вы не можете добавлять отделения";
+                return Json(result);
+            }
+
             var branch = new BranchModel
             {
                 Login = newBranch.Login,
@@ -126,17 +136,22 @@ namespace EasyStart.Controllers
             };
             
 
-            if (branchId == -1)
+            if (newBranchId == -1)
             {
                 DataWrapper.SaveBranch(branch);
-                branchId = DataWrapper.GetBranchId(newBranch.Login);
+                newBranchId = DataWrapper.GetBranchId(newBranch.Login);
                 var setting = new SettingModel
                 {
-                    BranchId = branchId,
+                    BranchId = newBranchId,
                     CityId = newBranch.CityId
                 };
 
                 DataWrapper.SaveSetting(setting);
+
+                var converter = new ConverterBranchSetting();
+                var branchView = converter.GetBranchSettingViews(branch, setting, typeBranch);
+
+                result.Data = branchView;
                 result.Success = true;
             }
             else

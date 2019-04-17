@@ -159,6 +159,7 @@ function addBranch() {
     let successFunc = function (result, loader) {
         loader.stop();
         if (result.Success) {
+            addBranchToList(result.Data);
             cancelDialog("#addBranchDialog");
         } else {
             alert(result.ErrorMessage);
@@ -167,6 +168,23 @@ function addBranch() {
     loader.start();
    
     $.post("/Admin/AddBranch", newBranch, successCallBack(successFunc, loader));
+}
+
+function addBranchToList(branchView) {
+    let templateBranchItem = `<div class="branch-item">
+        <div class="branch-item-info">
+            <div class="branch-adress">${branchView.Addres}</div>
+            <div class="branch-operation-mode">${branchView.OperationMode}</div>
+            <div class="branch-phone-number">${branchView.PhoneNumber}</div>
+            <div class="branch-login">${branchView.Login}</div>
+            <div class="branch-password">${branchView.Password}</div>
+        </div>
+        <div class="branch-item-action ${branchView.Login == '******' ? 'disbled' : ''})">
+            <i class="fas fa-trash-alt"></i>
+        </div>
+    </div >`;
+
+    $(".branch-list").append(templateBranchItem);
 }
 
 function getSelectedCategoryId() {
