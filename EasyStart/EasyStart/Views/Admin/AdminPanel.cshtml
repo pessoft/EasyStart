@@ -25,14 +25,10 @@
             <i class="fas fa-cart-arrow-down"></i>
             Товары
         </div>
-        @if (ViewBag.TypeBranch == EasyStart.Logic.TypeBranch.MainBranch)
-        {
-            <div class="menu-item" target-id="branch">
-                <i class="fas fa-code-branch"></i>
-                Отделения
-            </div>
-        }
-
+        <div class="menu-item" target-id="branch">
+            <i class="fas fa-code-branch"></i>
+            Отделения
+        </div>
         <div class="menu-item" target-id="setting">
             <i class="fas fa-info"></i>
             Информация отделения
@@ -63,13 +59,41 @@
                 </div>
             </div>
         </div>
+       
         <div class="section hide" id="branch">
             <div class="branch-header">Отделения</div>
-            <div class="branch-header-add" id="add-branch">
-                <i class="fas fa-plus"></i>
-                Добавить отделение
-            </div>
+            @if (ViewBag.TypeBranch == EasyStart.Logic.TypeBranch.MainBranch)
+            {
+                <div class="branch-header-add" id="add-branch">
+                    <i class="fas fa-plus"></i>
+                    Добавить отделение
+                </div>
+            }
+                <div class="branch-list">
+                    @if (ViewBag.BranchViews != null)
+                    {
+                        foreach (var branchView in ViewBag.BranchViews)
+                        {
+                    <div class="branch-item">
+                        <div class="branch-item-info">
+                            <div class="branch-adress">@branchView.Addres</div>
+                            <div class="branch-operation-mode">@branchView.OperationMode</div>
+                            <div class="branch-phone-number">@branchView.PhoneNumber</div>
+                            @if (ViewBag.TypeBranch == EasyStart.Logic.TypeBranch.MainBranch)
+                            {
+                                <div class="branch-login">@branchView.Login</div>
+                                <div class="branch-password">@branchView.Password</div>
+                            }
+                        </div>
+                        <div class="branch-item-action">
+                            <i class="fas fa-trash-alt"></i>
+                        </div>
+                    </div>
+                        }
+                    }
+                </div>
         </div>
+        
         <div class="section hide" id="setting" setting-id="@(ViewBag.Setting != null ? ViewBag.Setting.Id : 0)">
             <div class="setting-header">Настройка отделения</div>
             <input list="setting-city-list" id="setting-city" value="@(ViewBag.Setting != null ? ViewBag.Setting.City : "")" type="text" placeholder="Город">
@@ -79,8 +103,8 @@
                     <option city-id="@cityPair.Key" value="@cityPair.Value" />
                 }
             </datalist>
-            <input type="text" id="setting-street" placeholder="Улица" value="@(ViewBag.Setting != null ? ViewBag.Setting.Street : "")" "  />
-            <input type="text" id="setting-home" placeholder="Дом" value="@(ViewBag.Setting != null && ViewBag.Setting.HomeNumber!= 0 ? ViewBag.Setting.HomeNumber : "")" "  />
+            <input type="text" id="setting-street" placeholder="Улица" value="@(ViewBag.Setting != null ? ViewBag.Setting.Street : "")" "    />
+            <input type="text" id="setting-home" placeholder="Дом" value="@(ViewBag.Setting != null && ViewBag.Setting.HomeNumber!= 0 ? ViewBag.Setting.HomeNumber : "")" "    />
             <input type="number" placeholder="Время открытия" id="time-open" min="0" max="24" step="0.1" value="@(ViewBag.Setting != null && ViewBag.Setting.TimeOpen!= 0 ? ViewBag.Setting.TimeOpen : "")" />
             <input type="number" placeholder="Время закрытия" id="time-close" min="0" max="24" step="0.1" value="@(ViewBag.Setting != null && ViewBag.Setting.TimeClose!= 0 ? ViewBag.Setting.TimeClose : "")" />
             <input type="number" placeholder="Стоймость доставки" id="price-delivery" min="0" step="0.1" value="@(ViewBag.Setting != null && ViewBag.Setting.PriceDelivery!=0 ? ViewBag.Setting.PriceDelivery : "")" />

@@ -18,6 +18,7 @@ namespace EasyStart.Models
         public double FreePriceDelivery { get; set; }
         public double TimeOpen { get; set; }
         public double TimeClose { get; set; }
+        public string PhoneNumber { get; set; }
 
         [NotMapped]
         public string City
@@ -26,7 +27,7 @@ namespace EasyStart.Models
             {
                 if (CityId != 0)
                 {
-                    return CityHelper.City[CityId];
+                    return CityHelper.GetCity(CityId);
                 }
 
                 return "";

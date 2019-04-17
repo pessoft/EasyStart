@@ -131,10 +131,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Logic\ConverterBranchSetting.cs" />
     <Compile Include="Logic\DataWrapper.cs" />
     <Compile Include="Logic\TypeBranch.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\BranchModel.cs" />
+    <Compile Include="Models\BranchSettingViewModel.cs" />
     <Compile Include="Models\NewBranchModel.cs" />
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\JsonResultModel.cs" />

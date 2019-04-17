@@ -18,7 +18,12 @@ namespace EasyStart.Controllers
         {
             var branchId = DataWrapper.GetBranchId(User.Identity.Name);
             var typeBranch = DataWrapper.GetBranchType(branchId);
-
+            var converter = new ConverterBranchSetting(
+                DataWrapper.GetAllBranch(),
+                DataWrapper.GetAllSettingDictionary(),
+                typeBranch);
+            var branchViewvs = converter.GetBranchSettingViews();
+            ViewBag.BranchViews = branchViewvs != null && branchViewvs.Any() ? branchViewvs : null;
             ViewBag.City = CityHelper.City;
             ViewBag.Setting = null;
             ViewBag.TypeBranch = typeBranch;

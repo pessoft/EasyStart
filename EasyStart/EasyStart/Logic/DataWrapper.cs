@@ -8,6 +8,22 @@ namespace EasyStart.Logic
 {
     public class DataWrapper
     {
+        public static Dictionary<int,SettingModel> GetAllSettingDictionary()
+        {
+            Dictionary<int, SettingModel> settingDict = new Dictionary<int, SettingModel>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    settingDict = db.Settings.ToDictionary(p => p.BranchId, p => p);
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return settingDict;
+        }
+
         public static SettingModel GetSetting(int branchId)
         {
             SettingModel setting = null;
@@ -54,6 +70,22 @@ namespace EasyStart.Logic
             { }
 
             return branch == null ? TypeBranch.SubBranch : branch.TypeBranch;
+        }
+
+        public static List<BranchModel> GetAllBranch()
+        {
+            List<BranchModel> branches = new List<BranchModel>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    branches = db.Branches.ToList();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return branches;
         }
 
         public static BranchModel GetBranch(string login, string password)

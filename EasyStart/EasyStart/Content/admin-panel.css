@@ -46,7 +46,7 @@
 
 .content {
     width: 100%;
-    height:100%;
+    height:87%;
 }
 
 #products {
@@ -270,4 +270,64 @@ label[for=free-delivery] {
 #addBranchDialog label {
     font-size: 0.65em;
     color: #828080;
+}
+
+.branch-list {
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 3%;
+    flex: 1 0 auto;
+}
+
+.branch-item {
+    width: 100%;
+    height: 110px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: row;
+    border-radius: 2px;
+    padding: 1%;
+    box-shadow: 0px 0px 13px 0px;
+    margin-bottom: 2.5%;
+}
+
+.branch-item-info {
+    width: 87%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.branch-item-action {
+    width: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    font-size: 1.4em;
+}
+
+.branch-adress {
+}
+
+.branch-operation-mode {
+
+}
+
+.branch-phone-number {
+
+}
+
+.branch-login {
+
+}
+
+.branch-password {
+
 }

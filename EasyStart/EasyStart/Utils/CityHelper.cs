@@ -20,5 +20,19 @@ namespace EasyStart.Utils
             catch (Exception ex)
             { }
         }
+
+        public static string GetCity(int id)
+        {
+            string city;
+
+            if (City.TryGetValue(id, out city))
+            {
+                return city;
+            }
+            else
+            {
+                return "";
+            }
+        }
     }
 }
