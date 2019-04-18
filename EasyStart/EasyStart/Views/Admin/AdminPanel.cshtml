@@ -24,7 +24,7 @@
             <i class="fas fa-cart-arrow-down"></i>
             Товары
         </div>
-        <div class="menu-item" target-id="branch">
+        <div class="menu-item" target-id="branch" onclick="loadBranchList();">
             <i class="fas fa-code-branch"></i>
             Отделения
         </div>
@@ -78,11 +78,11 @@
                 </div>
             }
                 <div class="branch-list">
-                    @if (ViewBag.BranchViews != null)
+                    @*@if (ViewBag.BranchViews != null)
                     {
                         foreach (var branchView in ViewBag.BranchViews)
                         {
-                    <div class="branch-item">
+                    <div class="branch-item" branch-id="@branchView.Id">
                         <div class="branch-item-info">
                             <div class="branch-adress">@branchView.Addres</div>
                             <div class="branch-operation-mode">@branchView.OperationMode</div>
@@ -90,12 +90,12 @@
                             <div class="branch-login">@branchView.Login</div>
                             <div class="branch-password">@branchView.Password</div>
                         </div>
-                        <div class="branch-item-action @(ViewBag.TypeBranch == EasyStart.Logic.TypeBranch.MainBranch ? "" : "disbled")">
+                        <div onclick="removeBranch(this, @branchView.Id)" class="branch-item-action @(ViewBag.TypeBranch == EasyStart.Logic.TypeBranch.MainBranch ? "" : "disbled")">
                             <i class="fas fa-trash-alt"></i>
                         </div>
                     </div>
                         }
-                    }
+                    }*@
                 </div>
         </div>
         
@@ -167,7 +167,7 @@
             </div>
             <div class="dialog-menu">
                 <button type="submit">Добавить</button>
-                <button type="reset" onclick="CancelDialog($('#addProducDialog'))">Отмена</button>
+                <button type="reset" onclick="сancelDialog($('#addProducDialog'))">Отмена</button>
             </div>
         </form>
     </dialog>

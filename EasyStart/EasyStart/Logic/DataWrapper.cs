@@ -122,6 +122,26 @@ namespace EasyStart.Logic
             return success;
         }
 
+        public static bool RemoveBranch(int id)
+        {
+            var success = false;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var branch = db.Branches.FirstOrDefault(p => p.Id == id);
+
+                    db.Branches.Remove(branch);
+                    db.SaveChanges();
+                    success = true;
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return success;
+        }
+
         public static bool SaveSetting(SettingModel setting)
         {
             var success = false;

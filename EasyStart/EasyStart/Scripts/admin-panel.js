@@ -137,9 +137,7 @@ function saveSetting() {
     let loader = new Loader($("#setting"));
     let successFunc = function (result, loader) {
         loader.stop();
-        if (result.Success) {
-            alert("Настройка сохранена");
-        } else {
+        if (!result.Success) {
             alert(result.ErrorMessage);
         }
     }
@@ -171,7 +169,8 @@ function addBranch() {
 }
 
 function addBranchToList(branchView) {
-    let templateBranchItem = `<div class="branch-item">
+    let templateBranchItem = `
+    <div class="branch-item branch-id="${branchView.Id}"> 
         <div class="branch-item-info">
             <div class="branch-adress">${branchView.Addres}</div>
             <div class="branch-operation-mode">${branchView.OperationMode}</div>
@@ -179,7 +178,7 @@ function addBranchToList(branchView) {
             <div class="branch-login">${branchView.Login}</div>
             <div class="branch-password">${branchView.Password}</div>
         </div>
-        <div class="branch-item-action ${branchView.Login == '******' ? 'disbled' : ''})">
+        <div onclick="removeBranch(this, ${branchView.Id})" class="branch-item-action ${branchView.Login.indexOf('******') != -1 ? 'disbled' : ''}">
             <i class="fas fa-trash-alt"></i>
         </div>
     </div >`;
@@ -187,6 +186,48 @@ function addBranchToList(branchView) {
     $(".branch-list").append(templateBranchItem);
 }
 
+function loadBranchList() {
+    let container = $(".branch-list");
+    container.empty();
+    let loader = new Loader(container);
+    let successFunc = function (result, loader) {
+        loader.stop();
+        if (result.Success) {
+            for (let branchView of result.Data) {
+                addBranchToList(branchView);
+            }
+
+        } else {
+            alert(result.ErrorMessage);
+        }
+    }
+    loader.start();
+
+    $.post("/Admin/LoadBranchList", null, successCallBack(successFunc, loader));
+}
+
 function getSelectedCategoryId() {
     return 0;
+}
+
+function removeBranch(e, id) {
+    if ($(e).hasClass("disbled")) {
+        return;
+    }
+    let parent = $($(e).parents(".branch-item"));
+    let loader = new Loader(parent);
+    let successFunc = function (result, loader) {
+        loader.stop();
+        if (result.Success) {
+            $(`[branch-id=${id}]`).fadeOut(500, function () {
+                $(this).remove();
+            });
+            
+        } else {
+            alert(result.ErrorMessage);
+        }
+    }
+    loader.start();
+
+    $.post("/Admin/RemoveBranch", { id: id}, successCallBack(successFunc, loader));
 }

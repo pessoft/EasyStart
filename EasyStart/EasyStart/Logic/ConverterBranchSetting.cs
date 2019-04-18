@@ -43,6 +43,7 @@ namespace EasyStart.Logic
         {
             var view = new BranchSettingViewModel
             {
+                Id = setting.Id,
                 Addres = $"Адрес: г.{setting.City}, ул.{setting.Street}, д.{setting.HomeNumber}",
                 OperationMode = $"Режим работы: {setting.TimeOpen.ToString("#.00")} - {setting.TimeClose.ToString("#.00")}",
                 PhoneNumber = $"Номер телефона: {setting.PhoneNumber}",

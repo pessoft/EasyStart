@@ -8,6 +8,7 @@ namespace EasyStart.Models
 {
     public class BranchSettingViewModel
     {
+        public int Id { get; set; }
         public string Addres { get; set; }
         public string OperationMode { get; set; }
         public string PhoneNumber { get; set; }
