@@ -6,38 +6,42 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    @*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">*@
     <title>Панель администратора</title>
     @Styles.Render("~/admin-panel/css")
 </head>
 <body>
     <div class="header-menu">
         <div class="menu-item menu-item-active" target-id="order">
-            <i class="fas fa-shopping-basket"></i>
+            <i class="fal fa-shopping-basket"></i>
             Заказы
         </div>
         <div class="menu-item" target-id="history">
-            <i class="fas fa-history"></i>
+            <i class="fal fa-history"></i>
             История заказов
         </div>
         <div class="menu-item" target-id="products" onclick="loadProducts();">
-            <i class="fas fa-cart-arrow-down"></i>
+            <i class="fal fa-cart-arrow-down"></i>
             Товары
         </div>
         <div class="menu-item" target-id="branch" onclick="loadBranchList();">
-            <i class="fas fa-code-branch"></i>
+            <i class="fal fa-code-branch"></i>
             Отделения
         </div>
         <div class="menu-item" target-id="setting">
-            <i class="fas fa-info"></i>
-            Информация отделения
+            <i class="fal fa-map-marker-alt"></i>
+            Контакты отделения
+        </div>
+        <div class="menu-item" target-id="analytics">
+            <i class="fal fa-analytics"></i>
+            Аналитика
         </div>
         <div class="menu-item logout" onclick="logout()">
-            <i class="fas fa-sign-out-alt"></i>
+            <i class="fal fa-sign-out"></i>
             Выйти
         </div>
     </div>
-    
+
     <div class="content">
         <div class="section" id="order"></div>
         <div class="section hide" id="history"></div>
@@ -46,10 +50,10 @@
                 <div class="header-product">
                     <div class="header-product-text">
                         Категории
-                        <i class="fas fa-layer-group"></i>
+                        <i class="fal fa-layer-plus"></i>
                     </div>
                     <div class="header-product-add" id="add-category">
-                        <i class="fas fa-plus"></i>
+                        <i class="fal fa-plus"></i>
                         Добавить категорию
                     </div>
                 </div>
@@ -60,35 +64,35 @@
             <div class="product">
                 <div class="header-product-text">
                     Продукты
-                    <i class="fas fa-gifts"></i>
+                    <i class="fal fa-gifts"></i>
                 </div>
                 <div class="header-product-add" id="add-product">
-                    <i class="fas fa-plus"></i>
+                    <i class="fal fa-plus"></i>
                     Добавить продукт
                 </div>
             </div>
         </div>
-       
+
         <div class="section hide" id="branch">
             <div class="branch-header">
                 Отделения
-                <i class="fas fa-home"></i>
+                <i class="fal fa-chart-network"></i>
             </div>
             @if (ViewBag.TypeBranch == EasyStart.Logic.TypeBranch.MainBranch)
             {
                 <div class="branch-header-add" id="add-branch">
-                    <i class="fas fa-plus"></i>
+                    <i class="fal fa-plus"></i>
                     Добавить отделение
                 </div>
             }
-                <div class="branch-list">
-                </div>
+            <div class="branch-list">
+            </div>
         </div>
-        
+
         <div class="section hide" id="setting" setting-id="@(ViewBag.Setting != null ? ViewBag.Setting.Id : 0)">
             <div class="setting-header">
-                Настройка отделения
-                <i class="fas fa-sliders-h"></i>
+                Контакты отделения
+                <i class="fal fa-map-marker-alt"></i>
             </div>
             <input list="setting-city-list" id="setting-city" value="@(ViewBag.Setting != null ? ViewBag.Setting.City : "")" type="text" placeholder="Город">
             <datalist id="setting-city-list">
@@ -97,8 +101,8 @@
                     <option city-id="@cityPair.Key" value="@cityPair.Value" />
                 }
             </datalist>
-            <input type="text" id="setting-street" placeholder="Улица" value="@(ViewBag.Setting != null ? ViewBag.Setting.Street : "")"/>
-            <input type="text" id="setting-home" placeholder="Дом" value="@(ViewBag.Setting != null && ViewBag.Setting.HomeNumber!= 0 ? ViewBag.Setting.HomeNumber : "")"/>
+            <input type="text" id="setting-street" placeholder="Улица" value="@(ViewBag.Setting != null ? ViewBag.Setting.Street : "")" />
+            <input type="text" id="setting-home" placeholder="Дом" value="@(ViewBag.Setting != null && ViewBag.Setting.HomeNumber!= 0 ? ViewBag.Setting.HomeNumber : "")" />
             <input type="text" id="setting-phone-number" placeholder="Номер телефона" value="@(ViewBag.Setting != null ? ViewBag.Setting.PhoneNumber : "")" />
             <input type="number" placeholder="Время открытия" id="time-open" min="0" max="24" step="0.1" value="@(ViewBag.Setting != null && ViewBag.Setting.TimeOpen!= 0 ? ViewBag.Setting.TimeOpen : "")" />
             <input type="number" placeholder="Время закрытия" id="time-close" min="0" max="24" step="0.1" value="@(ViewBag.Setting != null && ViewBag.Setting.TimeClose!= 0 ? ViewBag.Setting.TimeClose : "")" />
@@ -106,6 +110,13 @@
             <label for="free-delivery">Бесплатная доставка при заказе на сумму от</label>
             <input type="number" id="free-delivery" min="0" step="0.1" value="@(ViewBag.Setting != null && ViewBag.Setting.FreePriceDelivery != 0 ? ViewBag.Setting.FreePriceDelivery : "")" />
             <button onclick="saveSetting();">Сохранить</button>
+        </div>
+
+        <div class="section hide" id="analytics">
+            <div class="analytics-header">
+                Аналитика
+                <i class="fal fa-analytics"></i>
+            </div>
         </div>
     </div>
 

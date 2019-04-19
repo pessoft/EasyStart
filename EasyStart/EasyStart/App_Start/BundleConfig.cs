@@ -35,10 +35,12 @@ namespace EasyStart
                       "~/Scripts/bootstrap.js"));
 
             bundles.Add(new StyleBundle("~/admin-login/css").Include(
-                      "~/Content/admin-login.css"));
+                      "~/Content/admin-login.css",
+                      "~/Content/fontawesome/css/all.css"));
 
             bundles.Add(new StyleBundle("~/admin-panel/css").Include(
-                      "~/Content/admin-panel.css"));
+                      "~/Content/admin-panel.css",
+                      "~/Content/fontawesome/css/all.css"));
         }
     }
 }

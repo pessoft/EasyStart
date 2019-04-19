@@ -121,13 +121,13 @@ function addCategory() {
     }
 
     loader.start();
-    
+
     $.post("/Admin/AddCategory", category, successCallBack(successFunc, loader));
 }
 
 function addCategoryToList(category) {
     let templateCategoryItem = `
-    <div class="category-item" onclick="selectCategory(this)" category-id="${category.Id}"> 
+    <div class="category-item" onclick="selectCategory(this)" category-id="${category.Id}">
         <div class="category-item-image">
             <img src="${category.Image}" />
         </div>
@@ -135,8 +135,8 @@ function addCategoryToList(category) {
             ${category.Name}
         </div>
         <div class="category-item-action">
-            <i onclick="editCategory(this, event);" class="far fa-edit"></i>
-            <i onclick="removeCategory(this, event);" class="fas fa-trash-alt"></i>
+            <i onclick="editCategory(this, event);" class="fal fa-edit"></i>
+            <i onclick="removeCategory(this, event);" class="fal fa-trash-alt"></i>
         </div>
     </div >`;
 
@@ -178,7 +178,7 @@ function removeCategory(e, event) {
             if (SelectIdCategoryId == id) {
                 SelectIdCategoryId = null;
             }
-                
+
             $(`[category-id=${id}]`).fadeOut(500, function () {
                 $(this).remove();
             });
@@ -298,7 +298,7 @@ function addBranch() {
         Login: $("#login-new-branch").val(),
         Password: $("#password-new-branch").val(),
         CityId: $("#branch-city-list option[value='" + $('#branch-city').val() + "']").attr('city-id'),
-    } 
+    }
     let loader = new Loader($("#addBranchDialog form"));
     let successFunc = function (result, loader) {
         loader.stop();
@@ -310,13 +310,13 @@ function addBranch() {
         }
     }
     loader.start();
-   
+
     $.post("/Admin/AddBranch", newBranch, successCallBack(successFunc, loader));
 }
 
 function addBranchToList(branchView) {
     let templateBranchItem = `
-    <div class="branch-item branch-id="${branchView.Id}"> 
+    <div class="branch-item" branch-id="${branchView.Id}">
         <div class="branch-item-info">
             <div class="branch-adress">${branchView.Addres}</div>
             <div class="branch-operation-mode">${branchView.OperationMode}</div>
@@ -325,7 +325,7 @@ function addBranchToList(branchView) {
             <div class="branch-password">${branchView.Password}</div>
         </div>
         <div onclick="removeBranch(this, ${branchView.Id})" class="branch-item-action ${branchView.Login.indexOf('******') != -1 ? 'disbled' : ''}">
-            <i class="fas fa-trash-alt"></i>
+            <i class="fal fa-trash-alt"></i>
         </div>
     </div >`;
 
@@ -368,7 +368,7 @@ function removeBranch(e, id) {
             $(`[branch-id=${id}]`).fadeOut(500, function () {
                 $(this).remove();
             });
-            
+
         } else {
             alert(result.ErrorMessage);
         }
