@@ -13,7 +13,6 @@ namespace EasyStart.Controllers
     {
         public ActionResult AdminLogin()
         {
-
             //var branch = new BranchModel
             //{
             //    Login = "login",

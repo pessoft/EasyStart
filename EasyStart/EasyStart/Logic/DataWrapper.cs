@@ -266,5 +266,65 @@ namespace EasyStart.Logic
 
             return result;
         }
+
+        public static List<ProductModel> GetProducts()
+        {
+            List<ProductModel> result = new List<ProductModel>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.Products.ToList();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
+
+        public static ProductModel UpdateProduct(ProductModel product)
+        {
+            ProductModel result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.Products.FirstOrDefault(p => p.Id == product.Id);
+
+                    result.Image = product.Image;
+                    result.Name = product.Name;
+                    result.Description = product.Description;
+                    result.Price = product.Price;
+                    db.SaveChanges();
+
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
+
+        public static bool RemoveProduct(int id)
+        {
+            var success = false;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var removeProduct = db.Products.FirstOrDefault(p => p.Id == id);
+
+                    db.Products.Remove(removeProduct);
+                    db.SaveChanges();
+
+                    success = true;
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return success;
+        }
     }
 }

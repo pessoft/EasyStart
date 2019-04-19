@@ -34,7 +34,7 @@ namespace EasyStart.Controllers
             {
                 ViewBag.Setting = DataWrapper.GetSetting(branchId);
             }
-            
+
             return View();
         }
 
@@ -49,17 +49,16 @@ namespace EasyStart.Controllers
                 foreach (string file in Request.Files)
                 {
                     var upload = Request.Files[file];
-
                     if (upload != null)
                     {
                         string fileName = System.IO.Path.GetFileName(upload.FileName);
                         string ext = fileName.Substring(fileName.LastIndexOf("."));
                         string newFileName = String.Format(@"{0}{1}", System.Guid.NewGuid(), ext);
 
-                        upload.SaveAs(Server.MapPath("~/images/" + newFileName));
+                        upload.SaveAs(Server.MapPath("~/Images/Products/" + newFileName));
 
                         result.Success = true;
-                        result.URL = $"../images/{newFileName}";
+                        result.URL = $"../Images/Products/{newFileName}";
                     }
                     else
                     {
@@ -71,7 +70,7 @@ namespace EasyStart.Controllers
             {
                 result.ErrorMessage = "При загрузки изображения что то пошло не так";
             }
-            
+
             return Json(result);
         }
 
@@ -106,7 +105,9 @@ namespace EasyStart.Controllers
             {
                 category.Image = "/images/default-image.jpg";
             }
+
             category = DataWrapper.SaveCategory(category);
+
             if (category != null)
             {
                 result.Data = category;
@@ -116,7 +117,7 @@ namespace EasyStart.Controllers
             {
                 result.ErrorMessage = "При добавлении категории что то пошло не так...";
             }
-            
+
             return Json(result);
         }
 
@@ -124,7 +125,24 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult AddProduct(ProductModel product)
         {
-            var result = new JsonResult();
+            var result = new JsonResultModel();
+
+            if (!System.IO.File.Exists(Server.MapPath(product.Image)))
+            {
+                product.Image = "/images/default-image.jpg";
+            }
+
+            product = DataWrapper.SaveProduct(product);
+
+            if (product != null)
+            {
+                result.Data = product;
+                result.Success = true;
+            }
+            else
+            {
+                result.ErrorMessage = "При добавлении продукта что то пошло не так...";
+            }
 
             return Json(result);
         }
@@ -150,7 +168,7 @@ namespace EasyStart.Controllers
                 Password = newBranch.Password,
                 TypeBranch = Logic.TypeBranch.SubBranch
             };
-            
+
 
             if (newBranchId == -1)
             {
@@ -216,7 +234,7 @@ namespace EasyStart.Controllers
                     result.ErrorMessage = "Отдедение не удалено";
                 }
             }
-                
+
             return Json(result);
         }
 
@@ -239,7 +257,7 @@ namespace EasyStart.Controllers
 
             return Json(result);
         }
-        
+
         [HttpPost]
         [Authorize]
         public JsonResult LoadCategoryList()
@@ -256,7 +274,7 @@ namespace EasyStart.Controllers
             {
                 result.ErrorMessage = "При загрузки категорий что то пошло не так";
             }
-            
+
             return Json(result);
         }
 
@@ -294,6 +312,65 @@ namespace EasyStart.Controllers
             else
             {
                 result.ErrorMessage = "Категория не обновлена";
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult LoadProductList()
+        {
+            var result = new JsonResultModel();
+            var pproducts = DataWrapper.GetProducts();
+
+            if (pproducts != null)
+            {
+                result.Data = pproducts;
+                result.Success = true;
+            }
+            else
+            {
+                result.ErrorMessage = "При загрузки продуктов что то пошло не так";
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult RemoveProduct(int id)
+        {
+            var result = new JsonResultModel();
+            var success = DataWrapper.RemoveProduct(id);
+
+            if (success)
+            {
+                result.Success = success;
+            }
+            else
+            {
+                result.ErrorMessage = "Продукт не удалена";
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult UpdateProduct(ProductModel product)
+        {
+            var result = new JsonResultModel();
+            var updateProduct = DataWrapper.UpdateProduct(product);
+
+            if (updateProduct != null)
+            {
+                result.Data = updateProduct;
+                result.Success = true;
+            }
+            else
+            {
+                result.ErrorMessage = "Продукт не обновлена";
             }
 
             return Json(result);

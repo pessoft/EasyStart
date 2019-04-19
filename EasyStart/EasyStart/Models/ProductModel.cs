@@ -10,7 +10,8 @@ namespace EasyStart.Models
         public int Id { get; set; }
         public int CategoryId { get; set; }
         public string Name { get; set; }
-        public string Discription { get; set; }
+        public string AdditionInfo { get; set; }
+        public string Description { get; set; }
         public double Price { get; set; }
         public string Image { get; set; }
     }

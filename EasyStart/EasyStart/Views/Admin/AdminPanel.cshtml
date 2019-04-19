@@ -24,6 +24,10 @@
             <i class="fal fa-cart-arrow-down"></i>
             Товары
         </div>
+        <div class="menu-item" target-id="stock">
+            <i class="fal fa-badge-percent"></i>
+            Акции
+        </div>
         <div class="menu-item" target-id="branch" onclick="loadBranchList();">
             <i class="fal fa-code-branch"></i>
             Отделения
@@ -58,21 +62,29 @@
                     </div>
                 </div>
                 <div class="category-list">
-
                 </div>
             </div>
             <div class="product">
-                <div class="header-product-text">
-                    Продукты
-                    <i class="fal fa-gifts"></i>
+                <div class="header-product">
+                    <div class="header-product-text">
+                        Продукты
+                        <i class="fal fa-gifts"></i>
+                    </div>
+                    <div class="header-product-add" id="add-product">
+                        <i class="fal fa-plus"></i>
+                        Добавить продукт
+                    </div>
                 </div>
-                <div class="header-product-add" id="add-product">
-                    <i class="fal fa-plus"></i>
-                    Добавить продукт
+                <div class="product-list">
                 </div>
+             </div>
+         </div>
+        <div class="section hide" id="stock">
+            <div class="stock-header">
+                Акции
+                <i class="fal fa-badge-percent"></i>
             </div>
         </div>
-
         <div class="section hide" id="branch">
             <div class="branch-header">
                 Отделения
@@ -121,7 +133,7 @@
     </div>
 
     <dialog id="addCategoryDialog">
-        <form onsubmit="operatinCategory(); return false;">
+        <form onsubmit="operationCategory(); return false;">
             <div class="header-dialog">Добавление категории</div>
             <div class="enter-dialog-data">
                 <input type="hidden" id="category-id">
@@ -131,7 +143,7 @@
                     <div class="preview-image" onclick="openDialogFile('add-category-image')">
                         <img src=""/images/default-image.jpg"" alt="your image" class="hide" />
                         <div class="dialog-image-upload">
-                            <i class="fas fa-upload"></i>
+                            <i class="fal fa-upload"></i>
                             Загрузите изображение категории
                         </div>
                     </div>
@@ -145,20 +157,20 @@
     </dialog>
 
     <dialog id="addProducDialog">
-        <form onsubmit="addProduct(); return false;">
+        <form onsubmit="operationProduct(); return false;">
             <div class="header-dialog">Добавление продукта</div>
             <div class="enter-dialog-data">
+                <input type="hidden" id="product-id">
                 <input required type="text" id="name-product" placeholder="Введите название продукта" />
-                <div class="product-price">
-                    <input type="number" required placeholder="Укажите цену (в рублях)" id="product-price" min="0" step="0.1" />
-                </div>
+                <input required type="text" maxlength="20" id="product-additional-info" placeholder="Доп.информация: 185/20 г, 6шт или 300мл" />
+                <input type="number" required placeholder="Укажите цену (в рублях)" id="product-price" min="0" step="0.1" />
                 <textarea required id="description-product" placeholder="Введите описание продукта"></textarea>
                 <div class="add-image-product">
                     <input type="file" id="add-product-image" accept="image/*" class="hide">
                     <div class="preview-image" onclick="OpenDialogFile('add-product-image')">
                         <img src="#" alt="your image" class="hide" />
                         <div class="dialog-image-upload">
-                            <i class="fas fa-upload"></i>
+                            <i class="fal fa-upload"></i>
                             Загрузите изображение продукта
                         </div>
                     </div>
@@ -166,7 +178,7 @@
             </div>
             <div class="dialog-menu">
                 <button type="submit">Ок</button>
-                <button type="reset" onclick="сancelDialog($('#addProducDialog'))">Отмена</button>
+                <button type="reset" onclick="cancelDialog($('#addProducDialog'))">Отмена</button>
             </div>
         </form>
     </dialog>
