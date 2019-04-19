@@ -179,6 +179,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Images\default-image.jpg" />
     <Content Include="Images\loader.gif" />
+    <Content Include="Images\loader_old.gif" />
     <Content Include="Scripts\admin-login.js" />
     <Content Include="Scripts\admin-panel.js" />
     <Content Include="Scripts\bootstrap.js" />

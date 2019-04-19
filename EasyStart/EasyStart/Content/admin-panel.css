@@ -140,7 +140,7 @@ dialog {
 
     .enter-dialog-data textarea {
         min-width: 320px;
-        min-height: 130px;
+        min-height: 70px;
         resize: none;
         margin-top: 2%;
         font-size: 1em;
@@ -188,9 +188,9 @@ dialog {
         font-size: 2em;
     }
 
-.dialog-image-upload:hover {
-    cursor: pointer;
-}
+    .dialog-image-upload:hover {
+        cursor: pointer;
+    }
 
 .preview-image {
     width: 322px;
@@ -214,11 +214,12 @@ dialog {
     height: 100%;
     top: 0;
     left: 0;
-    background-color: #0f1e3226;
+    /*background-color: #0f1e3226;*/
 }
 
     .loader img {
-        width: 150px;
+        width: 12%;
+        filter: blur(1px);
     }
 
 #setting,
@@ -338,11 +339,11 @@ label[for=free-delivery] {
     align-self: center;
 }
 
-.branch-item-action:hover:not(.disbled) {
-    transform: scale(1.07);
-    color: #f15151;
-    cursor: pointer
-}
+    .branch-item-action:hover:not(.disbled) {
+        transform: scale(1.07);
+        color: #f15151;
+        cursor: pointer
+    }
 
 .disbled {
     color: #cecece;
@@ -365,7 +366,7 @@ label[for=free-delivery] {
 
 .category-item {
     width: 70%;
-    min-height: 5%;
+    min-height: 8%;
     height: auto;
     display: flex;
     justify-content: center;
@@ -476,7 +477,7 @@ div.category-item:hover {
 
 .product-item {
     width: 90%;
-    min-height: 5%;
+    min-height: 7%;
     height: auto;
     display: flex;
     justify-content: center;
@@ -493,11 +494,11 @@ div.category-item:hover {
 }
 
 .product-item-header {
-    width:100%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    flex-direction:row;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
 }
 
 div.product-item:hover {
@@ -623,3 +624,18 @@ div.product-item:hover {
         font-size: 0.75em;
     }
 }
+
+.empty-list {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: 1.7em;
+    color: #0f1e322e;
+    text-align:center;
+}
+    .empty-list i {
+        font-size: 2.6em;
+    }

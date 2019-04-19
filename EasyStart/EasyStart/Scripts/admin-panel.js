@@ -1,9 +1,12 @@
 ﻿$(document).ready(function () {
 
-    let bindShowModal = function (id, dialogId, additionalFunc) {
+    let bindShowModal = function (id, dialogId, additionalFunc, predicate) {
         $(`#${id}`).bind("click", function () {
             let addCategoryDialog = $(`#${dialogId}`);
-            addCategoryDialog.trigger("showModal");
+
+            if (!predicate || predicate()) {
+                addCategoryDialog.trigger("showModal");
+            } 
 
             if (additionalFunc) {
                 additionalFunc();
@@ -18,9 +21,16 @@
     });
 
     let setOperationAdd = () => CurrentOperation = TypeOperation.Add;
+    let productPredicate = () => {
+        if (!SelectIdCategoryId) {
+            alert("Выберите категорию");
+            return false;
+        } 
 
+        return true;
+    };
     bindShowModal("add-category", "addCategoryDialog", setOperationAdd);
-    bindShowModal("add-product", "addProducDialog", setOperationAdd);
+    bindShowModal("add-product", "addProducDialog", setOperationAdd, productPredicate);
     bindShowModal("add-branch", "addBranchDialog", addNewBranchLoginData);
 
     $("input[type=file]").change(function () {
@@ -81,6 +91,10 @@ function operationCategory() {
 }
 
 function operationProduct() {
+    if (!SelectIdCategoryId) {
+        alert("Выберите категорию")
+    }
+
     switch (CurrentOperation) {
         case TypeOperation.Add:
             addProduct();
@@ -123,9 +137,40 @@ function addCategory() {
 
     let files = $("#addCategoryDialog input[type=file]")[0].files;
     var dataImage = new FormData();
+
     for (var x = 0; x < files.length; x++) {
         dataImage.append("file" + x, files[x]);
     }
+
+    let addFunc = function (data) {
+        let category = {
+            Name: $("#name-category").val(),
+            Image: data.URL
+        }
+
+        let successFunc = function (result, loader) {
+            loader.stop();
+            if (result.Success) {
+                addCategoryToList(result.Data);
+                cancelDialog("#addCategoryDialog");
+            } else {
+                alert(result.ErrorMessage);
+            }
+        }
+
+        $.post("/Admin/AddCategory", category, successCallBack(successFunc, loader));
+    }
+
+    if (files.length == 0) {
+        let data = {
+            URL: $("#addCategoryDialog img").attr("src")
+        }
+
+        addFunc(data);
+
+        return;
+    }
+
     $.ajax({
         type: 'POST',
         url: '/Admin/UploadImage',
@@ -133,26 +178,9 @@ function addCategory() {
         processData: false,
         data: dataImage,
         success: function (data) {
-            let category = {
-                Name: $("#name-category").val(),
-                Image: data.URL
-            }
-
-            let successFunc = function (result, loader) {
-                loader.stop();
-                if (result.Success) {
-                    addCategoryToList(result.Data);
-                    cancelDialog("#addCategoryDialog");
-                } else {
-                    alert(result.ErrorMessage);
-                }
-            }
-
-            $.post("/Admin/AddCategory", category, successCallBack(successFunc, loader));
+            addFunc(data);
         }
     });
-
-
 }
 
 function addCategoryToList(category) {
@@ -209,10 +237,16 @@ function removeCategory(e, event) {
         if (result.Success) {
             if (SelectIdCategoryId == id) {
                 SelectIdCategoryId = null;
+                $(".product-list").empty();
+                setEmptyProductInfo();
             }
 
             $(`[category-id=${id}]`).fadeOut(500, function () {
                 $(this).remove();
+
+                if ($(".category-list").children().length == 0) {
+                    setEmptyCategoryInfo();
+                }
             });
 
         } else {
@@ -227,7 +261,14 @@ function removeCategory(e, event) {
 function selectCategory(e) {
     $(".category-list .select-category").removeClass("select-category");
     $(e).addClass("select-category");
-    SelectIdCategoryId = $(e).attr("category-id");
+    categoryId = $(e).attr("category-id");
+
+    if (categoryId == SelectIdCategoryId) {
+        return;
+    }
+
+    SelectIdCategoryId = categoryId;
+    loadProductList(SelectIdCategoryId);
 }
 
 function loadCategoryList() {
@@ -238,12 +279,17 @@ function loadCategoryList() {
     let successFunc = function (result, loader) {
         loader.stop();
         if (result.Success) {
-            for (let category of result.Data) {
-                addCategoryToList(category);
+            if (!result.Data || result.Data.length == 0) {
+                setEmptyCategoryInfo();
+            } else {
+                for (let category of result.Data) {
+                    addCategoryToList(category);
+                }
             }
 
         } else {
             alert(result.ErrorMessage);
+            setEmptyCategoryInfo();
         }
     }
     loader.start();
@@ -253,31 +299,64 @@ function loadCategoryList() {
 
 function loadProducts() {
     loadCategoryList();
-    loadProductList();
+    
 }
 
 function addProduct() {
-    let product = {
-        CategoryId: SelectIdCategoryId,
-        Name: $("#name-product").val(),
-        AdditionInfo: $("#product-additional-info").val(),
-        Price: $("#product-price").val(),
-        Description: $("#description-product").val(),
-        Image: $("#addProducDialog img").attr("src")
-    }
+   
+
     let loader = new Loader($("#addProducDialog  form"));
-    let successFunc = function (result, loader) {
-        loader.stop();
-        if (result.Success) {
-            addProductToList(result.Data);
-            cancelDialog("#addProducDialog");
-        } else {
-            alert(result.ErrorMessage);
-        }
-    }
     loader.start();
 
-    $.post("/Admin/AddProduct", product, successCallBack(successFunc, loader));
+    let files = $("#addProducDialog input[type=file]")[0].files;
+    var dataImage = new FormData();
+
+    for (var x = 0; x < files.length; x++) {
+        dataImage.append("file" + x, files[x]);
+    }
+
+    let addFunc = function (data) {
+        let product = {
+            CategoryId: SelectIdCategoryId,
+            Name: $("#name-product").val(),
+            AdditionInfo: $("#product-additional-info").val(),
+            Price: $("#product-price").val(),
+            Description: $("#description-product").val(),
+            Image: data.URL
+        }
+        let successFunc = function (result, loader) {
+            loader.stop();
+            if (result.Success) {
+                $(".empty-product-list").remove();
+                addProductToList(result.Data);
+                cancelDialog("#addProducDialog");
+            } else {
+                alert(result.ErrorMessage);
+            }
+        }
+
+        $.post("/Admin/AddProduct", product, successCallBack(successFunc, loader));
+    }
+
+    if (files.length == 0) {
+        let data = {
+            URL: $("#addProducDialog img").attr("src")
+        }
+
+        addFunc(data);
+        return;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/Admin/UploadImage',
+        contentType: false,
+        processData: false,
+        data: dataImage,
+        success: function (data) {
+            addFunc(data);
+        }
+    });
 }
 
 function updateProduct() {
@@ -385,6 +464,10 @@ function removeProduct(e, event) {
         if (result.Success) {
             $(`[product-id=${id}]`).fadeOut(500, function () {
                 $(this).remove();
+
+                if ($(".product-list").children().length == 0) {
+                    setEmptyProductInfo();
+                }
             });
 
         } else {
@@ -396,24 +479,28 @@ function removeProduct(e, event) {
     $.post("/Admin/RemoveProduct", { id: id }, successCallBack(successFunc, loader));
 }
 
-function loadProductList() {
+function loadProductList(idCategory) {
     let container = $(".product-list");
     container.empty();
     let loader = new Loader($(".product"));
     let successFunc = function (result, loader) {
         loader.stop();
         if (result.Success) {
-            for (let product of result.Data) {
-                addProductToList(product);
+            if (!result.Data || result.Data.length == 0) {
+                setEmptyProductInfo();
+            } else {
+                for (let product of result.Data) {
+                    addProductToList(product);
+                }
             }
-
         } else {
             alert(result.ErrorMessage);
+            setEmptyProductInfo();
         }
     }
     loader.start();
 
-    $.post("/Admin/LoadProductList", null, successCallBack(successFunc, loader));
+    $.post("/Admin/LoadProductList", { idCategory: idCategory}, successCallBack(successFunc, loader));
 }
 
 function addPreviewImage(input) {
@@ -542,4 +629,26 @@ function removeBranch(e, id) {
     loader.start();
 
     $.post("/Admin/RemoveBranch", { id: id}, successCallBack(successFunc, loader));
+}
+
+function setEmptyProductInfo() {
+    let template = `
+        <div class="empty-list">
+            <i class="fal fa-smile-plus"></i>
+            <span>Выберите категорию и добавте продукт</span>
+        </div>
+    `;
+
+    $(".product-list").html(template);
+}
+
+function setEmptyCategoryInfo() {
+    let template = `
+        <div class="empty-list">
+            <i class="fal fa-smile-plus"></i>
+            <span>Пока нет ни одной категории</span>
+        </div>
+    `;
+
+    $(".category-list").html(template);
 }

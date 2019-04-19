@@ -267,14 +267,17 @@ namespace EasyStart.Logic
             return result;
         }
 
-        public static List<ProductModel> GetProducts()
+        public static List<ProductModel> GetProducts(int idCategory)
         {
             List<ProductModel> result = new List<ProductModel>();
             try
             {
                 using (var db = new AdminPanelContext())
                 {
-                    result = db.Products.ToList();
+                    result = db
+                        .Products
+                        .Where(p => p.CategoryId == idCategory)
+                        .ToList();
                 }
             }
             catch (Exception ex)

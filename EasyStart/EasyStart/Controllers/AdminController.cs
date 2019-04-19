@@ -319,14 +319,14 @@ namespace EasyStart.Controllers
 
         [HttpPost]
         [Authorize]
-        public JsonResult LoadProductList()
+        public JsonResult LoadProductList(int idCategory)
         {
             var result = new JsonResultModel();
-            var pproducts = DataWrapper.GetProducts();
+            var products = DataWrapper.GetProducts(idCategory);
 
-            if (pproducts != null)
+            if (products != null)
             {
-                result.Data = pproducts;
+                result.Data = products;
                 result.Success = true;
             }
             else
