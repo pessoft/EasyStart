@@ -8,7 +8,7 @@ namespace EasyStart.Logic
 {
     public class DataWrapper
     {
-        public static Dictionary<int,SettingModel> GetAllSettingDictionary()
+        public static Dictionary<int, SettingModel> GetAllSettingDictionary()
         {
             Dictionary<int, SettingModel> settingDict = new Dictionary<int, SettingModel>();
             try
@@ -95,7 +95,7 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    branch = db.Branches.FirstOrDefault(p => p.Login == login && p.Password == password );
+                    branch = db.Branches.FirstOrDefault(p => p.Login == login && p.Password == password);
                 }
             }
             catch (Exception ex)
@@ -160,12 +160,13 @@ namespace EasyStart.Logic
                         updateSetting.Street = setting.Street;
                         updateSetting.TimeClose = setting.TimeClose;
                         updateSetting.TimeOpen = setting.TimeOpen;
+                        updateSetting.PhoneNumber = setting.PhoneNumber;
                     }
                     else
                     {
                         db.Settings.Add(setting);
                     }
-                    
+
                     db.SaveChanges();
                     success = true;
                 }
@@ -191,6 +192,62 @@ namespace EasyStart.Logic
             { }
 
             return result;
+        }
+
+
+        public static List<CategoryModel> GetCategories()
+        {
+            List<CategoryModel> result = new List<CategoryModel>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.Categories.ToList();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
+
+        public static CategoryModel UpdateCategory(CategoryModel category)
+        {
+            CategoryModel result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.Categories.FirstOrDefault(p => p.Id == category.Id);
+                    result.Image = category.Image;
+                    result.Name = category.Name;
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
+
+        public static bool RemoveCategory(int id)
+        {
+            var success = false;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var removeCategory = db.Categories.FirstOrDefault(p => p.Id == id);
+                    db.Categories.Remove(removeCategory);
+                    db.SaveChanges();
+                    success = true;
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return success;
         }
 
         public static ProductModel SaveProduct(ProductModel product)

@@ -3,6 +3,7 @@ using EasyStart.Models;
 using EasyStart.Utils;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -99,8 +100,23 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult AddCategory(CategoryModel category)
         {
-            var result = new JsonResult();
+            var result = new JsonResultModel();
 
+            if (!System.IO.File.Exists(Server.MapPath(category.Image)))
+            {
+                category.Image = "/images/default-image.jpg";
+            }
+            category = DataWrapper.SaveCategory(category);
+            if (category != null)
+            {
+                result.Data = category;
+                result.Success = true;
+            }
+            else
+            {
+                result.ErrorMessage = "При добавлении категории что то пошло не так...";
+            }
+            
             return Json(result);
         }
 
@@ -220,6 +236,65 @@ namespace EasyStart.Controllers
 
             result.Data = branchViewvs;
             result.Success = true;
+
+            return Json(result);
+        }
+        
+        [HttpPost]
+        [Authorize]
+        public JsonResult LoadCategoryList()
+        {
+            var result = new JsonResultModel();
+            var categories = DataWrapper.GetCategories();
+
+            if (categories != null)
+            {
+                result.Data = categories;
+                result.Success = true;
+            }
+            else
+            {
+                result.ErrorMessage = "При загрузки категорий что то пошло не так";
+            }
+            
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult RemoveCategory(int id)
+        {
+            var result = new JsonResultModel();
+            var success = DataWrapper.RemoveCategory(id);
+
+            if (success)
+            {
+                result.Success = success;
+            }
+            else
+            {
+                result.ErrorMessage = "Категория не удалена";
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult UpdateCategory(CategoryModel category)
+        {
+            var result = new JsonResultModel();
+            var updateCategory = DataWrapper.UpdateCategory(category);
+
+            if (updateCategory != null)
+            {
+                result.Data = updateCategory;
+                result.Success = true;
+            }
+            else
+            {
+                result.ErrorMessage = "Категория не обновлена";
+            }
 
             return Json(result);
         }

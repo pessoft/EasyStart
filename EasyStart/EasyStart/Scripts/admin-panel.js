@@ -11,18 +11,28 @@
         });
     }
 
+    $("#setting-phone-number").mask("+7(999)999-99-99");
+
     $(".menu-item").not(".logout").bind("click", function () {
         selectMenuItem(this);
     });
 
-    bindShowModal("add-category", "addCategoryDialog");
-    bindShowModal("add-product", "addProducDialog");
+    let setOperationAdd = () => CurrentOperation = TypeOperation.Add;
+
+    bindShowModal("add-category", "addCategoryDialog", setOperationAdd);
+    bindShowModal("add-product", "addProducDialog", setOperationAdd);
     bindShowModal("add-branch", "addBranchDialog", addNewBranchLoginData);
 
     $("input[type=file]").change(function () {
         addPreviewImage(this);
     });
 });
+
+var TypeOperation = {
+    Add: 0,
+    Update: 1
+}
+var CurrentOperation;
 
 function addNewBranchLoginData() {
     let login = generateRandomString();
@@ -59,15 +69,51 @@ function cancelDialog(e) {
     dialog.trigger("close")
 }
 
-function addCategory() {
+function operatinCategory() {
+    switch (CurrentOperation) {
+        case TypeOperation.Add:
+            addCategory();
+            break;
+        case TypeOperation.Update:
+            updateCategory();
+            break;
+    }
+}
+
+function updateCategory() {
     let category = {
+        Id: $("#category-id").val(),
         Name: $("#name-category").val(),
-        Image: "image"
+        Image: $("#addCategoryDialog img").attr("src")
     }
     let loader = new Loader($("#addCategoryDialog form"));
     let successFunc = function (result, loader) {
         loader.stop();
         if (result.Success) {
+            let categoryItem = $(`[category-id=${category.Id}]`);
+            categoryItem.find("img").attr("src", category.Image);
+            categoryItem.find(".category-item-name").html(category.Name);
+
+            cancelDialog("#addCategoryDialog");
+        } else {
+            alert(result.ErrorMessage);
+        }
+    }
+    loader.start();
+
+    $.post("/Admin/UpdateCategory", category, successCallBack(successFunc, loader));
+}
+
+function addCategory() {
+    let category = {
+        Name: $("#name-category").val(),
+        Image: $("#addCategoryDialog img").attr("src")
+    }
+    let loader = new Loader($("#addCategoryDialog form"));
+    let successFunc = function (result, loader) {
+        loader.stop();
+        if (result.Success) {
+            addCategoryToList(result.Data);
             cancelDialog("#addCategoryDialog");
         } else {
             alert(result.ErrorMessage);
@@ -77,6 +123,105 @@ function addCategory() {
     loader.start();
     
     $.post("/Admin/AddCategory", category, successCallBack(successFunc, loader));
+}
+
+function addCategoryToList(category) {
+    let templateCategoryItem = `
+    <div class="category-item" onclick="selectCategory(this)" category-id="${category.Id}"> 
+        <div class="category-item-image">
+            <img src="${category.Image}" />
+        </div>
+        <div class="category-item-name">
+            ${category.Name}
+        </div>
+        <div class="category-item-action">
+            <i onclick="editCategory(this, event);" class="far fa-edit"></i>
+            <i onclick="removeCategory(this, event);" class="fas fa-trash-alt"></i>
+        </div>
+    </div >`;
+
+    $(".category-list").append(templateCategoryItem);
+}
+
+function editCategory(e, event) {
+    event.stopPropagation();
+
+    CurrentOperation = TypeOperation.Update;
+
+    let dialog = $("#addCategoryDialog");
+    let parent = $($(e).parents(".category-item"));
+
+    let category = {
+        Id: parent.attr("category-id"),
+        Name: parent.find(".category-item-name").html().trim(),
+        Image: parent.find("img").attr("src")
+    }
+
+    dialog.find("#category-id").val(category.Id);
+    dialog.find("#name-category").val(category.Name);
+    dialog.find("img").attr("src", category.Image);
+
+    dialog.find("img").removeClass("hide");
+    dialog.find(".dialog-image-upload").addClass("hide");
+
+    dialog.trigger("showModal");
+}
+
+function removeCategory(e, event) {
+    event.stopPropagation();
+    let parent = $($(e).parents(".category-item"));
+    let id = parent.attr("category-id");
+    let loader = new Loader(parent);
+    let successFunc = function (result, loader) {
+        loader.stop();
+        if (result.Success) {
+            if (SelectIdCategoryId == id) {
+                SelectIdCategoryId = null;
+            }
+                
+            $(`[category-id=${id}]`).fadeOut(500, function () {
+                $(this).remove();
+            });
+
+        } else {
+            alert(result.ErrorMessage);
+        }
+    }
+    loader.start();
+
+    $.post("/Admin/RemoveCategory", { id: id }, successCallBack(successFunc, loader));
+}
+
+function selectCategory(e) {
+    $(".category-list .select-category").removeClass("select-category");
+    $(e).addClass("select-category");
+    SelectIdCategoryId = $(e).attr("category-id");
+}
+
+function loadProducts() {
+    loadCategoryList();
+}
+
+var SelectIdCategoryId;
+function loadCategoryList() {
+    SelectIdCategoryId = null;
+    let container = $(".category-list");
+    container.empty();
+    let loader = new Loader(container);
+    let successFunc = function (result, loader) {
+        loader.stop();
+        if (result.Success) {
+            for (let category of result.Data) {
+                addCategoryToList(category);
+            }
+
+        } else {
+            alert(result.ErrorMessage);
+        }
+    }
+    loader.start();
+
+    $.post("/Admin/LoadCategoryList", null, successCallBack(successFunc, loader));
 }
 
 function addProduct() {
@@ -128,6 +273,7 @@ function saveSetting() {
         Id: $("#setting").attr("setting-id"),
         CityId: $("#setting-city-list option[value='" + $('#setting-city').val() + "']").attr('city-id'),
         Street: $("#setting-street").val(),
+        PhoneNumber: $("#setting-phone-number").val(),
         HomeNumber: $("#setting-home").val(),
         PriceDelivery: $("#price-delivery").val(),
         FreePriceDelivery: $("#free-delivery").val(),

@@ -157,6 +157,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\default-image.jpg" />
     <Content Include="Images\loader.gif" />
     <Content Include="Scripts\admin-login.js" />
     <Content Include="Scripts\admin-panel.js" />
@@ -177,6 +178,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\loader.js" />
     <Content Include="Scripts\main.js" />
+    <Content Include="Scripts\maskedinput.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

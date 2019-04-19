@@ -20,7 +20,7 @@
             <i class="fas fa-history"></i>
             История заказов
         </div>
-        <div class="menu-item" target-id="products">
+        <div class="menu-item" target-id="products" onclick="loadProducts();">
             <i class="fas fa-cart-arrow-down"></i>
             Товары
         </div>
@@ -37,6 +37,7 @@
             Выйти
         </div>
     </div>
+    
     <div class="content">
         <div class="section" id="order"></div>
         <div class="section hide" id="history"></div>
@@ -51,6 +52,9 @@
                         <i class="fas fa-plus"></i>
                         Добавить категорию
                     </div>
+                </div>
+                <div class="category-list">
+
                 </div>
             </div>
             <div class="product">
@@ -78,24 +82,6 @@
                 </div>
             }
                 <div class="branch-list">
-                    @*@if (ViewBag.BranchViews != null)
-                    {
-                        foreach (var branchView in ViewBag.BranchViews)
-                        {
-                    <div class="branch-item" branch-id="@branchView.Id">
-                        <div class="branch-item-info">
-                            <div class="branch-adress">@branchView.Addres</div>
-                            <div class="branch-operation-mode">@branchView.OperationMode</div>
-                            <div class="branch-phone-number">@branchView.PhoneNumber</div>
-                            <div class="branch-login">@branchView.Login</div>
-                            <div class="branch-password">@branchView.Password</div>
-                        </div>
-                        <div onclick="removeBranch(this, @branchView.Id)" class="branch-item-action @(ViewBag.TypeBranch == EasyStart.Logic.TypeBranch.MainBranch ? "" : "disbled")">
-                            <i class="fas fa-trash-alt"></i>
-                        </div>
-                    </div>
-                        }
-                    }*@
                 </div>
         </div>
         
@@ -111,8 +97,9 @@
                     <option city-id="@cityPair.Key" value="@cityPair.Value" />
                 }
             </datalist>
-            <input type="text" id="setting-street" placeholder="Улица" value="@(ViewBag.Setting != null ? ViewBag.Setting.Street : "")" "    />
-            <input type="text" id="setting-home" placeholder="Дом" value="@(ViewBag.Setting != null && ViewBag.Setting.HomeNumber!= 0 ? ViewBag.Setting.HomeNumber : "")" "    />
+            <input type="text" id="setting-street" placeholder="Улица" value="@(ViewBag.Setting != null ? ViewBag.Setting.Street : "")"/>
+            <input type="text" id="setting-home" placeholder="Дом" value="@(ViewBag.Setting != null && ViewBag.Setting.HomeNumber!= 0 ? ViewBag.Setting.HomeNumber : "")"/>
+            <input type="text" id="setting-phone-number" placeholder="Номер телефона" value="@(ViewBag.Setting != null ? ViewBag.Setting.PhoneNumber : "")" />
             <input type="number" placeholder="Время открытия" id="time-open" min="0" max="24" step="0.1" value="@(ViewBag.Setting != null && ViewBag.Setting.TimeOpen!= 0 ? ViewBag.Setting.TimeOpen : "")" />
             <input type="number" placeholder="Время закрытия" id="time-close" min="0" max="24" step="0.1" value="@(ViewBag.Setting != null && ViewBag.Setting.TimeClose!= 0 ? ViewBag.Setting.TimeClose : "")" />
             <input type="number" placeholder="Стоймость доставки" id="price-delivery" min="0" step="0.1" value="@(ViewBag.Setting != null && ViewBag.Setting.PriceDelivery!=0 ? ViewBag.Setting.PriceDelivery : "")" />
@@ -123,14 +110,15 @@
     </div>
 
     <dialog id="addCategoryDialog">
-        <form onsubmit="addCategory(); return false;">
+        <form onsubmit="operatinCategory(); return false;">
             <div class="header-dialog">Добавление категории</div>
             <div class="enter-dialog-data">
+                <input type="hidden" id="category-id">
                 <input required type="text" id="name-category" placeholder="Введите название категории" />
                 <div class="add-image-product">
                     <input type="file" id="add-category-image" accept="image/*" class="hide">
                     <div class="preview-image" onclick="openDialogFile('add-category-image')">
-                        <img src="#" alt="your image" class="hide" />
+                        <img src=""/images/default-image.jpg"" alt="your image" class="hide" />
                         <div class="dialog-image-upload">
                             <i class="fas fa-upload"></i>
                             Загрузите изображение категории
@@ -139,7 +127,7 @@
                 </div>
             </div>
             <div class="dialog-menu">
-                <button type="submit">Добавить</button>
+                <button type="submit">Ок</button>
                 <button type="reset" onclick="cancelDialog($('#addCategoryDialog'))">Отмена</button>
             </div>
         </form>
@@ -166,7 +154,7 @@
                 </div>
             </div>
             <div class="dialog-menu">
-                <button type="submit">Добавить</button>
+                <button type="submit">Ок</button>
                 <button type="reset" onclick="сancelDialog($('#addProducDialog'))">Отмена</button>
             </div>
         </form>
@@ -189,7 +177,7 @@
                 </datalist>
             </div>
             <div class="dialog-menu">
-                <button type="submit">Добавить</button>
+                <button type="submit">Ок</button>
                 <button type="reset" onclick="cancelDialog($('#addBranchDialog'))">Отмена</button>
             </div>
         </form>
