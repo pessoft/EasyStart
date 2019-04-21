@@ -6,7 +6,7 @@
 
             if (!predicate || predicate()) {
                 addCategoryDialog.trigger("showModal");
-            } 
+            }
 
             if (additionalFunc) {
                 additionalFunc();
@@ -14,7 +14,7 @@
         });
     }
 
-    $("#setting-phone-number").mask("+7(999)999-99-99");
+    $("#setting-phone-number,#setting-phone-number-additional").mask("+7(999)999-99-99");
 
     $(".menu-item").not(".logout").bind("click", function () {
         selectMenuItem(this);
@@ -25,7 +25,7 @@
         if (!SelectIdCategoryId) {
             alert("Выберите категорию");
             return false;
-        } 
+        }
 
         return true;
     };
@@ -237,7 +237,8 @@ function removeCategory(e, event) {
         if (result.Success) {
             if (SelectIdCategoryId == id) {
                 SelectIdCategoryId = null;
-                $(".product-list").empty();
+
+                clearProductList();
                 setEmptyProductInfo();
             }
 
@@ -273,8 +274,9 @@ function selectCategory(e) {
 
 function loadCategoryList() {
     SelectIdCategoryId = null;
+    clearCategoryList();
+
     let container = $(".category-list");
-    container.empty();
     let loader = new Loader($(".category"));
     let successFunc = function (result, loader) {
         loader.stop();
@@ -298,12 +300,15 @@ function loadCategoryList() {
 }
 
 function loadProducts() {
+    clearCategoryList();
+    clearProductList();
+
     loadCategoryList();
-    
+
 }
 
 function addProduct() {
-   
+
 
     let loader = new Loader($("#addProducDialog  form"));
     loader.start();
@@ -327,7 +332,7 @@ function addProduct() {
         let successFunc = function (result, loader) {
             loader.stop();
             if (result.Success) {
-                $(".empty-product-list").remove();
+                $(".empty-list").remove();
                 addProductToList(result.Data);
                 cancelDialog("#addProducDialog");
             } else {
@@ -412,14 +417,20 @@ function addProductToList(product) {
                 <i onclick="removeProduct(this, event);" class="fal fa-trash-alt"></i>
             </div>
         </div>
-        <div class="product-item-additional-info hide">
-            <div class="product-item-description">
+        <div class="product-item-description hide">
                 ${product.Description}
             </div>
-        </div>
     </div >`;
 
     $(".product-list").append(templateCategoryItem);
+}
+
+function clearProductList() {
+    $(".product-list").empty();
+}
+
+function clearCategoryList() {
+    $(".category-list").empty();
 }
 
 function editProduct(e, event) {
@@ -480,8 +491,8 @@ function removeProduct(e, event) {
 }
 
 function loadProductList(idCategory) {
+    clearProductList();
     let container = $(".product-list");
-    container.empty();
     let loader = new Loader($(".product"));
     let successFunc = function (result, loader) {
         loader.stop();
@@ -500,7 +511,7 @@ function loadProductList(idCategory) {
     }
     loader.start();
 
-    $.post("/Admin/LoadProductList", { idCategory: idCategory}, successCallBack(successFunc, loader));
+    $.post("/Admin/LoadProductList", { idCategory: idCategory }, successCallBack(successFunc, loader));
 }
 
 function addPreviewImage(input) {
@@ -531,7 +542,13 @@ function saveSetting() {
         CityId: $("#setting-city-list option[value='" + $('#setting-city').val() + "']").attr('city-id'),
         Street: $("#setting-street").val(),
         PhoneNumber: $("#setting-phone-number").val(),
+        PhoneNumberAdditional: $("#setting-phone-number-additional").val(),
+        Email: $("#setting-email").val(),
         HomeNumber: $("#setting-home").val(),
+        Vkontakte: $("#setting-vk").val(),
+        Instagram: $("#setting-instagram").val(),
+        Facebook: $("#setting-facebook").val(),
+
         PriceDelivery: $("#price-delivery").val(),
         FreePriceDelivery: $("#free-delivery").val(),
         TimeOpen: parseFloat($("#time-open").val()).toFixed(2).toString(),
@@ -548,6 +565,52 @@ function saveSetting() {
     loader.start();
 
     $.post("/Admin/SaveSetting", setting, successCallBack(successFunc, loader));
+}
+
+var DayWeekly = {
+    Monday: 1,
+    Tuesday: 2,
+    Wednesday: 3,
+    Thursday: 4,
+    Friday: 5,
+    Saturday: 6,
+    Sunday: 7
+}
+
+function getTimeDelivery() {
+    let timeDays = {};
+    for (let day in DayWeekly) {
+        let timeDay = $(`[day-id=${day}]`);
+        let checked = timeDay.find("input[type=checkbox]").is(":checked");
+        let start = parseFloat(timeDay.find("[name=start]").val()).toFixed(2);
+        let end = parseFloat(timeDay.find("[name=end]").val()).toFixed(2);
+
+        timeDays[DayWeekly[day]] = checked ? [start, end] : null;
+    }
+
+    return timeDays;
+}
+
+function saveDeliverySetting() {
+
+    let setting = {
+        PriceDelivery: $("#price-delivery").val(),
+        FreePriceDelivery: $("#free-delivery").val(),
+        PayCard: $("#payment-card").is(":checked"),
+        PayCash: $("#payment-cash").is(":checked"),
+        TimeDelivery: getTimeDelivery(),
+    }
+    let loader = new Loader($("#delivery"));
+    let successFunc = function (result, loader) {
+        loader.stop();
+        if (!result.Success) {
+            alert(result.ErrorMessage);
+        }
+    }
+
+    loader.start();
+
+    $.post("/Admin/SaveDeliverySetting", setting, successCallBack(successFunc, loader));
 }
 
 function addBranch() {
@@ -628,7 +691,7 @@ function removeBranch(e, id) {
     }
     loader.start();
 
-    $.post("/Admin/RemoveBranch", { id: id}, successCallBack(successFunc, loader));
+    $.post("/Admin/RemoveBranch", { id: id }, successCallBack(successFunc, loader));
 }
 
 function setEmptyProductInfo() {

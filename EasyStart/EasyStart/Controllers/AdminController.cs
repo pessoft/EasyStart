@@ -32,7 +32,7 @@ namespace EasyStart.Controllers
 
             if (branchId != -1)
             {
-                ViewBag.Setting = DataWrapper.GetSetting(branchId);
+                //ViewBag.Setting = DataWrapper.GetSetting(branchId);
             }
 
             return View();
@@ -81,6 +81,27 @@ namespace EasyStart.Controllers
             var branchId = DataWrapper.GetBranchId(User.Identity.Name);
             setting.BranchId = branchId;
             var successSave = DataWrapper.SaveSetting(setting);
+            var result = new JsonResultModel();
+
+            if (successSave)
+            {
+                result.Success = successSave;
+            }
+            else
+            {
+                result.ErrorMessage = "При сохранении натсройки что то пошло не так...";
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult SaveDeliverySetting(DeliverySettingModel setting)
+        {
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+            setting.BranchId = branchId;
+            var successSave = DataWrapper.SaveDeliverySetting(setting);
             var result = new JsonResultModel();
 
             if (successSave)

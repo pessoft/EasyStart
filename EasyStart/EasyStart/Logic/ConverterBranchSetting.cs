@@ -45,7 +45,6 @@ namespace EasyStart.Logic
             {
                 Id = setting.Id,
                 Addres = $"Адрес: г.{setting.City}, ул.{setting.Street}, д.{setting.HomeNumber}",
-                OperationMode = $"Режим работы: {setting.TimeOpen.ToString("#.00")} - {setting.TimeClose.ToString("#.00")}",
                 PhoneNumber = $"Номер телефона: {setting.PhoneNumber}",
                 Login = "Логин: " + (currentTypeBranch == TypeBranch.MainBranch ? branch.Login : templateLoginData),
                 Password = "Пароль: " + (currentTypeBranch == TypeBranch.MainBranch ? branch.Password : templateLoginData),

@@ -40,6 +40,22 @@ namespace EasyStart.Logic
             return setting;
         }
 
+        public static DeliverySettingModel GetDeliverySetting(int branchId)
+        {
+            DeliverySettingModel setting = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    setting = db.DeliverySettings.FirstOrDefault(p => p.BranchId == branchId);
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return setting;
+        }
+
         public static int GetBranchId(string login)
         {
             BranchModel branch = null;
@@ -149,22 +165,50 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    if (setting.Id != 0)
+                    var updateSetting = db.Settings.FirstOrDefault(p => p.BranchId == setting.BranchId);
+                    if (updateSetting != null)
                     {
-                        var updateSetting = db.Settings.FirstOrDefault(p => p.Id == setting.Id);
                         updateSetting.BranchId = setting.BranchId;
                         updateSetting.CityId = setting.CityId;
-                        updateSetting.FreePriceDelivery = setting.FreePriceDelivery;
                         updateSetting.HomeNumber = setting.HomeNumber;
-                        updateSetting.PriceDelivery = setting.PriceDelivery;
                         updateSetting.Street = setting.Street;
-                        updateSetting.TimeClose = setting.TimeClose;
-                        updateSetting.TimeOpen = setting.TimeOpen;
                         updateSetting.PhoneNumber = setting.PhoneNumber;
                     }
                     else
                     {
                         db.Settings.Add(setting);
+                    }
+
+                    db.SaveChanges();
+                    success = true;
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return success;
+        }
+
+        public static bool SaveDeliverySetting(DeliverySettingModel setting)
+        {
+            var success = false;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var updateSetting = db.DeliverySettings.FirstOrDefault(p => p.BranchId == setting.BranchId);
+
+                    if (updateSetting != null)
+                    {
+                        updateSetting.PayCard = setting.PayCard;
+                        updateSetting.PayCash = setting.PayCash;
+                        updateSetting.PriceDelivery = setting.PriceDelivery;
+                        updateSetting.FreePriceDelivery = setting.FreePriceDelivery;
+                        updateSetting.TimeDelivery = setting.TimeDelivery;
+                    }
+                    else
+                    {
+                        db.DeliverySettings.Add(setting);
                     }
 
                     db.SaveChanges();

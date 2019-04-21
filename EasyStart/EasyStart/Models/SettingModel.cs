@@ -14,11 +14,12 @@ namespace EasyStart.Models
         public int CityId { get; set; }
         public string Street { get; set; }
         public int HomeNumber { get; set; }
-        public double PriceDelivery { get; set; }
-        public double FreePriceDelivery { get; set; }
-        public double TimeOpen { get; set; }
-        public double TimeClose { get; set; }
         public string PhoneNumber { get; set; }
+        public string PhoneNumberAdditional { get; set; }
+        public string Email { get; set; }
+        public string Vkontakte { get; set; }
+        public string Instagram { get; set; }
+        public string Facebook { get; set; }
 
         [NotMapped]
         public string City

@@ -36,6 +36,10 @@
             <i class="fal fa-map-marker-alt"></i>
             Контакты отделения
         </div>
+        <div class="menu-item" target-id="delivery">
+            <i class="fal fa-truck-loading"></i>
+            О доставке
+        </div>
         <div class="menu-item" target-id="analytics">
             <i class="fal fa-analytics"></i>
             Аналитика
@@ -85,8 +89,8 @@
                         <span>Выберите категорию и добавте продукт</span>
                     </div>
                 </div>
-             </div>
-         </div>
+            </div>
+        </div>
         <div class="section hide" id="stock">
             <div class="stock-header">
                 Акции
@@ -109,7 +113,7 @@
             </div>
         </div>
 
-        <div class="section hide" id="setting" setting-id="@(ViewBag.Setting != null ? ViewBag.Setting.Id : 0)">
+        @*<div class="section hide" id="setting" setting-id="@(ViewBag.Setting != null ? ViewBag.Setting.Id : 0)">
             <div class="setting-header">
                 Контакты отделения
                 <i class="fal fa-map-marker-alt"></i>
@@ -130,8 +134,205 @@
             <label for="free-delivery">Бесплатная доставка при заказе на сумму от</label>
             <input type="number" id="free-delivery" min="0" step="0.1" value="@(ViewBag.Setting != null && ViewBag.Setting.FreePriceDelivery != 0 ? ViewBag.Setting.FreePriceDelivery : "")" />
             <button onclick="saveSetting();">Сохранить</button>
-        </div>
+        </div>*@
 
+
+        <div class="section hide" id="setting" setting-id="">
+            <div class="setting-block">
+                <div class="setting-header">
+                    Адрес
+                    <i class="fal fa-map-marker-alt"></i>
+                </div>
+                <div class="setting-content">
+                    <div class="group">
+                        <input required autocomplete="off" list="setting-city-list" id="setting-city" value="@(ViewBag.Setting != null ? ViewBag.Setting.City : "")" type="text">
+                        <datalist id="setting-city-list">
+                            @foreach (var cityPair in ViewBag.City)
+                            {
+                                <option city-id="@cityPair.Key" value="@cityPair.Value" />
+                            }
+                        </datalist>
+                        <span class="bar"></span>
+                        <label>Город</label>
+                    </div>
+                    <div class="group">
+                        <input required type="text" autocomplete="off" id="setting-street" value="@(ViewBag.Setting != null ? ViewBag.Setting.Street : "")" />
+                        <span class="bar"></span>
+                        <label>Улица</label>
+                    </div>
+                    <div class="group">
+                        <input required type="text" autocomplete="off" id="setting-home" value="@(ViewBag.Setting != null && ViewBag.Setting.HomeNumber!= 0 ? ViewBag.Setting.HomeNumber : "")" />
+                        <span class="bar"></span>
+                        <label>Номер дома(офиса)</label>
+                    </div>
+                </div>
+            </div>
+            <div class="setting-block">
+                <div class="setting-header">
+                    Контакты
+                    <i class="fal fa-address-card"></i>
+                </div>
+                <div class="setting-content">
+                    <div class="group">
+                        <input autocomplete="off" type="text" required id="setting-phone-number" value="@(ViewBag.Setting != null ? ViewBag.Setting.PhoneNumber : "")" />
+                        <span class="bar"></span>
+                        <label>Телефон 1</label>
+                    </div>
+                    <div class="group">
+                        <input autocomplete="off" type="text" required id="setting-phone-number-additional" value="@(ViewBag.Setting != null ? ViewBag.Setting.PhoneNumber : "")" />
+                        <span class="bar"></span>
+                        <label>Телефон 2</label>
+                    </div>
+                    <div class="group">
+                        <input autocomplete="off" type="text" required id="setting-email" value="" />
+                        <span class="bar"></span>
+                        <label>Адрес эл.почты</label>
+                    </div>
+                </div>
+            </div>
+            <div class="setting-block">
+                <div class="setting-header">
+                    Соц. сети
+                    <i class="fal fa-comments"></i>
+                </div>
+                <div class="setting-content">
+                    <div class="group">
+                        <input autocomplete="off" type="text" required id="setting-vk" value="" />
+                        <span class="bar"></span>
+                        <label>Вконтакте</label>
+                    </div>
+                    <div class="group">
+                        <input autocomplete="off" type="text" required id="setting-instagram" value="" />
+                        <span class="bar"></span>
+                        <label>Инстаграм</label>
+                    </div>
+                    <div class="group">
+                        <input autocomplete="off" type="text" required id="setting-facebook" value="" />
+                        <span class="bar"></span>
+                        <label>Фейсбук</label>
+                    </div>
+                </div>
+            </div>
+            <div class="setting-menu">
+                <button class="btn btn-submit" onclick="saveSetting();">Сохранить</button>
+            </div>
+        </div>
+        <div class="section hide" id="delivery">
+            <div class="delivery-block">
+                <div class="delivery-header">
+                    Настройка стоимости доставки
+                </div>
+                <div class="delivery-content">
+                    <div class="group">
+                        <input required type="text" id="price-delivery" value="" />
+                        <div class="bar"></div>
+                        <label>Стоимость доставки</label>
+                    </div>
+                    <div class="group">
+                        <input required type="text" id="free-delivery" value="" />
+                        <div class="bar"></div>
+                        <label>Бесплатная доставка при заказе на сумму от</label>
+                    </div>
+                </div>
+            </div>
+            <div class="delivery-block">
+                <div class="delivery-header">
+                    Оплата заказа
+                </div>
+                <div class="delivery-content">
+                    <div class="payment-type">
+                        <input type="checkbox" id="payment-card" value="" />
+                        <span>Банковской картой</span>
+                    </div>
+                    <div class="payment-type">
+                        <input type="checkbox" id="payment-cash" value="" checked disabled/>
+                        <span for="payment-card">Наличными</span>
+                    </div>
+                </div>
+            </div>
+            <div class="delivery-block">
+                <div class="delivery-header">
+                    Режим работы доставки
+                </div>
+                <div class="delivery-content">
+                    <div class="table-time">
+                        <div class="time-day" day-id="Monday">
+                            <div class="checkbox-item">
+                                <input type="checkbox" value="" />
+                                <span>Понедельник</span>
+                            </div>
+                            <div class="period-work">
+                                <input type="number" name="start" min="0" max="24" step="0.1" placeholder="0.00" />
+                                <input type="number" name="end" min="0" max="24" step="0.1" placeholder="0.00" />
+                            </div>
+                        </div>
+                        <div class="time-day" day-id="Tuesday">
+                            <div class="checkbox-item">
+                                <input type="checkbox" value="" />
+                                <span>Вторник</span>
+                            </div>
+                            <div class="period-work">
+                                <input type="number" name="start" min="0" max="24" step="0.1" placeholder="0.00" />
+                                <input type="number" name="end" min="0" max="24" step="0.1" placeholder="0.00" />
+                            </div>
+                        </div>
+                        <div class="time-day" day-id="Wednesday">
+                            <div class="checkbox-item">
+                                <input type="checkbox" value="" />
+                                <span>Среда</span>
+                            </div>
+                            <div class="period-work">
+                                <input type="number" name="start" min="0" max="24" step="0.1" placeholder="0.00" />
+                                <input type="number" name="end" min="0" max="24" step="0.1" placeholder="0.00" />
+                            </div>
+                        </div>
+                        <div class="time-day" day-id="Thursday">
+                            <div class="checkbox-item">
+                                <input type="checkbox" value="" />
+                                <span>Четверг</span>
+                            </div>
+                            <div class="period-work">
+                                <input type="number" name="start" min="0" max="24" step="0.1" placeholder="0.00" />
+                                <input type="number" name="end" min="0" max="24" step="0.1" placeholder="0.00" />
+                            </div>
+                        </div>
+                        <div class="time-day" day-id="Friday">
+                            <div class="checkbox-item">
+                                <input type="checkbox" value="" />
+                                <span>Пятница</span>
+                            </div>
+                            <div class="period-work">
+                                <input type="number" name="start" min="0" max="24" step="0.1" placeholder="0.00" />
+                                <input type="number" name="end" min="0" max="24" step="0.1" placeholder="0.00" />
+                            </div>
+                        </div>
+                        <div class="time-day" day-id="Saturday">
+                            <div class="checkbox-item">
+                                <input type="checkbox" value="" />
+                                <span>Суббота</span>
+                            </div>
+                            <div class="period-work">
+                                <input type="number" name="start" min="0" max="24" step="0.1" placeholder="0.00" />
+                                <input type="number" name="end" min="0" max="24" step="0.1" placeholder="0.00" />
+                            </div>
+                        </div>
+                        <div class="time-day" day-id="Sunday">
+                            <div class="checkbox-item">
+                                <input type="checkbox" value="" />
+                                <span>Воскресенье</span>
+                            </div>
+                            <div class="period-work">
+                                <input type="number" name="start" min="0" max="24" step="0.1" placeholder="0.00" />
+                                <input type="number" name="end" min="0" max="24" step="0.1" placeholder="0.00" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="delivery-menu">
+                <button class="btn btn-submit" onclick="saveDeliverySetting();">Сохранить</button>
+            </div>
+        </div>
         <div class="section hide" id="analytics">
             <div class="analytics-header">
                 Аналитика
@@ -141,75 +342,126 @@
     </div>
 
     <dialog id="addCategoryDialog">
-        <form onsubmit="operationCategory(); return false;">
-            <div class="header-dialog">Добавление категории</div>
+        <form onsubmit="operationCategory(); return false;" autocomplete="off">
             <div class="enter-dialog-data">
-                <input type="hidden" id="category-id">
-                <input required type="text" id="name-category" placeholder="Введите название категории" />
-                <div class="add-image-product">
-                    <input type="file" id="add-category-image" accept="image/*" class="hide">
-                    <div class="preview-image" onclick="openDialogFile('add-category-image')">
-                        <img src=""/images/default-image.jpg"" alt="your image" class="hide" />
-                        <div class="dialog-image-upload">
-                            <i class="fal fa-upload"></i>
-                            Загрузите изображение категории
-                        </div>
+                <div class="header-dialog">
+                    <i class="fal fa-layer-plus"></i>
+                    Добавление категории
+                </div>
+                <div class="content-dialog-data">
+                    <input type="hidden" id="category-id">
+                    <div class="group">
+                        <input required type="text" id="name-category" />
+                        <span class="bar"></span>
+                        <label>Название категории</label>
+                    </div>
+                </div>
+                <div class="dialog-menu">
+                    <button class="btn btn-submit" type="submit">Ок</button>
+                    <button class="btn btn-cancel" type="reset" onclick="cancelDialog($('#addCategoryDialog'))">Отмена</button>
+                </div>
+            </div>
+
+            <div class="add-image-product">
+                <input type="file" id="add-category-image" accept="image/*" class="hide">
+                <div class="preview-image" onclick="openDialogFile('add-category-image')">
+                    <img src=""/images/default-image.jpg"" alt="your image" class="hide" />
+                    <div class="dialog-image-upload">
+                        <i class="fal fa-upload"></i>
+                        Загрузите изображение категории
                     </div>
                 </div>
             </div>
-            <div class="dialog-menu">
-                <button type="submit">Ок</button>
-                <button type="reset" onclick="cancelDialog($('#addCategoryDialog'))">Отмена</button>
-            </div>
+
         </form>
     </dialog>
 
     <dialog id="addProducDialog">
-        <form onsubmit="operationProduct(); return false;">
-            <div class="header-dialog">Добавление продукта</div>
+        <form onsubmit="operationProduct(); return false;" autocomplete="off">
+
             <div class="enter-dialog-data">
-                <input type="hidden" id="product-id">
-                <input required type="text" id="name-product" placeholder="Введите название продукта" />
-                <input required type="text" maxlength="20" id="product-additional-info" placeholder="Доп.информация: 185/20 г, 6шт или 300мл" />
-                <input type="number" required placeholder="Укажите цену (в рублях)" id="product-price" min="0" step="0.1" />
-                <textarea required id="description-product" placeholder="Введите описание продукта"></textarea>
-                <div class="add-image-product">
-                    <input type="file" id="add-product-image" accept="image/*" class="hide">
-                    <div class="preview-image" onclick="openDialogFile('add-product-image')">
-                        <img src="#" alt="your image" class="hide" />
-                        <div class="dialog-image-upload">
-                            <i class="fal fa-upload"></i>
-                            Загрузите изображение продукта
-                        </div>
+                <div class="header-dialog">
+                    <i class="fal fa-layer-plus"></i>
+                    Добавление продукта
+                </div>
+                <div class="content-dialog-data">
+                    <input type="hidden" id="product-id">
+                    <div class="group">
+                        <input required type="text" id="name-product" />
+                        <span class="bar"></span>
+                        <label>Название продукта</label>
+                    </div>
+                    <div class="group">
+                        <input required type="text" maxlength="20" id="product-additional-info" />
+                        <span class="bar"></span>
+                        <label>Информация о количестве, массе или объеме</label>
+                    </div>
+                    <div class="group">
+                        <input type="number" required id="product-price" min="0" step="0.1" />
+                        <span class="bar"></span>
+                        <label>Цена (в рублях)</label>
+                    </div>
+
+                    <div class="group">
+                        <textarea id="description-product"></textarea>
+                        <span class="bar"></span>
+                        <label>Описание продукта</label>
                     </div>
                 </div>
+                <div class="dialog-menu">
+                    <button class="btn btn-submit" type="submit">Ок</button>
+                    <button class="btn btn-cancel" type="reset" onclick="cancelDialog($('#addProducDialog'))">Отмена</button>
+                </div>
             </div>
-            <div class="dialog-menu">
-                <button type="submit">Ок</button>
-                <button type="reset" onclick="cancelDialog($('#addProducDialog'))">Отмена</button>
+
+            <div class="add-image-product">
+                <input type="file" id="add-product-image" accept="image/*" class="hide">
+                <div class="preview-image" onclick="openDialogFile('add-product-image')">
+                    <img src="#" alt="your image" class="hide" />
+                    <div class="dialog-image-upload">
+                        <i class="fal fa-upload"></i>
+                        Загрузите изображение продукта
+                    </div>
+                </div>
             </div>
         </form>
     </dialog>
 
     <dialog id="addBranchDialog">
-        <form onsubmit="addBranch(); return false;">
-            <div class="header-dialog">Добавление отделения</div>
+        <form onsubmit="addBranch(); return false;" autocomplete="off">
+            
             <div class="enter-dialog-data">
-                <label for="login-new-branch">Логин для входа</label>
-                <input required type="text" disabled id="login-new-branch" placeholder="Логин" />
-                <label for="password-new-branch">Пароль для входа</label>
-                <input required type="text" disabled id="password-new-branch" placeholder="Пароль" />
-                <input list="branch-city-list" id="branch-city" type="text" placeholder="Город отделения">
-                <datalist id="branch-city-list">
-                    @foreach (var cityPair in ViewBag.City)
-                    {
-                        <option city-id="@cityPair.Key" value="@cityPair.Value" />
-                    }
-                </datalist>
-            </div>
-            <div class="dialog-menu">
-                <button type="submit">Ок</button>
-                <button type="reset" onclick="cancelDialog($('#addBranchDialog'))">Отмена</button>
+                <div class="header-dialog">
+                    <i class="fal fa-chart-network"></i>
+                    Добавление отделения
+                </div>
+                <div class="content-dialog-data">
+                    <div class="group">
+                        <input required type="text" disabled id="login-new-branch" />
+                        <span class="bar"></span>
+                        <label>Логин</label>
+                    </div>
+                    <div class="group">
+                        <input required type="text" disabled id="password-new-branch" />
+                        <span class="bar"></span>
+                        <label>Пароль</label>
+                    </div>
+                    <div class="group">
+                        <input list="branch-city-list" id="branch-city" type="text">
+                        <span class="bar"></span>
+                        <label>Город отделения</label>
+                        <datalist id="branch-city-list">
+                            @foreach (var cityPair in ViewBag.City)
+                            {
+                                <option city-id="@cityPair.Key" value="@cityPair.Value" />
+                            }
+                        </datalist>
+                    </div>
+                </div>
+                <div class="dialog-menu">
+                    <button class="btn btn-submit" type="submit">Ок</button>
+                    <button class="btn btn-cancel" type="reset" onclick="cancelDialog($('#addBranchDialog'))">Отмена</button>
+                </div>
             </div>
         </form>
     </dialog>

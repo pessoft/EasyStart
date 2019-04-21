@@ -13,14 +13,14 @@ namespace EasyStart.Controllers
     {
         public ActionResult AdminLogin()
         {
-            //var branch = new BranchModel
-            //{
-            //    Login = "login",
-            //    Password = "password",
-            //    TypeBranch = Logic.TypeBranch.MainBranch
-            //};
+            var branch = new BranchModel
+            {
+                Login = "login",
+                Password = "password",
+                TypeBranch = Logic.TypeBranch.MainBranch
+            };
 
-            //DataWrapper.SaveBranch(branch);
+            DataWrapper.SaveBranch(branch);
 
             return View();
         }

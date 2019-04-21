@@ -24,6 +24,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: row;
+    font-size: 0.9em;
 }
 
     .menu-item i {
@@ -72,6 +73,13 @@
     flex-direction: column;
 }
 
+dialog form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 3%;
+}
+
 .category {
     border-right: 1px solid #0f1e3212;
     width: 30%;
@@ -117,25 +125,43 @@ dialog {
     }
 
 .header-dialog {
+    width: 100%;
     margin-bottom: 4%;
-    text-align: center;
-    font-size: 1.15em;
+    text-align: left;
+    font-size: 1.3em;
+    color: #0f1e32de;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+    .header-dialog i {
+        margin-right: 5px;
+    }
+
+.content-dialog-data {
+    min-height: 235px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
 }
 
 .enter-dialog-data {
     width: 100%;
+    min-height: 322px;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    margin-right: 5%;
 }
 
     .enter-dialog-data input {
         min-width: 320px;
         min-height: 23px;
-        font-size: 0.8em;
-        padding-left: 2px;
-        margin-top: 2%;
+        font-size: 1em;
+        color: #0f1e328f;
     }
 
     .enter-dialog-data textarea {
@@ -149,14 +175,14 @@ dialog {
 .dialog-menu {
     width: 100%;
     display: flex;
-    justify-content: flex-end;
-    margin-top: 8%;
+    justify-content: flex-start;
+    margin-top: 5%;
 }
 
     .dialog-menu button {
-        margin-left: 3px;
+        margin-left: 6px;
         min-height: 25px;
-        min-width: 70px;
+        min-width: 100px;
     }
 
 .add-image-product {
@@ -164,12 +190,6 @@ dialog {
     justify-content: center;
     align-items: center;
     margin-top: 1%;
-}
-
-.preview-image {
-    width: 285px;
-    height: 285px;
-    border: 1px solid #828080;
 }
 
 .dialog-image-upload {
@@ -181,7 +201,8 @@ dialog {
     height: 100%;
     font-size: 0.8em;
     text-align: center;
-    color: #565656;
+    color: #163f75cf;
+    border: 1px solid #163f75cf;
 }
 
     .dialog-image-upload i {
@@ -195,7 +216,6 @@ dialog {
 .preview-image {
     width: 322px;
     height: 322px;
-    border: 1px solid #828080;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -224,7 +244,8 @@ dialog {
 
 #setting,
 #analytics,
-#stock {
+#stock,
+#delivery {
     width: 100%;
     height: 100%;
     display: flex;
@@ -233,7 +254,66 @@ dialog {
     flex-direction: column;
 }
 
+#setting,
+#delivery {
+    padding-top: 3%;
+    height: 93%;
+}
+
+    #setting .bar,
+    #delivery .bar {
+        width: 250px;
+    }
+
+    #setting .group,
+    #delivery .group {
+        margin-right: 5%;
+    }
+
+    #setting input:focus ~ .bar:before,
+    #delivery input:focus ~ .bar:before {
+        width: 250px;
+    }
+
+    #setting label,
+    #delivery label {
+        font-size: 0.68em;
+    }
+
+.setting-block,
+.delivery-block {
+    width: 75%;
+    height: 25%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+}
+
 .setting-header,
+.delivery-header {
+    font-size: 1.4em;
+    width: 100%;
+    font-weight: 600;
+    margin-bottom: 2%;
+}
+
+.delivery-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.setting-content,
+.delivery-content {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: row;
+    margin-left: 5%;
+}
+
 .analytics-header,
 .stock-header {
     font-size: 2em;
@@ -241,18 +321,10 @@ dialog {
     padding-top: 2%;
 }
 
-#setting input {
-    margin-bottom: 1%;
+#setting input[type=text],
+#delivery input[type=text] {
     width: 250px;
     height: 23px;
-    padding-left: 3px;
-}
-
-#setting button {
-    margin-bottom: 1%;
-    width: 255px;
-    height: 30px;
-    text-align: center;
 }
 
 label[for=free-delivery] {
@@ -273,20 +345,6 @@ label[for=free-delivery] {
     font-size: 2em;
     margin-bottom: 1%;
     padding-top: 2%;
-}
-
-
-#addBranchDialog input {
-    margin-bottom: 1%;
-    min-width: 282px;
-    min-height: 23px;
-    font-size: 0.8em;
-    padding-left: 2px;
-}
-
-#addBranchDialog label {
-    font-size: 0.65em;
-    color: #828080;
 }
 
 .branch-list {
@@ -634,8 +692,66 @@ div.product-item:hover {
     flex-direction: column;
     font-size: 1.7em;
     color: #0f1e322e;
-    text-align:center;
+    text-align: center;
 }
+
     .empty-list i {
         font-size: 2.6em;
     }
+
+.payment-type {
+    display:flex;
+    justify-content:flex-start;
+    align-items:center;
+    flex-direction:row;
+    width:30%;
+}
+
+    .payment-type input[type=checkbox],
+    .checkbox-item input[type=checkbox] {
+        width: 14px;
+        height: 14px;
+    }
+.table-time {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:row;
+    width:100%;
+}
+
+.time-day {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    width: 15%;
+    font-size: 0.9em;
+}
+
+.table-time input[type=number] {
+    width: 85px;
+    height: 20px;
+    text-align: center;
+    color: #0f1e32de;
+}
+
+.checkbox-item {
+    width: 100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:row;
+}
+
+.period-work {
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+}
+
+.delivery-menu {
+    margin-top: 2%;
+}
