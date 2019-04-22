@@ -137,7 +137,7 @@
         </div>*@
 
 
-        <div class="section hide" id="setting" setting-id="">
+        <div class="section hide" id="setting" setting-id="@(ViewBag.Setting != null ? ViewBag.Setting.Id : 0)">
             <div class="setting-block">
                 <div class="setting-header">
                     Адрес
@@ -179,12 +179,12 @@
                         <label>Телефон 1</label>
                     </div>
                     <div class="group">
-                        <input autocomplete="off" type="text" required id="setting-phone-number-additional" value="@(ViewBag.Setting != null ? ViewBag.Setting.PhoneNumber : "")" />
+                        <input autocomplete="off" type="text" required id="setting-phone-number-additional" value="@(ViewBag.Setting != null ? ViewBag.Setting.PhoneNumberAdditional : "")" />
                         <span class="bar"></span>
                         <label>Телефон 2</label>
                     </div>
                     <div class="group">
-                        <input autocomplete="off" type="text" required id="setting-email" value="" />
+                        <input autocomplete="off" type="text" required id="setting-email" value="@(ViewBag.Setting != null ? ViewBag.Setting.Email : "")" />
                         <span class="bar"></span>
                         <label>Адрес эл.почты</label>
                     </div>
@@ -197,17 +197,17 @@
                 </div>
                 <div class="setting-content">
                     <div class="group">
-                        <input autocomplete="off" type="text" required id="setting-vk" value="" />
+                        <input autocomplete="off" type="text" required id="setting-vk" value="@(ViewBag.Setting != null ? ViewBag.Setting.Vkontakte : "")" />
                         <span class="bar"></span>
                         <label>Вконтакте</label>
                     </div>
                     <div class="group">
-                        <input autocomplete="off" type="text" required id="setting-instagram" value="" />
+                        <input autocomplete="off" type="text" required id="setting-instagram" value="@(ViewBag.Setting != null ? ViewBag.Setting.Instagram : "")" />
                         <span class="bar"></span>
                         <label>Инстаграм</label>
                     </div>
                     <div class="group">
-                        <input autocomplete="off" type="text" required id="setting-facebook" value="" />
+                        <input autocomplete="off" type="text" required id="setting-facebook" value="@(ViewBag.Setting != null ? ViewBag.Setting.Facebook : "")" />
                         <span class="bar"></span>
                         <label>Фейсбук</label>
                     </div>
@@ -224,12 +224,12 @@
                 </div>
                 <div class="delivery-content">
                     <div class="group">
-                        <input required type="text" id="price-delivery" value="" />
+                        <input required type="text" id="price-delivery" value="@(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.PriceDelivery != 0 ? ViewBag.DeliverySetting.PriceDelivery : "")" />
                         <div class="bar"></div>
                         <label>Стоимость доставки</label>
                     </div>
                     <div class="group">
-                        <input required type="text" id="free-delivery" value="" />
+                        <input required type="text" id="free-delivery" value="@(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.FreePriceDelivery != 0 ? ViewBag.DeliverySetting.FreePriceDelivery : "")" />
                         <div class="bar"></div>
                         <label>Бесплатная доставка при заказе на сумму от</label>
                     </div>
@@ -241,11 +241,11 @@
                 </div>
                 <div class="delivery-content">
                     <div class="payment-type">
-                        <input type="checkbox" id="payment-card" value="" />
+                        <input type="checkbox" id="payment-card" @(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.PayCard ?  "checked" : "") />
                         <span>Банковской картой</span>
                     </div>
                     <div class="payment-type">
-                        <input type="checkbox" id="payment-cash" value="" checked disabled/>
+                        <input type="checkbox" id="payment-cash" value="" @(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.PayCash ?  "checked" : "") disabled/>
                         <span for="payment-card">Наличными</span>
                     </div>
                 </div>

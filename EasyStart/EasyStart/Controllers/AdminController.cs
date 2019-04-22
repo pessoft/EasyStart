@@ -28,11 +28,13 @@ namespace EasyStart.Controllers
             ViewBag.BranchViews = branchViewvs != null && branchViewvs.Any() ? branchViewvs : null;
             ViewBag.City = CityHelper.City;
             ViewBag.Setting = null;
+            ViewBag.DeliverySetting = null;
             ViewBag.TypeBranch = typeBranch;
 
             if (branchId != -1)
             {
-                //ViewBag.Setting = DataWrapper.GetSetting(branchId);
+                ViewBag.Setting = DataWrapper.GetSetting(branchId);
+                ViewBag.DeliverySetting = DataWrapper.GetDeliverySetting(branchId);
             }
 
             return View();
