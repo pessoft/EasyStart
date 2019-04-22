@@ -29,12 +29,19 @@ namespace EasyStart.Controllers
             ViewBag.City = CityHelper.City;
             ViewBag.Setting = null;
             ViewBag.DeliverySetting = null;
+            ViewBag.DeliveryTimeTable= null;
             ViewBag.TypeBranch = typeBranch;
 
             if (branchId != -1)
             {
+                var deliverySetting = DataWrapper.GetDeliverySetting(branchId); ;
                 ViewBag.Setting = DataWrapper.GetSetting(branchId);
-                ViewBag.DeliverySetting = DataWrapper.GetDeliverySetting(branchId);
+                ViewBag.DeliverySetting = deliverySetting;
+                ViewBag.DeliveryTimeTable = WeeklyDayHelper.ConvertTimeDeliveryToViev(deliverySetting.TimeDelivery);
+            }
+            else
+            {
+                ViewBag.DeliveryTimeTable = WeeklyDayHelper.ConvertTimeDeliveryToViev();
             }
 
             return View();

@@ -755,3 +755,10 @@ div.product-item:hover {
 .delivery-menu {
     margin-top: 2%;
 }
+
+#delivery .label-for {
+    position: relative;
+    pointer-events: all;
+    top: 0px;
+    font-size: 0.75em;
+}

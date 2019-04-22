@@ -204,7 +204,7 @@ namespace EasyStart.Logic
                         updateSetting.PayCash = setting.PayCash;
                         updateSetting.PriceDelivery = setting.PriceDelivery;
                         updateSetting.FreePriceDelivery = setting.FreePriceDelivery;
-                        updateSetting.TimeDelivery = setting.TimeDelivery;
+                        updateSetting.TimeDeliveryJSON = setting.TimeDeliveryJSON;
                     }
                     else
                     {

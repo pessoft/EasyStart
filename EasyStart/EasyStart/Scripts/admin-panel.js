@@ -302,9 +302,9 @@ function loadCategoryList() {
 function loadProducts() {
     clearCategoryList();
     clearProductList();
+    setEmptyProductInfo();
 
     loadCategoryList();
-
 }
 
 function addProduct() {
@@ -577,7 +577,7 @@ var DayWeekly = {
     Sunday: 7
 }
 
-function getTimeDelivery() {
+function getTimeDeliveryJSON() {
     let timeDays = {};
     for (let day in DayWeekly) {
         let timeDay = $(`[day-id=${day}]`);
@@ -588,7 +588,7 @@ function getTimeDelivery() {
         timeDays[DayWeekly[day]] = checked ? [start, end] : null;
     }
 
-    return timeDays;
+    return JSON.stringify(timeDays);
 }
 
 function saveDeliverySetting() {
@@ -598,7 +598,7 @@ function saveDeliverySetting() {
         FreePriceDelivery: $("#free-delivery").val(),
         PayCard: $("#payment-card").is(":checked"),
         PayCash: $("#payment-cash").is(":checked"),
-        TimeDelivery: getTimeDelivery(),
+        TimeDeliveryJSON: getTimeDeliveryJSON(),
     }
     let loader = new Loader($("#delivery"));
     let successFunc = function (result, loader) {
@@ -639,7 +639,6 @@ function addBranchToList(branchView) {
     <div class="branch-item" branch-id="${branchView.Id}">
         <div class="branch-item-info">
             <div class="branch-adress">${branchView.Addres}</div>
-            <div class="branch-operation-mode">${branchView.OperationMode}</div>
             <div class="branch-phone-number">${branchView.PhoneNumber}</div>
             <div class="branch-login">${branchView.Login}</div>
             <div class="branch-password">${branchView.Password}</div>
