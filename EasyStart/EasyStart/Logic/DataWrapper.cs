@@ -373,5 +373,24 @@ namespace EasyStart.Logic
 
             return success;
         }
+
+        public static List<int> GetAllowedCity()
+        {
+            var alloweCity = new List<int>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    alloweCity = db
+                        .Settings
+                        .Select(p => p.CityId)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return alloweCity;
+        }
     }
 }

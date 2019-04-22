@@ -151,6 +151,7 @@ function addCategory() {
         let successFunc = function (result, loader) {
             loader.stop();
             if (result.Success) {
+                $(".empty-list").remove();
                 addCategoryToList(result.Data);
                 cancelDialog("#addCategoryDialog");
             } else {

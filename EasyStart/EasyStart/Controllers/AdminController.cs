@@ -31,7 +31,7 @@ namespace EasyStart.Controllers
             ViewBag.DeliverySetting = null;
             ViewBag.DeliveryTimeTable= null;
             ViewBag.TypeBranch = typeBranch;
-
+            //branchId = -1;
             if (branchId != -1)
             {
                 var deliverySetting = DataWrapper.GetDeliverySetting(branchId); ;
