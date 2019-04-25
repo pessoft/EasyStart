@@ -33,9 +33,9 @@ namespace EasyStart
         }
 
 
-        public List<ProductModel> GetProducts(int idCategory)
+        public List<ProductModel> GetProducts(int categoryId)
         {
-            var products = DataWrapper.GetProducts(idCategory);
+            var products = DataWrapper.GetProducts(categoryId);
 
             return products;
         }
