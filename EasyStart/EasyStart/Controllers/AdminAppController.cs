@@ -32,12 +32,25 @@ namespace EasyStart
             return categories;
         }
 
-
         public List<ProductModel> GetProducts(int categoryId)
         {
             var products = DataWrapper.GetProducts(categoryId);
 
             return products;
+        }
+
+        public DeliverySettingModel GetDeliverySetting(int cityId)
+        {
+            var deliverySetting = DataWrapper.GetDeliverySettingByCity(cityId);
+
+            return deliverySetting;
+        }
+
+        public SettingModel GetSetting(int cityId)
+        {
+            var setting = DataWrapper.GetSettingByCity(cityId);
+
+            return setting;
         }
     }
 }

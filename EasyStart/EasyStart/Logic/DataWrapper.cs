@@ -56,6 +56,56 @@ namespace EasyStart.Logic
             return setting;
         }
 
+        public static int GetBranchIdByCity(int cityId)
+        {
+            SettingModel setting = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    setting = db.Settings.FirstOrDefault(p => p.CityId == cityId); ;
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return setting == null ? -1 : setting.BranchId;
+        }
+
+        public static SettingModel GetSettingByCity(int cityId)
+        {
+            SettingModel setting = null;
+            int branchId = GetBranchIdByCity(cityId);
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    setting = db.Settings.FirstOrDefault(p => p.BranchId == branchId);
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return setting;
+        }
+
+        public static DeliverySettingModel GetDeliverySettingByCity(int cityId)
+        {
+            DeliverySettingModel setting = null;
+            int branchId = GetBranchIdByCity(cityId);
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    setting = db.DeliverySettings.FirstOrDefault(p => p.BranchId == branchId);
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return setting;
+        }
+
         public static int GetBranchId(string login)
         {
             BranchModel branch = null;
@@ -173,6 +223,11 @@ namespace EasyStart.Logic
                         updateSetting.HomeNumber = setting.HomeNumber;
                         updateSetting.Street = setting.Street;
                         updateSetting.PhoneNumber = setting.PhoneNumber;
+                        updateSetting.PhoneNumberAdditional = setting.PhoneNumberAdditional;
+                        updateSetting.Email = setting.Email;
+                        updateSetting.Vkontakte = setting.Vkontakte;
+                        updateSetting.Instagram = setting.Instagram;
+                        updateSetting.Facebook= setting.Facebook;
                     }
                     else
                     {
