@@ -52,5 +52,20 @@ namespace EasyStart
 
             return setting;
         }
+
+        [HttpPost]
+        public JsonResultModel SendOrder([FromBody]OrderModel order)
+        {
+            var result = new JsonResultModel();
+            var numberOrder = DataWrapper.SaveOrder(order);
+
+            if(numberOrder != -1)
+            {
+                result.Data = numberOrder;
+                result.Success = true;
+            }
+
+            return result;
+        }
     }
 }

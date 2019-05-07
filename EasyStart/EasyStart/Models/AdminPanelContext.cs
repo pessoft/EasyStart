@@ -13,5 +13,6 @@ namespace EasyStart.Models
         public DbSet<BranchModel> Branches { get; set; }
         public DbSet<SettingModel> Settings { get; set; }
         public DbSet<DeliverySettingModel> DeliverySettings { get; set; }
+        public DbSet<OrderModel> Orders { get; set; }
     }
 }

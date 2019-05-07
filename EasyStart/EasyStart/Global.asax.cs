@@ -1,6 +1,9 @@
 ﻿using EasyStart.App_Start;
+using EasyStart.Migrations;
+using EasyStart.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net.Http.Formatting;
 using System.Web;
@@ -15,6 +18,8 @@ namespace EasyStart
     {
         protected void Application_Start()
         {
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<AdminPanelContext, Configuration>());
+
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

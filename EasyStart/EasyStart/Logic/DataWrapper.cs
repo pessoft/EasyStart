@@ -447,5 +447,23 @@ namespace EasyStart.Logic
 
             return alloweCity;
         }
+
+        public static int SaveOrder(OrderModel order)
+        {
+            var numberOrder = -1;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var saveOrder = db.Orders.Add(order);
+                    db.SaveChanges();
+                    numberOrder = saveOrder.Id;
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return numberOrder;
+        }
     }
 }
