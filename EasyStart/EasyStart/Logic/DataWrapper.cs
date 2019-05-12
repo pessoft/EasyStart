@@ -385,6 +385,24 @@ namespace EasyStart.Logic
             return result;
         }
 
+        public static List<ProductModel> GetAllProducts()
+        {
+            List<ProductModel> result = new List<ProductModel>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db
+                        .Products
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
+
         public static ProductModel UpdateProduct(ProductModel product)
         {
             ProductModel result = null;
@@ -398,6 +416,7 @@ namespace EasyStart.Logic
                     result.Name = product.Name;
                     result.Description = product.Description;
                     result.Price = product.Price;
+                    result.AdditionInfo = product.AdditionInfo;
                     db.SaveChanges();
 
                 }
@@ -436,8 +455,15 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
+                    var allowedBranches = db.DeliverySettings
+                        .Select(p => p.BranchId)
+                        .Distinct()
+                        .ToList();
+                 
                     alloweCity = db
                         .Settings
+                        .ToList()
+                        .Where(p => allowedBranches.IndexOf(p.BranchId) != -1)
                         .Select(p => p.CityId)
                         .ToList();
                 }
@@ -464,6 +490,24 @@ namespace EasyStart.Logic
             { }
 
             return numberOrder;
+        }
+
+        public static List<OrderModel> GetHistoryOrder(string phoneNumber)
+        {
+            var histroyOrders = new List<OrderModel>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    histroyOrders = db.Orders
+                        .Where(p => p.PhoneNumber == phoneNumber)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return histroyOrders;
         }
     }
 }

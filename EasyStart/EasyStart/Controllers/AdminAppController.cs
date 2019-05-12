@@ -39,6 +39,15 @@ namespace EasyStart
             return products;
         }
 
+        public Dictionary<int, List<ProductModel>> GetAllProducts()
+        {
+            var products = DataWrapper.GetAllProducts()
+                .GroupBy(p => p.CategoryId)
+                .ToDictionary(p => p.Key, p => p.ToList());
+
+            return products;
+        }
+
         public DeliverySettingModel GetDeliverySetting(int cityId)
         {
             var deliverySetting = DataWrapper.GetDeliverySettingByCity(cityId);
@@ -66,6 +75,19 @@ namespace EasyStart
             }
 
             return result;
+        }
+
+        public List<OrderModel> GetHistoryOrder(string phoneNumber)
+        {
+            //hack - плюс куда то исчезает при передаче
+            if(phoneNumber[0] != '+')
+            {
+                phoneNumber = "+" + phoneNumber.Trim();
+            }
+
+            var historyOrder = DataWrapper.GetHistoryOrder(phoneNumber);
+
+            return historyOrder;
         }
     }
 }

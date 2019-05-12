@@ -27,7 +27,10 @@ namespace EasyStart.Models
         public string ProductCountJSON { get; set; }
         public double Discount { get; set; }
         public double CashBack { get; set; }
+        public double AmountPay { get; set; }
+        public double AmountPayDiscountDelivery { get; set; }
         public bool NeedCashBack { get; set; }
+        public DateTime Date { get; set; } 
 
         [NotMapped]
         public Dictionary<int, int> ProductCount

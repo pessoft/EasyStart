@@ -166,6 +166,14 @@
     <Compile Include="Migrations\201905071337452_AddCityIdOrderModel.Designer.cs">
       <DependentUpon>201905071337452_AddCityIdOrderModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905101937207_AddDateOrder.cs" />
+    <Compile Include="Migrations\201905101937207_AddDateOrder.Designer.cs">
+      <DependentUpon>201905101937207_AddDateOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905111241317_AddAmountPayDeliveryDiscountOrder.cs" />
+    <Compile Include="Migrations\201905111241317_AddAmountPayDeliveryDiscountOrder.Designer.cs">
+      <DependentUpon>201905111241317_AddAmountPayDeliveryDiscountOrder.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\BranchModel.cs" />
@@ -292,6 +300,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905071337452_AddCityIdOrderModel.resx">
       <DependentUpon>201905071337452_AddCityIdOrderModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905101937207_AddDateOrder.resx">
+      <DependentUpon>201905101937207_AddDateOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905111241317_AddAmountPayDeliveryDiscountOrder.resx">
+      <DependentUpon>201905111241317_AddAmountPayDeliveryDiscountOrder.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

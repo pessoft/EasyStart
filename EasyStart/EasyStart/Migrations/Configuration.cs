@@ -9,7 +9,7 @@ namespace EasyStart.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
             ContextKey = "EasyStart.Models.AdminPanelContext";
         }
 
