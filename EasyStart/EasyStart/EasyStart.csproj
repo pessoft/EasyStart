@@ -174,9 +174,6 @@
     <Compile Include="Migrations\201905111241317_AddAmountPayDeliveryDiscountOrder.Designer.cs">
       <DependentUpon>201905111241317_AddAmountPayDeliveryDiscountOrder.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201905131819132_AddProductRating.cs" />
-    <Compile Include="Migrations\201905131819132_AddProductRating.Designer.cs">
-      <DependentUpon>201905131819132_AddProductRating.cs</DependentUpon>
     <Compile Include="Migrations\201905140514020_AddRatingVotesCountProduct.cs" />
     <Compile Include="Migrations\201905140514020_AddRatingVotesCountProduct.Designer.cs">
       <DependentUpon>201905140514020_AddRatingVotesCountProduct.cs</DependentUpon>
@@ -323,8 +320,6 @@
     <EmbeddedResource Include="Migrations\201905111241317_AddAmountPayDeliveryDiscountOrder.resx">
       <DependentUpon>201905111241317_AddAmountPayDeliveryDiscountOrder.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905131819132_AddProductRating.resx">
-      <DependentUpon>201905131819132_AddProductRating.cs</DependentUpon>
     <EmbeddedResource Include="Migrations\201905140514020_AddRatingVotesCountProduct.resx">
       <DependentUpon>201905140514020_AddRatingVotesCountProduct.cs</DependentUpon>
     </EmbeddedResource>
