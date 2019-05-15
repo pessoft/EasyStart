@@ -177,6 +177,17 @@
     <Compile Include="Migrations\201905131819132_AddProductRating.cs" />
     <Compile Include="Migrations\201905131819132_AddProductRating.Designer.cs">
       <DependentUpon>201905131819132_AddProductRating.cs</DependentUpon>
+    <Compile Include="Migrations\201905140514020_AddRatingVotesCountProduct.cs" />
+    <Compile Include="Migrations\201905140514020_AddRatingVotesCountProduct.Designer.cs">
+      <DependentUpon>201905140514020_AddRatingVotesCountProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905140723390_AddRatingVotesSumProduct.cs" />
+    <Compile Include="Migrations\201905140723390_AddRatingVotesSumProduct.Designer.cs">
+      <DependentUpon>201905140723390_AddRatingVotesSumProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905140728430_RenameRatingVotesSumProduct.cs" />
+    <Compile Include="Migrations\201905140728430_RenameRatingVotesSumProduct.Designer.cs">
+      <DependentUpon>201905140728430_RenameRatingVotesSumProduct.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
@@ -189,6 +200,7 @@
     <Compile Include="Models\LoginDataModel.cs" />
     <Compile Include="Models\OrderModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
+    <Compile Include="Models\RatingProducUpdater.cs" />
     <Compile Include="Models\SettingModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\CityHelper.cs" />
@@ -313,6 +325,14 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905131819132_AddProductRating.resx">
       <DependentUpon>201905131819132_AddProductRating.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201905140514020_AddRatingVotesCountProduct.resx">
+      <DependentUpon>201905140514020_AddRatingVotesCountProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905140723390_AddRatingVotesSumProduct.resx">
+      <DependentUpon>201905140723390_AddRatingVotesSumProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905140728430_RenameRatingVotesSumProduct.resx">
+      <DependentUpon>201905140728430_RenameRatingVotesSumProduct.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

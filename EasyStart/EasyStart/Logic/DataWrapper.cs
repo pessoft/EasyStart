@@ -385,6 +385,50 @@ namespace EasyStart.Logic
             return result;
         }
 
+        public static void UpdateRating(int productId, double rating, int votesCount, double votesSum)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var product = db
+                        .Products
+                        .FirstOrDefault(p => p.Id == productId);
+
+                    if (product != null)
+                    {
+                        product.Rating = rating;
+                        product.VotesCount = votesCount;
+                        product.VotesSum = votesSum;
+
+                        db.SaveChanges();
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            { }
+        }
+
+        public static ProductModel GetProduct(int productId)
+        {
+            ProductModel result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db
+                        .Products
+                        .FirstOrDefault(p => p.Id == productId);
+
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
+
         public static List<ProductModel> GetAllProducts()
         {
             List<ProductModel> result = new List<ProductModel>();
@@ -459,7 +503,7 @@ namespace EasyStart.Logic
                         .Select(p => p.BranchId)
                         .Distinct()
                         .ToList();
-                 
+
                     alloweCity = db
                         .Settings
                         .ToList()

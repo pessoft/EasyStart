@@ -89,5 +89,18 @@ namespace EasyStart
 
             return historyOrder;
         }
+
+        [HttpPost]
+        public void UpdateProducRating([FromBody]RatingProducUpdater ratingUp)
+        {
+            var result = new JsonResultModel();
+            var product = DataWrapper.GetProduct(ratingUp.ProductId);
+            var votesCount = ++product.VotesCount;
+            var score = ratingUp.Score > 0 ? ratingUp.Score : 0;
+            var votesSum = product.VotesSum + score;
+            var rating = votesSum / votesCount;
+
+            DataWrapper.UpdateRating(ratingUp.ProductId, rating, votesCount, votesSum);
+        }
     }
 }
