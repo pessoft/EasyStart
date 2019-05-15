@@ -102,5 +102,38 @@ namespace EasyStart
 
             DataWrapper.UpdateRating(ratingUp.ProductId, rating, votesCount, votesSum);
         }
+
+        [HttpPost]
+        public void SetProductReviews(ProductReview review)
+        {
+            if (review != null &&
+                !string.IsNullOrEmpty(review.PhoneNumber) &&
+                !string.IsNullOrEmpty(review.ReviewText) &&
+                review.PorudctId > 0)
+            {
+                review.Date = DateTime.Now;
+
+                DataWrapper.SaveProductReviews(review);
+            }
+        }
+
+        public List<ProductReview> GetProductReviews(int productId)
+        {
+            var reviews = DataWrapper.GetProductReviews(productId);
+
+            if(reviews != null && reviews.Any())
+            {
+                reviews.ForEach(p =>
+                {
+                    var numberChrar = p.PhoneNumber.ToArray();
+                    numberChrar[11] = '*';
+                    numberChrar[12] = '*';
+
+                    p.PhoneNumber = string.Join("", numberChrar);
+                });
+            }
+
+            return reviews;
+        }
     }
 }

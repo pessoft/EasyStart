@@ -553,5 +553,44 @@ namespace EasyStart.Logic
 
             return histroyOrders;
         }
+
+        public static bool SaveProductReviews(ProductReview previews)
+        {
+            bool success = false;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    db.ProductReviews.Add(previews);
+                    db.SaveChanges();
+
+                    success = true;
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return success;
+        }
+
+        public static List<ProductReview> GetProductReviews(int productId)
+        {
+            List<ProductReview> result = new List<ProductReview>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.ProductReviews
+                        .Where(p => p.PorudctId == productId)
+                        .OrderByDescending(p => p.Date)
+                        .Take(50)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
     }
 }

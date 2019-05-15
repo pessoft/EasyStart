@@ -186,6 +186,10 @@
     <Compile Include="Migrations\201905140728430_RenameRatingVotesSumProduct.Designer.cs">
       <DependentUpon>201905140728430_RenameRatingVotesSumProduct.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905150734314_AddProductReviewTable.cs" />
+    <Compile Include="Migrations\201905150734314_AddProductReviewTable.Designer.cs">
+      <DependentUpon>201905150734314_AddProductReviewTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\BranchModel.cs" />
@@ -197,6 +201,7 @@
     <Compile Include="Models\LoginDataModel.cs" />
     <Compile Include="Models\OrderModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
+    <Compile Include="Models\ProductReview.cs" />
     <Compile Include="Models\RatingProducUpdater.cs" />
     <Compile Include="Models\SettingModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -328,6 +333,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905140728430_RenameRatingVotesSumProduct.resx">
       <DependentUpon>201905140728430_RenameRatingVotesSumProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905150734314_AddProductReviewTable.resx">
+      <DependentUpon>201905150734314_AddProductReviewTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
