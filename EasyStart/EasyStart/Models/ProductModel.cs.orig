@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
+
+namespace EasyStart.Models
+{
+    public class ProductModel
+    {
+        public int Id { get; set; }
+        public int CategoryId { get; set; }
+        public string Name { get; set; }
+        public string AdditionInfo { get; set; }
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
+        public string Description { get; set; }
+        public double Price { get; set; }
+        public string Image { get; set; }
+        public double Rating { get; set; }
+<<<<<<< HEAD
+=======
+        public double VotesSum { get; set; }
+        public int VotesCount { get; set; }
+>>>>>>> 881d7c269cb35dfb7ad57d91b1b323c8a66e7d5a
+    }
+}
