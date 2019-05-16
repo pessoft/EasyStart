@@ -76,6 +76,7 @@ function cancelDialog(e) {
     dialog.find("textarea").val("");
     dialog.find(".dialog-image-upload").removeClass("hide");
     dialog.find("img").addClass("hide");
+    dialog.find("option").removeAttr("selected");
     dialog.trigger("close")
 }
 
@@ -328,7 +329,8 @@ function addProduct() {
             AdditionInfo: $("#product-additional-info").val(),
             Price: $("#product-price").val(),
             Description: $("#description-product").val(),
-            Image: data.URL
+            Image: data.URL,
+            ProductType: parseInt($("#product-type option:selected").attr("value"))
         }
         let successFunc = function (result, loader) {
             loader.stop();
@@ -373,7 +375,8 @@ function updateProduct() {
         AdditionInfo: $("#product-additional-info").val(),
         Price: $("#product-price").val(),
         Description: $("#description-product").val(),
-        Image: $("#addProducDialog img").attr("src")
+        Image: $("#addProducDialog img").attr("src"),
+        ProductType: parseInt($("#product-type option:selected").attr("value"))
     }
     let loader = new Loader($("#addProducDialog form"));
     let successFunc = function (result, loader) {
@@ -385,6 +388,8 @@ function updateProduct() {
             productItem.find(".product-item-additional-info").html(product.AdditionInfo);
             productItem.find(".product-item-price span").html(product.Price);
             productItem.find(".product-item-description").html(product.Description);
+            productItem.find(".product-type-item").html(product.ProductType);
+
 
             cancelDialog("#addProducDialog");
         } else {
@@ -421,6 +426,9 @@ function addProductToList(product) {
         <div class="product-item-description hide">
                 ${product.Description}
             </div>
+        <div class="product-type-item hide">
+            ${product.ProductType}
+        </div>
     </div >`;
 
     $(".product-list").append(templateCategoryItem);
@@ -448,7 +456,8 @@ function editProduct(e, event) {
         AdditionInfo: parent.find(".product-item-additional-info").html().trim(),
         Price: parent.find(".product-item-price span").html().trim(),
         Description: parent.find(".product-item-description").html().trim(),
-        Image: parent.find("img").attr("src")
+        Image: parent.find("img").attr("src"),
+        ProductType: parseInt(parent.find(".product-type-item").html().trim())
     }
 
     dialog.find("#product-id").val(product.Id);
@@ -457,6 +466,11 @@ function editProduct(e, event) {
     dialog.find("#product-price").val(product.Price);
     dialog.find("#description-product").val(product.Description);
     dialog.find("img").attr("src", product.Image);
+
+    let $selectProductType = dialog.find("#product-type");
+    $selectProductType.find("option").removeAttr("selected");
+    $selectProductType.find(`[value=${product.ProductType}]`).attr("selected", true);
+
 
     if (product.Image.indexOf("default") == -1) {
         dialog.find("img").removeClass("hide");

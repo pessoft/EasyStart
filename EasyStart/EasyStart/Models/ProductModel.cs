@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasyStart.Logic;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -19,5 +20,6 @@ namespace EasyStart.Models
         public double Rating { get; set; }
         public double VotesSum { get; set; }
         public int VotesCount { get; set; }
+        public ProductType ProductType { get; set; }
     }
 }

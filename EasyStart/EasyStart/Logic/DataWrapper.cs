@@ -461,6 +461,7 @@ namespace EasyStart.Logic
                     result.Description = product.Description;
                     result.Price = product.Price;
                     result.AdditionInfo = product.AdditionInfo;
+                    result.ProductType = product.ProductType;
                     db.SaveChanges();
 
                 }

@@ -762,3 +762,31 @@ div.product-item:hover {
     top: 0px;
     font-size: 0.75em;
 }
+
+.product-type {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-bottom: 5px;
+    flex-direction: column;
+    color: #0f1e32de;
+}
+
+.product-type-header {
+    font-size: 0.7em;
+    margin-bottom: 5px;
+}
+
+#product-type {
+    min-width: 322px;
+    min-height: 25px;
+    border-color: #c6c6c6;
+    color: #0f1e328f;
+    border-radius: 3px;
+}
+
+    #product-type:focus {
+        outline: -webkit-focus-ring-color auto 5px;
+        outline-color: #496e98;
+    }
