@@ -9,6 +9,8 @@ namespace EasyStart.Logic
     {
         Normal = 0,
         New = 1,
-        Hit = 2
+        Hit = 2,
+        Stock = 3,
+        HotPeppers = 4
     }
 }
