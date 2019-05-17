@@ -220,42 +220,73 @@ function isVisibleStock(id) {
 function updateRenderStock(container, stock) {
     let $stock = $(container);
 
-    $stock.find("img").attr("src", stock.Imge);
+    $stock.find("img").attr("src", stock.Image);
     $stock.find(".stock-item-name").html(stock.Name);
     toggleVisibleSotck(container, stock);
 }
 
 
 function updateStock() {
-    let stockId = $("#stock-id").val();
-    let stock = {
-        Id: stockId,
-        Name: $("#name-stock").val(),
-        Discount: $("#stock-discount").val(),
-        Description: $("#description-stock").val(),
-        Image: $("#addStockDialog img").attr("src"),
-        Visible: isVisibleStock(stockId),
-        StockType: parseInt($("#stock-type option:selected").attr("value"))
+    let files = $("#addStockDialog input[type=file]")[0].files;
+    var dataImage = new FormData();
+
+    for (var x = 0; x < files.length; x++) {
+        dataImage.append("file" + x, files[x]);
     }
 
-    let loader = new Loader($("#addStockDialog form"));
-    let successFunc = function (result, loader) {
-        loader.stop();
-        if (result.Success) {
-            let index = getIndexStockById(result.Data.Id);
-            StockList[index] = result.Data;
-
-            let $stock = $(`[stock-id=${result.Data.Id}]`);
-
-            updateRenderStock($stock, result.Data);
-            cancelDialog("#addStockDialog");
-        } else {
-            alert(result.ErrorMessage);
+    let functUpdate = function (data) {
+        let stockId = $("#stock-id").val();
+        let stock = {
+            Id: stockId,
+            Name: $("#name-stock").val(),
+            Discount: $("#stock-discount").val(),
+            Description: $("#description-stock").val(),
+            Image: data.URL,
+            Visible: isVisibleStock(stockId),
+            StockType: parseInt($("#stock-type option:selected").attr("value"))
         }
-    }
-    loader.start();
 
-    $.post("/Admin/UpdateStock", stock, successCallBack(successFunc, loader));
+        let loader = new Loader($("#addStockDialog form"));
+        let successFunc = function (result, loader) {
+            loader.stop();
+            if (result.Success) {
+                let index = getIndexStockById(result.Data.Id);
+                StockList[index] = result.Data;
+
+                let $stock = $(`[stock-id=${result.Data.Id}]`);
+
+                updateRenderStock($stock, result.Data);
+                cancelDialog("#addStockDialog");
+            } else {
+                alert(result.ErrorMessage);
+            }
+        }
+        loader.start();
+
+        $.post("/Admin/UpdateStock", stock, successCallBack(successFunc, loader));
+    }
+
+
+
+    if (files.length == 0) {
+        let data = {
+            URL: $("#addStockDialog img").attr("src")
+        }
+
+        functUpdate(data);
+        return;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/Admin/UploadImage',
+        contentType: false,
+        processData: false,
+        data: dataImage,
+        success: function (data) {
+            functUpdate(data);
+        }
+    });
 }
 
 function updateVisibleStock(stock) {
