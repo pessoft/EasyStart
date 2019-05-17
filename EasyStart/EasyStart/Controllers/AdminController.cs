@@ -405,5 +405,90 @@ namespace EasyStart.Controllers
 
             return Json(result);
         }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult AddStock(StockModel stock)
+        {
+            var result = new JsonResultModel();
+
+            if (!System.IO.File.Exists(Server.MapPath(stock.Image)))
+            {
+                stock.Image = "/images/default-image.jpg";
+            }
+
+            stock = DataWrapper.SaveStock(stock);
+
+            if (stock != null)
+            {
+                result.Data = stock;
+                result.Success = true;
+            }
+            else
+            {
+                result.ErrorMessage = "При добавлении акции что то пошло не так...";
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult RemoveStock(int id)
+        {
+            var result = new JsonResultModel();
+            var success = DataWrapper.RemoveStock(id);
+
+            if (success)
+            {
+                result.Success = success;
+            }
+            else
+            {
+                result.ErrorMessage = "Акция не удалена";
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult UpdateStock(StockModel sotck)
+        {
+            var result = new JsonResultModel();
+            var updateStock = DataWrapper.UpdateStock(sotck);
+
+            if (updateStock != null)
+            {
+                result.Data = updateStock;
+                result.Success = true;
+            }
+            else
+            {
+                result.ErrorMessage = "Акция не обновлена";
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult LoadStockList()
+        {
+            var result = new JsonResultModel();
+            var stock = DataWrapper.GetStocks();
+
+            if (stock != null)
+            {
+                result.Data = stock;
+                result.Success = true;
+            }
+            else
+            {
+                result.ErrorMessage = "При загрузки акций что то пошло не так";
+            }
+
+            return Json(result);
+        }
     }
 }

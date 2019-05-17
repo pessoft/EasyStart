@@ -15,5 +15,6 @@ namespace EasyStart.Models
         public DbSet<DeliverySettingModel> DeliverySettings { get; set; }
         public DbSet<OrderModel> Orders { get; set; }
         public DbSet<ProductReview> ProductReviews { get; set; }
+        public DbSet<StockModel> Stocks { get; set; }
     }
 }

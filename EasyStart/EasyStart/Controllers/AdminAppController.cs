@@ -135,5 +135,12 @@ namespace EasyStart
 
             return reviews;
         }
+
+        public List<StockModel> GetStocks()
+        {
+            var stocks = DataWrapper.GetStocksVisible();
+
+            return stocks;
+        }
     }
 }

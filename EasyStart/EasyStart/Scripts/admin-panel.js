@@ -29,14 +29,48 @@
 
         return true;
     };
+
+    let stockOkFunc = () => {
+        stockTypeToggleDiscountn();
+        setOperationAdd();
+    };
+
     bindShowModal("add-category", "addCategoryDialog", setOperationAdd);
     bindShowModal("add-product", "addProducDialog", setOperationAdd, productPredicate);
     bindShowModal("add-branch", "addBranchDialog", addNewBranchLoginData);
+    bindShowModal("add-stock", "addStockDialog", stockOkFunc);
 
     $("input[type=file]").change(function () {
         addPreviewImage(this);
     });
+
+    $("#stock-type").bind("change", stockTypeToggleDiscountn);
 });
+
+var StockType = {
+    Custom: 0,
+    FirstOrder: 1,
+    OrderTakeYourself: 2
+}
+
+function stockTypeToggleDiscountn() {
+    let currentType = parseInt($("#stock-type").val());
+
+    if (currentType == StockType.Custom) {
+        $("#stock-discount").attr("disabled", true);
+    } else {
+        $("#stock-discount").removeAttr("disabled");
+    }
+}
+
+function initBlocks() {
+    $('#stock-list').BlocksIt({
+        numOfCol: 2,
+        boxClass: '.stock-item',
+        offsetX: 5,
+        offsetY: 5
+    });
+}
 
 var TypeOperation = {
     Add: 0,
@@ -67,6 +101,10 @@ function selectMenuItem(e) {
     $e.addClass("menu-item-active");
     $(".section").addClass("hide");
     $(`#${targetId}`).removeClass("hide");
+
+    if (targetId == "stock") {
+        loadStockList();
+    }
 }
 
 function cancelDialog(e) {
@@ -104,6 +142,179 @@ function operationProduct() {
             updateProduct();
             break;
     }
+}
+
+function operationStock() {
+
+    switch (CurrentOperation) {
+        case TypeOperation.Add:
+            addStock();
+            break;
+        case TypeOperation.Update:
+            updateStock();
+            break;
+    }
+}
+
+function getStockById(searchId) {
+
+    for (let id in StockList) {
+        if (StockList[id].Id == searchId) {
+            return StockList[id];
+        }
+    }
+}
+
+function getIndexStockById(searchId) {
+    for (let id in StockList) {
+        if (StockList[id].Id == searchId) {
+            return id;
+        }
+    }
+}
+
+function removeStock(id) {
+    $(`[stock-id=${id}]`).fadeOut(1000, function () {
+        $(this).remove();
+        initBlocks();
+
+        var stockIndex = getIndexStockById(id);
+        StockList.splice(stockIndex, 1);
+    });
+
+    $.post("/Admin/RemoveStock", { id: id }, null);
+}
+
+function editStock(id) {
+    CurrentOperation = TypeOperation.Update;
+
+    let dialog = $("#addStockDialog");
+    let stock = getStockById(id);
+
+    dialog.find("#stock-id").val(stock.Id);
+    dialog.find("#name-stock").val(stock.Name);
+    dialog.find("#stock-discount").val(stock.Discount);
+    dialog.find("#description-stock").val(stock.Description);
+    dialog.find("img").attr("src", stock.Image);
+
+    let $selectStockype = dialog.find("#stock-type");
+    $selectStockype.find("option").removeAttr("selected");
+    $selectStockype.find(`[value=${stock.StockType}]`).attr("selected", true);
+
+
+    if (stock.Image.indexOf("default") == -1) {
+        dialog.find("img").removeClass("hide");
+        dialog.find(".dialog-image-upload").addClass("hide");
+    }
+
+    dialog.trigger("showModal");
+}
+
+function isVisibleStock(id) {
+    let stock = getStockById(id);
+
+    return stock.Visible;
+}
+
+function updateRenderStock(container, stock) {
+    let $stock = $(container);
+
+    $stock.find("img").attr("src", stock.Imge);
+    $stock.find(".stock-item-name").html(stock.Name);
+    toggleVisibleSotck(container, stock);
+}
+
+
+function updateStock() {
+    let stockId = $("#stock-id").val();
+    let stock = {
+        Id: stockId,
+        Name: $("#name-stock").val(),
+        Discount: $("#stock-discount").val(),
+        Description: $("#description-stock").val(),
+        Image: $("#addStockDialog img").attr("src"),
+        Visible: isVisibleStock(stockId),
+        StockType: parseInt($("#stock-type option:selected").attr("value"))
+    }
+
+    let loader = new Loader($("#addStockDialog form"));
+    let successFunc = function (result, loader) {
+        loader.stop();
+        if (result.Success) {
+            let index = getIndexStockById(result.Data.Id);
+            StockList[index] = result.Data;
+
+            let $stock = $(`[stock-id=${result.Data.Id}]`);
+
+            updateRenderStock($stock, result.Data);
+            cancelDialog("#addStockDialog");
+        } else {
+            alert(result.ErrorMessage);
+        }
+    }
+    loader.start();
+
+    $.post("/Admin/UpdateStock", stock, successCallBack(successFunc, loader));
+}
+
+function updateVisibleStock(stock) {
+    $.post("/Admin/UpdateStock", stock, null);
+}
+
+function addStock() {
+    let loader = new Loader($("#addStockDialog  form"));
+    loader.start();
+
+    let files = $("#addStockDialog input[type=file]")[0].files;
+    var dataImage = new FormData();
+
+    for (var x = 0; x < files.length; x++) {
+        dataImage.append("file" + x, files[x]);
+    }
+
+    let addFunc = function (data) {
+        let stock = {
+            Name: $("#name-stock").val(),
+            Discount: $("#stock-discount").val(),
+            Description: $("#description-stock").val(),
+            Image: data.URL,
+            Visible: true,
+            StockType: parseInt($("#stock-type option:selected").attr("value"))
+        }
+        let successFunc = function (result, loader) {
+            loader.stop();
+            if (result.Success) {
+                $("#stock .empty-list").remove();
+                StockList.push(result.Data);
+                addStockToList(result.Data);
+                cancelDialog("#addStockDialog");
+            } else {
+                alert(result.ErrorMessage);
+            }
+        }
+
+        $.post("/Admin/AddStock", stock, successCallBack(successFunc, loader));
+    }
+
+    if (files.length == 0) {
+        let data = {
+            URL: $("#addStockDialog img").attr("src")
+        }
+
+        addFunc(data);
+        return;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/Admin/UploadImage',
+        contentType: false,
+        processData: false,
+        data: dataImage,
+        success: function (data) {
+            addFunc(data);
+        }
+    });
 }
 
 var SelectIdCategoryId;
@@ -152,7 +363,7 @@ function addCategory() {
         let successFunc = function (result, loader) {
             loader.stop();
             if (result.Success) {
-                $(".empty-list").remove();
+                $(".category .empty-list").remove();
                 addCategoryToList(result.Data);
                 cancelDialog("#addCategoryDialog");
             } else {
@@ -310,8 +521,6 @@ function loadProducts() {
 }
 
 function addProduct() {
-
-
     let loader = new Loader($("#addProducDialog  form"));
     loader.start();
 
@@ -335,7 +544,7 @@ function addProduct() {
         let successFunc = function (result, loader) {
             loader.stop();
             if (result.Success) {
-                $(".empty-list").remove();
+                $(".product .empty-list").remove();
                 addProductToList(result.Data);
                 cancelDialog("#addProducDialog");
             } else {
@@ -401,6 +610,49 @@ function updateProduct() {
     $.post("/Admin/UpdateProduct", product, successCallBack(successFunc, loader));
 }
 
+function addStockToList(stock) {
+    let $template = $($("#stock-item-template").html());
+
+    $template.find("#stock-id").val(stock.Id);
+    $template.attr("stock-id", stock.Id);
+    $template.find("img").attr("src", stock.Image);
+    $template.find(".stock-item-name").html(stock.Name);
+    $template.find(".stock-remove").bind("click", function () {
+        removeStock(stock.Id);
+    });
+    $template.find(".stock-edit").bind("click", function () {
+        editStock(stock.Id);
+    });
+    $template.find(".stock-visible").bind("click", function () {
+        let changeStock = getStockById(stock.Id);
+
+        changeStock.Visible = !changeStock.Visible;
+        toggleVisibleSotck($template, changeStock);
+        updateVisibleStock(changeStock);
+    });
+    toggleVisibleSotck($template, stock);
+
+    $("#stock-list").append($template);
+    $template.find("img").one("load", function () {
+        initBlocks();
+    }).each(function () {
+        if (this.complete) {
+            $(this).trigger('load');
+        }
+    });
+}
+
+function toggleVisibleSotck(container, stock) {
+    let $container = $(container);
+
+    if (stock.Visible) {
+        $container.find(".stock-visible").html('<i class="fal fa-eye"></i>');
+    } else {
+        $container.find(".stock-visible").html('<i class="fal fa-eye-slash"></i>');
+    }
+
+}
+
 function addProductToList(product) {
     let templateCategoryItem = `
     <div class="product-item" category-id="${product.CategoryId}" product-id="${product.Id}">
@@ -432,6 +684,11 @@ function addProductToList(product) {
     </div >`;
 
     $(".product-list").append(templateCategoryItem);
+}
+
+function clearStockList() {
+    $("#stock .empty-list").remove();
+    $("#stock-list").empty();
 }
 
 function clearProductList() {
@@ -503,6 +760,41 @@ function removeProduct(e, event) {
     loader.start();
 
     $.post("/Admin/RemoveProduct", { id: id }, successCallBack(successFunc, loader));
+}
+
+var StockList = [];
+
+function addAllItemStock(data) {
+    for (let stock of data) {
+        addStockToList(stock);
+    }
+}
+
+function loadStockList() {
+    clearStockList();
+    if (StockList &&
+        StockList.length > 0) {
+        addAllItemStock(StockList);
+    } else {
+        let loader = new Loader($("#stock .content-wrapper"));
+        let successFunc = function (result, loader) {
+            loader.stop();
+            if (result.Success) {
+                if (!result.Data || result.Data.length == 0) {
+                    setEmptyStockInfo();
+                } else {
+                    StockList = result.Data;
+                    addAllItemStock(StockList);
+                }
+            } else {
+                alert(result.ErrorMessage);
+                setEmptyStockInfo();
+            }
+        }
+        loader.start();
+
+        $.post("/Admin/LoadStockList", null, successCallBack(successFunc, loader));
+    }
 }
 
 function loadProductList(idCategory) {
@@ -728,4 +1020,15 @@ function setEmptyCategoryInfo() {
     `;
 
     $(".category-list").html(template);
+}
+
+function setEmptyStockInfo() {
+    let template = `
+        <div class="empty-list">
+            <i class="fal fa-smile-plus"></i>
+            <span>Пока нет ни одной акции</span>
+        </div>
+    `;
+
+    $("#stock .content-wrapper").html(template);
 }

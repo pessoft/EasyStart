@@ -593,5 +593,106 @@ namespace EasyStart.Logic
 
             return result;
         }
+        public static StockModel SaveStock(StockModel stock)
+        {
+            StockModel result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.Stocks.Add(stock);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
+
+        public static List<StockModel> GetStocks()
+        {
+            List<StockModel> result = new List<StockModel>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.Stocks.ToList();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
+
+        public static List<StockModel> GetStocksVisible()
+        {
+            List<StockModel> result = new List<StockModel>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.Stocks
+                        .Where(p => p.Visible)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
+
+        public static bool RemoveStock(int id)
+        {
+            var success = false;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var removeStock = db.Stocks.FirstOrDefault(p => p.Id == id);
+
+                    db.Stocks.Remove(removeStock);
+                    db.SaveChanges();
+
+                    success = true;
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return success;
+        }
+
+
+        public static StockModel UpdateStock(StockModel stock)
+        {
+            StockModel result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.Stocks.FirstOrDefault(p => p.Id == stock.Id);
+
+                    if (result != null)
+                    {
+                        result.Description = stock.Description;
+                        result.Discount = stock.Discount;
+                        result.Image = stock.Image;
+                        result.Name = stock.Name;
+                        result.StockType = stock.StockType;
+                        result.Visible = stock.Visible;
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
+
     }
 }

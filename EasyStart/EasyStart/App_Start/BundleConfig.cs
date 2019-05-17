@@ -18,7 +18,8 @@ namespace EasyStart
             bundles.Add(new ScriptBundle("~/bundles/main").Include(
                         "~/Scripts/main.js",
                         "~/Scripts/loader.js",
-                        "~/Scripts/maskedinput.min.js"));
+                        "~/Scripts/maskedinput.min.js",
+                        "~/Scripts/blocksIt.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/admin-login").Include(
                         "~/Scripts/admin-login.js"));
