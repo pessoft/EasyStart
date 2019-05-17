@@ -115,6 +115,7 @@ function cancelDialog(e) {
     dialog.find(".dialog-image-upload").removeClass("hide");
     dialog.find("img").addClass("hide");
     dialog.find("option").removeAttr("selected");
+    dialog.find("select").val("0")
     dialog.trigger("close")
 }
 
@@ -1030,5 +1031,5 @@ function setEmptyStockInfo() {
         </div>
     `;
 
-    $("#stock .content-wrapper").html(template);
+    $("#stock .content-wrapper").append(template);
 }
