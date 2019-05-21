@@ -127,148 +127,140 @@
             </div>
         </div>
 
-        @*<div class="section hide" id="setting" setting-id="@(ViewBag.Setting != null ? ViewBag.Setting.Id : 0)">
-                <div class="setting-header">
-                    Контакты отделения
-                    <i class="fal fa-map-marker-alt"></i>
-                </div>
-                <input list="setting-city-list" id="setting-city" value="@(ViewBag.Setting != null ? ViewBag.Setting.City : "")" type="text" placeholder="Город">
-                <datalist id="setting-city-list">
-                    @foreach (var cityPair in ViewBag.City)
-                    {
-                        <option city-id="@cityPair.Key" value="@cityPair.Value" />
-                    }
-                </datalist>
-                <input type="text" id="setting-street" placeholder="Улица" value="@(ViewBag.Setting != null ? ViewBag.Setting.Street : "")" />
-                <input type="text" id="setting-home" placeholder="Дом" value="@(ViewBag.Setting != null && ViewBag.Setting.HomeNumber!= 0 ? ViewBag.Setting.HomeNumber : "")" />
-                <input type="text" id="setting-phone-number" placeholder="Номер телефона" value="@(ViewBag.Setting != null ? ViewBag.Setting.PhoneNumber : "")" />
-                <input type="number" placeholder="Время открытия" id="time-open" min="0" max="24" step="0.1" value="@(ViewBag.Setting != null && ViewBag.Setting.TimeOpen!= 0 ? ViewBag.Setting.TimeOpen : "")" />
-                <input type="number" placeholder="Время закрытия" id="time-close" min="0" max="24" step="0.1" value="@(ViewBag.Setting != null && ViewBag.Setting.TimeClose!= 0 ? ViewBag.Setting.TimeClose : "")" />
-                <input type="number" placeholder="Стоймость доставки" id="price-delivery" min="0" step="0.1" value="@(ViewBag.Setting != null && ViewBag.Setting.PriceDelivery!=0 ? ViewBag.Setting.PriceDelivery : "")" />
-                <label for="free-delivery">Бесплатная доставка при заказе на сумму от</label>
-                <input type="number" id="free-delivery" min="0" step="0.1" value="@(ViewBag.Setting != null && ViewBag.Setting.FreePriceDelivery != 0 ? ViewBag.Setting.FreePriceDelivery : "")" />
-                <button onclick="saveSetting();">Сохранить</button>
-            </div>*@
-
-
         <div class="section hide" id="setting" setting-id="@(ViewBag.Setting != null ? ViewBag.Setting.Id : 0)">
-            <div class="setting-block">
-                <div class="setting-header">
-                    Адрес
-                    <i class="fal fa-map-marker-alt"></i>
-                </div>
-                <div class="setting-content">
-                    <div class="group">
-                        <input required autocomplete="off" list="setting-city-list" id="setting-city" value="@(ViewBag.Setting != null ? ViewBag.Setting.City : "")" type="text">
-                        <datalist id="setting-city-list">
-                            @foreach (var cityPair in ViewBag.City)
-                            {
-                                <option city-id="@cityPair.Key" value="@cityPair.Value" />
-                            }
-                        </datalist>
-                        <span class="bar"></span>
-                        <label>Город</label>
+            <div class="section-wrapper">
+                <div class="setting-block">
+                    <div class="setting-header">
+                        Адрес
+                        <i class="fal fa-map-marker-alt"></i>
                     </div>
-                    <div class="group">
-                        <input required type="text" autocomplete="off" id="setting-street" value="@(ViewBag.Setting != null ? ViewBag.Setting.Street : "")" />
-                        <span class="bar"></span>
-                        <label>Улица</label>
-                    </div>
-                    <div class="group">
-                        <input required type="text" autocomplete="off" id="setting-home" value="@(ViewBag.Setting != null && ViewBag.Setting.HomeNumber!= 0 ? ViewBag.Setting.HomeNumber : "")" />
-                        <span class="bar"></span>
-                        <label>Номер дома(офиса)</label>
-                    </div>
-                </div>
-            </div>
-            <div class="setting-block">
-                <div class="setting-header">
-                    Контакты
-                    <i class="fal fa-address-card"></i>
-                </div>
-                <div class="setting-content">
-                    <div class="group">
-                        <input autocomplete="off" type="text" required id="setting-phone-number" value="@(ViewBag.Setting != null ? ViewBag.Setting.PhoneNumber : "")" />
-                        <span class="bar"></span>
-                        <label>Телефон 1</label>
-                    </div>
-                    <div class="group">
-                        <input autocomplete="off" type="text" required id="setting-phone-number-additional" value="@(ViewBag.Setting != null ? ViewBag.Setting.PhoneNumberAdditional : "")" />
-                        <span class="bar"></span>
-                        <label>Телефон 2</label>
-                    </div>
-                    <div class="group">
-                        <input autocomplete="off" type="text" required id="setting-email" value="@(ViewBag.Setting != null ? ViewBag.Setting.Email : "")" />
-                        <span class="bar"></span>
-                        <label>Адрес эл.почты</label>
+                    <div class="setting-content">
+                        <div class="group">
+                            <input required autocomplete="off" list="setting-city-list" id="setting-city" value="@(ViewBag.Setting != null ? ViewBag.Setting.City : "")" type="text">
+                            <datalist id="setting-city-list">
+                                @foreach (var cityPair in ViewBag.City)
+                                {
+                                    <option city-id="@cityPair.Key" value="@cityPair.Value" />
+                                }
+                            </datalist>
+                            <span class="bar"></span>
+                            <label>Город</label>
+                        </div>
+                        <div class="group">
+                            <input required type="text" autocomplete="off" id="setting-street" value="@(ViewBag.Setting != null ? ViewBag.Setting.Street : "")" />
+                            <span class="bar"></span>
+                            <label>Улица</label>
+                        </div>
+                        <div class="group">
+                            <input required type="text" autocomplete="off" id="setting-home" value="@(ViewBag.Setting != null && ViewBag.Setting.HomeNumber!= 0 ? ViewBag.Setting.HomeNumber : "")" />
+                            <span class="bar"></span>
+                            <label>Номер дома(офиса)</label>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="setting-block">
-                <div class="setting-header">
-                    Соц. сети
-                    <i class="fal fa-comments"></i>
+                <div class="setting-block">
+                    <div class="setting-header">
+                        Контакты
+                        <i class="fal fa-address-card"></i>
+                    </div>
+                    <div class="setting-content">
+                        <div class="group">
+                            <input autocomplete="off" type="text" required id="setting-phone-number" value="@(ViewBag.Setting != null ? ViewBag.Setting.PhoneNumber : "")" />
+                            <span class="bar"></span>
+                            <label>Телефон 1</label>
+                        </div>
+                        <div class="group">
+                            <input autocomplete="off" type="text" required id="setting-phone-number-additional" value="@(ViewBag.Setting != null ? ViewBag.Setting.PhoneNumberAdditional : "")" />
+                            <span class="bar"></span>
+                            <label>Телефон 2</label>
+                        </div>
+                        <div class="group">
+                            <input autocomplete="off" type="text" required id="setting-email" value="@(ViewBag.Setting != null ? ViewBag.Setting.Email : "")" />
+                            <span class="bar"></span>
+                            <label>Адрес эл.почты</label>
+                        </div>
+                    </div>
                 </div>
-                <div class="setting-content">
-                    <div class="group">
-                        <input autocomplete="off" type="text" required id="setting-vk" value="@(ViewBag.Setting != null ? ViewBag.Setting.Vkontakte : "")" />
-                        <span class="bar"></span>
-                        <label>Вконтакте</label>
+                <div class="setting-block">
+                    <div class="setting-header">
+                        Соц. сети
+                        <i class="fal fa-comments"></i>
                     </div>
-                    <div class="group">
-                        <input autocomplete="off" type="text" required id="setting-instagram" value="@(ViewBag.Setting != null ? ViewBag.Setting.Instagram : "")" />
-                        <span class="bar"></span>
-                        <label>Инстаграм</label>
-                    </div>
-                    <div class="group">
-                        <input autocomplete="off" type="text" required id="setting-facebook" value="@(ViewBag.Setting != null ? ViewBag.Setting.Facebook : "")" />
-                        <span class="bar"></span>
-                        <label>Фейсбук</label>
+                    <div class="setting-content">
+                        <div class="group">
+                            <input autocomplete="off" type="text" required id="setting-vk" value="@(ViewBag.Setting != null ? ViewBag.Setting.Vkontakte : "")" />
+                            <span class="bar"></span>
+                            <label>Вконтакте</label>
+                        </div>
+                        <div class="group">
+                            <input autocomplete="off" type="text" required id="setting-instagram" value="@(ViewBag.Setting != null ? ViewBag.Setting.Instagram : "")" />
+                            <span class="bar"></span>
+                            <label>Инстаграм</label>
+                        </div>
+                        <div class="group">
+                            <input autocomplete="off" type="text" required id="setting-facebook" value="@(ViewBag.Setting != null ? ViewBag.Setting.Facebook : "")" />
+                            <span class="bar"></span>
+                            <label>Фейсбук</label>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="setting-menu">
-                <button class="btn btn-submit" onclick="saveSetting();">Сохранить</button>
+                <div class="setting-menu">
+                    <button class="btn btn-submit" onclick="saveSetting();">Сохранить</button>
+                </div>
             </div>
         </div>
         <div class="section hide" id="delivery">
-            <div class="delivery-block">
-                <div class="delivery-header">
-                    Настройка стоимости доставки
-                </div>
-                <div class="delivery-content">
-                    <div class="group">
-                        <input required type="text" id="price-delivery" value="@(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.PriceDelivery != 0 ? ViewBag.DeliverySetting.PriceDelivery : "")" />
-                        <div class="bar"></div>
-                        <label>Стоимость доставки</label>
+            <div class="section-wrapper">
+                <div class="delivery-block">
+                    <div class="delivery-header">
+                        Настройка стоимости доставки
                     </div>
-                    <div class="group">
-                        <input required type="text" id="free-delivery" value="@(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.FreePriceDelivery != 0 ? ViewBag.DeliverySetting.FreePriceDelivery : "")" />
-                        <div class="bar"></div>
-                        <label>Бесплатная доставка при заказе на сумму от</label>
-                    </div>
-                </div>
-            </div>
-            <div class="delivery-block">
-                <div class="delivery-header">
-                    Оплата заказа
-                </div>
-                <div class="delivery-content">
-                    <div class="payment-type">
-                        <input type="checkbox" id="payment-card" @(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.PayCard ? "checked" : "") />
-                        <label for="payment-card" class="label-for">Банковской картой</label>
-                    </div>
-                    <div class="payment-type">
-                        <input type="checkbox" id="payment-cash" checked disabled />
-                        <label for="payment-cash" class="label-for">Наличными</label>
+                    <div class="delivery-content">
+                        <div class="group">
+                            <input required type="text" id="price-delivery" value="@(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.PriceDelivery != 0 ? ViewBag.DeliverySetting.PriceDelivery : "")" />
+                            <div class="bar"></div>
+                            <label>Стоимость доставки</label>
+                        </div>
+                        <div class="group">
+                            <input required type="text" id="free-delivery" value="@(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.FreePriceDelivery != 0 ? ViewBag.DeliverySetting.FreePriceDelivery : "")" />
+                            <div class="bar"></div>
+                            <label>Бесплатная доставка при заказе на сумму от</label>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="delivery-block">
-                <div class="delivery-header">
-                    Режим работы доставки
+                <div class="delivery-block smaller">
+                    <div class="delivery-header">
+                        Оплата заказа
+                    </div>
+                    <div class="delivery-content">
+                        <div class="payment-type">
+                            <input type="checkbox" id="payment-card" @(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.PayCard ? "checked" : "") />
+                            <label for="payment-card" class="label-for">Банковской картой</label>
+                        </div>
+                        <div class="payment-type">
+                            <input type="checkbox" id="payment-cash" checked disabled />
+                            <label for="payment-cash" class="label-for">Наличными</label>
+                        </div>
+                    </div>
                 </div>
-                <div class="delivery-content">
+                <div class="delivery-block smaller">
+                    <div class="delivery-header">
+                        Часовой пояс
+                    </div>
+                    <div class="delivery-content">
+                        <select id="delivery-time-zone">
+                            @foreach (var kv in ViewBag.Zones)
+                            {
+                                <option @(@kv.Key == @ViewBag.ZoneId ? "selected" : "") value="@kv.Key">@kv.Value</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="delivery-block">
+                    <div class="delivery-header">
+                        Режим работы доставки
+                    </div>
+
                     <div class="table-time">
                         @foreach (var day in ViewBag.DeliveryTimeTable)
                         {
@@ -285,17 +277,19 @@
                         }
                     </div>
                 </div>
-            </div>
-            <div class="delivery-menu">
-                <button class="btn btn-submit" onclick="saveDeliverySetting();">Сохранить</button>
-            </div>
-        </div>
-        <div class="section hide" id="analytics">
-            <div class="analytics-header">
-                Аналитика
-                <i class="fal fa-analytics"></i>
+                <div class="delivery-menu">
+                    <button class="btn btn-submit" onclick="saveDeliverySetting();">Сохранить</button>
+                </div>
             </div>
         </div>
+    </div>
+    <div class="section hide" id="analytics">
+        <div class="analytics-header">
+            Аналитика
+            <i class="fal fa-analytics"></i>
+        </div>
+    </div>
+
     </div>
 
     <dialog id="addCategoryDialog">
@@ -358,7 +352,7 @@
                         <label>Название акции</label>
                     </div>
                     <div class="group">
-                        <input type="number" required id="stock-discount" min="0" step="1" value="0"/>
+                        <input type="number" required id="stock-discount" min="0" step="1" value="0" />
                         <span class="bar"></span>
                         <label>Размер скидки (в процентах)</label>
                     </div>

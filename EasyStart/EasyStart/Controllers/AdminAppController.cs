@@ -66,6 +66,9 @@ namespace EasyStart
         public JsonResultModel SendOrder([FromBody]OrderModel order)
         {
             var result = new JsonResultModel();
+            var deliverSetting = DataWrapper.GetDeliverySetting(order.BranchId);
+            order.Date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
+
             var numberOrder = DataWrapper.SaveOrder(order);
 
             if(numberOrder != -1)

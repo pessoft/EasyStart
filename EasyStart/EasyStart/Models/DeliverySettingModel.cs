@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using EasyStart.Utils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,6 +16,10 @@ namespace EasyStart.Models
         public double FreePriceDelivery { get; set; }
         public bool PayCard { get; set; }
         public bool PayCash { get; set; }
+        /// <summary>
+        /// Time Zone Id
+        /// </summary>
+        public string ZoneId { get; set; } = DateTimeHepler.DEFAULT_ZONE_ID;
         public string TimeDeliveryJSON { get; set; }
 
         [NotMapped]

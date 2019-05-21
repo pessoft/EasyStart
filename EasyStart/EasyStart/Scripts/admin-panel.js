@@ -935,6 +935,7 @@ function saveDeliverySetting() {
     let setting = {
         PriceDelivery: $("#price-delivery").val(),
         FreePriceDelivery: $("#free-delivery").val(),
+        ZoneId: $("#delivery-time-zone").val(),
         PayCard: $("#payment-card").is(":checked"),
         PayCash: $("#payment-cash").is(":checked"),
         TimeDeliveryJSON: getTimeDeliveryJSON(),

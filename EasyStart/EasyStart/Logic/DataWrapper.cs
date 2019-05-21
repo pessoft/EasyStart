@@ -260,6 +260,7 @@ namespace EasyStart.Logic
                         updateSetting.PriceDelivery = setting.PriceDelivery;
                         updateSetting.FreePriceDelivery = setting.FreePriceDelivery;
                         updateSetting.TimeDeliveryJSON = setting.TimeDeliveryJSON;
+                        updateSetting.ZoneId = setting.ZoneId;
                     }
                     else
                     {

@@ -25,6 +25,8 @@ namespace EasyStart.Controllers
                 DataWrapper.GetAllSettingDictionary(),
                 typeBranch);
 
+            ViewBag.Zones = DateTimeHepler.GetDisplayDictionary();
+
             ViewBag.BranchViews = branchViewvs != null && branchViewvs.Any() ? branchViewvs : null;
             ViewBag.City = CityHelper.City;
             ViewBag.Setting = null;
@@ -35,6 +37,7 @@ namespace EasyStart.Controllers
             if (branchId != -1)
             {
                 var deliverySetting = DataWrapper.GetDeliverySetting(branchId); ;
+                ViewBag.ZoneId = deliverySetting.ZoneId;
                 ViewBag.Setting = DataWrapper.GetSetting(branchId);
                 ViewBag.DeliverySetting = deliverySetting;
                 ViewBag.DeliveryTimeTable = WeeklyDayHelper.ConvertTimeDeliveryToViev(deliverySetting.TimeDelivery);
@@ -42,6 +45,7 @@ namespace EasyStart.Controllers
             else
             {
                 ViewBag.DeliveryTimeTable = WeeklyDayHelper.ConvertTimeDeliveryToViev();
+                ViewBag.ZoneId = DateTimeHepler.DEFAULT_ZONE_ID;
             }
 
             return View();
