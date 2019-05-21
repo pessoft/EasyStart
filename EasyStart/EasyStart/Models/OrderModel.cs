@@ -13,6 +13,7 @@ namespace EasyStart.Models
         public int Id { get; set; }
         public int BranchId { get; set; }
         public int CityId { get; set; }
+        public int ClientId { get; set; }
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
         public DeliveryType DeliveryType { get; set; }
@@ -30,7 +31,7 @@ namespace EasyStart.Models
         public double AmountPay { get; set; }
         public double AmountPayDiscountDelivery { get; set; }
         public bool NeedCashBack { get; set; }
-        public DateTime Date { get; set; } 
+        public DateTime Date { get; set; }
 
         [NotMapped]
         public Dictionary<int, int> ProductCount

@@ -538,7 +538,7 @@ namespace EasyStart.Logic
             return numberOrder;
         }
 
-        public static List<OrderModel> GetHistoryOrder(string phoneNumber)
+        public static List<OrderModel> GetHistoryOrder(int clientId)
         {
             var histroyOrders = new List<OrderModel>();
             try
@@ -546,7 +546,7 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     histroyOrders = db.Orders
-                        .Where(p => p.PhoneNumber == phoneNumber)
+                        .Where(p => p.ClientId == clientId)
                         .ToList();
                 }
             }
@@ -666,7 +666,6 @@ namespace EasyStart.Logic
             return success;
         }
 
-
         public static StockModel UpdateStock(StockModel stock)
         {
             StockModel result = null;
@@ -693,6 +692,37 @@ namespace EasyStart.Logic
             { }
 
             return result;
+        }
+
+        public static Client AddOrUpdateClient(Client clinet)
+        {
+            Client newClient = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    if (clinet.Id != 0)
+                    {
+                        newClient = db.Clients.FirstOrDefault(p => p.Id == clinet.Id);
+                    }
+
+                    if (newClient != null)
+                    {
+                        newClient.PhoneNumber = clinet.PhoneNumber;
+                    }
+                    else
+                    {
+                        newClient = db.Clients.Add(clinet);
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return clinet;
         }
 
     }

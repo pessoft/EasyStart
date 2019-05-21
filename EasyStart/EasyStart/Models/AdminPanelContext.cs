@@ -16,5 +16,6 @@ namespace EasyStart.Models
         public DbSet<OrderModel> Orders { get; set; }
         public DbSet<ProductReview> ProductReviews { get; set; }
         public DbSet<StockModel> Stocks { get; set; }
+        public DbSet<Client> Clients { get; set; }
     }
 }

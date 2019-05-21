@@ -80,15 +80,9 @@ namespace EasyStart
             return result;
         }
 
-        public List<OrderModel> GetHistoryOrder(string phoneNumber)
+        public List<OrderModel> GetHistoryOrder(int clientId)
         {
-            //hack - плюс куда то исчезает при передаче
-            if(phoneNumber[0] != '+')
-            {
-                phoneNumber = "+" + phoneNumber.Trim();
-            }
-
-            var historyOrder = DataWrapper.GetHistoryOrder(phoneNumber);
+            var historyOrder = DataWrapper.GetHistoryOrder(clientId);
 
             return historyOrder;
         }
@@ -107,7 +101,7 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public void SetProductReviews(ProductReview review)
+        public void SetProductReviews([FromBody]ProductReview review)
         {
             if (review != null &&
                 !string.IsNullOrEmpty(review.PhoneNumber) &&
@@ -144,6 +138,14 @@ namespace EasyStart
             var stocks = DataWrapper.GetStocksVisible();
 
             return stocks;
+        }
+
+        [HttpPost]
+        public Client AddOrUpdateClient([FromBody]Client client)
+        {
+            var newClient = DataWrapper.AddOrUpdateClient(client);
+
+            return newClient;
         }
     }
 }

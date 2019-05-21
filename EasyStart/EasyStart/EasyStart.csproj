@@ -205,10 +205,15 @@
     <Compile Include="Migrations\201905210538325_AddTimeZoneDelivery.Designer.cs">
       <DependentUpon>201905210538325_AddTimeZoneDelivery.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905210705230_AddClinetId.cs" />
+    <Compile Include="Migrations\201905210705230_AddClinetId.Designer.cs">
+      <DependentUpon>201905210705230_AddClinetId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\BranchModel.cs" />
     <Compile Include="Models\BranchSettingViewModel.cs" />
+    <Compile Include="Models\Client.cs" />
     <Compile Include="Models\DeliverySettingModel.cs" />
     <Compile Include="Models\NewBranchModel.cs" />
     <Compile Include="Models\CategoryModel.cs" />
@@ -366,6 +371,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905210538325_AddTimeZoneDelivery.resx">
       <DependentUpon>201905210538325_AddTimeZoneDelivery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905210705230_AddClinetId.resx">
+      <DependentUpon>201905210705230_AddClinetId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
