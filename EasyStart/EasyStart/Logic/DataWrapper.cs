@@ -311,6 +311,24 @@ namespace EasyStart.Logic
             return result;
         }
 
+        public static List<CategoryModel> GetCategoriesVisible()
+        {
+            List<CategoryModel> result = new List<CategoryModel>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.Categories
+                        .Where(p => p.Visible)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
+
         public static CategoryModel UpdateCategory(CategoryModel category)
         {
             CategoryModel result = null;
@@ -439,6 +457,25 @@ namespace EasyStart.Logic
                 {
                     result = db
                         .Products
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
+
+        public static List<ProductModel> GetAllProductsVisible()
+        {
+            List<ProductModel> result = new List<ProductModel>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db
+                        .Products.
+                        Where(p => p.Visible)
                         .ToList();
                 }
             }
@@ -769,5 +806,46 @@ namespace EasyStart.Logic
             catch (Exception ex)
             { }
         }
+
+        public static void UpdateVisibleCategory(UpdaterVisible upData)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var data = db.Categories.FirstOrDefault(p => p.Id == upData.Id);
+
+                    if (data != null)
+                    {
+                        data.Visible = upData.Visible;
+
+                        db.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            { }
+        }
+
+        public static void UpdateVisibleProduct(UpdaterVisible upData)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var data = db.Products.FirstOrDefault(p => p.Id == upData.Id);
+
+                    if (data != null)
+                    {
+                        data.Visible = upData.Visible;
+
+                        db.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            { }
+        }
+
     }
 }

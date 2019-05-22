@@ -22,5 +22,6 @@ namespace EasyStart.Models
         public int VotesCount { get; set; }
         public ProductType ProductType { get; set; }
         public int OrderNumber { get; set; }
+        public bool Visible { get; set; } = true;
     }
 }

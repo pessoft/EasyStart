@@ -11,5 +11,6 @@ namespace EasyStart.Models
         public string Name { get; set; }
         public string Image { get; set; }
         public int OrderNumber { get; set; }
+        public bool Visible { get; set; } = true;
     }
 }

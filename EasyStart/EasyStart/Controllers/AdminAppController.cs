@@ -27,7 +27,7 @@ namespace EasyStart
 
         public List<CategoryModel> GetCategories()
         {
-            var categories = DataWrapper.GetCategories();
+            var categories = DataWrapper.GetCategoriesVisible();
 
             return categories;
         }
@@ -41,7 +41,7 @@ namespace EasyStart
 
         public Dictionary<int, List<ProductModel>> GetAllProducts()
         {
-            var products = DataWrapper.GetAllProducts()
+            var products = DataWrapper.GetAllProductsVisible()
                 .GroupBy(p => p.CategoryId)
                 .ToDictionary(p => p.Key, p => p.ToList());
 

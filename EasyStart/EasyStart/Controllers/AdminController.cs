@@ -514,5 +514,25 @@ namespace EasyStart.Controllers
                 DataWrapper.UpdateOrderNumberProducts(data);
             }
         }
+
+        [HttpPost]
+        [Authorize]
+        public void UpdateVisibleCategory(UpdaterVisible data)
+        {
+            if (data != null && data.Id > 0)
+            {
+                DataWrapper.UpdateVisibleCategory(data);
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public void UpdateVisibleProduct(UpdaterVisible data)
+        {
+            if (data != null && data.Id > 0)
+            {
+                DataWrapper.UpdateVisibleProduct(data);
+            }
+        }
     }
 }

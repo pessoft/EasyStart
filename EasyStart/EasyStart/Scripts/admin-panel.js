@@ -48,7 +48,7 @@
     bindDragula();
 });
 
-var TypeOrderNumber = {
+var TypeItem = {
     Categories: 0,
     Products: 1
 }
@@ -57,28 +57,28 @@ function bindDragula() {
     dragula([document.getElementById("category-list")], {
         revertOnSpill: true
     }).on("drop", function () {
-        calcOrderNumbers(TypeOrderNumber.Categories);
+        calcOrderNumbers(TypeItem.Categories);
         });
     dragula([document.getElementById("product-list")], {
         revertOnSpill: true
     }).on("drop", function () {
-        calcOrderNumbers(TypeOrderNumber.Products);
+        calcOrderNumbers(TypeItem.Products);
     });;
 }
 
-function calcOrderNumbers(typeOrderNumber) {
+function calcOrderNumbers(typeItem) {
     let $items = [];
     let updaterOrderNumber = []
     let attrName = "";
     let url = "";
 
-    switch (typeOrderNumber) {
-        case TypeOrderNumber.Categories:
+    switch (typeItem) {
+        case TypeItem.Categories:
             $items = $("#category-list .category-item");
             attrName = "category-id";
             url = "/Admin/UpdateOrderNumberCategory";
             break;
-        case TypeOrderNumber.Products:
+        case TypeItem.Products:
             $items = $("#product-list .product-item");
             attrName = "product-id";
             url = "/Admin/UpdateOrderNumberProducts";
@@ -496,6 +496,8 @@ function addCategoryToList(category) {
         </div>
         <div class="category-item-action">
             <i onclick="editCategory(this, event);" class="fal fa-edit"></i>
+            <i class="fal fa-eye item-show ${(category.Visible ? '' : 'hide')}" onclick="toggleShowItem(this, ${TypeItem.Categories}, event);"></i>
+            <i class="fal fa-eye-slash item-hide ${(category.Visible ? 'hide' : '')}" onclick="toggleShowItem(this, ${TypeItem.Categories}, event);"></i>
             <i onclick="removeCategory(this, event);" class="fal fa-trash-alt"></i>
         </div>
     </div >`;
@@ -756,17 +758,43 @@ function toggleVisibleSotck(container, stock) {
 
 }
 
-function toggleShowProduct(e) {
+function toggleShowItem(e, typeItem, event) {
+    event.stopPropagation();
+
+    let url = "";
     let $e = $(e);
-    let $containerMenu = $e.parents(".product-item-action");
+    let $parent;
+    let id;
+    let visible;
+    switch (typeItem) {
+        case TypeItem.Categories:
+            $parent = $e.parents(".category-item");
+            id = $parent.attr("category-id");
+            url = "/Admin/UpdateVisibleCategory";
+            break;
+        case TypeItem.Products:
+            $parent = $e.parents(".product-item");
+            id = $parent.attr("product-id");
+            url = "/Admin/UpdateVisibleProduct";
+            break;
+    }
 
     $e.addClass("hide");
 
-    if ($e.hasClass("product-show")) {
-        $containerMenu.find(".product-hide").removeClass("hide");
+    if ($e.hasClass("item-show")) {
+        visible = false;
+        $parent.find(".item-hide").removeClass("hide");
     } else {
-        $containerMenu.find(".product-show").removeClass("hide");
+        visible = true;
+        $parent.find(".item-show").removeClass("hide");
     }
+
+    let updaterVisible = {
+        Id: id,
+        Visible: visible
+
+    };
+    $.post(url, { data: updaterVisible }, null);
 
 }
 
@@ -792,8 +820,8 @@ function addProductToList(product) {
             <div class="product-item-action">
                 <i onclick="editProduct(this, event);" class="fal fa-edit"></i>
                 <i class="fal  fa-comment-dots" ></i>
-                <i class="fal fa-eye product-show" onclick="toggleShowProduct(this);"></i>
-                <i class="fal fa-eye-slash product-hide hide" onclick="toggleShowProduct(this);"></i>
+                <i class="fal fa-eye item-show ${(product.Visible ? '' : 'hide')}" onclick="toggleShowItem(this, ${TypeItem.Products}, event);"></i>
+                <i class="fal fa-eye-slash item-hide ${(product.Visible ? 'hide' : '')}" onclick="toggleShowItem(this, ${TypeItem.Products}, event);"></i>
                 <i onclick="removeProduct(this, event);" class="fal fa-trash-alt"></i>
             </div>
         </div>
