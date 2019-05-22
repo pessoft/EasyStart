@@ -29,6 +29,8 @@ namespace EasyStart
 
             bundles.Add(new ScriptBundle("~/bundles/admin-panel").Include(
                         "~/Scripts/admin-panel.js"));
+            bundles.Add(new ScriptBundle("~/bundles/jquery-raty").Include(
+                      "~/Scripts/jquery.raty.min.js"));
 
             // Используйте версию Modernizr для разработчиков, чтобы учиться работать. Когда вы будете готовы перейти к работе,
             // готово к выпуску, используйте средство сборки по адресу https://modernizr.com, чтобы выбрать только необходимые тесты.

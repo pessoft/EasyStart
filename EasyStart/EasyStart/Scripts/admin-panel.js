@@ -756,6 +756,20 @@ function toggleVisibleSotck(container, stock) {
 
 }
 
+function toggleShowProduct(e) {
+    let $e = $(e);
+    let $containerMenu = $e.parents(".product-item-action");
+
+    $e.addClass("hide");
+
+    if ($e.hasClass("product-show")) {
+        $containerMenu.find(".product-hide").removeClass("hide");
+    } else {
+        $containerMenu.find(".product-show").removeClass("hide");
+    }
+
+}
+
 function addProductToList(product) {
     let templateCategoryItem = `
     <div class="product-item" category-id="${product.CategoryId}" product-id="${product.Id}">
@@ -766,6 +780,8 @@ function addProductToList(product) {
             <div class="product-item-name">
                 ${product.Name}
             </div>
+            <div class="product-item-raty">
+            </div>
             <div class="product-item-additional-info">
                 ${product.AdditionInfo}
             </div>
@@ -775,6 +791,9 @@ function addProductToList(product) {
             </div>
             <div class="product-item-action">
                 <i onclick="editProduct(this, event);" class="fal fa-edit"></i>
+                <i class="fal  fa-comment-dots" ></i>
+                <i class="fal fa-eye product-show" onclick="toggleShowProduct(this);"></i>
+                <i class="fal fa-eye-slash product-hide hide" onclick="toggleShowProduct(this);"></i>
                 <i onclick="removeProduct(this, event);" class="fal fa-trash-alt"></i>
             </div>
         </div>
@@ -786,7 +805,18 @@ function addProductToList(product) {
         </div>
     </div >`;
 
-    $(".product-list").append(templateCategoryItem);
+    let $template = $(templateCategoryItem);
+
+    $template.find(".product-item-raty").raty({
+        score: product.Rating,
+        showHalf: true,
+        path: "../images/rating",
+        targetKeep: true,
+        precision: true,
+        readOnly: true
+    });
+
+    $(".product-list").append($template);
 }
 
 function clearStockList() {

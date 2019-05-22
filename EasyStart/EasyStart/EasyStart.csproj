@@ -275,6 +275,11 @@
     <Content Include="Images\Products\first-order.jpg" />
     <Content Include="Images\Products\mors.jpg" />
     <Content Include="Images\Products\take.jpg" />
+    <Content Include="Images\rating\cancel-off.png" />
+    <Content Include="Images\rating\cancel-on.png" />
+    <Content Include="Images\rating\star-half.png" />
+    <Content Include="Images\rating\star-off.png" />
+    <Content Include="Images\rating\star-on.png" />
     <Content Include="Scripts\admin-login.js" />
     <Content Include="Scripts\admin-panel.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -296,6 +301,7 @@
     <Content Include="Content\fontawesome\webfonts\fa-solid-900.ttf" />
     <Content Include="Content\fontawesome\webfonts\fa-solid-900.woff" />
     <Content Include="Content\fontawesome\webfonts\fa-solid-900.woff2" />
+    <Content Include="Images\rating\.DS_Store" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\dragula.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -303,6 +309,7 @@
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.raty.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
