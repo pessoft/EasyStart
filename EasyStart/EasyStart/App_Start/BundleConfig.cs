@@ -21,6 +21,9 @@ namespace EasyStart
                         "~/Scripts/maskedinput.min.js",
                         "~/Scripts/blocksIt.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/dragula").Include(
+                        "~/Scripts/dragula.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/admin-login").Include(
                         "~/Scripts/admin-login.js"));
 
@@ -44,6 +47,8 @@ namespace EasyStart
                       "~/Content/admin-panel.css",
                       "~/Content/fontawesome/css/all.css",
                       "~/Content/material-input.css"));
+            bundles.Add(new ScriptBundle("~/dragula/css").Include(
+                       "~/Content/dragula.css"));
         }
     }
 }

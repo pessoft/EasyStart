@@ -457,6 +457,15 @@ label[for=free-delivery] {
     cursor: default;
 }
 
+    .category-item.gu-mirror {
+        padding: 0 !important;
+    }
+
+    .product-item.gu-mirror {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
 div.category-item:hover {
     transition: 100ms ease-in;
     transform: scale(1.03);

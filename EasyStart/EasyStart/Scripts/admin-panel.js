@@ -45,7 +45,59 @@
     });
 
     $("#stock-type").bind("change", stockTypeToggleDiscountn);
+    bindDragula();
 });
+
+var TypeOrderNumber = {
+    Categories: 0,
+    Products: 1
+}
+
+function bindDragula() {
+    dragula([document.getElementById("category-list")], {
+        revertOnSpill: true
+    }).on("drop", function () {
+        calcOrderNumbers(TypeOrderNumber.Categories);
+        });
+    dragula([document.getElementById("product-list")], {
+        revertOnSpill: true
+    }).on("drop", function () {
+        calcOrderNumbers(TypeOrderNumber.Products);
+    });;
+}
+
+function calcOrderNumbers(typeOrderNumber) {
+    let $items = [];
+    let updaterOrderNumber = []
+    let attrName = "";
+    let url = "";
+
+    switch (typeOrderNumber) {
+        case TypeOrderNumber.Categories:
+            $items = $("#category-list .category-item");
+            attrName = "category-id";
+            url = "/Admin/UpdateOrderNumberCategory";
+            break;
+        case TypeOrderNumber.Products:
+            $items = $("#product-list .product-item");
+            attrName = "product-id";
+            url = "/Admin/UpdateOrderNumberProducts";
+            break;
+    }
+
+    if ($items.length > 0) {
+        for (let i = 0; i < $items.length; ++i) {
+            let id = $($items[i]).attr(attrName);
+
+            updaterOrderNumber.push({
+                Id: id,
+                OrderNumber: i +1,
+            });
+        }
+
+        $.post(url, { data: updaterOrderNumber }, null);
+    }
+}
 
 var DataProduct = {
     Categories: [],
@@ -550,6 +602,7 @@ function loadCategoryList() {
                 for (let category of DataProduct.Categories) {
                     addCategoryToList(category);
                 }
+
             }
 
         } else {
@@ -861,6 +914,8 @@ function loadProductList(idCategory) {
                 for (let product of DataProduct.Products) {
                     addProductToList(product);
                 }
+
+
             }
         } else {
             alert(result.ErrorMessage);
