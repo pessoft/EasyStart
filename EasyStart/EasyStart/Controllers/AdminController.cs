@@ -494,5 +494,25 @@ namespace EasyStart.Controllers
 
             return Json(result);
         }
+
+        [HttpPost]
+        [Authorize]
+        public void UpdateOrderNumberCategory(List<UpdaterOrderNumber> data)
+        {
+            if (data != null && data.Any())
+            {
+                DataWrapper.UpdateOrderNumberCategory(data);
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public void UpdateOrderNumberProducts(List<UpdaterOrderNumber> data)
+        {
+            if (data != null && data.Any())
+            {
+                DataWrapper.UpdateOrderNumberProducts(data);
+            }
+        }
     }
 }

@@ -5,11 +5,9 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class CategoryModel
+    public class UpdaterOrderNumber
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Image { get; set; }
         public int OrderNumber { get; set; }
     }
 }

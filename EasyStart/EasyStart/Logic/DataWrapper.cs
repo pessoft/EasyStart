@@ -725,5 +725,49 @@ namespace EasyStart.Logic
             return clinet;
         }
 
+        public static void UpdateOrderNumberCategory(List<UpdaterOrderNumber> upData)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var dict = upData.ToDictionary(p => p.Id, p => p.OrderNumber);
+                    var ids = dict.Keys.ToList(); ;
+                    var data = db.Categories.Where(p => ids.Contains(p.Id));
+
+                    foreach(var up in data)
+                    {
+                        up.OrderNumber = dict[up.Id];
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            { }
+        }
+
+        //to do вынести в общий метод с категориями
+        public static void UpdateOrderNumberProducts(List<UpdaterOrderNumber> upData)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var dict = upData.ToDictionary(p => p.Id, p => p.OrderNumber);
+                    var ids = dict.Keys.ToList();
+                    var data = db.Products.Where(p => ids.Contains(p.Id));
+
+                    foreach (var up in data)
+                    {
+                        up.OrderNumber = dict[up.Id];
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            { }
+        }
     }
 }

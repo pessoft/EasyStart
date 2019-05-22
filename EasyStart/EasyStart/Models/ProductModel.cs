@@ -21,5 +21,6 @@ namespace EasyStart.Models
         public double VotesSum { get; set; }
         public int VotesCount { get; set; }
         public ProductType ProductType { get; set; }
+        public int OrderNumber { get; set; }
     }
 }

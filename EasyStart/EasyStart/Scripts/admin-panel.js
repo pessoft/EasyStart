@@ -47,6 +47,11 @@
     $("#stock-type").bind("change", stockTypeToggleDiscountn);
 });
 
+var DataProduct = {
+    Categories: [],
+    Products: []
+}
+
 var StockType = {
     Custom: 0,
     FirstOrder: 1,
@@ -517,10 +522,21 @@ function selectCategory(e) {
     loadProductList(SelectIdCategoryId);
 }
 
+function sortByOrderNumber(data) {
+    var newData = [];
+
+    for (var item of data) {
+        newData[item.OrderNumber - 1] = item;
+    }
+
+    return newData;
+}
+
 function loadCategoryList() {
     SelectIdCategoryId = null;
     clearCategoryList();
 
+    DataProduct.Products = [];
     let container = $(".category-list");
     let loader = new Loader($(".category"));
     let successFunc = function (result, loader) {
@@ -529,7 +545,9 @@ function loadCategoryList() {
             if (!result.Data || result.Data.length == 0) {
                 setEmptyCategoryInfo();
             } else {
-                for (let category of result.Data) {
+                DataProduct.Categories = sortByOrderNumber(result.Data);
+
+                for (let category of DataProduct.Categories) {
                     addCategoryToList(category);
                 }
             }
@@ -839,7 +857,8 @@ function loadProductList(idCategory) {
             if (!result.Data || result.Data.length == 0) {
                 setEmptyProductInfo();
             } else {
-                for (let product of result.Data) {
+                DataProduct.Products = sortByOrderNumber(result.Data);
+                for (let product of DataProduct.Products) {
                     addProductToList(product);
                 }
             }

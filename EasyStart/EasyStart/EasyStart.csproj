@@ -209,6 +209,10 @@
     <Compile Include="Migrations\201905210705230_AddClinetId.Designer.cs">
       <DependentUpon>201905210705230_AddClinetId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905220451492_AddOrderNumberField.cs" />
+    <Compile Include="Migrations\201905220451492_AddOrderNumberField.Designer.cs">
+      <DependentUpon>201905220451492_AddOrderNumberField.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\BranchModel.cs" />
@@ -225,6 +229,7 @@
     <Compile Include="Models\RatingProducUpdater.cs" />
     <Compile Include="Models\SettingModel.cs" />
     <Compile Include="Models\StockModel.cs" />
+    <Compile Include="Models\UpdaterOrderNumber.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\CityHelper.cs" />
     <Compile Include="Utils\DateTimeHepler.cs" />
@@ -374,6 +379,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905210705230_AddClinetId.resx">
       <DependentUpon>201905210705230_AddClinetId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905220451492_AddOrderNumberField.resx">
+      <DependentUpon>201905220451492_AddOrderNumberField.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
