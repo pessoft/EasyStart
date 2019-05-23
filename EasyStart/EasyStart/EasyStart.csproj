@@ -217,6 +217,14 @@
     <Compile Include="Migrations\201905221446469_AddVisibleField.Designer.cs">
       <DependentUpon>201905221446469_AddVisibleField.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905230536487_AddProductReviewVisible.cs" />
+    <Compile Include="Migrations\201905230536487_AddProductReviewVisible.Designer.cs">
+      <DependentUpon>201905230536487_AddProductReviewVisible.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905230813163_RenameFieldProductReview.cs" />
+    <Compile Include="Migrations\201905230813163_RenameFieldProductReview.Designer.cs">
+      <DependentUpon>201905230813163_RenameFieldProductReview.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\BranchModel.cs" />
@@ -399,6 +407,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905221446469_AddVisibleField.resx">
       <DependentUpon>201905221446469_AddVisibleField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905230536487_AddProductReviewVisible.resx">
+      <DependentUpon>201905230536487_AddProductReviewVisible.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905230813163_RenameFieldProductReview.resx">
+      <DependentUpon>201905230813163_RenameFieldProductReview.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

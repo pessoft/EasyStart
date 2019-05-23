@@ -50,7 +50,8 @@
 
 var TypeItem = {
     Categories: 0,
-    Products: 1
+    Products: 1,
+    Review: 2
 }
 
 function bindDragula() {
@@ -58,7 +59,7 @@ function bindDragula() {
         revertOnSpill: true
     }).on("drop", function () {
         calcOrderNumbers(TypeItem.Categories);
-        });
+    });
     dragula([document.getElementById("product-list")], {
         revertOnSpill: true
     }).on("drop", function () {
@@ -91,7 +92,7 @@ function calcOrderNumbers(typeItem) {
 
             updaterOrderNumber.push({
                 Id: id,
-                OrderNumber: i +1,
+                OrderNumber: i + 1,
             });
         }
 
@@ -656,6 +657,7 @@ function addProduct() {
             loader.stop();
             if (result.Success) {
                 $(".product .empty-list").remove();
+                Data.Products.push(result.Data);
                 addProductToList(result.Data);
                 cancelDialog("#addProducDialog");
             } else {
@@ -702,6 +704,14 @@ function updateProduct() {
     let successFunc = function (result, loader) {
         loader.stop();
         if (result.Success) {
+            var oldProduct = getProductById(product.Id);
+            oldProduct.Image = product.Image;
+            oldProduct.Name = product.Name;
+            oldProduct.AdditionInfo = product.AdditionInfo;
+            oldProduct.Price = product.Price;
+            oldProduct.Description = product.Description;
+            oldProduct.ProductType = product.ProductType;
+
             let productItem = $(`[product-id=${product.Id}]`);
             productItem.find("img").attr("src", product.Image);
             productItem.find(".category-item-name").html(product.Name);
@@ -767,7 +777,9 @@ function toggleVisibleSotck(container, stock) {
 }
 
 function toggleShowItem(e, typeItem, event) {
-    event.stopPropagation();
+    if (event) {
+        event.stopPropagation();
+    }
 
     let url = "";
     let $e = $(e);
@@ -784,6 +796,11 @@ function toggleShowItem(e, typeItem, event) {
             $parent = $e.parents(".product-item");
             id = $parent.attr("product-id");
             url = "/Admin/UpdateVisibleProduct";
+            break;
+        case TypeItem.Review:
+            $parent = $e.parents(".review-item");
+            id = $parent.attr("review-id");
+            url = "/Admin/UpdateVisibleReview";
             break;
     }
 
@@ -827,7 +844,7 @@ function addProductToList(product) {
             </div>
             <div class="product-item-action">
                 <i onclick="editProduct(this, event);" class="fal fa-edit"></i>
-                <i class="fal  fa-comment-dots" ></i>
+                <i class="fal  fa-comment-dots" onclick="openProductUserCallback(this, event)"></i>
                 <i class="fal fa-eye item-show ${(product.Visible ? '' : 'hide')}" onclick="toggleShowItem(this, ${TypeItem.Products}, event);"></i>
                 <i class="fal fa-eye-slash item-hide ${(product.Visible ? 'hide' : '')}" onclick="toggleShowItem(this, ${TypeItem.Products}, event);"></i>
                 <i onclick="removeProduct(this, event);" class="fal fa-trash-alt"></i>
@@ -907,7 +924,7 @@ function editProduct(e, event) {
 }
 
 function deleteConfirmation(callback) {
-    let $dialog = $("#deleteConfirmation");
+    let $dialog = $("#deleteConfirmationDialog");
     let clickFunc = function () {
         if (callback) {
             callback();
@@ -985,6 +1002,19 @@ function loadStockList() {
 
         $.post("/Admin/LoadStockList", null, successCallBack(successFunc, loader));
     }
+}
+
+function getProductById(id) {
+    let serchProduct = null;
+
+    for (let product of DataProduct.Products) {
+        if (product.Id == id) {
+            serchProduct = product;
+            break;
+        }
+    }
+
+    return serchProduct;
 }
 
 function loadProductList(idCategory) {
@@ -1225,4 +1255,127 @@ function setEmptyStockInfo() {
     `;
 
     $("#stock .content-wrapper").append(template);
+}
+
+function setEmptyReview() {
+    let template = `
+        <div class="empty-list">
+            <i class="fal fa-comment-edit"></i>
+            <span>Пока нет ни одного отзыва</span>
+        </div>
+    `;
+
+    $("#productUserCallbackDialog .product-user-callback-review-list").append(template);
+}
+
+function renderReviewItem(data) {
+    let $template = $($("#review-item-template").html());
+    let userName = `Клиент: ${data.PhoneNumber}`;
+
+
+    $template.attr("review-id", data.Id);
+    $template.find(".review-item-header span").html(userName);
+    $template.find(".review-item-text").html(data.ReviewText);
+
+    if (data.Visible) {
+        $template.find(".item-show").removeClass("hide");
+        $template.find(".item-hide").addClass("hide");
+    } else {
+        $template.find(".item-show").addClass("hide");
+        $template.find(".item-hide").removeClass("hide");
+    }
+
+    return $template;
+}
+
+function cleanProductUserCallbackDialog() {
+    let $dialog = $("#productUserCallbackDialog");
+
+    $dialog.find("img").attr("src", "");
+    $dialog.find(".product-name-user-callback").html("");
+    $dialog.find(".product-user-callback-review-list").html("");
+    $dialog.find(".product-raty-text-user-callback").html("");
+}
+
+function num2str(n, text_forms) {
+    n = Math.abs(n) % 100; var n1 = n % 10;
+    if (n > 10 && n < 20) { return text_forms[2]; }
+    if (n1 > 1 && n1 < 5) { return text_forms[1]; }
+    if (n1 == 1) { return text_forms[0]; }
+    return text_forms[2];
+}
+
+function openProductUserCallback(e, event) {
+    if (event) {
+        event.stopPropagation();
+    }
+
+    cleanProductUserCallbackDialog();
+    Reviews = [];
+
+    let $parent = $(e).parents(".product-item");
+    let loader = new Loader($parent);
+
+    loader.start();
+
+    let productId = $parent.attr("product-id");
+    let callback = () => {
+        let templateReviews = [];
+        for (let review of Reviews) {
+            templateReviews.push(renderReviewItem(review));
+        }
+
+        let product = getProductById(productId);
+        var votesCountStr = num2str(product.VotesCount, ["голос", "голоса", "голосов"]);
+        let reviewText = `Оценка: ${product.Rating.toFixed(1)} - ${product.VotesCount} ${votesCountStr}`;
+
+        let $dialog = $("#productUserCallbackDialog");
+
+        let $img = $dialog.find("img");
+        $img.attr("src", product.Image);
+        $img.removeClass("hide");
+        $dialog.find(".product-name-user-callback").html(product.Name)
+        $dialog.find(".product-raty-text-user-callback").html(reviewText)
+        $dialog.find(".product-raty-image-user-callback").raty({
+            score: product.Rating,
+            showHalf: true,
+            path: "../images/rating",
+            targetKeep: true,
+            precision: true,
+            readOnly: true
+        });
+
+        $dialog.find(".product-user-callback-review-list").html(templateReviews);
+
+        if (!Reviews || Reviews.length == 0) {
+            setEmptyReview();
+        }
+
+        $dialog.trigger("showModal");
+
+        loader.stop();
+    };
+
+    loadProductReviews(productId, callback);
+}
+
+var Reviews = [];
+
+function loadProductReviews(productId, callback) {
+    let successFunc = function (result) {
+        if (result.Success) {
+            if (result.Data &&
+                result.Data.length > 0) {
+                Reviews = result.Data;
+            }
+        } else {
+            alert(result.ErrorMessage);
+        }
+
+        if (callback) {
+            callback();
+        }
+    }
+
+    $.post("/Admin/LoadProductReviews", { productId: productId }, successCallBack(successFunc));
 }

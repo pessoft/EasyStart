@@ -484,16 +484,58 @@
         </form>
     </dialog>
 
-    <dialog id="deleteConfirmation">
+    <dialog id="deleteConfirmationDialog">
         <div class="confirmation-info">
             <i class="fal fa-map-marker-question"></i>
             <span>Вы действительно хотите удалить элемент?</span>
         </div>
         <div class="dialog-menu">
             <button class="btn btn-submit">Да</button>
-            <button class="btn btn-cancel" onclick="cancelDialog($('#deleteConfirmation'))">Нет</button>
+            <button class="btn btn-cancel" onclick="cancelDialog($('#deleteConfirmationDialog'))">Нет</button>
         </div>
     </dialog>
+
+    <dialog id="productUserCallbackDialog">
+        <div class="product-user-callback">
+            <div class="product-user-callback-image">
+                <img src=""/>
+            </div>
+            <div class="product-user-callback-info">
+                <div class="product-user-callback-header">
+                    <div class="product-name-user-callback"></div>
+                    <div class="product-raty-user-callback">
+                        <div class="product-raty-image-user-callback"></div>
+                        <div class="product-raty-text-user-callback"></div>
+                    </div>
+                </div>
+                <div class="product-user-callback-review">
+                    <div class="product-user-callback-review-header">
+                        Отзывы
+                    </div>
+                    <div class="product-user-callback-review-list">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-menu">
+            <button class="btn btn-cancel" onclick="cancelDialog($('#productUserCallbackDialog'))">Закрыть</button>
+        </div>
+    </dialog>
+
+    <template id="review-item-template">
+        <div class="review-item">
+            <div class="review-item-header">
+                <span></span>
+                <div>
+                    <i class="fal fa-eye item-show" onclick="toggleShowItem(this, TypeItem.Review, event);"></i>
+                    <i class="fal fa-eye-slash item-hide" onclick="toggleShowItem(this, TypeItem.Review, event);"></i>
+                </div>
+            </div>
+            <div class="review-item-text">
+            </div>
+        </div>
+    </template>
 
     <template id="stock-item-template">
         <div class="stock-item">

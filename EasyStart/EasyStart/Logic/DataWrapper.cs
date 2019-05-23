@@ -620,7 +620,27 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     result = db.ProductReviews
-                        .Where(p => p.PorudctId == productId)
+                        .Where(p => p.ProductId == productId)
+                        .OrderByDescending(p => p.Date)
+                        .Take(50)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
+
+        public static List<ProductReview> GetProductReviewsVisible(int productId)
+        {
+            List<ProductReview> result = new List<ProductReview>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.ProductReviews
+                        .Where(p => p.ProductId == productId && p.Visible)
                         .OrderByDescending(p => p.Date)
                         .Take(50)
                         .ToList();
@@ -847,5 +867,24 @@ namespace EasyStart.Logic
             { }
         }
 
+        public static void UpdateVisibleReview(UpdaterVisible upData)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var data = db.ProductReviews.FirstOrDefault(p => p.Id == upData.Id);
+
+                    if (data != null)
+                    {
+                        data.Visible = upData.Visible;
+
+                        db.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            { }
+        }
     }
 }

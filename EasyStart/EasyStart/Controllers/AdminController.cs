@@ -534,5 +534,35 @@ namespace EasyStart.Controllers
                 DataWrapper.UpdateVisibleProduct(data);
             }
         }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult LoadProductReviews(int productId)
+        {
+            var result = new JsonResultModel();
+            var reviews = DataWrapper.GetProductReviews(productId);
+
+            if (reviews != null)
+            {
+                result.Data = reviews;
+                result.Success = true;
+            }
+            else
+            {
+                result.ErrorMessage = "При загрузки отзывов что то пошло не так";
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public void UpdateVisibleReview(UpdaterVisible data)
+        {
+            if (data != null && data.Id > 0)
+            {
+                DataWrapper.UpdateVisibleReview(data);
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
@@ -106,7 +107,7 @@ namespace EasyStart
             if (review != null &&
                 !string.IsNullOrEmpty(review.PhoneNumber) &&
                 !string.IsNullOrEmpty(review.ReviewText) &&
-                review.PorudctId > 0)
+                review.ProductId > 0)
             {
                 review.Date = DateTime.Now;
 
@@ -116,17 +117,17 @@ namespace EasyStart
 
         public List<ProductReview> GetProductReviews(int productId)
         {
-            var reviews = DataWrapper.GetProductReviews(productId);
+            var reviews = DataWrapper.GetProductReviewsVisible(productId);
 
             if(reviews != null && reviews.Any())
             {
                 reviews.ForEach(p =>
                 {
-                    var numberChrar = p.PhoneNumber.ToArray();
-                    numberChrar[11] = '*';
-                    numberChrar[12] = '*';
+                    var hideNumberPhone = new StringBuilder(p.PhoneNumber);
+                    hideNumberPhone[11] = '*';
+                    hideNumberPhone[12] = '*';
 
-                    p.PhoneNumber = string.Join("", numberChrar);
+                    p.PhoneNumber = hideNumberPhone.ToString();
                 });
             }
 
