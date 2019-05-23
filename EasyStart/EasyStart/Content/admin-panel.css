@@ -948,3 +948,25 @@ div.product-item:hover {
         align-items: center;
         flex-direction: row;
     }
+
+.confirmation-info {
+    font-size: 1.1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    color: #0f1e32de
+}
+
+    .confirmation-info i {
+        font-size: 2em;
+        margin-right: 10px
+    }
+
+#deleteConfirmation {
+    padding: 20px;
+}
+
+#deleteConfirmation .dialog-menu {
+    justify-content:flex-end;
+}

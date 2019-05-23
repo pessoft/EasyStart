@@ -533,34 +533,40 @@ function editCategory(e, event) {
 
 function removeCategory(e, event) {
     event.stopPropagation();
-    let parent = $($(e).parents(".category-item"));
-    let id = parent.attr("category-id");
-    let loader = new Loader(parent);
-    let successFunc = function (result, loader) {
-        loader.stop();
-        if (result.Success) {
-            if (SelectIdCategoryId == id) {
-                SelectIdCategoryId = null;
 
-                clearProductList();
-                setEmptyProductInfo();
-            }
+    let callback = function () {
+        let parent = $($(e).parents(".category-item"));
+        let id = parent.attr("category-id");
+        let loader = new Loader(parent);
+        let successFunc = function (result, loader) {
+            loader.stop();
+            if (result.Success) {
+                if (SelectIdCategoryId == id) {
+                    SelectIdCategoryId = null;
 
-            $(`[category-id=${id}]`).fadeOut(500, function () {
-                $(this).remove();
-
-                if ($(".category-list").children().length == 0) {
-                    setEmptyCategoryInfo();
+                    clearProductList();
+                    setEmptyProductInfo();
                 }
-            });
 
-        } else {
-            alert(result.ErrorMessage);
+                $(`[category-id=${id}]`).fadeOut(500, function () {
+                    $(this).remove();
+
+                    if ($(".category-list").children().length == 0) {
+                        setEmptyCategoryInfo();
+                    }
+                });
+
+            } else {
+                alert(result.ErrorMessage);
+            }
         }
-    }
-    loader.start();
+        loader.start();
 
-    $.post("/Admin/RemoveCategory", { id: id }, successCallBack(successFunc, loader));
+        $.post("/Admin/RemoveCategory", { id: id }, successCallBack(successFunc, loader));
+    }
+
+
+    deleteConfirmation(callback)
 }
 
 function selectCategory(e) {
@@ -723,7 +729,9 @@ function addStockToList(stock) {
     $template.find("img").attr("src", stock.Image);
     $template.find(".stock-item-name").html(stock.Name);
     $template.find(".stock-remove").bind("click", function () {
-        removeStock(stock.Id);
+        let callback = () => removeStock(stock.Id);
+
+        deleteConfirmation(callback);
     });
     $template.find(".stock-edit").bind("click", function () {
         editStock(stock.Id);
@@ -898,29 +906,50 @@ function editProduct(e, event) {
     dialog.trigger("showModal");
 }
 
+function deleteConfirmation(callback) {
+    let $dialog = $("#deleteConfirmation");
+    let clickFunc = function () {
+        if (callback) {
+            callback();
+        }
+
+        cancelDialog($dialog);
+    };
+
+    $dialog.find(".btn-submit").unbind("click");
+    $dialog.find(".btn-submit").bind("click", clickFunc);
+
+    $dialog.trigger("showModal");
+}
+
 function removeProduct(e, event) {
     event.stopPropagation();
-    let parent = $($(e).parents(".product-item"));
-    let id = parent.attr("product-id");
-    let loader = new Loader(parent);
-    let successFunc = function (result, loader) {
-        loader.stop();
-        if (result.Success) {
-            $(`[product-id=${id}]`).fadeOut(500, function () {
-                $(this).remove();
 
-                if ($(".product-list").children().length == 0) {
-                    setEmptyProductInfo();
-                }
-            });
+    let callback = function () {
+        let parent = $($(e).parents(".product-item"));
+        let id = parent.attr("product-id");
+        let loader = new Loader(parent);
+        let successFunc = function (result, loader) {
+            loader.stop();
+            if (result.Success) {
+                $(`[product-id=${id}]`).fadeOut(500, function () {
+                    $(this).remove();
 
-        } else {
-            alert(result.ErrorMessage);
+                    if ($(".product-list").children().length == 0) {
+                        setEmptyProductInfo();
+                    }
+                });
+
+            } else {
+                alert(result.ErrorMessage);
+            }
         }
-    }
-    loader.start();
+        loader.start();
 
-    $.post("/Admin/RemoveProduct", { id: id }, successCallBack(successFunc, loader));
+        $.post("/Admin/RemoveProduct", { id: id }, successCallBack(successFunc, loader));
+    }
+
+    deleteConfirmation(callback);
 }
 
 var StockList = [];

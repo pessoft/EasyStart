@@ -484,6 +484,17 @@
         </form>
     </dialog>
 
+    <dialog id="deleteConfirmation">
+        <div class="confirmation-info">
+            <i class="fal fa-map-marker-question"></i>
+            <span>Вы действительно хотите удалить элемент?</span>
+        </div>
+        <div class="dialog-menu">
+            <button class="btn btn-submit">Да</button>
+            <button class="btn btn-cancel" onclick="cancelDialog($('#deleteConfirmation'))">Нет</button>
+        </div>
+    </dialog>
+
     <template id="stock-item-template">
         <div class="stock-item">
             <div class="stock-item-image">
