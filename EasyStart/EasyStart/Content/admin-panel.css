@@ -167,7 +167,7 @@ dialog {
 
     .enter-dialog-data textarea {
         min-width: 320px;
-        min-height: 70px;
+        min-height: 160px;
         resize: none;
         margin-top: 2%;
         font-size: 1em;
@@ -215,16 +215,21 @@ dialog {
     }
 
 .preview-image {
-    width: 322px;
-    height: 322px;
+    width: 400px;
+    height: 400px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-    .preview-image img {
-        width: 100%;
-    }
+#addCategoryDialog .preview-image {
+    width: 322px;
+    height: 322px;
+}
+
+.preview-image img {
+    width: 100%;
+}
 
 .loader {
     position: absolute;
@@ -513,7 +518,8 @@ div.category-item:hover {
 .category-list::-webkit-scrollbar,
 .product-list::-webkit-scrollbar,
 .stock-list::-webkit-scrollbar,
-.product-user-callback-review-list::-webkit-scrollbar {
+.product-user-callback-review-list::-webkit-scrollbar,
+.product-name-user-callback::-webkit-scrollbar {
     width: 0.45em;
 }
 
@@ -521,7 +527,8 @@ div.category-item:hover {
 .category-list::-webkit-scrollbar-track,
 .product-list::-webkit-scrollbar-track,
 .stock-list::-webkit-scrollbar-track,
-.product-user-callback-review-list::-webkit-scrollbar-track {
+.product-user-callback-review-list::-webkit-scrollbar-track,
+.product-name-user-callback::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
     border-radius: 30px;
 }
@@ -530,7 +537,8 @@ div.category-item:hover {
 .category-list::-webkit-scrollbar-thumb,
 .product-list::-webkit-scrollbar-thumb,
 .stock-list::-webkit-scrollbar-thumb,
-.product-user-callback-review-list::-webkit-scrollbar-thumb {
+.product-user-callback-review-list::-webkit-scrollbar-thumb,
+.product-name-user-callback::-webkit-scrollbar-thumb {
     background-color: #163f752e;
     border-radius: 2px;
 }
@@ -541,7 +549,8 @@ div.category-item:hover {
     .branch-list::-webkit-scrollbar-thumb:active,
     .category-list::-webkit-scrollbar-thumb:active,
     .product-list::-webkit-scrollbar-thumb:active,
-    .product-user-callback-review-list::-webkit-scrollbar-thumb:active {
+    .product-user-callback-review-list::-webkit-scrollbar-thumb:active,
+    .product-name-user-callback::-webkit-scrollbar-thumb:active {
         background-color: #163f75c9;
     }
 
@@ -610,7 +619,7 @@ div.product-item:hover {
 .product-item-name {
     width: 60%;
     font-size: 0.8em;
-    word-break: break-all;
+    word-break: break-word;
 }
 
 .product-item-price {
@@ -985,21 +994,21 @@ div.product-item:hover {
         margin-top: 0;
     }
 
-    .product-user-callback {
-        width: 700px;
-        height: 350px;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        flex-direction: row;
-    }
+.product-user-callback {
+    width: 850px;
+    height: 400px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: row;
+}
 
 .product-user-callback-image {
-    width: 350px;
-    height: 350px;
-    display:flex;
-    justify-content:center;
-    align-items:center
+    width: 400px;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
     .product-user-callback-image img {
@@ -1008,12 +1017,12 @@ div.product-item:hover {
     }
 
 .product-user-callback-info {
-    width: 400px;
+    width: 450px;
     height: 100%;
-    display:flex;
-    justify-content:center;
-    align-items:flex-start;
-    flex-direction:column;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: column;
 }
 
 .product-user-callback-header {
@@ -1030,12 +1039,12 @@ div.product-item:hover {
 .product-user-callback-review {
     width: 98%;
     padding: 0 15px;
-    height: 80%;
+    height: 77%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
-    color: #0f1e32de;
+    color: #163f75cf;
 }
 
 .product-user-callback-review-header {
@@ -1043,10 +1052,12 @@ div.product-item:hover {
     max-height: 30%;
     margin-top: 15px;
     margin-bottom: 5px;
+    font-size: 1.1em;
+    color: #0f1e32de;
 }
 
 .product-user-callback-review-list {
-    width: 100%;
+    width: 95%;
     height: 85%;
     overflow-x: hidden;
     overflow-y: auto;
@@ -1056,6 +1067,9 @@ div.product-item:hover {
 .product-name-user-callback {
     font-size: 1.4em;
     color: #0f1e32de;
+    margin-bottom: 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .product-raty-user-callback {
@@ -1078,7 +1092,7 @@ div.product-item:hover {
 }
 
 .review-item {
-    width: 85%;
+    width: 90%;
     margin: 10px 0;
     display: flex;
     justify-content: center;
@@ -1094,6 +1108,7 @@ div.product-item:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color: #163f75eb;
 }
 
     .review-item-header i {
@@ -1111,4 +1126,68 @@ div.product-item:hover {
     color: #f15151;
     transition: 200ms ease-in;
     transform: scale(1.1);
+}
+
+#productUserCallbackDialog img {
+    cursor:default;
+}
+
+
+#order {
+    width:100%;
+    height: 100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+.order-wrapper {
+    width: 1000px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    box-shadow: 0px 0px 10px 0px #0f1e321f;
+    border-radius: 2px;
+    color: #0f1e32de;
+}
+
+.orders {
+    width: 35%;
+    height: 96%;
+    padding: 2% 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction:column;
+    border-right: 1px solid #0f1e3212;
+}
+
+.order-info {
+    width: 80%;
+    height: 96%;
+    padding: 2% 0;
+}
+
+.orders-header {
+    width: 100%;
+    height: 14%;
+}
+
+.order-header-text {
+    font-size: 2em;
+    margin-bottom: 10px;
+    text-align:center;
+}
+
+.order-list {
+    width:100%;
+    height: 86%;
+    position:relative;
+    display:flex;
+    justify-content:flex-start;
+    align-items:center;
+    flex-direction:column;
 }

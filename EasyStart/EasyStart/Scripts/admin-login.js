@@ -5,7 +5,7 @@
         if (result.Success) {
             window.location.href = result.URL;
         } else {
-            alert(result.ErrorMessage);
+            showErrorMessage(result.ErrorMessage);
         }
     }
 

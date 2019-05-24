@@ -13,7 +13,7 @@
 </head>
 <body>
     <div class="header-menu">
-        <div class="menu-item menu-item-active" target-id="order">
+        <div class="menu-item menu-item-active" target-id="order" onclick="loadOrders();">
             <i class="fal fa-shopping-basket"></i>
             Заказы
         </div>
@@ -52,7 +52,34 @@
     </div>
 
     <div class="content">
-        <div class="section" id="order"></div>
+        <div class="section" id="order">
+            <div class="order-wrapper">
+                <div class="orders">
+                    <div class="orders-header">
+                        <div class="order-header-text">
+                            Заказы
+                            <i class="fal fa-cash-register"></i>
+                        </div>
+                        <div></div>
+                    </div>
+                    <div class="order-list">
+                        <div class="empty-list">
+                            <i class="fal fa-user-clock"></i>
+                            <span>Пока нет ни одного заказа</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-info">
+                    <div class="orders-header">
+                        <div class="order-header-text">
+                            Информация о заказе
+                            <i class="fal fa-receipt"></i>
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="section hide" id="history"></div>
         <div class="section hide" id="products">
             <div class="category">
@@ -498,7 +525,7 @@
     <dialog id="productUserCallbackDialog">
         <div class="product-user-callback">
             <div class="product-user-callback-image">
-                <img src=""/>
+                <img src="" />
             </div>
             <div class="product-user-callback-info">
                 <div class="product-user-callback-header">
@@ -562,6 +589,7 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/main")
+    @Scripts.Render("~/bundles/notify")
     @Scripts.Render("~/bundles/admin-panel")
     @Scripts.Render("~/bundles/dragula")
     @Scripts.Render("~/bundles/jquery-raty")

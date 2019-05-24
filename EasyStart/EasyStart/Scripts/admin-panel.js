@@ -23,7 +23,7 @@
     let setOperationAdd = () => CurrentOperation = TypeOperation.Add;
     let productPredicate = () => {
         if (!SelectIdCategoryId) {
-            alert("Выберите категорию");
+            showInfoMessage("Выберите категорию");
             return false;
         }
 
@@ -190,7 +190,7 @@ function operationCategory() {
 
 function operationProduct() {
     if (!SelectIdCategoryId) {
-        alert("Выберите категорию")
+        showInfoMessage("Выберите категорию")
     }
 
     switch (CurrentOperation) {
@@ -316,7 +316,7 @@ function updateStock() {
                 updateRenderStock($stock, result.Data);
                 cancelDialog("#addStockDialog");
             } else {
-                alert(result.ErrorMessage);
+                showErrorMessage(result.ErrorMessage);
             }
         }
         loader.start();
@@ -379,7 +379,7 @@ function addStock() {
                 addStockToList(result.Data);
                 cancelDialog("#addStockDialog");
             } else {
-                alert(result.ErrorMessage);
+                showErrorMessage(result.ErrorMessage);
             }
         }
 
@@ -425,7 +425,7 @@ function updateCategory() {
 
             cancelDialog("#addCategoryDialog");
         } else {
-            alert(result.ErrorMessage);
+            showErrorMessage(result.ErrorMessage);
         }
     }
     loader.start();
@@ -457,7 +457,7 @@ function addCategory() {
                 addCategoryToList(result.Data);
                 cancelDialog("#addCategoryDialog");
             } else {
-                alert(result.ErrorMessage);
+                showErrorMessage(result.ErrorMessage);
             }
         }
 
@@ -558,7 +558,7 @@ function removeCategory(e, event) {
                 });
 
             } else {
-                alert(result.ErrorMessage);
+                showErrorMessage(result.ErrorMessage);
             }
         }
         loader.start();
@@ -615,7 +615,7 @@ function loadCategoryList() {
             }
 
         } else {
-            alert(result.ErrorMessage);
+            showErrorMessage(result.ErrorMessage);
             setEmptyCategoryInfo();
         }
     }
@@ -661,7 +661,7 @@ function addProduct() {
                 addProductToList(result.Data);
                 cancelDialog("#addProducDialog");
             } else {
-                alert(result.ErrorMessage);
+                showErrorMessage(result.ErrorMessage);
             }
         }
 
@@ -723,7 +723,7 @@ function updateProduct() {
 
             cancelDialog("#addProducDialog");
         } else {
-            alert(result.ErrorMessage);
+            showErrorMessage(result.ErrorMessage);
         }
     }
     loader.start();
@@ -958,7 +958,7 @@ function removeProduct(e, event) {
                 });
 
             } else {
-                alert(result.ErrorMessage);
+                showErrorMessage(result.ErrorMessage);
             }
         }
         loader.start();
@@ -994,7 +994,7 @@ function loadStockList() {
                     addAllItemStock(StockList);
                 }
             } else {
-                alert(result.ErrorMessage);
+                showErrorMessage(result.ErrorMessage);
                 setEmptyStockInfo();
             }
         }
@@ -1035,7 +1035,7 @@ function loadProductList(idCategory) {
 
             }
         } else {
-            alert(result.ErrorMessage);
+            showErrorMessage(result.ErrorMessage);
             setEmptyProductInfo();
         }
     }
@@ -1065,16 +1065,48 @@ function openDialogFile(id) {
     $(`#${id}`).click();
 }
 
+function checkRequreValid() {
+
+}
+
 function saveSetting() {
+    let warnMsg = {
+        City: "Выберите город из списка",
+        Street: "Укажите имя улицы",
+        HomeNumber: "Укажите номер дома",
+        PhoneNumber: "Укажите номер телефона"
+    }
+
+    let cityId = $("#setting-city-list option[value='" + $('#setting-city').val() + "']").attr('city-id');
+    let street = $("#setting-street").val();
+    let homeNumber = $("#setting-home").val();
+    let phoneNumber = $("#setting-phone-number").val();
+
+    if (!cityId) {
+        showWarningMessage(warnMsg.City);
+        return;
+    }
+    if (!street) {
+        showWarningMessage(warnMsg.Street);
+        return;
+    }
+    if (!homeNumber) {
+        showWarningMessage(warnMsg.HomeNumber);
+        return;
+    }
+    if (!phoneNumber) {
+        showWarningMessage(warnMsg.PhoneNumber);
+        return;
+    }
 
     let setting = {
         Id: $("#setting").attr("setting-id"),
-        CityId: $("#setting-city-list option[value='" + $('#setting-city').val() + "']").attr('city-id'),
-        Street: $("#setting-street").val(),
-        PhoneNumber: $("#setting-phone-number").val(),
+        CityId: cityId,
+        Street: street,
+        PhoneNumber: phoneNumber,
         PhoneNumberAdditional: $("#setting-phone-number-additional").val(),
         Email: $("#setting-email").val(),
-        HomeNumber: $("#setting-home").val(),
+        HomeNumber: homeNumber,
         Vkontakte: $("#setting-vk").val(),
         Instagram: $("#setting-instagram").val(),
         Facebook: $("#setting-facebook").val(),
@@ -1088,7 +1120,7 @@ function saveSetting() {
     let successFunc = function (result, loader) {
         loader.stop();
         if (!result.Success) {
-            alert(result.ErrorMessage);
+            showErrorMessage(result.ErrorMessage);
         }
     }
 
@@ -1115,6 +1147,14 @@ function getTimeDeliveryJSON() {
         let start = parseFloat(timeDay.find("[name=start]").val()).toFixed(2);
         let end = parseFloat(timeDay.find("[name=end]").val()).toFixed(2);
 
+        if (isNaN(start)) {
+            start = "0.00";
+        }
+
+        if (isNaN(end)) {
+            end = "0.00";
+        }
+
         timeDays[DayWeekly[day]] = checked ? [start, end] : null;
     }
 
@@ -1122,10 +1162,26 @@ function getTimeDeliveryJSON() {
 }
 
 function saveDeliverySetting() {
+    let warnMgs = {
+        PriceDelivery: "Укажите стоимость доставки",
+        FreePriceDelivery: "Укажите минимальную сумму заказа для бесплатной доставки",
+    }
+
+    let priceDelivery = $("#price-delivery").val();
+    let freePriceDelivery = $("#free-delivery").val();
+
+    if (!priceDelivery) {
+        showWarningMessage(warnMgs.PriceDelivery);
+        return;
+    }
+    if (!freePriceDelivery || freePriceDelivery == 0) {
+        showWarningMessage(warnMgs.FreePriceDelivery);
+        return;
+    }
 
     let setting = {
-        PriceDelivery: $("#price-delivery").val(),
-        FreePriceDelivery: $("#free-delivery").val(),
+        PriceDelivery: priceDelivery,
+        FreePriceDelivery: freePriceDelivery,
         ZoneId: $("#delivery-time-zone").val(),
         PayCard: $("#payment-card").is(":checked"),
         PayCash: $("#payment-cash").is(":checked"),
@@ -1135,7 +1191,7 @@ function saveDeliverySetting() {
     let successFunc = function (result, loader) {
         loader.stop();
         if (!result.Success) {
-            alert(result.ErrorMessage);
+            showErrorMessage(result.ErrorMessage);
         }
     }
 
@@ -1157,7 +1213,7 @@ function addBranch() {
             addBranchToList(result.Data);
             cancelDialog("#addBranchDialog");
         } else {
-            alert(result.ErrorMessage);
+            showErrorMessage(result.ErrorMessage);
         }
     }
     loader.start();
@@ -1194,7 +1250,7 @@ function loadBranchList() {
             }
 
         } else {
-            alert(result.ErrorMessage);
+            showErrorMessage(result.ErrorMessage);
         }
     }
     loader.start();
@@ -1216,7 +1272,7 @@ function removeBranch(e, id) {
             });
 
         } else {
-            alert(result.ErrorMessage);
+            showErrorMessage(result.ErrorMessage);
         }
     }
     loader.start();
@@ -1357,6 +1413,7 @@ function openProductUserCallback(e, event) {
     };
 
     loadProductReviews(productId, callback);
+    loadProductReviews(productId, callback);
 }
 
 var Reviews = [];
@@ -1369,7 +1426,7 @@ function loadProductReviews(productId, callback) {
                 Reviews = result.Data;
             }
         } else {
-            alert(result.ErrorMessage);
+            showErrorMessage(result.ErrorMessage);
         }
 
         if (callback) {
@@ -1378,4 +1435,28 @@ function loadProductReviews(productId, callback) {
     }
 
     $.post("/Admin/LoadProductReviews", { productId: productId }, successCallBack(successFunc));
+}
+
+
+function setEmptyOrders() {
+    let template = `
+        <div class="empty-list">
+            <i class="fal fa-user-clock"></i>
+            <span>Пока нет ни одного заказа</span>
+        </div>
+    `;
+
+    $("#order .order-list").append(template);
+}
+
+function removeRmptyList(containerId) {
+    $(`#${containerId} .empty-list`).remove();
+}
+
+var Orders = [];
+function loadOrders() {
+    removeRmptyList("order");
+    if (Orders.length == 0) {
+        setEmptyOrders();
+    }
 }

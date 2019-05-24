@@ -21,6 +21,9 @@ namespace EasyStart
                         "~/Scripts/maskedinput.min.js",
                         "~/Scripts/blocksIt.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/notify").Include(
+                      "~/Scripts/notify.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/dragula").Include(
                         "~/Scripts/dragula.js"));
 
