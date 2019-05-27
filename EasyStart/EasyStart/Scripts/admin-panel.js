@@ -1449,14 +1449,99 @@ function setEmptyOrders() {
     $("#order .order-list").append(template);
 }
 
-function removeRmptyList(containerId) {
-    $(`#${containerId} .empty-list`).remove();
+function setEmptyOrderInfo() {
+    let template = `
+        <div class="empty-list">
+            <i class="fal fa-info"></i>
+            <span>Что бы увидеть информацию о заказе, выберите нужный из колонки "Заказы"</span>
+        </div>
+    `;
+
+    $("#order .order-list").append(template);
 }
 
+
 var Orders = [];
+
 function loadOrders() {
-    removeRmptyList("order");
-    if (Orders.length == 0) {
-        setEmptyOrders();
+    if (Orders.length != 0) {
+        return;
     }
+
+    currentBranchId = $("#current-brnach").val();
+    let brnachIds = getAdditionBranches();
+    brnachIds.push(currentBranchId);
+
+    let $list = $("#order .orders .order-list");
+    $list.empty();
+
+    let loader = new Loader($list);
+    loader.start();
+
+    let successFunc = function (data, loader) {
+        if (data.Success) {
+            Orders = processingOrders(data.Data);
+
+            if (Orders.length == 0) {
+                setEmptyOrders();
+            } else {
+                renderOrders();
+            }
+        } else {
+            showErrorMessage(data.ErrorMessage);
+        }
+
+        loader.stop();
+    }
+
+    $.post("/Admin/LoadOrders", { brnachIds: brnachIds}, successCallBack(successFunc, loader));
+}
+
+function getAdditionBranches() {
+    return [];
+}
+
+function renderOrders() {
+    let templates = [];
+
+    for (let order of Orders) {
+        templates.push(getTemplateOrderItem(order));
+    }
+
+    $("#order .order-list").html(templates);
+}
+
+function getTemplateOrderItem(data) {
+    let $template = $($(`#order-item-template-${data.DeliveryType}`).html());
+    let orderNumber = `№ ${data.Id}`;
+    let date = toStringDateAndTime(data.Date);
+
+    $template.find(".order-item-number span").html(orderNumber);
+    $template.find(".order-item-date").html(date);
+
+    return $template;
+}
+
+function jsonToDate(value) {
+    date = new Date(parseInt(value.replace("/Date(", "").replace(")/", ""), 10));
+
+    return date;
+}
+
+function processingOrders(orders) {
+    for (let order of orders) {
+        order.Date = jsonToDate(order.Date);
+        order.ProductCount = JSON.parse(order.ProductCountJSON);
+    }
+
+    return orders;
+}
+
+function toStringDateAndTime(date) {
+    let day = date.getDate().toString();;
+    day = day.length == 1 ? "0" + day : day;
+    let month = (date.getMonth() + 1).toString();
+    month = month.length == 1 ? "0" + month : month;
+    let dateStr = `${date.getHours()}:${date.getMinutes()} ${day}.${month}.${date.getFullYear()}`;
+    return dateStr;
 }

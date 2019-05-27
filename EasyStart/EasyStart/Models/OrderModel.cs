@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Serialization;
 
 namespace EasyStart.Models
 {
@@ -34,6 +35,7 @@ namespace EasyStart.Models
         public DateTime Date { get; set; }
 
         [NotMapped]
+        [ScriptIgnore]
         public Dictionary<int, int> ProductCount
         {
             get

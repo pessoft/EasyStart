@@ -50,7 +50,7 @@
             Выйти
         </div>
     </div>
-
+    <input type="hidden" id="current-brnach" value="@ViewBag.CurrentBranch">
     <div class="content">
         <div class="section" id="order">
             <div class="order-wrapper">
@@ -76,6 +76,12 @@
                             <i class="fal fa-receipt"></i>
                         </div>
                         <div></div>
+                    </div>
+                    <div class="order-description">
+                        <div class="empty-list">
+                            <i class="fal fa-info"></i>
+                            <span>Что бы увидеть информацию о заказе, выберите нужный из колонки "Заказы"</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -584,6 +590,26 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </template>
+
+    <template id="order-item-template-0">
+        <div class="order-item">
+            <div class="order-item-number">
+                <i class="fal fa-shipping-timed"></i>
+                <span>№ 24</span>
+            </div>
+            <div class="order-item-date">7:51 23.05.2019</div>
+        </div>
+    </template>
+
+    <template id="order-item-template-1">
+        <div class="order-item">
+            <div class="order-item-number">
+                <i class="fal fa-hand-holding-box"></i>
+                <span></span>
+            </div>
+            <div class="order-item-date"></div>
         </div>
     </template>
 

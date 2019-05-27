@@ -519,7 +519,8 @@ div.category-item:hover {
 .product-list::-webkit-scrollbar,
 .stock-list::-webkit-scrollbar,
 .product-user-callback-review-list::-webkit-scrollbar,
-.product-name-user-callback::-webkit-scrollbar {
+.product-name-user-callback::-webkit-scrollbar,
+.order-list::-webkit-scrollbar {
     width: 0.45em;
 }
 
@@ -528,7 +529,8 @@ div.category-item:hover {
 .product-list::-webkit-scrollbar-track,
 .stock-list::-webkit-scrollbar-track,
 .product-user-callback-review-list::-webkit-scrollbar-track,
-.product-name-user-callback::-webkit-scrollbar-track {
+.product-name-user-callback::-webkit-scrollbar-track,
+.order-list::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
     border-radius: 30px;
 }
@@ -538,7 +540,8 @@ div.category-item:hover {
 .product-list::-webkit-scrollbar-thumb,
 .stock-list::-webkit-scrollbar-thumb,
 .product-user-callback-review-list::-webkit-scrollbar-thumb,
-.product-name-user-callback::-webkit-scrollbar-thumb {
+.product-name-user-callback::-webkit-scrollbar-thumb,
+.order-list::-webkit-scrollbar-thumb {
     background-color: #163f752e;
     border-radius: 2px;
 }
@@ -550,7 +553,8 @@ div.category-item:hover {
     .category-list::-webkit-scrollbar-thumb:active,
     .product-list::-webkit-scrollbar-thumb:active,
     .product-user-callback-review-list::-webkit-scrollbar-thumb:active,
-    .product-name-user-callback::-webkit-scrollbar-thumb:active {
+    .product-name-user-callback::-webkit-scrollbar-thumb:active,
+    .order-list::-webkit-scrollbar-thumb:active {
         background-color: #163f75c9;
     }
 
@@ -985,14 +989,14 @@ div.product-item:hover {
     padding: 20px;
 }
 
-#deleteConfirmationDialog .dialog-menu,
-#productUserCallbackDialog .dialog-menu {
-    justify-content: flex-end;
-}
-
+    #deleteConfirmationDialog .dialog-menu,
     #productUserCallbackDialog .dialog-menu {
-        margin-top: 0;
+        justify-content: flex-end;
     }
+
+#productUserCallbackDialog .dialog-menu {
+    margin-top: 0;
+}
 
 .product-user-callback {
     width: 850px;
@@ -1061,7 +1065,7 @@ div.product-item:hover {
     height: 85%;
     overflow-x: hidden;
     overflow-y: auto;
-    position:relative;
+    position: relative;
 }
 
 .product-name-user-callback {
@@ -1115,11 +1119,11 @@ div.product-item:hover {
         font-size: 1.15em;
     }
 
-    .review-item-text {
-        font-size: 0.85em;
-        width: 95%;
-        padding: 10px 0 10px 5%;
-    }
+.review-item-text {
+    font-size: 0.85em;
+    width: 95%;
+    padding: 10px 0 10px 5%;
+}
 
 .review-item-header i:hover {
     cursor: pointer;
@@ -1129,20 +1133,21 @@ div.product-item:hover {
 }
 
 #productUserCallbackDialog img {
-    cursor:default;
+    cursor: default;
 }
 
 
 #order {
-    width:100%;
+    width: 100%;
     height: 100%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
 .order-wrapper {
     width: 1000px;
-    height: 100%;
+    height: 99%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1161,7 +1166,7 @@ div.product-item:hover {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    flex-direction:column;
+    flex-direction: column;
     border-right: 1px solid #0f1e3212;
 }
 
@@ -1179,15 +1184,72 @@ div.product-item:hover {
 .order-header-text {
     font-size: 2em;
     margin-bottom: 10px;
-    text-align:center;
+    text-align: center;
 }
 
 .order-list {
-    width:100%;
+    width: 100%;
+    height: 80%;
+    padding: 3% 0;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.order-description {
+    width: 100%;
     height: 86%;
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+}
+
+#order .empty-list {
+    font-size: 1.5em;
+}
+
+.order-item {
+    width: 92%;
+    padding: 0 4%;
+    height: 50px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: row;
+    color: #163f75eb;
+    border-bottom: 1px solid #0f1e3212;
     position:relative;
-    display:flex;
-    justify-content:flex-start;
-    align-items:center;
-    flex-direction:column;
+}
+
+.order-item-date {
+    font-size: 0.8em;
+}
+
+.order-item i {
+    font-size: 1.5em;
+}
+
+.order-item-number {
+    width: 60%;
+}
+
+.order-item:hover {
+    box-shadow: 0 0 10px 0px #163f7570;
+}
+
+.order-item::after {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 50px;
+    background: none;
+    border-bottom: 1px solid #163f754f;
+}
+
+.order-item:hover::after {
+    width: 100%;
+    transition: width .3s;
 }

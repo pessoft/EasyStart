@@ -26,7 +26,7 @@ namespace EasyStart.Controllers
                 typeBranch);
 
             ViewBag.Zones = DateTimeHepler.GetDisplayDictionary();
-
+            ViewBag.CurrentBranch = branchId;
             ViewBag.BranchViews = branchViewvs != null && branchViewvs.Any() ? branchViewvs : null;
             ViewBag.City = CityHelper.City;
             ViewBag.Setting = null;
@@ -563,6 +563,26 @@ namespace EasyStart.Controllers
             {
                 DataWrapper.UpdateVisibleReview(data);
             }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult LoadOrders(List<int> brnachIds)
+        {
+            var result = new JsonResultModel();
+            var orders = DataWrapper.GetOrders(brnachIds);
+
+            if (orders != null)
+            {
+                result.Data = orders;
+                result.Success = true;
+            }
+            else
+            {
+                result.ErrorMessage = "При загрузки заказов, что то пошло не так";
+            }
+
+            return Json(result);
         }
     }
 }

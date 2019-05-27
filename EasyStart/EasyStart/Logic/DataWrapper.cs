@@ -575,6 +575,25 @@ namespace EasyStart.Logic
             return numberOrder;
         }
 
+
+        public static List<OrderModel> GetOrders(List<int> brandchIds)
+        {
+            var orders = new List<OrderModel>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    orders = db.Orders
+                        .Where(p => brandchIds.Contains(p.BranchId))
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return orders;
+        }
+
         public static List<OrderModel> GetHistoryOrder(int clientId)
         {
             var histroyOrders = new List<OrderModel>();
