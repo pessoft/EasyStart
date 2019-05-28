@@ -404,6 +404,25 @@ namespace EasyStart.Logic
             return result;
         }
 
+        public static List<ProductModel> GetOrderProducts(List<int> ids)
+        {
+            List<ProductModel> result = new List<ProductModel>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db
+                        .Products
+                        .Where(p => ids.Contains(p.Id))
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
+
         public static void UpdateRating(int productId, double rating, int votesCount, double votesSum)
         {
             try

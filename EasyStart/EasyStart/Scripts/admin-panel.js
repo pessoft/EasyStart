@@ -46,6 +46,10 @@
 
     $("#stock-type").bind("change", stockTypeToggleDiscountn);
     bindDragula();
+
+    if ($(".header-menu .menu-item-active").attr("target-id") == "order") {
+        loadOrders();
+    }
 });
 
 var TypeItem = {
@@ -1475,7 +1479,7 @@ function loadOrders() {
     let $list = $("#order .orders .order-list");
     $list.empty();
 
-    let loader = new Loader($list);
+    let loader = new Loader($("#order"));
     loader.start();
 
     let successFunc = function (data, loader) {
@@ -1494,7 +1498,7 @@ function loadOrders() {
         loader.stop();
     }
 
-    $.post("/Admin/LoadOrders", { brnachIds: brnachIds}, successCallBack(successFunc, loader));
+    $.post("/Admin/LoadOrders", { brnachIds: brnachIds }, successCallBack(successFunc, loader));
 }
 
 function getAdditionBranches() {
@@ -1516,8 +1520,11 @@ function getTemplateOrderItem(data) {
     let orderNumber = `№ ${data.Id}`;
     let date = toStringDateAndTime(data.Date);
 
+    $template.attr("order-id", data.Id);
     $template.find(".order-item-number span").html(orderNumber);
     $template.find(".order-item-date").html(date);
+
+    $template.bind("click", function () { selectOrder(this) });
 
     return $template;
 }
@@ -1544,4 +1551,194 @@ function toStringDateAndTime(date) {
     month = month.length == 1 ? "0" + month : month;
     let dateStr = `${date.getHours()}:${date.getMinutes()} ${day}.${month}.${date.getFullYear()}`;
     return dateStr;
+}
+
+function setActiveOrderItem(e) {
+    $parent = getParentItemFromOrdersDOM(e);
+
+    $("#order .order-item-active").removeClass("order-item-active");
+    $parent.addClass("order-item-active");
+}
+
+function getParentItemFromOrdersDOM(e) {
+    let $e = $(e);
+    let cssClass = "order-item";
+    let $parent = $e.parents(`.${cssClass}`);
+
+    if ($parent.length == 0 &&
+        $e.hasClass(cssClass)) {
+        $parent = $e;
+    }
+
+    return $parent;
+}
+
+function getOrderIdFromItemOrdersDOM(e) {
+    $parent = getParentItemFromOrdersDOM(e);
+
+    return $parent.attr("order-id");
+}
+
+function selectOrder(e) {
+    let orderId = getOrderIdFromItemOrdersDOM(e);
+
+    setActiveOrderItem(e);
+    showInfoDesctiprionOrder(orderId);
+}
+
+function showInfoDesctiprionOrder(orderId) {
+    let order = getOrderById(orderId);
+    let loader = new Loader($("#order .order-description"));
+
+    loader.start()
+
+    let productIdsforLoad = getProductIdsForLoad(order);
+
+    let callbackLoadProducts = function (data) {
+        if (data.Success) {
+            for (let product of data.Data) {
+                OrderProducts[product.Id] = product;
+            }
+
+            callbackShowDescription();
+        } else {
+            showErrorMessage(data.ErrorMessage);
+            loader.stop()
+        }
+    }
+
+    let callbackShowDescription = function () {
+        let dataStr = getDataOrderStr(order);
+
+        loader.stop()
+    }
+
+    if (productIdsforLoad.length == 0) {
+        callbackShowDescription();
+    } else {
+        loadProductById(productIdsforLoad, callbackLoadProducts);
+    }
+}
+
+function getProductIdsForLoad(order) {
+    let ids = [];
+
+    for (let id in order.ProductCount) {
+        if (!OrderProducts[id]) {
+            ids.push(id);
+        }
+    }
+
+    return ids;
+}
+
+function getDataOrderStr(order) {
+    let prefixRub = " руб.";
+    let prefixPercent = "%";
+    let getProductsStr = () => {
+        let products = [];
+
+        for (let productId  in order.ProductCount) {
+            let product = OrderProducts[productId];
+            let obj = {
+                Name: product.Name,
+                InfoCount: `${order.ProductCount[productId]} x ${product.Price}${prefixRub}`
+            }
+
+            products.push(obj);
+        }
+
+        return products;
+    };
+
+    let amountPay = order.AmountPay + prefixRub;
+    let amountPayDiscountDelivery = order.AmountPayDiscountDelivery + prefixRub;
+    let apartamentNumber = order.ApartamentNumber;
+    let buyType = getBuyType(order.BuyType);
+    let cashBack = order.CashBack;
+    let cashBackNumber = (order.CashBack - order.AmountPayDiscountDelivery) + prefixRub;
+    let city = getCityNameById(order.CityId);
+    let comment = order.Comment
+    let date = toStringDateAndTime(order.Date);
+    let deliveryType = getDeliveryType(order.DeliveryType);
+    let discount = order.Discount + prefixPercent;
+    let entranceNumber = order.EntranceNumber;
+    let homeNumber = order.HomeNumber;
+    let orderNumber = order.Id;
+    let intercomCode = order.IntercomCode;
+    let level = order.Level;
+    let name = order.Name;
+    let needCashBack = order.NeedCashBack;
+    let phoneNumber = order.PhoneNumber;
+    let products = getProductsStr();
+    let street = order.Street;
+}
+
+var OrderProducts = {}
+function loadProductById(ids, callback) {
+    $.post("/Admin/LoadOrderProducts", { ids: ids }, successCallBack(callback, null));
+}
+
+function getOrderById(orderId) {
+    let searchOrder = null;
+
+    for (let order of Orders) {
+        if (order.Id == orderId) {
+            searchOrder = order;
+            break;
+        }
+    }
+
+    return searchOrder;
+}
+
+function getCityNameById(id) {
+    let $cityItem = $(`#setting-city-list [city-id=${id}]`);
+    let cityName = "";
+
+    if ($cityItem.length != 0) {
+        cityName = $cityItem.val();
+    }
+
+    return cityName;
+}
+
+var BuyType = {
+    Cash: 1,
+    Card: 2
+}
+
+function getBuyType(id) {
+    let buyType = "";
+
+    switch (id) {
+        case BuyType.Cash:
+            buyType = "Наличными";
+            break;
+        case BuyType.Card:
+            buyType = "Банковской картой";
+            break;
+    }
+
+    return buyType;
+}
+
+var DeliveryType = {
+    TakeYourSelf: 1,
+    Delivery: 2
+}
+
+function getDeliveryType(id) {
+    let deliveryType = "";
+
+    switch (id) {
+        case DeliveryType.TakeYourSelf:
+            deliveryType = "Самовывоз";
+            break;
+        case BuyType.Delivery:
+            deliveryType = "Доставка курьером";
+            break;
+    }
+
+    return deliveryType;
 }

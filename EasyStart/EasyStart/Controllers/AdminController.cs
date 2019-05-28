@@ -584,5 +584,26 @@ namespace EasyStart.Controllers
 
             return Json(result);
         }
+
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult LoadOrderProducts(List<int> ids)
+        {
+            var result = new JsonResultModel();
+            var products = DataWrapper.GetOrderProducts(ids);
+
+            if (products != null)
+            {
+                result.Data = products;
+                result.Success = true;
+            }
+            else
+            {
+                result.ErrorMessage = "При загрузки продуктов что то пошло не так";
+            }
+
+            return Json(result);
+        }
     }
 }
