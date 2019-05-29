@@ -1635,6 +1635,7 @@ function getProductIdsForLoad(order) {
 function getDataOrderStr(order) {
     let prefixRub = " руб.";
     let prefixPercent = "%";
+    let prefixCount = "шт.";
     let getProductsStr = () => {
         let products = [];
 
@@ -1642,7 +1643,7 @@ function getDataOrderStr(order) {
             let product = OrderProducts[productId];
             let obj = {
                 Name: product.Name,
-                InfoCount: `${order.ProductCount[productId]} x ${product.Price}${prefixRub}`
+                InfoCount: `${order.ProductCount[productId]}${prefixCount}    ${product.Price}${prefixRub}`
             }
 
             products.push(obj);
