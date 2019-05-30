@@ -226,6 +226,10 @@
     <Compile Include="Migrations\201905230813163_RenameFieldProductReview.Designer.cs">
       <DependentUpon>201905230813163_RenameFieldProductReview.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905300959280_AddDelvieryPriceOrderModel.cs" />
+    <Compile Include="Migrations\201905300959280_AddDelvieryPriceOrderModel.Designer.cs">
+      <DependentUpon>201905300959280_AddDelvieryPriceOrderModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\BranchModel.cs" />
@@ -415,6 +419,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905230813163_RenameFieldProductReview.resx">
       <DependentUpon>201905230813163_RenameFieldProductReview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905300959280_AddDelvieryPriceOrderModel.resx">
+      <DependentUpon>201905300959280_AddDelvieryPriceOrderModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

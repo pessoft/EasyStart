@@ -78,10 +78,10 @@
                         <div></div>
                     </div>
                     <div class="order-description">
-                        @*<div class="empty-list">
+                        <div class="empty-list">
                             <i class="fal fa-info"></i>
                             <span>Что бы увидеть информацию о заказе, выберите нужный из колонки "Заказы"</span>
-                        </div>*@
+                         </div>
                         <div class="order-description-header">
                             <div class="order-description-number-header">№ 1</div>
                             <div class="order-description-date-header">19:36 14.05.2019</div>
@@ -131,19 +131,19 @@
                                     <div class="order-description-product-info-price">240 руб.</div>
                                 </div>
                             </div>
-                            <div class="order-description-additional-info">
+                            <div class="order-description-additional-info" id="to-pay">
                                 <div>К оплате:</div>
                                 <div class="order-description-additional-info-value">1024 руб.</div>
                             </div>
-                            <div class="order-description-additional-info">
+                            <div class="order-description-additional-info" id="need-cashback">
                                 <div>Нужна сдача с 1500 руб.:</div>
                                 <div class="order-description-additional-info-value">476 руб.</div>
                             </div>
-                            <div class="order-description-additional-info">
+                            <div class="order-description-additional-info" id="order-user-name">
                                 <div>Заказчик:</div>
                                 <div class="order-description-additional-info-value">Антон</div>
                             </div>
-                            <div class="order-description-additional-info">
+                            <div class="order-description-additional-info" id="order-user-phone">
                                 <div>Телефон заказчика:</div>
                                 <div class="order-description-additional-info-value">+7(999)999-99-99</div>
                             </div>
@@ -245,7 +245,7 @@
                             </div>
                         </div>
 
-                        <div class="order-description-info-comment">
+                        <div class="order-description-info-comment" id="order-description-comment">
                             <div class="order-description-info-comment-header">
                                 Коментарий к заказу
                             </div>
@@ -788,6 +788,145 @@
                 <span></span>
             </div>
             <div class="order-item-date"></div>
+        </div>
+    </template>
+
+    <template id="order-product-item-template">
+        <div class="order-description-product">
+            <div class="order-description-product-number"></div>
+            <div class="order-description-product-name"></div>
+            <div class="order-description-product-info-count"></div>
+            <div class="order-description-product-info-price"></div>
+        </div>
+    </template>
+
+    <template id="info-order-cost-template">
+        <div class="order-description-info-take-item">
+            <div class="background-order-info">
+                <i class="fal fa-money-bill-wave-alt"></i>
+            </div>
+            <div class="take-info-header">
+                Стоимость заказа
+            </div>
+            <div class="take-info-items" id="order-price-info">
+                <div class="take-info-item"  id="take-info-pay-type">
+                    <div class="take-info-item-name">
+                        Способ оплаты:
+                    </div>
+                    <div class="take-info-item-value">
+                    </div>
+                </div>
+                <div class="take-info-item" id="take-info-price">
+                    <div class="take-info-item-name">
+                        Стоимость:
+                    </div>
+                    <div class="take-info-item-value">
+                    </div>
+                </div>
+                <div class="take-info-item" id="take-info-discount">
+                    <div class="take-info-item-name">
+                        Скидка:
+                    </div>
+                    <div class="take-info-item-value">
+                    </div>
+                </div>
+                <div class="take-info-item" id="take-info-delivery">
+                    <div class="take-info-item-name">
+                        Доставка:
+                    </div>
+                    <div class="take-info-item-value">
+                    </div>
+                </div>
+                <div class="take-info-item" id="take-info-topay">
+                    <div class="take-info-item-name">
+                        К оплате:
+                    </div>
+                    <div class="take-info-item-value">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="info-order-delivery-template">
+        <div class="order-description-info-take-item">
+            <div class="background-order-info">
+                <i class="fal fa-truck-loading"></i>
+            </div>
+            <div class="take-info-header">
+                Адрес доставки
+            </div>
+            <div class="take-info-items">
+                <div class="take-info-item" id="order-delivery-city">
+                    <div class="take-info-item-name">
+                        Город:
+                    </div>
+                    <div class="take-info-item-value">
+                    </div>
+                </div>
+                <div class="take-info-item" id="order-delivery-street">
+                    <div class="take-info-item-name">
+                        Улица:
+                    </div>
+                    <div class="take-info-item-value">
+                    </div>
+                </div>
+                <div class="take-info-item" id="order-delivery-home">
+                    <div class="take-info-item-name">
+                        Дом (офис):
+                    </div>
+                    <div class="take-info-item-value">
+                    </div>
+                </div>
+                <div class="take-info-item" id="order-delivery-apartment">
+                    <div class="take-info-item-name">
+                        Квартира:
+                    </div>
+                    <div class="take-info-item-value">
+                    </div>
+                </div>
+                <div class="take-info-item" id="order-delivery-intercom-code">
+                    <div class="take-info-item-name">
+                        Код домафона:
+                    </div>
+                    <div class="take-info-item-value">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="info-order-takeyorself-template">
+        <div class="order-description-info-take-item">
+            <div class="background-order-info">
+                <i class="fal fa-hand-holding-box"></i>
+            </div>
+            <div class="take-info-header">
+                Адрес самовывоза
+            </div>
+            <div class="take-info-items">
+                <div class="take-info-item" id="order-takeyorself-city">
+                    <div class="take-info-item-name">
+                        Город:
+                    </div>
+                    <div class="take-info-item-value">
+                    </div>
+                </div>
+                <div class="take-info-item" id="order-takeyorself-street">
+                    <div class="take-info-item-name">
+                        Улица:
+                    </div>
+                    <div class="take-info-item-value">
+                    </div>
+                </div>
+                <div class="take-info-item" id="order-takeyorself-home">
+                    <div class="take-info-item-name">
+                        Дом (офис):
+                    </div>
+                    <div class="take-info-item-value">
+                    </div>
+                </div>
+            </div>
         </div>
     </template>
 

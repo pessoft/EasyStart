@@ -28,6 +28,7 @@ namespace EasyStart.Models
         public string Comment { get; set; }
         public string ProductCountJSON { get; set; }
         public double Discount { get; set; }
+        public double DeliveryPrice { get; set; }
         public double CashBack { get; set; }
         public double AmountPay { get; set; }
         public double AmountPayDiscountDelivery { get; set; }

@@ -1583,7 +1583,27 @@ function selectOrder(e) {
     let orderId = getOrderIdFromItemOrdersDOM(e);
 
     setActiveOrderItem(e);
+    clearOrderDescriptionBlock();
     showInfoDesctiprionOrder(orderId);
+
+    $("#order .order-description .empty-list").remove();
+}
+
+function clearOrderDescriptionBlock() {
+    $(".order-description-number-header").empty();
+    $(".order-description-date-header").empty();
+    $(".order-description-products").empty();
+    $("#to-pay .order-description-additional-info-value").empty();
+
+    $("#need-cashback .order-description-additional-info-value").empty();
+    $("#need-cashback").addClass("hide");
+
+    $("#order-user-name .order-description-additional-info-value").empty();
+    $("#order-user-phone .order-description-additional-info-value").empty();
+    $(".order-description-info-take").empty();
+
+    $("#order-description-comment .order-description-info-comment-text").empty();
+    $("#order-description-comment").addClass("hide");
 }
 
 function showInfoDesctiprionOrder(orderId) {
@@ -1610,6 +1630,12 @@ function showInfoDesctiprionOrder(orderId) {
     let callbackShowDescription = function () {
         let dataStr = getDataOrderStr(order);
 
+        renderOrderNumberHeader(dataStr.orderNumber, dataStr.date);
+        renderorderOrderProducts(dataStr.products);
+        renderOrderAdditionaInfo(dataStr);
+        renderOrderInfoTake(dataStr);
+        renderOrderComment(dataStr.comment);
+
         loader.stop()
     }
 
@@ -1618,6 +1644,75 @@ function showInfoDesctiprionOrder(orderId) {
     } else {
         loadProductById(productIdsforLoad, callbackLoadProducts);
     }
+}
+
+function renderOrderComment(comment) {
+    if (comment) {
+        let $comment = $("#order-description-comment");
+
+        $comment.removeClass("hide");
+        $comment.find(".order-description-info-comment-text").html(comment);
+    }
+}
+
+function renderorderOrderProducts(dataProducdtsStr) {
+    let templates = [];
+
+    for (let product of dataProducdtsStr) {
+        let $template = $($("#order-product-item-template").html());
+
+        $template.find(".order-description-product-number").html(product.Index);
+        $template.find(".order-description-product-name").html(product.Name);
+        $template.find(".order-description-product-info-count").html(product.Count);
+        $template.find(".order-description-product-info-price").html(product.Price);
+
+        templates.push($template);
+    }
+
+    $("#order .order-description-products").html(templates);
+}
+
+function renderOrderAdditionaInfo(dataStr) {
+    $("#to-pay .order-description-additional-info-value").html(dataStr.amountPayDiscountDelivery);
+    $("#need-cashback .order-description-additional-info-value").html(dataStr.cashBackNumber);
+    $("#order-user-name .order-description-additional-info-value").html(dataStr.name);
+    $("#order-user-phone .order-description-additional-info-value").html(dataStr.phoneNumber);
+
+    if (dataStr.needCashBack) {
+        $("#need-cashback").removeClass("hide");
+    }
+}
+
+function renderOrderNumberHeader(numberOrder, date) {
+    $("#order .order-description-number-header").html(numberOrder);
+    $("#order .order-description-date-header").html(date);
+}
+
+function renderOrderInfoTake(dataStr) {
+    let $payInfo = $($("#info-order-cost-template").html());
+    let $deliveryInfo = dataStr.deliveryType == DeliveryType.Delivery ?
+        $($("#info-order-delivery-template").html()) :
+        $($("#info-order-takeyorself-template").html());
+
+    $payInfo.find("#take-info-pay-type .take-info-item-value").html(dataStr.buyType);
+    $payInfo.find("#take-info-price .take-info-item-value").html(dataStr.amountPay);
+    $payInfo.find("#take-info-discount .take-info-item-value").html(dataStr.discount);
+    $payInfo.find("#take-info-delivery .take-info-item-value").html(dataStr.deliveryPrice);
+    $payInfo.find("#take-info-topay .take-info-item-value").html(dataStr.amountPayDiscountDelivery);
+
+    $deliveryInfo.find("#order-takeyorself-city .take-info-item-value").html(dataStr.city);
+    $deliveryInfo.find("#order-takeyorself-street .take-info-item-value").html(dataStr.street);
+    $deliveryInfo.find("#order-takeyorself-home .take-info-item-value").html(dataStr.homeNumber);
+
+    if (dataStr.deliveryType == DeliveryType.Delivery) {
+        $deliveryInfo.find("#order-delivery-apartment .take-info-item-value").html(dataStr.apartamentNumber);
+        $deliveryInfo.find("#order-delivery-intercom-code .take-info-item-value").html(dataStr.intercomCode);
+    }
+
+    let $descriptionItemTake = $("#order .order-description-info-take");
+
+    $descriptionItemTake.append($payInfo);
+    $descriptionItemTake.append($deliveryInfo);
 }
 
 function getProductIdsForLoad(order) {
@@ -1632,18 +1727,32 @@ function getProductIdsForLoad(order) {
     return ids;
 }
 
+function isInteger(num) {
+    return (num ^ 0) === num;
+}
+
+function getPriceValid(num) {
+    if (!isInteger(num)) {
+        num = num.toFixed(2);
+    }
+
+    return num;
+}
+
 function getDataOrderStr(order) {
-    let prefixRub = " руб.";
+    let prefixRub = "руб.";
     let prefixPercent = "%";
     let prefixCount = "шт.";
     let getProductsStr = () => {
         let products = [];
-
-        for (let productId  in order.ProductCount) {
+        let index = 0;
+        for (let productId in order.ProductCount) {
             let product = OrderProducts[productId];
             let obj = {
+                Index: `${++index}.`,
                 Name: product.Name,
-                InfoCount: `${order.ProductCount[productId]}${prefixCount}    ${product.Price}${prefixRub}`
+                Count: `${order.ProductCount[productId]} ${prefixCount}`,
+                Price: `${product.Price} ${prefixRub}`
             }
 
             products.push(obj);
@@ -1652,27 +1761,34 @@ function getDataOrderStr(order) {
         return products;
     };
 
-    let amountPay = order.AmountPay + prefixRub;
-    let amountPayDiscountDelivery = order.AmountPayDiscountDelivery + prefixRub;
-    let apartamentNumber = order.ApartamentNumber;
-    let buyType = getBuyType(order.BuyType);
-    let cashBack = order.CashBack;
-    let cashBackNumber = (order.CashBack - order.AmountPayDiscountDelivery) + prefixRub;
-    let city = getCityNameById(order.CityId);
-    let comment = order.Comment
-    let date = toStringDateAndTime(order.Date);
-    let deliveryType = getDeliveryType(order.DeliveryType);
-    let discount = order.Discount + prefixPercent;
-    let entranceNumber = order.EntranceNumber;
-    let homeNumber = order.HomeNumber;
-    let orderNumber = order.Id;
-    let intercomCode = order.IntercomCode;
-    let level = order.Level;
-    let name = order.Name;
-    let needCashBack = order.NeedCashBack;
-    let phoneNumber = order.PhoneNumber;
-    let products = getProductsStr();
-    let street = order.Street;
+    let deliveryPrice = order.DeliveryPrice == 0 ? "Бесплатно" : `${getPriceValid(order.DeliveryPrice)} ${prefixRub}`;
+    let discount = order.Discount == 0 ? `0${prefixPercent}` : `${order.Discount}${prefixPercent} (${getPriceValid(order.AmountPay * order.Discount / 100)} ${prefixRub})`
+    let dataStr = {
+        amountPay: `${getPriceValid(order.AmountPay)} ${prefixRub}`,
+        amountPayDiscountDelivery: `${getPriceValid(order.AmountPayDiscountDelivery)} ${prefixRub}`,
+        apartamentNumber: order.ApartamentNumber,
+        buyType: getBuyType(order.BuyType),
+        cashBack: order.CashBack,
+        cashBackNumber: `${getPriceValid(order.CashBack - order.AmountPayDiscountDelivery)} ${prefixRub}`,
+        city: getCityNameById(order.CityId),
+        comment: order.Comment,
+        date: toStringDateAndTime(order.Date),
+        deliveryType: order.DeliveryType,
+        discount: discount,
+        entranceNumber: order.EntranceNumber,
+        homeNumber: order.HomeNumber,
+        orderNumber: `№ ${order.Id}`,
+        intercomCode: order.IntercomCode,
+        level: order.Level,
+        name: order.Name,
+        needCashBack: order.NeedCashBack,
+        phoneNumber: order.PhoneNumber,
+        products: getProductsStr(),
+        street: order.Street,
+        deliveryPrice: deliveryPrice
+    }
+
+    return dataStr;
 }
 
 var OrderProducts = {}
@@ -1714,10 +1830,10 @@ function getBuyType(id) {
 
     switch (id) {
         case BuyType.Cash:
-            buyType = "Наличными";
+            buyType = "Наличные";
             break;
         case BuyType.Card:
-            buyType = "Банковской картой";
+            buyType = "Банковская карта";
             break;
     }
 

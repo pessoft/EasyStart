@@ -744,12 +744,14 @@ div.product-item:hover {
 .empty-list {
     width: 100%;
     height: 100%;
+    z-index: 999999;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     font-size: 1.7em;
     color: #0f1e322e;
+    background-color: #fafafa;
     text-align: center;
     position: absolute;
     top: 0;
