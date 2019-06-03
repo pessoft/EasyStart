@@ -12,6 +12,9 @@ namespace EasyStart
                         "~/Scripts/jquery-{version}.js",
                         "~/Scripts/jquery.unobtrusive-ajax.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/sumoselect").Include(
+                         "~/Scripts/jquery.sumoselect.min.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
 
@@ -54,6 +57,8 @@ namespace EasyStart
                       "~/Content/material-input.css"));
             bundles.Add(new ScriptBundle("~/dragula/css").Include(
                        "~/Content/dragula.css"));
+            bundles.Add(new ScriptBundle("~/sumoselect/css").Include(
+                    "~/Content/sumoselect.min.css"));
         }
     }
 }

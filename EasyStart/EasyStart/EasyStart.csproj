@@ -155,6 +155,7 @@
     <Compile Include="Logic\DayWeekly.cs" />
     <Compile Include="Logic\DeliveryType.cs" />
     <Compile Include="Logic\List.cs" />
+    <Compile Include="Logic\OrderStatus.cs" />
     <Compile Include="Logic\ProductType.cs" />
     <Compile Include="Logic\StockType.cs" />
     <Compile Include="Logic\TypeBranch.cs" />
@@ -230,6 +231,10 @@
     <Compile Include="Migrations\201905300959280_AddDelvieryPriceOrderModel.Designer.cs">
       <DependentUpon>201905300959280_AddDelvieryPriceOrderModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201906030903073_AddOrderStatus.cs" />
+    <Compile Include="Migrations\201906030903073_AddOrderStatus.Designer.cs">
+      <DependentUpon>201906030903073_AddOrderStatus.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\BranchModel.cs" />
@@ -247,6 +252,7 @@
     <Compile Include="Models\SettingModel.cs" />
     <Compile Include="Models\StockModel.cs" />
     <Compile Include="Models\UpdaterOrderNumber.cs" />
+    <Compile Include="Models\UpdaterOrderStatus.cs" />
     <Compile Include="Models\UpdaterVisible.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\CityHelper.cs" />
@@ -282,6 +288,7 @@
     <Content Include="Content\fontawesome\webfonts\fa-regular-400.svg" />
     <Content Include="Content\fontawesome\webfonts\fa-solid-900.svg" />
     <Content Include="Content\material-input.css" />
+    <Content Include="Content\sumoselect.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -328,6 +335,7 @@
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.raty.min.js" />
+    <Content Include="Scripts\jquery.sumoselect.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -422,6 +430,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905300959280_AddDelvieryPriceOrderModel.resx">
       <DependentUpon>201905300959280_AddDelvieryPriceOrderModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906030903073_AddOrderStatus.resx">
+      <DependentUpon>201906030903073_AddOrderStatus.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

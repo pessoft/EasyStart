@@ -9,6 +9,7 @@
     @*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">*@
     <title>Панель администратора</title>
     @Styles.Render("~/admin-panel/css")
+    @Styles.Render("~/sumoselect/css")
     @Styles.Render("~/dragula/css")
 </head>
 <body>
@@ -60,7 +61,19 @@
                             Заказы
                             <i class="fal fa-cash-register"></i>
                         </div>
-                        <div></div>
+                        <div class="additional-order">
+                            @if (ViewBag.BranchViews != null)
+                            {
+                                <label for="show-additional-order">Заказы из других городов</label>
+                                <select id="show-additional-order" multiple="multiple">
+                                    @foreach (var kv in ViewBag.BranchViews)
+                                    {
+                                        <option key="@kv.Key">@kv.Value</option>
+                                    }
+                                </select>
+                            }
+
+                        </div>
                     </div>
                     <div class="order-list">
                         <div class="empty-list">
@@ -81,71 +94,29 @@
                         <div class="empty-list">
                             <i class="fal fa-info"></i>
                             <span>Что бы увидеть информацию о заказе, выберите нужный из колонки "Заказы"</span>
-                         </div>
+                        </div>
                         <div class="order-description-header">
-                            <div class="order-description-number-header">№ 1</div>
-                            <div class="order-description-date-header">19:36 14.05.2019</div>
+                            <div class="order-description-number-header"></div>
+                            <div class="order-description-date-header"></div>
                         </div>
                         <div class="order-description-products-wrapper">
                             <div class="order-description-products">
-                                <div class="order-description-product">
-                                    <div class="order-description-product-number">1.</div>
-                                    <div class="order-description-product-name">Филаделфия с лососем</div>
-                                    <div class="order-description-product-info-count">999 шт.</div>
-                                    <div class="order-description-product-info-price">240 руб.</div>
-                                </div>
-                                <div class="order-description-product">
-                                    <div class="order-description-product-number">2.</div>
-                                    <div class="order-description-product-name">Филаделфия с лососем</div>
-                                    <div class="order-description-product-info-count">999 шт.</div>
-                                    <div class="order-description-product-info-price">240 руб.</div>
-                                </div>
-                                <div class="order-description-product">
-                                    <div class="order-description-product-number">3.</div>
-                                    <div class="order-description-product-name">Филаделфия с лососем</div>
-                                    <div class="order-description-product-info-count">999 шт.</div>
-                                    <div class="order-description-product-info-price">240 руб.</div>
-                                </div>
-                                <div class="order-description-product">
-                                    <div class="order-description-product-number">4.</div>
-                                    <div class="order-description-product-name">Филаделфия с лососем</div>
-                                    <div class="order-description-product-info-count">999 шт.</div>
-                                    <div class="order-description-product-info-price">240 руб.</div>
-                                </div>
-                                <div class="order-description-product">
-                                    <div class="order-description-product-number">5.</div>
-                                    <div class="order-description-product-name">Филаделфия с лососем</div>
-                                    <div class="order-description-product-info-count">999 шт.</div>
-                                    <div class="order-description-product-info-price">240 руб.</div>
-                                </div>
-                                <div class="order-description-product">
-                                    <div class="order-description-product-number">6.</div>
-                                    <div class="order-description-product-name">Филаделфия с лососем</div>
-                                    <div class="order-description-product-info-count">999 шт.</div>
-                                    <div class="order-description-product-info-price">240 руб.</div>
-                                </div>
-                                <div class="order-description-product">
-                                    <div class="order-description-product-number">7.</div>
-                                    <div class="order-description-product-name">Филаделфия с лососем</div>
-                                    <div class="order-description-product-info-count">999 шт.</div>
-                                    <div class="order-description-product-info-price">240 руб.</div>
-                                </div>
                             </div>
-                            <div class="order-description-additional-info" id="to-pay">
+                            <div class="order-description-additional-info to-pay">
                                 <div>К оплате:</div>
-                                <div class="order-description-additional-info-value">1024 руб.</div>
+                                <div class="order-description-additional-info-value"></div>
                             </div>
-                            <div class="order-description-additional-info" id="need-cashback">
-                                <div>Нужна сдача с 1500 руб.:</div>
-                                <div class="order-description-additional-info-value">476 руб.</div>
+                            <div class="order-description-additional-info need-cashback" >
+                                <div id="need-cashback-header"></div>
+                                <div class="order-description-additional-info-value"></div>
                             </div>
-                            <div class="order-description-additional-info" id="order-user-name">
+                            <div class="order-description-additional-info order-user-name">
                                 <div>Заказчик:</div>
-                                <div class="order-description-additional-info-value">Антон</div>
+                                <div class="order-description-additional-info-value"></div>
                             </div>
-                            <div class="order-description-additional-info" id="order-user-phone">
+                            <div class="order-description-additional-info order-user-phone">
                                 <div>Телефон заказчика:</div>
-                                <div class="order-description-additional-info-value">+7(999)999-99-99</div>
+                                <div class="order-description-additional-info-value"></div>
                             </div>
                         </div>
                         <div class="order-description-info-take">
@@ -162,7 +133,6 @@
                                             Стоимость:
                                         </div>
                                         <div class="take-info-item-value">
-                                            1050 руб.
                                         </div>
                                     </div>
                                     <div class="take-info-item">
@@ -170,7 +140,6 @@
                                             Скидка:
                                         </div>
                                         <div class="take-info-item-value">
-                                            10% (10.50 руб.)
                                         </div>
                                     </div>
                                     <div class="take-info-item">
@@ -178,7 +147,6 @@
                                             Доставка:
                                         </div>
                                         <div class="take-info-item-value">
-                                            15.50 руб.
                                         </div>
                                     </div>
                                     <div class="take-info-item">
@@ -186,7 +154,6 @@
                                             К оплате:
                                         </div>
                                         <div class="take-info-item-value">
-                                            1024 руб.
                                         </div>
                                     </div>
                                 </div>
@@ -205,7 +172,6 @@
                                             Город:
                                         </div>
                                         <div class="take-info-item-value">
-                                            Александровск-Сахалинский
                                         </div>
                                     </div>
                                     <div class="take-info-item">
@@ -213,7 +179,6 @@
                                             Улица:
                                         </div>
                                         <div class="take-info-item-value">
-                                            Текстильщиков
                                         </div>
                                     </div>
                                     <div class="take-info-item">
@@ -221,7 +186,6 @@
                                             Дом (офис):
                                         </div>
                                         <div class="take-info-item-value">
-                                            9
                                         </div>
                                     </div>
                                     <div class="take-info-item">
@@ -229,7 +193,6 @@
                                             Квартира:
                                         </div>
                                         <div class="take-info-item-value">
-                                            167
                                         </div>
                                     </div>
                                     <div class="take-info-item">
@@ -237,11 +200,9 @@
                                             Код домафона:
                                         </div>
                                         <div class="take-info-item-value">
-                                            167
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
 
@@ -250,12 +211,10 @@
                                 Коментарий к заказу
                             </div>
                             <div class="order-description-info-comment-text">
-                                Пусть курьер позвонит когда подъедет, я выйду,
-                                иначе его не пропустят так как это общежитие,
-                                режимный объект
                             </div>
 
                         </div>
+
                         <div class="order-menu">
                             <button class="btn btn-submit" onclick="">Заказ обработан</button>
                             <button class="btn btn-cancel-order" onclick="">Отменить заказ</button>
@@ -771,20 +730,20 @@
         </div>
     </template>
 
-    <template id="order-item-template-0">
-        <div class="order-item">
-            <div class="order-item-number">
-                <i class="fal fa-shipping-timed"></i>
-                <span>№ 24</span>
-            </div>
-            <div class="order-item-date">7:51 23.05.2019</div>
-        </div>
-    </template>
-
     <template id="order-item-template-1">
         <div class="order-item">
             <div class="order-item-number">
                 <i class="fal fa-hand-holding-box"></i>
+                <span></span>
+            </div>
+            <div class="order-item-date"></div>
+        </div>
+    </template>
+
+    <template id="order-item-template-2">
+        <div class="order-item">
+            <div class="order-item-number">
+                <i class="fal fa-shipping-timed"></i>
                 <span></span>
             </div>
             <div class="order-item-date"></div>
@@ -809,7 +768,7 @@
                 Стоимость заказа
             </div>
             <div class="take-info-items" id="order-price-info">
-                <div class="take-info-item"  id="take-info-pay-type">
+                <div class="take-info-item" id="take-info-pay-type">
                     <div class="take-info-item-name">
                         Способ оплаты:
                     </div>
@@ -931,6 +890,7 @@
     </template>
 
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/sumoselect")
     @Scripts.Render("~/bundles/main")
     @Scripts.Render("~/bundles/notify")
     @Scripts.Render("~/bundles/admin-panel")

@@ -423,6 +423,28 @@ namespace EasyStart.Logic
             return result;
         }
 
+        public static void UpdateStatusOrder(UpdaterOrderStatus data)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var order = db
+                        .Orders
+                        .FirstOrDefault(p => data.OrderId == p.Id);
+
+                    if(order != null)
+                    {
+                        order.OrderStatus = data.Status;
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            { }
+        }
+
         public static void UpdateRating(int productId, double rating, int votesCount, double votesSum)
         {
             try
@@ -594,7 +616,6 @@ namespace EasyStart.Logic
             return numberOrder;
         }
 
-
         public static List<OrderModel> GetOrders(List<int> brandchIds)
         {
             var orders = new List<OrderModel>();
@@ -603,7 +624,8 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     orders = db.Orders
-                        .Where(p => brandchIds.Contains(p.BranchId))
+                        .Where(p => brandchIds.Contains(p.BranchId) &&
+                                    p.OrderStatus == OrderStatus.Processing)
                         .ToList();
                 }
             }

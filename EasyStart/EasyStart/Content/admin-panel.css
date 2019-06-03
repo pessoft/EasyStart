@@ -1485,3 +1485,29 @@ div.product-item:hover {
 .btn.btn-cancel-order:hover {
     color: #e7f5ff
 }
+
+.additional-order {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+    .additional-order label {
+        color: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        pointer-events: inherit;
+        position: inherit;
+        left: inherit;
+        top: 0;
+        transition: none;
+    }
+
+.optWrapper label {
+    font-size: 0.8em;
+}
+
+#order .SumoSelect {
+    width: 90%;
+}

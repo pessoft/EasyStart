@@ -20,10 +20,10 @@ namespace EasyStart.Controllers
             var branchId = DataWrapper.GetBranchId(User.Identity.Name);
             var typeBranch = DataWrapper.GetBranchType(branchId);
             var converter = new ConverterBranchSetting();
-            var branchViewvs = converter.GetBranchSettingViews(
-                DataWrapper.GetAllBranch(),
-                DataWrapper.GetAllSettingDictionary(),
-                typeBranch);
+            var branchViewvs = DataWrapper.GetAllSettingDictionary()
+                .Where(p => p.Value.CityId > 0 && p.Key != branchId)
+                .ToDictionary(p => p.Key,
+                              p => CityHelper.GetCity(p.Value.CityId));
 
             ViewBag.Zones = DateTimeHepler.GetDisplayDictionary();
             ViewBag.CurrentBranch = branchId;
@@ -604,6 +604,19 @@ namespace EasyStart.Controllers
             }
 
             return Json(result);
+        }
+
+
+        [HttpPost]
+        [Authorize]
+        public void UpdateSatsusOrder(UpdaterOrderStatus data)
+        {
+            if(data.Status == OrderStatus.Processing)
+            {
+                return;
+            }
+
+            DataWrapper.UpdateStatusOrder(data);
         }
     }
 }

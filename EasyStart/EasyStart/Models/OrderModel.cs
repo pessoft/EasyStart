@@ -34,6 +34,7 @@ namespace EasyStart.Models
         public double AmountPayDiscountDelivery { get; set; }
         public bool NeedCashBack { get; set; }
         public DateTime Date { get; set; }
+        public OrderStatus OrderStatus { get; set; } = OrderStatus.Processing;
 
         [NotMapped]
         [ScriptIgnore]

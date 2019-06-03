@@ -50,7 +50,32 @@
     if ($(".header-menu .menu-item-active").attr("target-id") == "order") {
         loadOrders();
     }
+
+    bindSelectSumo();
 });
+
+var AdditionalBranch = [];
+function bindSelectSumo() {
+    $("#show-additional-order").SumoSelect({
+        okCancelInMulti: true,
+        placeholder: 'Выберите города'
+    });
+
+    let bindFunc = function () {
+        AdditionalBranch = [];
+        $('#show-additional-order option:selected').each(function (i) {
+            AdditionalBranch.push($(this).attr("key"));
+        });
+
+        loadOrders(true);
+    }
+
+    bindSumoOk(bindFunc);
+}
+
+function bindSumoOk(func) {
+    $(".additional-order .btnOk").bind("click", func)
+}
 
 var TypeItem = {
     Categories: 0,
@@ -1461,14 +1486,14 @@ function setEmptyOrderInfo() {
         </div>
     `;
 
-    $("#order .order-list").append(template);
+    $("#order .order-description").append(template);
 }
 
 
 var Orders = [];
 
-function loadOrders() {
-    if (Orders.length != 0) {
+function loadOrders(reload = false) {
+    if (Orders.length != 0 && !reload) {
         return;
     }
 
@@ -1502,7 +1527,7 @@ function loadOrders() {
 }
 
 function getAdditionBranches() {
-    return [];
+    return AdditionalBranch;
 }
 
 function renderOrders() {
@@ -1593,13 +1618,13 @@ function clearOrderDescriptionBlock() {
     $(".order-description-number-header").empty();
     $(".order-description-date-header").empty();
     $(".order-description-products").empty();
-    $("#to-pay .order-description-additional-info-value").empty();
+    $("#order .to-pay .order-description-additional-info-value").empty();
 
-    $("#need-cashback .order-description-additional-info-value").empty();
-    $("#need-cashback").addClass("hide");
+    $("#order .need-cashback .order-description-additional-info-value").empty();
+    $("#order .need-cashback").addClass("hide");
 
-    $("#order-user-name .order-description-additional-info-value").empty();
-    $("#order-user-phone .order-description-additional-info-value").empty();
+    $("#order .order-user-name .order-description-additional-info-value").empty();
+    $("#order .order-user-phone .order-description-additional-info-value").empty();
     $(".order-description-info-take").empty();
 
     $("#order-description-comment .order-description-info-comment-text").empty();
@@ -1635,7 +1660,7 @@ function showInfoDesctiprionOrder(orderId) {
         renderOrderAdditionaInfo(dataStr);
         renderOrderInfoTake(dataStr);
         renderOrderComment(dataStr.comment);
-
+        bindUpdateStatusButton(order);
         loader.stop()
     }
 
@@ -1644,6 +1669,17 @@ function showInfoDesctiprionOrder(orderId) {
     } else {
         loadProductById(productIdsforLoad, callbackLoadProducts);
     }
+}
+
+function bindUpdateStatusButton(order) {
+    let $proccesed = $("#order .btn-submit");
+    let $cancel = $("#order .btn-cancel-order");
+
+    $proccesed.unbind("clcik");
+    $cancel.unbind("clcik");
+
+    $proccesed.bind("click", () => changeOrderStatus(order.Id, OrderStatus.Processed));
+    $cancel.bind("click", () => changeOrderStatus(order.Id, OrderStatus.Cancellation));
 }
 
 function renderOrderComment(comment) {
@@ -1673,13 +1709,14 @@ function renderorderOrderProducts(dataProducdtsStr) {
 }
 
 function renderOrderAdditionaInfo(dataStr) {
-    $("#to-pay .order-description-additional-info-value").html(dataStr.amountPayDiscountDelivery);
-    $("#need-cashback .order-description-additional-info-value").html(dataStr.cashBackNumber);
-    $("#order-user-name .order-description-additional-info-value").html(dataStr.name);
-    $("#order-user-phone .order-description-additional-info-value").html(dataStr.phoneNumber);
+    $("#order .to-pay .order-description-additional-info-value").html(dataStr.amountPayDiscountDelivery);
+    $("#order #need-cashback-header").html(dataStr.cashBack);
+    $("#order .need-cashback .order-description-additional-info-value").html(dataStr.cashBackNumber);
+    $("#order .order-user-name .order-description-additional-info-value").html(dataStr.name);
+    $("#order .order-user-phone .order-description-additional-info-value").html(dataStr.phoneNumber);
 
     if (dataStr.needCashBack) {
-        $("#need-cashback").removeClass("hide");
+        $("#order .need-cashback").removeClass("hide");
     }
 }
 
@@ -1705,6 +1742,9 @@ function renderOrderInfoTake(dataStr) {
     $deliveryInfo.find("#order-takeyorself-home .take-info-item-value").html(dataStr.homeNumber);
 
     if (dataStr.deliveryType == DeliveryType.Delivery) {
+        $deliveryInfo.find("#order-delivery-city .take-info-item-value").html(dataStr.city);
+        $deliveryInfo.find("#order-delivery-street .take-info-item-value").html(dataStr.street);
+        $deliveryInfo.find("#order-delivery-home .take-info-item-value").html(dataStr.homeNumber);
         $deliveryInfo.find("#order-delivery-apartment .take-info-item-value").html(dataStr.apartamentNumber);
         $deliveryInfo.find("#order-delivery-intercom-code .take-info-item-value").html(dataStr.intercomCode);
     }
@@ -1761,6 +1801,8 @@ function getDataOrderStr(order) {
         return products;
     };
 
+    let street = order.DeliveryType == DeliveryType.Delivery ? order.Street : $("#setting-street").val();
+    let homeNumber = order.DeliveryType == DeliveryType.Delivery ? order.HomeNumber : $("#setting-home").val();
     let deliveryPrice = order.DeliveryPrice == 0 ? "Бесплатно" : `${getPriceValid(order.DeliveryPrice)} ${prefixRub}`;
     let discount = order.Discount == 0 ? `0${prefixPercent}` : `${order.Discount}${prefixPercent} (${getPriceValid(order.AmountPay * order.Discount / 100)} ${prefixRub})`
     let dataStr = {
@@ -1768,7 +1810,7 @@ function getDataOrderStr(order) {
         amountPayDiscountDelivery: `${getPriceValid(order.AmountPayDiscountDelivery)} ${prefixRub}`,
         apartamentNumber: order.ApartamentNumber,
         buyType: getBuyType(order.BuyType),
-        cashBack: order.CashBack,
+        cashBack: `Нужна сдача с ${order.CashBack} ${prefixRub}:`,
         cashBackNumber: `${getPriceValid(order.CashBack - order.AmountPayDiscountDelivery)} ${prefixRub}`,
         city: getCityNameById(order.CityId),
         comment: order.Comment,
@@ -1776,7 +1818,7 @@ function getDataOrderStr(order) {
         deliveryType: order.DeliveryType,
         discount: discount,
         entranceNumber: order.EntranceNumber,
-        homeNumber: order.HomeNumber,
+        homeNumber: homeNumber,
         orderNumber: `№ ${order.Id}`,
         intercomCode: order.IntercomCode,
         level: order.Level,
@@ -1784,7 +1826,7 @@ function getDataOrderStr(order) {
         needCashBack: order.NeedCashBack,
         phoneNumber: order.PhoneNumber,
         products: getProductsStr(),
-        street: order.Street,
+        street: street,
         deliveryPrice: deliveryPrice
     }
 
@@ -1858,4 +1900,31 @@ function getDeliveryType(id) {
     }
 
     return deliveryType;
+}
+
+const OrderStatus = {
+    Processing: 0,
+    Processed: 1,
+    Cancellation: 2
+}
+
+function changeOrderStatus(orderId, orderStatus) {
+    let $order = $(`#order [order-id=${orderId}]`);
+
+    $order.fadeOut(600, function () {
+        $(this.remove());
+        for (let i = 0; i < Orders.length; ++i) {
+            if (Orders[i].Id == orderId) {
+                Orders.splice(i, 1);
+                break;
+            }
+        }
+
+        if (Orders.length == 0) {
+            setEmptyOrders();
+        }
+    });
+
+    setEmptyOrderInfo();
+    $.post("/Admin/UpdateSatsusOrder", { OrderId: orderId, Status: orderStatus }, null);
 }
