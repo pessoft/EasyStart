@@ -109,7 +109,9 @@ namespace EasyStart
                 !string.IsNullOrEmpty(review.ReviewText) &&
                 review.ProductId > 0)
             {
-                review.Date = DateTime.Now;
+                var branchId = DataWrapper.GetBranchIdByCity(review.CityId);
+                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
+                review.Date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
 
                 DataWrapper.SaveProductReviews(review);
             }

@@ -686,7 +686,7 @@ function addProduct() {
             loader.stop();
             if (result.Success) {
                 $(".product .empty-list").remove();
-                Data.Products.push(result.Data);
+                //Data.Products.push(result.Data);
                 addProductToList(result.Data);
                 cancelDialog("#addProducDialog");
             } else {
@@ -742,7 +742,7 @@ function updateProduct() {
             oldProduct.ProductType = product.ProductType;
 
             let productItem = $(`[product-id=${product.Id}]`);
-            productItem.find("img").attr("src", product.Image);
+            productItem.find(".product-item-image img").attr("src", product.Image);
             productItem.find(".category-item-name").html(product.Name);
             productItem.find(".product-item-additional-info").html(product.AdditionInfo);
             productItem.find(".product-item-price span").html(product.Price);
@@ -1441,7 +1441,6 @@ function openProductUserCallback(e, event) {
         loader.stop();
     };
 
-    loadProductReviews(productId, callback);
     loadProductReviews(productId, callback);
 }
 

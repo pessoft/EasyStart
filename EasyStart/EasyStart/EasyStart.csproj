@@ -235,6 +235,10 @@
     <Compile Include="Migrations\201906030903073_AddOrderStatus.Designer.cs">
       <DependentUpon>201906030903073_AddOrderStatus.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201906061950050_AddCityIdReviewProduct.cs" />
+    <Compile Include="Migrations\201906061950050_AddCityIdReviewProduct.Designer.cs">
+      <DependentUpon>201906061950050_AddCityIdReviewProduct.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\BranchModel.cs" />
@@ -433,6 +437,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906030903073_AddOrderStatus.resx">
       <DependentUpon>201906030903073_AddOrderStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906061950050_AddCityIdReviewProduct.resx">
+      <DependentUpon>201906061950050_AddCityIdReviewProduct.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

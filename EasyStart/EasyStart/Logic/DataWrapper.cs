@@ -284,6 +284,9 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
+                    var orderNumber = db.Categories.Count();
+
+                    category.OrderNumber = orderNumber;
                     result = db.Categories.Add(category);
                     db.SaveChanges();
                 }
@@ -375,6 +378,9 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
+                    var orderNumber = db.Products.Count();
+
+                    product.OrderNumber = orderNumber;
                     result = db.Products.Add(product);
                     db.SaveChanges();
                 }
