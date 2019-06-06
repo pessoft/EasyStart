@@ -563,7 +563,7 @@ div.category-item:hover {
     }
 
 .select-category {
-    border: 1.5px solid;
+    background-color: #dcdcdc;
     font-weight: 600;
 }
 
@@ -764,6 +764,7 @@ div.product-item:hover {
 
 #productUserCallbackDialog .empty-list {
     font-size: 1.4em;
+    background-color: #fff;
 }
 
 .payment-type {
@@ -1222,16 +1223,20 @@ div.product-item:hover {
 }
 
 .order-item {
-    width: 92%;
-    padding: 0 4%;
+    width: 90%;
+    padding: 0px 5px;
+    margin: 0 auto;
+    margin-bottom: 5px;
     height: 50px;
     display: flex;
     justify-content: space-around;
     align-items: center;
     flex-direction: row;
-    color: #163f75eb;
+    color: #163f75;
     border-bottom: 1px solid #0f1e3212;
-    position:relative;
+    border-radius: 2px;
+    position: relative;
+    box-shadow: 0px 0px 3px 0px #163f75;
 }
 
 .order-item-date {
@@ -1239,7 +1244,15 @@ div.product-item:hover {
 }
 
 .order-item i {
-    font-size: 1.5em;
+    font-size: 1.25em;
+}
+
+.order-item .fa-shipping-timed {
+    color: #b94a48;
+}
+
+.order-item .fa-hand-holding-box {
+    color: #51944a;
 }
 
 .order-item-number {
@@ -1247,13 +1260,12 @@ div.product-item:hover {
 }
 
 .order-item:hover {
-    box-shadow: 0 0 10px 0px #163f7570;
-    cursor:pointer;
+    transition: 100ms ease-in;
+    transform: scale(1.03);
 }
 
 .order-item-active {
-    box-shadow: 0 0 10px 0px #163f7570;
-    border-bottom: 1px solid #163f754f;
+    background-color: #dcdcdc;
 }
 
 .order-item::after {
@@ -1272,16 +1284,16 @@ div.product-item:hover {
 }
 
 .order-description-header {
-    width:100%;
-    display:flex;
-    justify-content:center;
-    align-items:flex-start;
-    flex-direction:column;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
 }
 
 .order-description-number-header {
     width: 100%;
-    text-align:center;
+    text-align: center;
     font-size: 1.2em;
 }
 
@@ -1321,11 +1333,13 @@ div.product-item:hover {
     flex-direction: row;
     border-bottom: 1px solid #0f1e3212;
 }
+
 .order-description-product-number {
     width: 5%;
     margin-right: 5px;
     font-size: 0.8em;
 }
+
 .order-description-product-name {
     width: 64%;
     text-align: left;
@@ -1346,7 +1360,7 @@ div.product-item:hover {
 
 .order-description-item-name {
     width: 60%;
-    text-align:left;
+    text-align: left;
 }
 
 .order-description-item-value {
@@ -1383,21 +1397,21 @@ div.product-item:hover {
         border-right: 1px solid #0f1e3212;
     }
 
-    .order-description-info-take-item {
-        width: 300px;
-        height: 150px;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        flex-direction: column;
-        margin: 5px;
-        padding: 10px;
-        position:relative;
-    }
+.order-description-info-take-item {
+    width: 300px;
+    height: 150px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: column;
+    margin: 5px;
+    padding: 10px;
+    position: relative;
+}
 
 .take-info-header {
     width: 100%;
-    text-align:center;
+    text-align: center;
 }
 
 .take-info-items {
@@ -1440,9 +1454,9 @@ div.product-item:hover {
 
 .order-description-info-comment {
     width: 90%;
-    display:flex;
-    justify-content:flex-start;
-    align-items:flex-start;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
     flex-direction: column;
 }
 
