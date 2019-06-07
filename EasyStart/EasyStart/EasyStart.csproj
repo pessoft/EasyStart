@@ -266,10 +266,6 @@
   <ItemGroup>
     <Content Include="Content\admin-login.css" />
     <Content Include="Content\admin-panel.css" />
-    <Content Include="Content\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\dragula.css" />
     <Content Include="Content\fontawesome\css\all.css" />
     <Content Include="Content\fontawesome\css\all.min.css" />
@@ -294,12 +290,13 @@
     <Content Include="Content\material-input.css" />
     <Content Include="Content\sumoselect.min.css" />
     <Content Include="favicon.ico" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
+    <Content Include="Content\main.css" />
     <Content Include="Images\default-image.jpg" />
     <Content Include="Images\loader.gif" />
     <Content Include="Images\loader_old.gif" />
+    <Content Include="Images\logo.png" />
+    <Content Include="Images\logo2.png" />
     <Content Include="Images\Products\combo.jpg" />
     <Content Include="Images\Products\first-order.jpg" />
     <Content Include="Images\Products\mors.jpg" />
@@ -311,8 +308,6 @@
     <Content Include="Images\rating\star-on.png" />
     <Content Include="Scripts\admin-login.js" />
     <Content Include="Scripts\admin-panel.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Resource\City.json" />
     <Content Include="Content\fontawesome\webfonts\fa-brands-400.eot" />
     <Content Include="Content\fontawesome\webfonts\fa-brands-400.ttf" />
@@ -331,6 +326,7 @@
     <Content Include="Content\fontawesome\webfonts\fa-solid-900.woff" />
     <Content Include="Content\fontawesome\webfonts\fa-solid-900.woff2" />
     <Content Include="Images\rating\.DS_Store" />
+    <Content Include="fonts\SFUIDisplay-Light.ttf" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\dragula.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -368,14 +364,6 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\bootstrap-theme.min.css.map" />
-    <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />

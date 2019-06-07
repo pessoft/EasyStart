@@ -1745,6 +1745,7 @@ function renderOrderInfoTake(dataStr) {
         $deliveryInfo.find("#order-delivery-street .take-info-item-value").html(dataStr.street);
         $deliveryInfo.find("#order-delivery-home .take-info-item-value").html(dataStr.homeNumber);
         $deliveryInfo.find("#order-delivery-apartment .take-info-item-value").html(dataStr.apartamentNumber);
+        $deliveryInfo.find("#order-delivery-level .take-info-item-value").html(dataStr.level);
         $deliveryInfo.find("#order-delivery-intercom-code .take-info-item-value").html(dataStr.intercomCode);
     }
 
@@ -1826,7 +1827,8 @@ function getDataOrderStr(order) {
         phoneNumber: order.PhoneNumber,
         products: getProductsStr(),
         street: street,
-        deliveryPrice: deliveryPrice
+        deliveryPrice: deliveryPrice,
+        level: order.Level
     }
 
     return dataStr;

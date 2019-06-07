@@ -8,12 +8,16 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     @*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">*@
     <title>Панель администратора</title>
+    @Styles.Render("~/main/css")
     @Styles.Render("~/admin-panel/css")
     @Styles.Render("~/sumoselect/css")
     @Styles.Render("~/dragula/css")
 </head>
 <body>
     <div class="header-menu">
+        <div class="logo-img">
+            <img src="~/Images/logo2.png" alt="Logo" />
+        </div>
         <div class="menu-item menu-item-active" target-id="order" onclick="loadOrders();">
             <i class="fal fa-shopping-basket"></i>
             Заказы
@@ -102,11 +106,13 @@
                         <div class="order-description-products-wrapper">
                             <div class="order-description-products">
                             </div>
+                        </div>
+                        <div class="order-description-products-additional-wrapper">
                             <div class="order-description-additional-info to-pay">
                                 <div>К оплате:</div>
                                 <div class="order-description-additional-info-value"></div>
                             </div>
-                            <div class="order-description-additional-info need-cashback" >
+                            <div class="order-description-additional-info need-cashback">
                                 <div id="need-cashback-header"></div>
                                 <div class="order-description-additional-info-value"></div>
                             </div>
@@ -191,6 +197,13 @@
                                     <div class="take-info-item">
                                         <div class="take-info-item-name">
                                             Квартира:
+                                        </div>
+                                        <div class="take-info-item-value">
+                                        </div>
+                                    </div>
+                                    <div class="take-info-item">
+                                        <div class="take-info-item-name">
+                                            Этаж:
                                         </div>
                                         <div class="take-info-item-value">
                                         </div>
@@ -840,6 +853,13 @@
                 <div class="take-info-item" id="order-delivery-apartment">
                     <div class="take-info-item-name">
                         Квартира:
+                    </div>
+                    <div class="take-info-item-value">
+                    </div>
+                </div>
+                <div class="take-info-item" id="order-delivery-level">
+                    <div class="take-info-item-name">
+                        Этаж:
                     </div>
                     <div class="take-info-item-value">
                     </div>

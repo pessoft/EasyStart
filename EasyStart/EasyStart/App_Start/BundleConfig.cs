@@ -38,27 +38,22 @@ namespace EasyStart
             bundles.Add(new ScriptBundle("~/bundles/jquery-raty").Include(
                       "~/Scripts/jquery.raty.min.js"));
 
-            // Используйте версию Modernizr для разработчиков, чтобы учиться работать. Когда вы будете готовы перейти к работе,
-            // готово к выпуску, используйте средство сборки по адресу https://modernizr.com, чтобы выбрать только необходимые тесты.
-            bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                        "~/Scripts/modernizr-*"));
-
-            bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js"));
-
             bundles.Add(new StyleBundle("~/admin-login/css").Include(
-                      "~/Content/admin-login.css",
-                      "~/Content/fontawesome/css/all.css",
-                      "~/Content/material-input.css"));
+                      "~/Content/admin-login.css"));
 
             bundles.Add(new StyleBundle("~/admin-panel/css").Include(
-                      "~/Content/admin-panel.css",
-                      "~/Content/fontawesome/css/all.css",
-                      "~/Content/material-input.css"));
-            bundles.Add(new ScriptBundle("~/dragula/css").Include(
+                      "~/Content/admin-panel.css"));
+
+            bundles.Add(new StyleBundle("~/dragula/css").Include(
                        "~/Content/dragula.css"));
-            bundles.Add(new ScriptBundle("~/sumoselect/css").Include(
+
+            bundles.Add(new StyleBundle("~/sumoselect/css").Include(
                     "~/Content/sumoselect.min.css"));
+
+            bundles.Add(new StyleBundle("~/main/css").Include(
+                   "~/Content/main.css",
+                   "~/Content/fontawesome/css/all.css",
+                   "~/Content/material-input.css"));
         }
     }
 }

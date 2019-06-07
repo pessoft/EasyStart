@@ -1,0 +1,9 @@
+﻿@font-face {
+    font-family: "SFNSDisplay-Ultralight";
+    src: url("../fonts/SFUIDisplay-Light.ttf") format("truetype");
+    font-style: normal;
+}
+
+body {
+    font-family: sans-serif;
+}
