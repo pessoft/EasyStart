@@ -293,10 +293,11 @@
     <Content Include="Global.asax" />
     <Content Include="Content\main.css" />
     <Content Include="Images\default-image.jpg" />
+    <Content Include="Images\full-logo-pink.png" />
+    <Content Include="Images\full-logo-blue.png" />
     <Content Include="Images\loader.gif" />
     <Content Include="Images\loader_old.gif" />
     <Content Include="Images\logo.png" />
-    <Content Include="Images\logo2.png" />
     <Content Include="Images\Products\combo.jpg" />
     <Content Include="Images\Products\first-order.jpg" />
     <Content Include="Images\Products\mors.jpg" />

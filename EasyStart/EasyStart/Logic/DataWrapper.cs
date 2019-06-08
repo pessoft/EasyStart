@@ -297,6 +297,23 @@ namespace EasyStart.Logic
             return result;
         }
 
+        public static Dictionary<int, CategoryModel> GetCategories(List<int> ids)
+        {
+            Dictionary<int, CategoryModel> result = new Dictionary<int, CategoryModel>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.Categories
+                        .Where(p => ids.Contains(p.Id))
+                        .ToDictionary(p => p.Id, p => p);
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
 
         public static List<CategoryModel> GetCategories()
         {
@@ -378,7 +395,9 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    var orderNumber = db.Products.Count();
+                    var orderNumber = 1 + db.Products
+                        .Where(p => p.CategoryId == product.CategoryId)
+                        .Count();
 
                     product.OrderNumber = orderNumber;
                     result = db.Products.Add(product);

@@ -3,7 +3,7 @@
     margin: 0;
     padding: 0;
     font-size: 1em;
-    color: #2d2b2b;
+    color: #163f75;
     background-color: #0f1e3205;
 }
 
@@ -11,24 +11,41 @@
     margin: 10px;
     text-align: center;
     font-size: 1.2em;
-    font-weight:600;
+    font-weight: 600;
+    color: #0f1e32de;
+}
+
+.logo-img {
+    width: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .logo-img img {
+        width: 100%
+    }
+
+.header i {
+    font-size: 1.5em;
 }
 
 .wrapper {
     width: 100vw;
     height: 100vh;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+    flex-direction:column;
     background-color: #ffffff
 }
 
 .login-form {
-    width: 25%;
-    height: 32%;
-    box-shadow: 2px 3px 16px 0px #565656;
-    background-color: #efefef;
-    border-radius: 0px;
+    width: 400px;
+    height: 250px;
+    box-shadow: 0px 0px 3px 0px #163f7569;
+    background-color: #0f1e3200;
+    border-radius: 2px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -36,9 +53,7 @@
 }
 
     .login-form input {
-        margin: 5px;
-        width: 65%;
-        height: 10%;
+        width: 100%;
     }
 
     .login-form button {
@@ -47,3 +62,19 @@
         height: 13%;
     }
 
+    #login-form .group{
+        width: 65%
+    }
+
+    #login-form .bar {
+        width: 100%;
+    }
+
+#login-form input:focus ~ .bar:before {
+    width: 100%;
+}
+
+#action-login {
+    height: 35px;
+    margin-top: 20px
+}

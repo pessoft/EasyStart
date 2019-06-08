@@ -595,7 +595,22 @@ namespace EasyStart.Controllers
 
             if (products != null)
             {
-                result.Data = products;
+                var idsDict = products
+                .Select(p => p.CategoryId)
+                .Distinct()
+                .ToList();
+                var categoryDict = DataWrapper.GetCategories(idsDict);
+                var dataResult = products
+                    .GroupBy(p => p.CategoryId)
+                    .Select(p => new
+                    {
+                        CategoryId = p.Key,
+                        CategoryName = categoryDict[p.Key].Name,
+                        Products = p
+                    })
+                    .ToList();
+
+                result.Data = dataResult;
                 result.Success = true;
             }
             else

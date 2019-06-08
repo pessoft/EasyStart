@@ -16,7 +16,7 @@
 <body>
     <div class="header-menu">
         <div class="logo-img">
-            <img src="~/Images/logo2.png" alt="Logo" />
+            <img src="~/Images/logo.png" alt="Logo" />
         </div>
         <div class="menu-item menu-item-active" target-id="order" onclick="loadOrders();">
             <i class="fal fa-shopping-basket"></i>
@@ -554,7 +554,7 @@
 
             <div class="add-image-product">
                 <input type="file" id="add-stock-image" accept="image/*" class="hide">
-                <div class="preview-image" onclick="openDialogFile('add-product-image')">
+                <div class="preview-image" onclick="openDialogFile('add-stock-image')">
                     <img src="#" alt="your image" class="hide" />
                     <div class="dialog-image-upload">
                         <i class="fal fa-upload"></i>
@@ -585,6 +585,7 @@
                             <option value="2">Хит</option>
                             <option value="3">Участвует в акции</option>
                             <option value="4">Острое</option>
+                            <option value="5">Вегетарианское</option>
                         </select>
                     </div>
                     <div class="group">
@@ -760,6 +761,11 @@
                 <span></span>
             </div>
             <div class="order-item-date"></div>
+        </div>
+    </template>
+
+    <template id="order-product-header-item-template">
+        <div class="order-description-product-header">
         </div>
     </template>
 

@@ -11,6 +11,7 @@ namespace EasyStart.Logic
         New = 1,
         Hit = 2,
         Stock = 3,
-        HotPeppers = 4
+        HotPeppers = 4,
+        Vegetarion = 5
     }
 }

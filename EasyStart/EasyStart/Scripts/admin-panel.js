@@ -449,7 +449,7 @@ function updateCategory() {
         loader.stop();
         if (result.Success) {
             let categoryItem = $(`[category-id=${category.Id}]`);
-            categoryItem.find("img").attr("src", category.Image);
+            categoryItem.find(".category-item-image img").attr("src", category.Image);
             categoryItem.find(".category-item-name").html(category.Name);
 
             cancelDialog("#addCategoryDialog");
@@ -482,6 +482,7 @@ function addCategory() {
         let successFunc = function (result, loader) {
             loader.stop();
             if (result.Success) {
+                DataProduct.Categories.push(result.Data);
                 $(".category .empty-list").remove();
                 addCategoryToList(result.Data);
                 cancelDialog("#addCategoryDialog");
@@ -686,7 +687,7 @@ function addProduct() {
             loader.stop();
             if (result.Success) {
                 $(".product .empty-list").remove();
-                //Data.Products.push(result.Data);
+                DataProduct.Products.push(result.Data);
                 addProductToList(result.Data);
                 cancelDialog("#addProducDialog");
             } else {
@@ -743,7 +744,7 @@ function updateProduct() {
 
             let productItem = $(`[product-id=${product.Id}]`);
             productItem.find(".product-item-image img").attr("src", product.Image);
-            productItem.find(".category-item-name").html(product.Name);
+            productItem.find(".product-item-name").html(product.Name);
             productItem.find(".product-item-additional-info").html(product.AdditionInfo);
             productItem.find(".product-item-price span").html(product.Price);
             productItem.find(".product-item-description").html(product.Description);
@@ -1640,8 +1641,15 @@ function showInfoDesctiprionOrder(orderId) {
 
     let callbackLoadProducts = function (data) {
         if (data.Success) {
-            for (let product of data.Data) {
-                OrderProducts[product.Id] = product;
+            OrderCategoryes = {};
+            for (let categoryObj of data.Data) {
+                OrderCategoryes[categoryObj.CategoryId] = {
+                    Id: categoryObj.CategoryId,
+                    Name: categoryObj.CategoryName,
+                    ProductIds: categoryObj.Products.map(product => product.Id)
+                };
+
+                categoryObj.Products.forEach(product => OrderProducts[product.Id] = product);
             }
 
             callbackShowDescription();
@@ -1693,15 +1701,27 @@ function renderOrderComment(comment) {
 function renderorderOrderProducts(dataProducdtsStr) {
     let templates = [];
 
-    for (let product of dataProducdtsStr) {
-        let $template = $($("#order-product-item-template").html());
+    for (let categoryId in OrderCategoryes) {
+        let category = OrderCategoryes[categoryId];
+        let $templateCategoryHeader = $($("#order-product-header-item-template").html());
 
-        $template.find(".order-description-product-number").html(product.Index);
-        $template.find(".order-description-product-name").html(product.Name);
-        $template.find(".order-description-product-info-count").html(product.Count);
-        $template.find(".order-description-product-info-price").html(product.Price);
+        $templateCategoryHeader.html(category.Name);
+        templates.push($templateCategoryHeader);
 
-        templates.push($template);
+        for (let productId of category.ProductIds) {
+            let product = dataProducdtsStr[productId];
+
+            let $template = $($("#order-product-item-template").html());
+
+            $template.find(".order-description-product-number").html(product.Index);
+            $template.find(".order-description-product-name").html(product.Name);
+            $template.find(".order-description-product-info-count").html(product.Count);
+            $template.find(".order-description-product-info-price").html(product.Price);
+
+            templates.push($template);
+        }
+
+        templates[templates.length - 1].addClass("not-border");
     }
 
     $("#order .order-description-products").html(templates);
@@ -1759,173 +1779,191 @@ function getProductIdsForLoad(order) {
     let ids = [];
 
     for (let id in order.ProductCount) {
-        if (!OrderProducts[id]) {
-            ids.push(id);
-        }
+        ids.push(id);
+        //if (!OrderProducts[id]) {
+        //    ids.push(id);
+        //}
     }
 
     return ids;
 }
 
-function isInteger(num) {
-    return (num ^ 0) === num;
-}
-
-function getPriceValid(num) {
-    if (!isInteger(num)) {
-        num = num.toFixed(2);
+    function isInteger(num) {
+        return (num ^ 0) === num;
     }
 
-    return num;
+    function getPriceValid(num) {
+        if (!isInteger(num)) {
+            num = num.toFixed(2);
+        }
+
+        return num;
+    }
+
+function getProductIndexFromOrderCategory(productId) {
+    let indexResult = 0;
+    for (let categoryId in OrderCategoryes) {
+        let category = OrderCategoryes[categoryId];
+        let index = category.ProductIds.indexOf(productId);
+
+        if (index != -1) {
+            indexResult += ++index;
+            break;
+        } else {
+            indexResult += category.ProductIds.length;
+        }
+    }
+
+    return indexResult;
 }
 
-function getDataOrderStr(order) {
-    let prefixRub = "руб.";
-    let prefixPercent = "%";
-    let prefixCount = "шт.";
-    let getProductsStr = () => {
-        let products = [];
-        let index = 0;
-        for (let productId in order.ProductCount) {
-            let product = OrderProducts[productId];
-            let obj = {
-                Index: `${++index}.`,
-                Name: product.Name,
-                Count: `${order.ProductCount[productId]} ${prefixCount}`,
-                Price: `${product.Price} ${prefixRub}`
+    function getDataOrderStr(order) {
+        let prefixRub = "руб.";
+        let prefixPercent = "%";
+        let prefixCount = "шт.";
+        let getProductsStr = () => {
+            let products = [];
+            for (let productId in order.ProductCount) {
+                let product = OrderProducts[productId];
+                let obj = {
+                    Index: `${getProductIndexFromOrderCategory(parseInt(productId))}.`,
+                    Name: product.Name,
+                    Count: `${order.ProductCount[productId]} ${prefixCount}`,
+                    Price: `${product.Price} ${prefixRub}`
+                }
+
+                products[productId] = obj;
             }
 
-            products.push(obj);
+            return products;
+        };
+
+        let street = order.DeliveryType == DeliveryType.Delivery ? order.Street : $("#setting-street").val();
+        let homeNumber = order.DeliveryType == DeliveryType.Delivery ? order.HomeNumber : $("#setting-home").val();
+        let deliveryPrice = order.DeliveryPrice == 0 ? "Бесплатно" : `${getPriceValid(order.DeliveryPrice)} ${prefixRub}`;
+        let discount = order.Discount == 0 ? `0${prefixPercent}` : `${order.Discount}${prefixPercent} (${getPriceValid(order.AmountPay * order.Discount / 100)} ${prefixRub})`
+        let dataStr = {
+            amountPay: `${getPriceValid(order.AmountPay)} ${prefixRub}`,
+            amountPayDiscountDelivery: `${getPriceValid(order.AmountPayDiscountDelivery)} ${prefixRub}`,
+            apartamentNumber: order.ApartamentNumber,
+            buyType: getBuyType(order.BuyType),
+            cashBack: `Нужна сдача с ${order.CashBack} ${prefixRub}:`,
+            cashBackNumber: `${getPriceValid(order.CashBack - order.AmountPayDiscountDelivery)} ${prefixRub}`,
+            city: getCityNameById(order.CityId),
+            comment: order.Comment,
+            date: toStringDateAndTime(order.Date),
+            deliveryType: order.DeliveryType,
+            discount: discount,
+            entranceNumber: order.EntranceNumber,
+            homeNumber: homeNumber,
+            orderNumber: `№ ${order.Id}`,
+            intercomCode: order.IntercomCode,
+            level: order.Level,
+            name: order.Name,
+            needCashBack: order.NeedCashBack,
+            phoneNumber: order.PhoneNumber,
+            products: getProductsStr(),
+            street: street,
+            deliveryPrice: deliveryPrice,
+            level: order.Level
         }
 
-        return products;
-    };
-
-    let street = order.DeliveryType == DeliveryType.Delivery ? order.Street : $("#setting-street").val();
-    let homeNumber = order.DeliveryType == DeliveryType.Delivery ? order.HomeNumber : $("#setting-home").val();
-    let deliveryPrice = order.DeliveryPrice == 0 ? "Бесплатно" : `${getPriceValid(order.DeliveryPrice)} ${prefixRub}`;
-    let discount = order.Discount == 0 ? `0${prefixPercent}` : `${order.Discount}${prefixPercent} (${getPriceValid(order.AmountPay * order.Discount / 100)} ${prefixRub})`
-    let dataStr = {
-        amountPay: `${getPriceValid(order.AmountPay)} ${prefixRub}`,
-        amountPayDiscountDelivery: `${getPriceValid(order.AmountPayDiscountDelivery)} ${prefixRub}`,
-        apartamentNumber: order.ApartamentNumber,
-        buyType: getBuyType(order.BuyType),
-        cashBack: `Нужна сдача с ${order.CashBack} ${prefixRub}:`,
-        cashBackNumber: `${getPriceValid(order.CashBack - order.AmountPayDiscountDelivery)} ${prefixRub}`,
-        city: getCityNameById(order.CityId),
-        comment: order.Comment,
-        date: toStringDateAndTime(order.Date),
-        deliveryType: order.DeliveryType,
-        discount: discount,
-        entranceNumber: order.EntranceNumber,
-        homeNumber: homeNumber,
-        orderNumber: `№ ${order.Id}`,
-        intercomCode: order.IntercomCode,
-        level: order.Level,
-        name: order.Name,
-        needCashBack: order.NeedCashBack,
-        phoneNumber: order.PhoneNumber,
-        products: getProductsStr(),
-        street: street,
-        deliveryPrice: deliveryPrice,
-        level: order.Level
+        return dataStr;
     }
 
-    return dataStr;
-}
-
-var OrderProducts = {}
-function loadProductById(ids, callback) {
-    $.post("/Admin/LoadOrderProducts", { ids: ids }, successCallBack(callback, null));
-}
-
-function getOrderById(orderId) {
-    let searchOrder = null;
-
-    for (let order of Orders) {
-        if (order.Id == orderId) {
-            searchOrder = order;
-            break;
-        }
+    var OrderProducts = {};
+    var OrderCategoryes = {};
+    function loadProductById(ids, callback) {
+        $.post("/Admin/LoadOrderProducts", { ids: ids }, successCallBack(callback, null));
     }
 
-    return searchOrder;
-}
+    function getOrderById(orderId) {
+        let searchOrder = null;
 
-function getCityNameById(id) {
-    let $cityItem = $(`#setting-city-list [city-id=${id}]`);
-    let cityName = "";
-
-    if ($cityItem.length != 0) {
-        cityName = $cityItem.val();
-    }
-
-    return cityName;
-}
-
-var BuyType = {
-    Cash: 1,
-    Card: 2
-}
-
-function getBuyType(id) {
-    let buyType = "";
-
-    switch (id) {
-        case BuyType.Cash:
-            buyType = "Наличные";
-            break;
-        case BuyType.Card:
-            buyType = "Банковская карта";
-            break;
-    }
-
-    return buyType;
-}
-
-var DeliveryType = {
-    TakeYourSelf: 1,
-    Delivery: 2
-}
-
-function getDeliveryType(id) {
-    let deliveryType = "";
-
-    switch (id) {
-        case DeliveryType.TakeYourSelf:
-            deliveryType = "Самовывоз";
-            break;
-        case BuyType.Delivery:
-            deliveryType = "Доставка курьером";
-            break;
-    }
-
-    return deliveryType;
-}
-
-const OrderStatus = {
-    Processing: 0,
-    Processed: 1,
-    Cancellation: 2
-}
-
-function changeOrderStatus(orderId, orderStatus) {
-    let $order = $(`#order [order-id=${orderId}]`);
-
-    $order.fadeOut(600, function () {
-        $(this.remove());
-        for (let i = 0; i < Orders.length; ++i) {
-            if (Orders[i].Id == orderId) {
-                Orders.splice(i, 1);
+        for (let order of Orders) {
+            if (order.Id == orderId) {
+                searchOrder = order;
                 break;
             }
         }
 
-        if (Orders.length == 0) {
-            setEmptyOrders();
-        }
-    });
+        return searchOrder;
+    }
 
-    setEmptyOrderInfo();
-    $.post("/Admin/UpdateSatsusOrder", { OrderId: orderId, Status: orderStatus }, null);
-}
+    function getCityNameById(id) {
+        let $cityItem = $(`#setting-city-list [city-id=${id}]`);
+        let cityName = "";
+
+        if ($cityItem.length != 0) {
+            cityName = $cityItem.val();
+        }
+
+        return cityName;
+    }
+
+    var BuyType = {
+        Cash: 1,
+        Card: 2
+    }
+
+    function getBuyType(id) {
+        let buyType = "";
+
+        switch (id) {
+            case BuyType.Cash:
+                buyType = "Наличные";
+                break;
+            case BuyType.Card:
+                buyType = "Банковская карта";
+                break;
+        }
+
+        return buyType;
+    }
+
+    var DeliveryType = {
+        TakeYourSelf: 1,
+        Delivery: 2
+    }
+
+    function getDeliveryType(id) {
+        let deliveryType = "";
+
+        switch (id) {
+            case DeliveryType.TakeYourSelf:
+                deliveryType = "Самовывоз";
+                break;
+            case BuyType.Delivery:
+                deliveryType = "Доставка курьером";
+                break;
+        }
+
+        return deliveryType;
+    }
+
+    const OrderStatus = {
+        Processing: 0,
+        Processed: 1,
+        Cancellation: 2
+    }
+
+    function changeOrderStatus(orderId, orderStatus) {
+        let $order = $(`#order [order-id=${orderId}]`);
+
+        $order.fadeOut(600, function () {
+            $(this.remove());
+            for (let i = 0; i < Orders.length; ++i) {
+                if (Orders[i].Id == orderId) {
+                    Orders.splice(i, 1);
+                    break;
+                }
+            }
+
+            if (Orders.length == 0) {
+                setEmptyOrders();
+            }
+        });
+
+        setEmptyOrderInfo();
+        $.post("/Admin/UpdateSatsusOrder", { OrderId: orderId, Status: orderStatus }, null);
+    }

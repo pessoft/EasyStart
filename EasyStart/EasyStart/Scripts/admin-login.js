@@ -20,3 +20,9 @@
 
     $.post("/Home/Login", loginData, successCallBack(successFunc, null));
  }
+
+function loginByEnter(event) {
+    if (event.keyCode == 13) {
+        login();
+    }
+}

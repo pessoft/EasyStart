@@ -92,6 +92,10 @@ label {
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
+    .btn:focus {
+        box-shadow: 0 7px 14px rgba(0, 0, 0, 0.18), 0 5px 5px rgba(66, 0, 0, 0.38);
+    }
+
     .btn:hover {
         color: #8b8b8b;
         box-shadow: 0 7px 14px rgba(0, 0, 0, 0.18), 0 5px 5px rgba(0, 0, 0, 0.12);
