@@ -266,6 +266,7 @@
   <ItemGroup>
     <Content Include="Content\admin-login.css" />
     <Content Include="Content\admin-panel.css" />
+    <Content Include="Content\datepicker.min.css" />
     <Content Include="Content\dragula.css" />
     <Content Include="Content\fontawesome\css\all.css" />
     <Content Include="Content\fontawesome\css\all.min.css" />
@@ -329,6 +330,7 @@
     <Content Include="Images\rating\.DS_Store" />
     <Content Include="fonts\SFUIDisplay-Light.ttf" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\datepicker.min.js" />
     <Content Include="Scripts\dragula.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

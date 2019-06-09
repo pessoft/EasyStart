@@ -30,6 +30,9 @@ namespace EasyStart
             bundles.Add(new ScriptBundle("~/bundles/dragula").Include(
                         "~/Scripts/dragula.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/darepicker").Include(
+                        "~/Scripts/datepicker.min.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/admin-login").Include(
                         "~/Scripts/admin-login.js"));
 
@@ -40,6 +43,8 @@ namespace EasyStart
 
             bundles.Add(new StyleBundle("~/admin-login/css").Include(
                       "~/Content/admin-login.css"));
+            bundles.Add(new StyleBundle("~/datepicker/css").Include(
+                      "~/Content/datepicker.min.css"));
 
             bundles.Add(new StyleBundle("~/admin-panel/css").Include(
                       "~/Content/admin-panel.css"));

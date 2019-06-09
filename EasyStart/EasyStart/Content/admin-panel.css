@@ -696,12 +696,6 @@ div.product-item:hover {
     word-break:break-word;
 }
 
-@media screen and (max-height: 768px) {
-    /*.order-description-products-wrapper {
-        max-height: 32% !important;
-    }*/
-}
-
 @media screen and (max-width: 1248px) {
     .category-item-action > i {
         margin-right: 8px;
@@ -1102,7 +1096,7 @@ div.product-item:hover {
     max-height: 30%;
     margin-top: 15px;
     margin-bottom: 5px;
-    font-size: 1.1em;
+    font-size: 1.2em;
     color: #0f1e32de;
 }
 
@@ -1183,7 +1177,8 @@ div.product-item:hover {
 }
 
 
-#order {
+#order,
+#history {
     width: 100%;
     height: 100%;
     display: flex;
@@ -1258,7 +1253,8 @@ div.product-item:hover {
     overflow-y: auto;
 }
 
-#order .empty-list {
+#order .empty-list,
+#history .empty-list {
     font-size: 1.5em;
 }
 
@@ -1339,7 +1335,7 @@ div.product-item:hover {
     width: 96%;
     padding: 10px 1%;
     height: auto;
-    max-height: 45%;
+    max-height: 50%;
     justify-content: center;
     align-items: flex-start;
     flex-direction: column;
@@ -1366,8 +1362,8 @@ div.product-item:hover {
 .order-description-product,
 .order-description-product-header {
     width: 90%;
-    height: 40px;
-    padding: 0 5%;
+    min-height: 35px;
+    padding: 5px 5%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -1375,11 +1371,12 @@ div.product-item:hover {
     border-bottom: 1px solid #0f1e3212;
 }
 
-    .order-description-product-header {
-        padding-left: 3%;
-        width: 92%;
-        border-bottom:none;
-    }
+.order-description-product-header {
+    padding-left: 3%;
+    width: 92%;
+    border-bottom: none;
+    font-weight: 600;
+}
 
     div.order-description-product:last-child {
         border-bottom: none;
@@ -1567,35 +1564,79 @@ div.take-info-item:nth-child(odd) {
     flex-direction: column;
 }
 
-    .additional-order label {
-        color: inherit;
-        font-size: inherit;
-        font-weight: inherit;
-        pointer-events: inherit;
-        position: inherit;
-        left: inherit;
-        top: 0;
-        transition: none;
-        color: #0f1e328c;
-    }
+.sumuselect label {
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    pointer-events: inherit;
+    position: inherit;
+    left: inherit;
+    top: 0;
+    transition: none;
+    color: #0f1e328c;
+}
 
 .optWrapper label {
     font-size: 0.8em;
 }
 
-#order .SumoSelect > .CaptionCont > span {
+#order .SumoSelect > .CaptionCont > span,
+#history .SumoSelect > .CaptionCont > span {
     font-size: 0.85em;
 }
 
-#order .SumoSelect {
+#order .SumoSelect,
+#history .SumoSelect {
     width: 90%;
     margin: 5px;
 }
 
-    #order .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i {
+    #order .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
+    #history .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i {
         background-color: #4a919e;
     }
 
     .not-border {
         border: none;
     }
+
+.SumoSelect.open > .optWrapper,
+.datepickers-container {
+    z-index: 99999999;
+}
+
+.additional-order-item {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.datepicker-input input {
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    text-align:center;
+}
+
+.datepicker-input .group {
+    width: 54%;
+    cursor: pointer;
+}
+
+.datepicker-input .bar {
+    width: 100%;
+}
+
+.datepicker-input input:focus ~ .bar:before {
+    width: 100%;
+}
+
+.datepicker-input div {
+    width: 100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:row;
+}

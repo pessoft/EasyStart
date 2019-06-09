@@ -12,6 +12,7 @@
     @Styles.Render("~/admin-panel/css")
     @Styles.Render("~/sumoselect/css")
     @Styles.Render("~/dragula/css")
+    @Styles.Render("~/datepicker/css")
 </head>
 <body>
     <div class="header-menu">
@@ -66,17 +67,17 @@
                             <i class="fal fa-cash-register"></i>
                         </div>
                         <div class="additional-order">
-                            @if (ViewBag.BranchViews != null)
-                            {
-                                <label for="show-additional-order">Заказы из других городов</label>
-                                <select id="show-additional-order" multiple="multiple">
-                                    @foreach (var kv in ViewBag.BranchViews)
-                                    {
-                                        <option key="@kv.Key">@kv.Value</option>
-                                    }
-                                </select>
-                            }
-
+                            <div class="additional-order-item sumuselect" id="additional-order-city">
+                                @if (ViewBag.BranchViews != null)
+                                {
+                                    <select id="show-additional-order" multiple="multiple">
+                                        @foreach (var kv in ViewBag.BranchViews)
+                                        {
+                                            <option key="@kv.Key">@kv.Value</option>
+                                        }
+                                    </select>
+                                }
+                            </div>
                         </div>
                     </div>
                     <div class="order-list">
@@ -125,109 +126,13 @@
                                 <div class="order-description-additional-info-value"></div>
                             </div>
                         </div>
-                        <div class="order-description-info-take">
-                            <div class="order-description-info-take-item">
-                                <div class="background-order-info">
-                                    <i class="fal fa-money-bill-wave-alt"></i>
-                                </div>
-                                <div class="take-info-header">
-                                    Стоимость заказа
-                                </div>
-                                <div class="take-info-items">
-                                    <div class="take-info-item">
-                                        <div class="take-info-item-name">
-                                            Стоимость:
-                                        </div>
-                                        <div class="take-info-item-value">
-                                        </div>
-                                    </div>
-                                    <div class="take-info-item">
-                                        <div class="take-info-item-name">
-                                            Скидка:
-                                        </div>
-                                        <div class="take-info-item-value">
-                                        </div>
-                                    </div>
-                                    <div class="take-info-item">
-                                        <div class="take-info-item-name">
-                                            Доставка:
-                                        </div>
-                                        <div class="take-info-item-value">
-                                        </div>
-                                    </div>
-                                    <div class="take-info-item">
-                                        <div class="take-info-item-name">
-                                            К оплате:
-                                        </div>
-                                        <div class="take-info-item-value">
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="order-description-info-take-item">
-                                <div class="background-order-info">
-                                    <i class="fal fa-truck-loading"></i>
-                                </div>
-                                <div class="take-info-header">
-                                    Адрес доставки
-                                </div>
-                                <div class="take-info-items">
-                                    <div class="take-info-item">
-                                        <div class="take-info-item-name">
-                                            Город:
-                                        </div>
-                                        <div class="take-info-item-value">
-                                        </div>
-                                    </div>
-                                    <div class="take-info-item">
-                                        <div class="take-info-item-name">
-                                            Улица:
-                                        </div>
-                                        <div class="take-info-item-value">
-                                        </div>
-                                    </div>
-                                    <div class="take-info-item">
-                                        <div class="take-info-item-name">
-                                            Дом (офис):
-                                        </div>
-                                        <div class="take-info-item-value">
-                                        </div>
-                                    </div>
-                                    <div class="take-info-item">
-                                        <div class="take-info-item-name">
-                                            Квартира:
-                                        </div>
-                                        <div class="take-info-item-value">
-                                        </div>
-                                    </div>
-                                    <div class="take-info-item">
-                                        <div class="take-info-item-name">
-                                            Этаж:
-                                        </div>
-                                        <div class="take-info-item-value">
-                                        </div>
-                                    </div>
-                                    <div class="take-info-item">
-                                        <div class="take-info-item-name">
-                                            Код домафона:
-                                        </div>
-                                        <div class="take-info-item-value">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                        <div class="order-description-info-take"></div>
                         <div class="order-description-info-comment" id="order-description-comment">
                             <div class="order-description-info-comment-header">
                                 Коментарий к заказу
                             </div>
-                            <div class="order-description-info-comment-text">
-                            </div>
-
+                            <div class="order-description-info-comment-text"></div>
                         </div>
-
                         <div class="order-menu">
                             <button class="btn btn-submit" onclick="">Заказ обработан</button>
                             <button class="btn btn-cancel-order" onclick="">Отменить заказ</button>
@@ -236,7 +141,98 @@
                 </div>
             </div>
         </div>
-        <div class="section hide" id="history"></div>
+        <div class="section hide" id="history">
+            <div class="order-wrapper">
+                <div class="orders">
+                    <div class="orders-header">
+                        <div class="order-header-text">
+                            Заказы
+                            <i class="fal fa-cash-register"></i>
+                        </div>
+                        <div class="additional-order">
+                            <div class="additional-order-item datepicker-input">
+                                <div >
+                                    @*<i class="fal fa-calendar-alt"></i>*@
+                                    <div class="group">
+                                        <input required id="order-history-period"/>
+                                        <i class="fal fa-calendar-alt"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="additional-order-item sumuselect" id="additional-history-order-city">
+                                @if (ViewBag.BranchViews != null)
+                                {
+                                    <select id="show-additional-history-order" multiple="multiple">
+                                        @foreach (var kv in ViewBag.BranchViews)
+                                        {
+                                            <option key="@kv.Key">@kv.Value</option>
+                                        }
+                                    </select>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-list">
+                        <div class="empty-list">
+                            <i class="fal fa-user-clock"></i>
+                            <span>История заказов пуста</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-info">
+                    <div class="orders-header">
+                        <div class="order-header-text">
+                            Информация о заказе
+                            <i class="fal fa-receipt"></i>
+                        </div>
+                        <div></div>
+                    </div>
+                    <div class="order-description">
+                        <div class="empty-list">
+                            <i class="fal fa-info"></i>
+                            <span>Что бы увидеть информацию о заказе, выберите нужный из колонки "Заказы"</span>
+                        </div>
+                        <div class="order-description-header">
+                            <div class="order-description-number-header"></div>
+                            <div class="order-description-date-header"></div>
+                        </div>
+                        <div class="order-description-products-wrapper">
+                            <div class="order-description-products">
+                            </div>
+                        </div>
+                        <div class="order-description-products-additional-wrapper">
+                            <div class="order-description-additional-info to-pay">
+                                <div>К оплате:</div>
+                                <div class="order-description-additional-info-value"></div>
+                            </div>
+                            <div class="order-description-additional-info need-cashback">
+                                <div id="need-cashback-header"></div>
+                                <div class="order-description-additional-info-value"></div>
+                            </div>
+                            <div class="order-description-additional-info order-user-name">
+                                <div>Заказчик:</div>
+                                <div class="order-description-additional-info-value"></div>
+                            </div>
+                            <div class="order-description-additional-info order-user-phone">
+                                <div>Телефон заказчика:</div>
+                                <div class="order-description-additional-info-value"></div>
+                            </div>
+                        </div>
+                        <div class="order-description-info-take"></div>
+                        <div class="order-description-info-comment" id="order-description-comment">
+                            <div class="order-description-info-comment-header">
+                                Коментарий к заказу
+                            </div>
+                            <div class="order-description-info-comment-text"></div>
+                        </div>
+                        <div class="order-menu">
+                            <button class="btn btn-submit" onclick="">Заказ обработан</button>
+                            <button class="btn btn-cancel-order" onclick="">Отменить заказ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="section hide" id="products">
             <div class="category">
                 <div class="header-product">
@@ -922,5 +918,6 @@
     @Scripts.Render("~/bundles/admin-panel")
     @Scripts.Render("~/bundles/dragula")
     @Scripts.Render("~/bundles/jquery-raty")
+    @Scripts.Render("~/bundles/darepicker")
 </body>
 </html>

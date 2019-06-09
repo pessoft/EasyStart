@@ -52,13 +52,35 @@
     }
 
     bindSelectSumo();
+    initHistoryOrderDatePicker();
 });
+
+function initHistoryOrderDatePicker() {
+    var prevDate = new Date();
+    prevDate.setDate(prevDate.getDate() - 1);
+
+    let options = {
+        position: "bottom center",
+        range: true,
+        multipleDatesSeparator: " - ",
+        toggleSelected: false,
+    };
+    let $inputDate = $("#order-history-period");
+    $inputDate.datepicker(options);
+    let datepicer = $inputDate.data("datepicker");
+
+    $inputDate.next("i").bind("click", function () {
+        datepicer.show();
+    })
+
+    datepicer.selectDate([prevDate, prevDate]);
+}
 
 var AdditionalBranch = [];
 function bindSelectSumo() {
-    $("#show-additional-order").SumoSelect({
+    $("#show-additional-order,#show-additional-history-order").SumoSelect({
         okCancelInMulti: true,
-        placeholder: 'Выберите города'
+        placeholder: 'Заказы из других городов'
     });
 
     let bindFunc = function () {
@@ -70,11 +92,11 @@ function bindSelectSumo() {
         loadOrders(true);
     }
 
-    bindSumoOk(bindFunc);
+    bindSumoOk("additional-order-city", bindFunc);
 }
 
-function bindSumoOk(func) {
-    $(".additional-order .btnOk").bind("click", func)
+function bindSumoOk(id, func) {
+    $(`#${id} .btnOk`).bind("click", func)
 }
 
 var TypeItem = {
