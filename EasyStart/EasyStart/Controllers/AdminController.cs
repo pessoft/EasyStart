@@ -585,6 +585,26 @@ namespace EasyStart.Controllers
             return Json(result);
         }
 
+        [HttpPost]
+        [Authorize]
+        public JsonResult LoadHistoryOrders(HistoryOrderFilter filter)
+        {
+            var result = new JsonResultModel();
+            var orders = DataWrapper.GetHistoryOrders(filter.BranchIds, filter.StartDate, filter.EndDate);
+
+            if (orders != null)
+            {
+                result.Data = orders;
+                result.Success = true;
+            }
+            else
+            {
+                result.ErrorMessage = "При загрузки заказов, что то пошло не так";
+            }
+
+            return Json(result);
+        }
+
 
         [HttpPost]
         [Authorize]

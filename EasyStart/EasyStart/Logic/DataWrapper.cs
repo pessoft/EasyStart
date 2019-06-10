@@ -1,6 +1,7 @@
 ﻿using EasyStart.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
@@ -660,6 +661,32 @@ namespace EasyStart.Logic
             return orders;
         }
 
+        public static List<OrderModel> GetHistoryOrders(List<int> brandchIds, DateTime startDate, DateTime endDate)
+        {
+            var orders = new List<OrderModel>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    orders = db.Orders
+                        .Where(p => brandchIds.Contains(p.BranchId) &&
+                                    p.OrderStatus != OrderStatus.Processing &&
+                                    DbFunctions.TruncateTime(p.Date) >= startDate.Date &&
+                                    DbFunctions.TruncateTime(p.Date) <= endDate.Date)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return orders;
+        }
+
+        /// <summary>
+        /// Method for mobile app API
+        /// </summary>
+        /// <param name="clientId"></param>
+        /// <returns></returns>
         public static List<OrderModel> GetHistoryOrder(int clientId)
         {
             var histroyOrders = new List<OrderModel>();

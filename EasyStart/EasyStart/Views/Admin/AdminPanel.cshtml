@@ -23,7 +23,7 @@
             <i class="fal fa-shopping-basket"></i>
             Заказы
         </div>
-        <div class="menu-item" target-id="history">
+        <div class="menu-item" target-id="history" onclick="loadHistoryOrders()">
             <i class="fal fa-history"></i>
             История заказов
         </div>
@@ -127,7 +127,7 @@
                             </div>
                         </div>
                         <div class="order-description-info-take"></div>
-                        <div class="order-description-info-comment" id="order-description-comment">
+                        <div class="order-description-info-comment">
                             <div class="order-description-info-comment-header">
                                 Коментарий к заказу
                             </div>
@@ -152,7 +152,9 @@
                         <div class="additional-order">
                             <div class="additional-order-item datepicker-input">
                                 <div >
-                                    @*<i class="fal fa-calendar-alt"></i>*@
+                                    <span class="period-description">
+                                        Период:
+                                    </span>
                                     <div class="group">
                                         <input required id="order-history-period"/>
                                         <i class="fal fa-calendar-alt"></i>
@@ -195,6 +197,14 @@
                         <div class="order-description-header">
                             <div class="order-description-number-header"></div>
                             <div class="order-description-date-header"></div>
+                            <div class="order-description-processed-header">
+                                <i class="fal fa-thumbs-up"></i>
+                                оформлен
+                            </div>
+                            <div class="order-description-cancellation-header">
+                                <i class="fal fa-thumbs-down"></i>
+                                отменён
+                            </div>
                         </div>
                         <div class="order-description-products-wrapper">
                             <div class="order-description-products">
@@ -224,10 +234,6 @@
                                 Коментарий к заказу
                             </div>
                             <div class="order-description-info-comment-text"></div>
-                        </div>
-                        <div class="order-menu">
-                            <button class="btn btn-submit" onclick="">Заказ обработан</button>
-                            <button class="btn btn-cancel-order" onclick="">Отменить заказ</button>
                         </div>
                     </div>
                 </div>

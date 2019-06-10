@@ -55,6 +55,7 @@
     initHistoryOrderDatePicker();
 });
 
+var OrderHistoryDatePicker;
 function initHistoryOrderDatePicker() {
     var prevDate = new Date();
     prevDate.setDate(prevDate.getDate() - 1);
@@ -64,39 +65,52 @@ function initHistoryOrderDatePicker() {
         range: true,
         multipleDatesSeparator: " - ",
         toggleSelected: false,
+        onHide: function (dp, animationCompleted) {
+            if (!dp.maxRange && !animationCompleted) {
+                dp.selectDate(dp.minRange);
+            }
+
+            if (!animationCompleted) {
+                loadHistoryOrders();
+            }
+        }
     };
     let $inputDate = $("#order-history-period");
     $inputDate.datepicker(options);
-    let datepicer = $inputDate.data("datepicker");
+    OrderHistoryDatePicker = $inputDate.data("datepicker");
 
     $inputDate.next("i").bind("click", function () {
-        datepicer.show();
+        OrderHistoryDatePicker.show();
     })
 
-    datepicer.selectDate([prevDate, prevDate]);
+    OrderHistoryDatePicker.selectDate([prevDate, prevDate]);
 }
 
 var AdditionalBranch = [];
+var AdditionalHistoryBranch = [];
 function bindSelectSumo() {
     $("#show-additional-order,#show-additional-history-order").SumoSelect({
         okCancelInMulti: true,
         placeholder: 'Заказы из других городов'
     });
 
-    let bindFunc = function () {
+    $(`#additional-order-city .btnOk`).bind("click", function () {
         AdditionalBranch = [];
         $('#show-additional-order option:selected').each(function (i) {
             AdditionalBranch.push($(this).attr("key"));
         });
 
         loadOrders(true);
-    }
+    });
 
-    bindSumoOk("additional-order-city", bindFunc);
-}
+    $(`#additional-history-order-city .btnOk`).bind("click", function () {
+        AdditionalHistoryBranch = [];
+        $('#additional-history-order-city option:selected').each(function (i) {
+            AdditionalHistoryBranch.push($(this).attr("key"));
+        });
 
-function bindSumoOk(id, func) {
-    $(`#${id} .btnOk`).bind("click", func)
+        loadHistoryOrders();
+    });
 }
 
 var TypeItem = {
@@ -1500,7 +1514,18 @@ function setEmptyOrders() {
     $("#order .order-list").append(template);
 }
 
-function setEmptyOrderInfo() {
+function setEmptyHistoryOrders() {
+    let template = `
+        <div class="empty-list">
+            <i class="fal fa-user-clock"></i>
+            <span>История заказов пуста</span>
+        </div>
+    `;
+
+    $("#history .order-list").append(template);
+}
+
+function setEmptyOrderInfo(containerId) {
     let template = `
         <div class="empty-list">
             <i class="fal fa-info"></i>
@@ -1508,7 +1533,7 @@ function setEmptyOrderInfo() {
         </div>
     `;
 
-    $("#order .order-description").append(template);
+    $(`#${containerId} .order-description`).append(template);
 }
 
 
@@ -1520,7 +1545,7 @@ function loadOrders(reload = false) {
     }
 
     currentBranchId = $("#current-brnach").val();
-    let brnachIds = getAdditionBranches();
+    let brnachIds = [...AdditionalBranch];
     brnachIds.push(currentBranchId);
 
     let $list = $("#order .orders .order-list");
@@ -1548,21 +1573,66 @@ function loadOrders(reload = false) {
     $.post("/Admin/LoadOrders", { brnachIds: brnachIds }, successCallBack(successFunc, loader));
 }
 
-function getAdditionBranches() {
-    return AdditionalBranch;
+var HistoryOrders = [];
+
+function loadHistoryOrders() {
+    setEmptyOrderInfo("history");
+    currentBranchId = $("#current-brnach").val();
+    let brnachIds = [...AdditionalHistoryBranch];
+
+    brnachIds.push(currentBranchId);
+
+    let $list = $("#history .orders .order-list");
+    $list.empty();
+
+    let loader = new Loader($("#history"));
+    loader.start();
+
+    let successFunc = function (data, loader) {
+        if (data.Success) {
+            HistoryOrders = processingOrders(data.Data);
+
+            if (HistoryOrders.length == 0) {
+                setEmptyHistoryOrders();
+            } else {
+                renderHistoryOrders();
+            }
+        } else {
+            showErrorMessage(data.ErrorMessage);
+        }
+
+        loader.stop();
+    }
+
+    $.post("/Admin/LoadHistoryOrders", {
+        BranchIds: brnachIds,
+        StartDate: OrderHistoryDatePicker.minRange.toGMTString(),
+        EndDate: OrderHistoryDatePicker.maxRange.toGMTString(),
+
+    }, successCallBack(successFunc, loader));
 }
 
 function renderOrders() {
     let templates = [];
 
     for (let order of Orders) {
-        templates.push(getTemplateOrderItem(order));
+        templates.push(getTemplateOrderItem(order, "order"));
     }
 
     $("#order .order-list").html(templates);
 }
 
-function getTemplateOrderItem(data) {
+function renderHistoryOrders() {
+    let templates = [];
+
+    for (let order of HistoryOrders) {
+        templates.push(getTemplateOrderItem(order, "history"));
+    }
+
+    $("#history .order-list").html(templates);
+}
+
+function getTemplateOrderItem(data, containerId) {
     let $template = $($(`#order-item-template-${data.DeliveryType}`).html());
     let orderNumber = `№ ${data.Id}`;
     let date = toStringDateAndTime(data.Date);
@@ -1571,7 +1641,7 @@ function getTemplateOrderItem(data) {
     $template.find(".order-item-number span").html(orderNumber);
     $template.find(".order-item-date").html(date);
 
-    $template.bind("click", function () { selectOrder(this) });
+    $template.bind("click", function () { selectOrder(this, containerId) });
 
     return $template;
 }
@@ -1600,10 +1670,10 @@ function toStringDateAndTime(date) {
     return dateStr;
 }
 
-function setActiveOrderItem(e) {
+function setActiveOrderItem(e, containerId = "order") {
     $parent = getParentItemFromOrdersDOM(e);
 
-    $("#order .order-item-active").removeClass("order-item-active");
+    $(`#${containerId} .order-item-active`).removeClass("order-item-active");
     $parent.addClass("order-item-active");
 }
 
@@ -1626,36 +1696,38 @@ function getOrderIdFromItemOrdersDOM(e) {
     return $parent.attr("order-id");
 }
 
-function selectOrder(e) {
+function selectOrder(e, containerId) {
+    setEmptyOrderInfo(containerId);
+
     let orderId = getOrderIdFromItemOrdersDOM(e);
 
-    setActiveOrderItem(e);
-    clearOrderDescriptionBlock();
-    showInfoDesctiprionOrder(orderId);
-
-    $("#order .order-description .empty-list").remove();
+    setActiveOrderItem(e, containerId);
+    clearOrderDescriptionBlock(containerId);
+    showInfoDesctiprionOrder(orderId, containerId);
 }
 
-function clearOrderDescriptionBlock() {
-    $(".order-description-number-header").empty();
-    $(".order-description-date-header").empty();
-    $(".order-description-products").empty();
-    $("#order .to-pay .order-description-additional-info-value").empty();
+function clearOrderDescriptionBlock(containerId) {
+    $(`#${containerId} .order-description-number-header`).empty();
+    $(`#${containerId} .order-description-date-header`).empty();
+    $(`#${containerId} .order-description-processed-header`).addClass("hide");
+    $(`#${containerId} .order-description-cancellation-header`).addClass("hide");
+    $(`#${containerId} .order-description-products`).empty();
+    $(`#${containerId} .to-pay .order-description-additional-info-value`).empty();
 
-    $("#order .need-cashback .order-description-additional-info-value").empty();
-    $("#order .need-cashback").addClass("hide");
+    $(`#${containerId} .need-cashback .order-description-additional-info-value`).empty();
+    $(`#${containerId} .need-cashback`).addClass("hide");
 
-    $("#order .order-user-name .order-description-additional-info-value").empty();
-    $("#order .order-user-phone .order-description-additional-info-value").empty();
-    $(".order-description-info-take").empty();
+    $(`#${containerId} .order-user-name .order-description-additional-info-value`).empty();
+    $(`#${containerId} .order-user-phone .order-description-additional-info-value`).empty();
+    $(`#${containerId} .order-description-info-take`).empty();
 
-    $("#order-description-comment .order-description-info-comment-text").empty();
-    $("#order-description-comment").addClass("hide");
+    $(`#${containerId} .order-description-info-comment .order-description-info-comment-text`).empty();
+    $(`#${containerId} .order-description-info-comment`).addClass("hide");
 }
 
-function showInfoDesctiprionOrder(orderId) {
-    let order = getOrderById(orderId);
-    let loader = new Loader($("#order .order-description"));
+function showInfoDesctiprionOrder(orderId, containerId) {
+    let order = containerId == "history" ? getHistoryOrderById(orderId) : getOrderById(orderId);
+    let loader = new Loader($(`#${containerId} .order-description`));
 
     loader.start()
 
@@ -1677,6 +1749,7 @@ function showInfoDesctiprionOrder(orderId) {
             callbackShowDescription();
         } else {
             showErrorMessage(data.ErrorMessage);
+            $(`#${containerId} .order-description .empty-list`).remove();
             loader.stop()
         }
     }
@@ -1684,12 +1757,13 @@ function showInfoDesctiprionOrder(orderId) {
     let callbackShowDescription = function () {
         let dataStr = getDataOrderStr(order);
 
-        renderOrderNumberHeader(dataStr.orderNumber, dataStr.date);
-        renderorderOrderProducts(dataStr.products);
-        renderOrderAdditionaInfo(dataStr);
-        renderOrderInfoTake(dataStr);
-        renderOrderComment(dataStr.comment);
-        bindUpdateStatusButton(order);
+        renderOrderNumberHeader(dataStr.orderNumber, dataStr.date, order.OrderStatus, containerId);
+        renderorderOrderProducts(dataStr.products, containerId);
+        renderOrderAdditionaInfo(dataStr, containerId);
+        renderOrderInfoTake(dataStr, containerId);
+        renderOrderComment(dataStr.comment, containerId);
+        bindUpdateStatusButton(order, containerId);
+        $(`#${containerId} .order-description .empty-list`).remove();
         loader.stop()
     }
 
@@ -1700,9 +1774,9 @@ function showInfoDesctiprionOrder(orderId) {
     }
 }
 
-function bindUpdateStatusButton(order) {
-    let $proccesed = $("#order .btn-submit");
-    let $cancel = $("#order .btn-cancel-order");
+function bindUpdateStatusButton(order, containerId) {
+    let $proccesed = $(`#${containerId} .btn-submit`);
+    let $cancel = $(`#${containerId} .btn-cancel-order`);
 
     $proccesed.unbind("clcik");
     $cancel.unbind("clcik");
@@ -1711,16 +1785,16 @@ function bindUpdateStatusButton(order) {
     $cancel.bind("click", () => changeOrderStatus(order.Id, OrderStatus.Cancellation));
 }
 
-function renderOrderComment(comment) {
+function renderOrderComment(comment, containerId) {
     if (comment) {
-        let $comment = $("#order-description-comment");
+        let $comment = $(`#${containerId} .order-description-info-comment`);
 
         $comment.removeClass("hide");
         $comment.find(".order-description-info-comment-text").html(comment);
     }
 }
 
-function renderorderOrderProducts(dataProducdtsStr) {
+function renderorderOrderProducts(dataProducdtsStr, containerId) {
     let templates = [];
 
     for (let categoryId in OrderCategoryes) {
@@ -1746,27 +1820,38 @@ function renderorderOrderProducts(dataProducdtsStr) {
         templates[templates.length - 1].addClass("not-border");
     }
 
-    $("#order .order-description-products").html(templates);
+    $(`#${containerId} .order-description-products`).html(templates);
 }
 
-function renderOrderAdditionaInfo(dataStr) {
-    $("#order .to-pay .order-description-additional-info-value").html(dataStr.amountPayDiscountDelivery);
-    $("#order #need-cashback-header").html(dataStr.cashBack);
-    $("#order .need-cashback .order-description-additional-info-value").html(dataStr.cashBackNumber);
-    $("#order .order-user-name .order-description-additional-info-value").html(dataStr.name);
-    $("#order .order-user-phone .order-description-additional-info-value").html(dataStr.phoneNumber);
+function renderOrderAdditionaInfo(dataStr, containerId) {
+    $(`#${containerId} .to-pay .order-description-additional-info-value`).html(dataStr.amountPayDiscountDelivery);
+    $(`#${containerId} #need-cashback-header`).html(dataStr.cashBack);
+    $(`#${containerId} .need-cashback .order-description-additional-info-value`).html(dataStr.cashBackNumber);
+    $(`#${containerId} .order-user-name .order-description-additional-info-value`).html(dataStr.name);
+    $(`#${containerId} .order-user-phone .order-description-additional-info-value`).html(dataStr.phoneNumber);
 
     if (dataStr.needCashBack) {
-        $("#order .need-cashback").removeClass("hide");
+        $(`#${containerId} .need-cashback`).removeClass("hide");
     }
 }
 
-function renderOrderNumberHeader(numberOrder, date) {
-    $("#order .order-description-number-header").html(numberOrder);
-    $("#order .order-description-date-header").html(date);
+function renderOrderNumberHeader(numberOrder, date, orderType, containerId) {
+    $(`#${containerId} .order-description-number-header`).html(numberOrder);
+    $(`#${containerId} .order-description-date-header`).html(date);
+
+    switch (orderType) {
+        case OrderStatus.Processed:
+            $(`#${containerId} .order-description-processed-header`).removeClass("hide");
+            $(`#${containerId} .order-description-cancellation-header`).addClass("hide");
+            break;
+        case OrderStatus.Cancellation:
+            $(`#${containerId} .order-description-cancellation-header`).removeClass("hide");
+            $(`#${containerId} .order-description-processed-header`).addClass("hide");
+            break;
+    }
 }
 
-function renderOrderInfoTake(dataStr) {
+function renderOrderInfoTake(dataStr, containerId) {
     let $payInfo = $($("#info-order-cost-template").html());
     let $deliveryInfo = dataStr.deliveryType == DeliveryType.Delivery ?
         $($("#info-order-delivery-template").html()) :
@@ -1791,7 +1876,7 @@ function renderOrderInfoTake(dataStr) {
         $deliveryInfo.find("#order-delivery-intercom-code .take-info-item-value").html(dataStr.intercomCode);
     }
 
-    let $descriptionItemTake = $("#order .order-description-info-take");
+    let $descriptionItemTake = $(`#${containerId} .order-description-info-take`);
 
     $descriptionItemTake.append($payInfo);
     $descriptionItemTake.append($deliveryInfo);
@@ -1899,18 +1984,26 @@ function getProductIndexFromOrderCategory(productId) {
         $.post("/Admin/LoadOrderProducts", { ids: ids }, successCallBack(callback, null));
     }
 
-    function getOrderById(orderId) {
-        let searchOrder = null;
+function getOrderById(orderId) {
+    return baseGetOrderByIrd(Orders, orderId);
+}
 
-        for (let order of Orders) {
-            if (order.Id == orderId) {
-                searchOrder = order;
-                break;
-            }
+function baseGetOrderByIrd(collection, orderId) {
+    let searchOrder = null;
+
+    for (let order of collection) {
+        if (order.Id == orderId) {
+            searchOrder = order;
+            break;
         }
-
-        return searchOrder;
     }
+
+    return searchOrder;
+}
+
+function getHistoryOrderById(orderId) {
+    return baseGetOrderByIrd(HistoryOrders, orderId);
+}
 
     function getCityNameById(id) {
         let $cityItem = $(`#setting-city-list [city-id=${id}]`);
@@ -1986,6 +2079,7 @@ function getProductIndexFromOrderCategory(productId) {
             }
         });
 
-        setEmptyOrderInfo();
+        setEmptyOrderInfo("order");
+        clearOrderDescriptionBlock("order");
         $.post("/Admin/UpdateSatsusOrder", { OrderId: orderId, Status: orderStatus }, null);
     }
