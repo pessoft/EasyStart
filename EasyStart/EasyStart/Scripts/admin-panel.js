@@ -1,4 +1,6 @@
 ﻿$(document).ready(function () {
+    bindSelectSumo();
+    initHistoryOrderDatePicker();
 
     let bindShowModal = function (id, dialogId, additionalFunc, predicate) {
         $(`#${id}`).bind("click", function () {
@@ -47,13 +49,21 @@
     $("#stock-type").bind("change", stockTypeToggleDiscountn);
     bindDragula();
 
-    if ($(".header-menu .menu-item-active").attr("target-id") == "order") {
+    if ($(".header-menu .menu-item-active").attr("target-id") == Pages.Order) {
         loadOrders();
     }
-
-    bindSelectSumo();
-    initHistoryOrderDatePicker();
 });
+
+const Pages = {
+    Order: 'order',
+    HistoryOrder: 'history',
+    Products: 'products',
+    Stock: 'stock',
+    Branch: 'branch',
+    Settong: 'setting',
+    Delivery: 'delivery',
+    Analitucs: 'analytics'
+}
 
 var OrderHistoryDatePicker;
 function initHistoryOrderDatePicker() {
@@ -217,17 +227,35 @@ function logout() {
     $.post("/Home/Logout", null, successCallBack(successFunc, null));
 }
 
+function prevChangedPage(page) {
+    switch (page) {
+        case Pages.Order:
+            resetSearchForOrderNumber(page);
+            break;
+        case Pages.HistoryOrder:
+            resetSearchForOrderNumber(page);
+            break
+        case Pages.Stock:
+            loadStockList();
+            break
+    }
+}
+
+function resetSearchForOrderNumber(containerId) {
+    $(`#${containerId} .search-input input`).val("");
+    searchByOrderNumber(containerId);
+}
+
 function selectMenuItem(e) {
     let $e = $(e);
     let targetId = $e.attr("target-id");
+
+    prevChangedPage(targetId);
+
     $(".menu-item").removeClass("menu-item-active");
     $e.addClass("menu-item-active");
     $(".section").addClass("hide");
     $(`#${targetId}`).removeClass("hide");
-
-    if (targetId == "stock") {
-        loadStockList();
-    }
 }
 
 function cancelDialog(e) {
@@ -2082,4 +2110,18 @@ function getHistoryOrderById(orderId) {
         setEmptyOrderInfo("order");
         clearOrderDescriptionBlock("order");
         $.post("/Admin/UpdateSatsusOrder", { OrderId: orderId, Status: orderStatus }, null);
-    }
+}
+
+function searchByOrderNumber(containerId) {
+    let searchNumber = $(`#${containerId} .search-input input`).val();
+    $(`#${containerId} .order-item`).each(function (index, e) {
+        let $e = $(e);
+        let orderNumber = $e.attr("order-id");
+
+        if (orderNumber.includes(searchNumber)) {
+            $e.removeClass("hide");
+        } else {
+            $e.addClass("hide");
+        }
+    });
+}

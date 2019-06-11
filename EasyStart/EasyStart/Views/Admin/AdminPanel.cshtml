@@ -78,6 +78,16 @@
                                     </select>
                                 }
                             </div>
+                            <div class="additional-order-item search-input">
+                                <div class="search-group">
+                                    <div class="search-group-item search-group-input">
+                                        <input oninput="searchByOrderNumber('order')" placeholder="Поиск по номеру закза" />
+                                    </div>
+                                    <div class="search-group-item search-group-ico">
+                                        <i class="fas fa-search"></i>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="order-list">
@@ -151,12 +161,12 @@
                         </div>
                         <div class="additional-order">
                             <div class="additional-order-item datepicker-input">
-                                <div >
+                                <div>
                                     <span class="period-description">
                                         Период:
                                     </span>
                                     <div class="group">
-                                        <input required id="order-history-period"/>
+                                        <input required id="order-history-period" />
                                         <i class="fal fa-calendar-alt"></i>
                                     </div>
                                 </div>
@@ -171,6 +181,16 @@
                                         }
                                     </select>
                                 }
+                            </div>
+                            <div class="additional-order-item search-input">
+                                <div class="search-group">
+                                    <div class="search-group-item search-group-input">
+                                        <input id="serch-input" oninput="searchByOrderNumber('history')" placeholder="Поиск по номеру закза" />
+                                    </div>
+                                    <div class="search-group-item search-group-ico">
+                                        <i class="fas fa-search"></i>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

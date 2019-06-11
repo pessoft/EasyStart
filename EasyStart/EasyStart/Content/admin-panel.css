@@ -1615,7 +1615,7 @@ div.take-info-item:nth-child(odd) {
 
     #order .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
     #history .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i {
-        background-color: #163f755e;
+        background-color: #163f75b0;
     }
 
     .not-border {
@@ -1668,3 +1668,61 @@ div.take-info-item:nth-child(odd) {
     color: #0f1e328f;
     font-size: 0.9em;
 }
+
+#order .SumoSelect > .CaptionCont,
+#history .SumoSelect > .CaptionCont {
+    min-height: 17px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    box-shadow: none;
+    border-color: #A4A4A4;
+}
+
+.search-group {
+    width: 90%;
+    margin: 5px;
+    height: 27px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-group-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid;
+    border-color: #A4A4A4;
+    background-color: #fff;
+}
+
+.search-group-ico {
+    width: 12%;
+    height: 100%;
+    border-left: none;
+    font-size: 0.9em;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+
+.search-group-input {
+    width: 88%;
+    border-right: none;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+    color: #ccc;
+}
+
+    .search-group-input input {
+        margin: 0;
+        border: none;
+        height: 27px;
+        padding: 0 0 0 10px;
+        font-size: 0.85em;
+    }
+
+    .search-group-input input::placeholder {
+        font-style:italic;
+        color:#ccc;
+    }
