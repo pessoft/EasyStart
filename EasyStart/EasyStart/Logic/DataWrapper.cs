@@ -262,6 +262,7 @@ namespace EasyStart.Logic
                         updateSetting.FreePriceDelivery = setting.FreePriceDelivery;
                         updateSetting.TimeDeliveryJSON = setting.TimeDeliveryJSON;
                         updateSetting.ZoneId = setting.ZoneId;
+                        updateSetting.IsSoundNotify = setting.IsSoundNotify;
                     }
                     else
                     {

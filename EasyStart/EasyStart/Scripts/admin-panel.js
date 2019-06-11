@@ -104,12 +104,20 @@ function bindSelectSumo() {
         placeholder: 'Заказы из других городов'
     });
 
+    let updateListenBranchIds = additionalBrunchIds => {
+        let currentBrunchId = getCurrentBranchId();
+        let listenNewBranchIds = [...additionalBrunchIds, currentBrunchId];
+
+        addListenByBranch(listenNewBranchIds);
+    };
+
     $(`#additional-order-city .btnOk`).bind("click", function () {
         AdditionalBranch = [];
         $('#show-additional-order option:selected').each(function (i) {
             AdditionalBranch.push($(this).attr("key"));
         });
 
+        updateListenBranchIds(AdditionalBranch);
         loadOrders(true);
     });
 
@@ -119,6 +127,7 @@ function bindSelectSumo() {
             AdditionalHistoryBranch.push($(this).attr("key"));
         });
 
+        updateListenBranchIds(AdditionalHistoryBranch);
         loadHistoryOrders();
     });
 }
@@ -242,8 +251,12 @@ function prevChangedPage(page) {
 }
 
 function resetSearchForOrderNumber(containerId) {
-    $(`#${containerId} .search-input input`).val("");
+    clearSearchInput(containerId);
     searchByOrderNumber(containerId);
+}
+
+function clearSearchInput(containerId) {
+    $(`#${containerId} .search-input input`).val("");
 }
 
 function selectMenuItem(e) {
@@ -1276,6 +1289,7 @@ function saveDeliverySetting() {
     let setting = {
         PriceDelivery: priceDelivery,
         FreePriceDelivery: freePriceDelivery,
+        IsSoundNotify: $("#sound-nodify").is(":checked"),
         ZoneId: $("#delivery-time-zone").val(),
         PayCard: $("#payment-card").is(":checked"),
         PayCash: $("#payment-cash").is(":checked"),
@@ -1564,6 +1578,10 @@ function setEmptyOrderInfo(containerId) {
     $(`#${containerId} .order-description`).append(template);
 }
 
+function getCurrentBranchId() {
+    return $("#current-brnach").val();
+}
+
 
 var Orders = [];
 
@@ -1572,7 +1590,8 @@ function loadOrders(reload = false) {
         return;
     }
 
-    currentBranchId = $("#current-brnach").val();
+    clearSearchInput(Pages.Order);
+    currentBranchId = getCurrentBranchId();
     let brnachIds = [...AdditionalBranch];
     brnachIds.push(currentBranchId);
 
@@ -1585,11 +1604,11 @@ function loadOrders(reload = false) {
     let successFunc = function (data, loader) {
         if (data.Success) {
             Orders = processingOrders(data.Data);
-
+            showCountOrder(Orders.length);
             if (Orders.length == 0) {
                 setEmptyOrders();
             } else {
-                renderOrders();
+                renderOrders(Orders, Pages.Order);
             }
         } else {
             showErrorMessage(data.ErrorMessage);
@@ -1605,7 +1624,9 @@ var HistoryOrders = [];
 
 function loadHistoryOrders() {
     setEmptyOrderInfo(Pages.HistoryOrder);
-    currentBranchId = $("#current-brnach").val();
+
+    clearSearchInput(Pages.HistoryOrder);
+    currentBranchId = getCurrentBranchId();
     let brnachIds = [...AdditionalHistoryBranch];
 
     brnachIds.push(currentBranchId);
@@ -1623,7 +1644,7 @@ function loadHistoryOrders() {
             if (HistoryOrders.length == 0) {
                 setEmptyHistoryOrders();
             } else {
-                renderHistoryOrders();
+                renderOrders(HistoryOrders, Pages.HistoryOrder);
             }
         } else {
             showErrorMessage(data.ErrorMessage);
@@ -1640,24 +1661,26 @@ function loadHistoryOrders() {
     }, successCallBack(successFunc, loader));
 }
 
-function renderOrders() {
+function renderOrders(orders, containerId) {
     let templates = [];
 
-    for (let order of Orders) {
-        templates.push(getTemplateOrderItem(order, Pages.Order));
+    for (let order of orders) {
+        templates.push(getTemplateOrderItem(order, containerId));
     }
 
-    $("#order .order-list").html(templates);
+    $(`#${containerId} .order-list`).html(templates);
 }
 
-function renderHistoryOrders() {
-    let templates = [];
+function renderOrder(order) {
+    let $templateOrder = getTemplateOrderItem(order, Pages.Order);
+    let $container = $(`#${Pages.Order} .order-list`);
 
-    for (let order of HistoryOrders) {
-        templates.push(getTemplateOrderItem(order, Pages.HistoryOrder));
+    if ($container.find(".empty-list").length > 0) {
+        $container.html($templateOrder);
+    } else {
+        $container.append($templateOrder);
     }
 
-    $("#history .order-list").html(templates);
 }
 
 function getTemplateOrderItem(data, containerId) {
@@ -1682,11 +1705,17 @@ function jsonToDate(value) {
 
 function processingOrders(orders) {
     for (let order of orders) {
-        order.Date = jsonToDate(order.Date);
-        order.ProductCount = JSON.parse(order.ProductCountJSON);
+        processsingOrder(order);
     }
 
     return orders;
+}
+
+function processsingOrder(order) {
+    order.Date = jsonToDate(order.Date);
+    order.ProductCount = JSON.parse(order.ProductCountJSON);
+
+    return order;
 }
 
 function toStringDateAndTime(date) {
@@ -2102,6 +2131,8 @@ function getHistoryOrderById(orderId) {
                 }
             }
 
+            showCountOrder(Orders.length);
+
             if (Orders.length == 0) {
                 setEmptyOrders();
             }
@@ -2125,3 +2156,32 @@ function searchByOrderNumber(containerId) {
         }
     });
 }
+
+function showCountOrder(count) {
+    let $orderCount = $(".order-count");
+    if (count) {
+        $orderCount.removeClass("hide");
+        $orderCount.html(count);
+    } else {
+        $orderCount.addClass("hide");
+    }
+}
+
+var NotifySoundNewOrder = new Audio('../Content/sounds/sound-new-order.mp3');
+NotifySoundNewOrder.autoplay = false;
+NotifySoundNewOrder.stop = function () {
+    if (!NotifySoundNewOrder.paused) {
+        NotifySoundNewOrder.pause();
+        NotifySoundNewOrder.currentTime = 0;
+    }
+}
+
+function notifySoundNewOrder() {
+    let soundOn = $("#sound-nodify").is(":checked");
+
+    if (soundOn) {
+        NotifySoundNewOrder.stop();
+        NotifySoundNewOrder.play();
+    }
+}
+

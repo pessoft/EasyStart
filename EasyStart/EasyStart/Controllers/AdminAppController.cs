@@ -1,4 +1,5 @@
-﻿using EasyStart.Logic;
+﻿using EasyStart.Hubs;
+using EasyStart.Logic;
 using EasyStart.Models;
 using EasyStart.Utils;
 using Newtonsoft.Json;
@@ -16,6 +17,15 @@ namespace EasyStart
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class AdminAppController : ApiController
     {
+        [HttpGet]
+        public string TestSignal()
+        {
+            var order = new OrderModel { BranchId = 1};
+
+            new NewOrderHub().AddedNewOrder(order);
+            return "all ok";
+        }
+
         public Dictionary<int, string> GetAllowedCity()
         {
             var alloweCityIds = DataWrapper.GetAllowedCity();
@@ -74,6 +84,9 @@ namespace EasyStart
 
             if(numberOrder != -1)
             {
+                order.Id = numberOrder;
+                new NewOrderHub().AddedNewOrder(order);
+
                 result.Data = numberOrder;
                 result.Success = true;
             }

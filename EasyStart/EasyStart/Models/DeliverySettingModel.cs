@@ -16,6 +16,9 @@ namespace EasyStart.Models
         public double FreePriceDelivery { get; set; }
         public bool PayCard { get; set; }
         public bool PayCash { get; set; }
+
+        public bool IsSoundNotify { get; set; }
+
         /// <summary>
         /// Time Zone Id
         /// </summary>

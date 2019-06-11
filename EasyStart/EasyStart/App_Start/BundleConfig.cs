@@ -15,6 +15,9 @@ namespace EasyStart
             bundles.Add(new ScriptBundle("~/bundles/sumoselect").Include(
                          "~/Scripts/jquery.sumoselect.min.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/signalr").Include(
+                         "~/Scripts/jquery.signalR-2.4.1.min.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
 

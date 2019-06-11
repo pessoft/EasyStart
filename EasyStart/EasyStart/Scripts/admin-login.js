@@ -1,4 +1,7 @@
 ﻿function login() {
+    let loader = new Loader($("#login-form"));
+
+    loader.start();
     let login = $("#login").val();
     let password = $("#password").val();
     let successFunc = (result) => {
@@ -6,6 +9,7 @@
             window.location.href = result.URL;
         } else {
             showErrorMessage(result.ErrorMessage);
+            loader.stop();
         }
     }
 
