@@ -1604,7 +1604,7 @@ function loadOrders(reload = false) {
 var HistoryOrders = [];
 
 function loadHistoryOrders() {
-    setEmptyOrderInfo("history");
+    setEmptyOrderInfo(Pages.HistoryOrder);
     currentBranchId = $("#current-brnach").val();
     let brnachIds = [...AdditionalHistoryBranch];
 
@@ -1644,7 +1644,7 @@ function renderOrders() {
     let templates = [];
 
     for (let order of Orders) {
-        templates.push(getTemplateOrderItem(order, "order"));
+        templates.push(getTemplateOrderItem(order, Pages.Order));
     }
 
     $("#order .order-list").html(templates);
@@ -1654,7 +1654,7 @@ function renderHistoryOrders() {
     let templates = [];
 
     for (let order of HistoryOrders) {
-        templates.push(getTemplateOrderItem(order, "history"));
+        templates.push(getTemplateOrderItem(order, Pages.HistoryOrder));
     }
 
     $("#history .order-list").html(templates);
@@ -1754,7 +1754,7 @@ function clearOrderDescriptionBlock(containerId) {
 }
 
 function showInfoDesctiprionOrder(orderId, containerId) {
-    let order = containerId == "history" ? getHistoryOrderById(orderId) : getOrderById(orderId);
+    let order = containerId == Pages.HistoryOrder ? getHistoryOrderById(orderId) : getOrderById(orderId);
     let loader = new Loader($(`#${containerId} .order-description`));
 
     loader.start()
@@ -2107,8 +2107,8 @@ function getHistoryOrderById(orderId) {
             }
         });
 
-        setEmptyOrderInfo("order");
-        clearOrderDescriptionBlock("order");
+        setEmptyOrderInfo(Pages.Order);
+        clearOrderDescriptionBlock(Pages.Order);
         $.post("/Admin/UpdateSatsusOrder", { OrderId: orderId, Status: orderStatus }, null);
 }
 
