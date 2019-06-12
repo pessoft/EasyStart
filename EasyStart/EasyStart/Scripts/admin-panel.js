@@ -1698,7 +1698,12 @@ function getTemplateOrderItem(data, containerId) {
 }
 
 function jsonToDate(value) {
-    date = new Date(parseInt(value.replace("/Date(", "").replace(")/", ""), 10));
+    let date;
+    if (value.includes("/Date")) {
+        date = new Date(parseInt(value.replace("/Date(", "").replace(")/", ""), 10));
+    } else {
+        date = new Date(value);
+    }
 
     return date;
 }
@@ -1723,7 +1728,11 @@ function toStringDateAndTime(date) {
     day = day.length == 1 ? "0" + day : day;
     let month = (date.getMonth() + 1).toString();
     month = month.length == 1 ? "0" + month : month;
-    let dateStr = `${date.getHours()}:${date.getMinutes()} ${day}.${month}.${date.getFullYear()}`;
+    let hours = date.getHours().toString();
+    hours = hours.length == 1 ? "0" + hours : hours;
+    let minutes = date.getMinutes().toString();
+    minutes = minutes.length == 1 ? "0" + minutes : minutes;
+    let dateStr = `${hours}:${minutes} ${day}.${month}.${date.getFullYear()}`;
     return dateStr;
 }
 
