@@ -500,14 +500,10 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="section hide" id="analytics">
-        <div class="analytics-header">
-            Аналитика
-            <i class="fal fa-analytics"></i>
+        <div class="section hide" id="analytics">
+            <div class="analytics-wrapper" id="analytics-wrapper">
+            </div>
         </div>
-    </div>
-
     </div>
 
     <dialog id="addCategoryDialog">
@@ -956,9 +952,11 @@
     @Scripts.Render("~/bundles/sumoselect")
     @Scripts.Render("~/bundles/main")
     @Scripts.Render("~/bundles/notify")
+    @Scripts.Render("~/bundles/chart")
     @Scripts.Render("~/bundles/admin-panel")
     @Scripts.Render("~/bundles/dragula")
     @Scripts.Render("~/bundles/jquery-raty")
     @Scripts.Render("~/bundles/darepicker")
+
 </body>
 </html>

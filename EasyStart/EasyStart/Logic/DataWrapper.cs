@@ -7,7 +7,7 @@ using System.Web;
 
 namespace EasyStart.Logic
 {
-    public class DataWrapper
+    public static class DataWrapper
     {
         public static Dictionary<int, SettingModel> GetAllSettingDictionary()
         {
@@ -299,7 +299,7 @@ namespace EasyStart.Logic
             return result;
         }
 
-        public static Dictionary<int, CategoryModel> GetCategories(List<int> ids)
+        public static Dictionary<int, CategoryModel> GetCategories(IEnumerable<int> ids)
         {
             Dictionary<int, CategoryModel> result = new Dictionary<int, CategoryModel>();
             try
@@ -508,6 +508,25 @@ namespace EasyStart.Logic
                         .Products
                         .FirstOrDefault(p => p.Id == productId);
 
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
+
+        public static List<ProductModel> GetProducts(IEnumerable<int> productIds)
+        {
+            List<ProductModel> result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db
+                        .Products
+                        .Where(p => productIds.Contains(p.Id))
+                        .ToList(); ;
                 }
             }
             catch (Exception ex)
@@ -883,6 +902,7 @@ namespace EasyStart.Logic
                     }
                     else
                     {
+                        clinet.Date = DateTime.Now.Date;
                         newClient = db.Clients.Add(clinet);
                     }
 

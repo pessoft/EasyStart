@@ -39,6 +39,7 @@
     flex-direction: row;
     font-size: 0.95em;
     position:relative;
+    user-select: none;
 }
 
     .menu-item i {
@@ -523,7 +524,8 @@ div.category-item:hover {
 .order-description-products::-webkit-scrollbar,
 .order-description-info-comment-text::-webkit-scrollbar,
 .order-description::-webkit-scrollbar,
-ul.options::-webkit-scrollbar {
+ul.options::-webkit-scrollbar,
+.analytics-wrapper::-webkit-scrollbar {
     width: 0.45em;
 }
 
@@ -537,7 +539,8 @@ ul.options::-webkit-scrollbar {
 .order-description-products::-webkit-scrollbar-track,
 .order-description-info-comment-text::-webkit-scrollbar-track,
 .order-description::-webkit-scrollbar-track,
-ul.options::-webkit-scrollbar-track {
+ul.options::-webkit-scrollbar-track,
+.analytics-wrapper::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
     border-radius: 30px;
 }
@@ -552,7 +555,8 @@ ul.options::-webkit-scrollbar-track {
 .order-description-products::-webkit-scrollbar-thumb,
 .order-description-info-comment-text::-webkit-scrollbar-thumb,
 .order-description::-webkit-scrollbar-thumb,
-ul.options::-webkit-scrollbar-thumb {
+ul.options::-webkit-scrollbar-thumb,
+.analytics-wrapper::-webkit-scrollbar-thumb {
     background-color: #163f752e;
     border-radius: 2px;
 }
@@ -569,7 +573,8 @@ ul.options::-webkit-scrollbar-thumb {
     .order-description-products::-webkit-scrollbar-thumb:active,
     .order-description-info-comment-text::-webkit-scrollbar-thumb:active,
     .order-description::-webkit-scrollbar-thumb:active,
-    ul.options::-webkit-scrollbar-thumb:active {
+    ul.options::-webkit-scrollbar-thumb:active,
+    .analytics-wrapper::-webkit-scrollbar-thumb:active {
         background-color: #163f75c9;
     }
 
@@ -1184,7 +1189,7 @@ div.product-item:hover {
     justify-content: center;
     align-items: center;
     flex-direction: row;
-    box-shadow: 0px 0px 10px 0px #0f1e321f;
+    box-shadow: 0px 0px 10px 0px #0f1e321c;
     border-radius: 2px;
     color: #0f1e32de;
 }
@@ -1653,6 +1658,7 @@ div.take-info-item:nth-child(odd) {
 .period-description {
     color: #0f1e328f;
     font-size: 0.9em;
+    cursor:default;
 }
 
 #order .SumoSelect > .CaptionCont,
@@ -1733,3 +1739,30 @@ div.take-info-item:nth-child(odd) {
 .sound-notify {
     justify-content:flex-start;
 }
+
+.period {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 230px
+}
+
+    .period .group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+        width: 100%;
+        cursor: pointer;
+        margin-top: 0;
+    }
+
+    .period input {
+        width: 100%;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+        color: transparent;
+        text-shadow: 0 0 0 #0f1e328f;
+    }
+

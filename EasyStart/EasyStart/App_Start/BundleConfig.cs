@@ -40,9 +40,14 @@ namespace EasyStart
                         "~/Scripts/admin-login.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/admin-panel").Include(
-                        "~/Scripts/admin-panel.js"));
+                        "~/Scripts/admin-panel.js",
+                        "~/Scripts/analytics.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/jquery-raty").Include(
                       "~/Scripts/jquery.raty.min.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/chart").Include(
+                      "~/Scripts/chart.js"));
 
             bundles.Add(new StyleBundle("~/admin-login/css").Include(
                       "~/Content/admin-login.css"));
@@ -50,7 +55,8 @@ namespace EasyStart
                       "~/Content/datepicker.min.css"));
 
             bundles.Add(new StyleBundle("~/admin-panel/css").Include(
-                      "~/Content/admin-panel.css"));
+                      "~/Content/admin-panel.css",
+                      "~/Content/analytics.css"));
 
             bundles.Add(new StyleBundle("~/dragula/css").Include(
                        "~/Content/dragula.css"));

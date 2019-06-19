@@ -27,6 +27,7 @@
 
 function loginByEnter(event) {
     if (event.keyCode == 13) {
+        $("#action-login").focus();
         login();
     }
 }

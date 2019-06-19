@@ -62,7 +62,7 @@ const Pages = {
     Branch: 'branch',
     Settong: 'setting',
     Delivery: 'delivery',
-    Analitucs: 'analytics'
+    Analytics: 'analytics'
 }
 
 var OrderHistoryDatePicker;
@@ -244,10 +244,31 @@ function prevChangedPage(page) {
         case Pages.HistoryOrder:
             resetSearchForOrderNumber(page);
             break
+    }
+}
+
+function postChangedPage(page) {
+    switch (page) {
         case Pages.Stock:
             loadStockList();
             break
+        case Pages.Analytics: {
+            loadAnalyticsReport();
+        }
     }
+}
+
+function loadAnalyticsReport() {
+    const containerId = "analytics-wrapper";
+    const currentBrunchId = getCurrentBranchId();
+
+    $(`#${containerId}`).empty();
+
+    new CountOrderReport(containerId, currentBrunchId, URLAnalytics);
+    new RevenueReport(containerId, currentBrunchId, URLAnalytics)
+    new Top5Categories(containerId, currentBrunchId, URLAnalytics);
+    new Top5Products(containerId, currentBrunchId, URLAnalytics);
+    new DeliveryMethod(containerId, currentBrunchId, URLAnalytics);
 }
 
 function resetSearchForOrderNumber(containerId) {
@@ -263,12 +284,18 @@ function selectMenuItem(e) {
     let $e = $(e);
     let targetId = $e.attr("target-id");
 
+    if ($e.hasClass("menu-item-active")) {
+        return;
+    }
+
     prevChangedPage(targetId);
 
     $(".menu-item").removeClass("menu-item-active");
     $e.addClass("menu-item-active");
     $(".section").addClass("hide");
     $(`#${targetId}`).removeClass("hide");
+
+    postChangedPage(targetId);
 }
 
 function cancelDialog(e) {
@@ -1953,9 +1980,6 @@ function getProductIdsForLoad(order) {
 
     for (let id in order.ProductCount) {
         ids.push(id);
-        //if (!OrderProducts[id]) {
-        //    ids.push(id);
-        //}
     }
 
     return ids;

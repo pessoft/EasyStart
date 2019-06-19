@@ -164,11 +164,13 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AnalyticsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Hubs\NewOrderHub.cs" />
+    <Compile Include="Logic\AnalyticsDataWrapper.cs" />
     <Compile Include="Logic\BuyType.cs" />
     <Compile Include="Logic\ConverterBranchSetting.cs" />
     <Compile Include="Logic\DataWrapper.cs" />
@@ -177,6 +179,16 @@
     <Compile Include="Logic\List.cs" />
     <Compile Include="Logic\OrderStatus.cs" />
     <Compile Include="Logic\ProductType.cs" />
+    <Compile Include="Logic\ReportType.cs" />
+    <Compile Include="Logic\Report\BaseReport.cs" />
+    <Compile Include="Logic\Report\CountBaseReport.cs" />
+    <Compile Include="Logic\Report\CountOrderReport.cs" />
+    <Compile Include="Logic\Report\DeliveryMethodReport.cs" />
+    <Compile Include="Logic\Report\IReport.cs" />
+    <Compile Include="Logic\Report\ReportFactory.cs" />
+    <Compile Include="Logic\Report\RevenueReport.cs" />
+    <Compile Include="Logic\Report\TopCategoriesReport.cs" />
+    <Compile Include="Logic\Report\TopProductsReport.cs" />
     <Compile Include="Logic\StockType.cs" />
     <Compile Include="Logic\TypeBranch.cs" />
     <Compile Include="Migrations\201904240619364_InitialCreate.cs" />
@@ -263,6 +275,10 @@
     <Compile Include="Migrations\201906111622103_AddSoundNotify.Designer.cs">
       <DependentUpon>201906111622103_AddSoundNotify.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201906170903015_AddDateRegisterClient.cs" />
+    <Compile Include="Migrations\201906170903015_AddDateRegisterClient.Designer.cs">
+      <DependentUpon>201906170903015_AddDateRegisterClient.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\BranchModel.cs" />
@@ -279,6 +295,8 @@
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\ProductReview.cs" />
     <Compile Include="Models\RatingProducUpdater.cs" />
+    <Compile Include="Models\ReportFilter.cs" />
+    <Compile Include="Models\ReportResult.cs" />
     <Compile Include="Models\SettingModel.cs" />
     <Compile Include="Models\StockModel.cs" />
     <Compile Include="Models\UpdaterOrderNumber.cs" />
@@ -293,6 +311,7 @@
   <ItemGroup>
     <Content Include="Content\admin-login.css" />
     <Content Include="Content\admin-panel.css" />
+    <Content Include="Content\analytics.css" />
     <Content Include="Content\datepicker.min.css" />
     <Content Include="Content\dragula.css" />
     <Content Include="Content\fontawesome\css\all.css" />
@@ -358,6 +377,7 @@
     <Content Include="Images\rating\.DS_Store" />
     <Content Include="fonts\SFUIDisplay-Light.ttf" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\analytics.js" />
     <Content Include="Scripts\datepicker.min.js" />
     <Content Include="Scripts\dragula.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -382,6 +402,7 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\notify.js" />
     <Content Include="Scripts\singnal-logic.js" />
+    <Content Include="Scripts\chart.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -396,6 +417,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Analytics\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -465,6 +487,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906111622103_AddSoundNotify.resx">
       <DependentUpon>201906111622103_AddSoundNotify.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906170903015_AddDateRegisterClient.resx">
+      <DependentUpon>201906170903015_AddDateRegisterClient.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
