@@ -15,10 +15,5 @@ namespace EasyStart.Logic.Report
         {
             return AnalyticsDataWrapper.GetCountOrder(filter.DateFrom, filter.DateTo, filter.BranchId);
         }
-
-        protected override double RecalcValue<K>(IGrouping<K, KeyValuePair<DateTime, double>> group)
-        {
-            return group.Count();
-        }
     }
 }

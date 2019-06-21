@@ -22,6 +22,8 @@ namespace EasyStart.Logic.Report
                     return new RevenueReport(filter);
                 case ReportType.DeliveryMethod:
                     return new DeliveryMethodReport(filter);
+                case ReportType.NewUsers:
+                    return new NewUsersReport(filter);
                 default:
                     throw new Exception("Unknown repot type");
             }

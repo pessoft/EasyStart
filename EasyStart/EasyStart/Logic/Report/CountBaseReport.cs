@@ -16,11 +16,6 @@ namespace EasyStart.Logic.Report
             throw new Exception("Not implemented method");
         }
 
-        protected virtual double RecalcValue<K>(IGrouping<K, KeyValuePair<DateTime, double>> group)
-        {
-            throw new Exception("Not implemented method");
-        }
-
         public ReportResult GetReport()
         {
             ReportResult result = null;

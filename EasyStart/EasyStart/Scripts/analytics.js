@@ -6,8 +6,7 @@ const ReportType = {
     Top5Products: 3,
     DeliveryMethod: 4,
     NewUsers: 5,
-    Feedback: 6,
-    Revenue: 7
+    Revenue: 6
 }
 
 class BaseReport {
@@ -17,7 +16,6 @@ class BaseReport {
         this.branchId = branchId;
         this.reportType = reportType;
         this.dateTo = new Date();
-        this.dateTo.setDate(this.dateTo.getDate() - 1);
         this.dateFrom = new Date(this.dateTo);
         this.urlAnalytics = urlAnalytics;
         this.filter = {
@@ -241,11 +239,13 @@ class RevenueReport extends CountBaseReport {
 
 class NewUsersReport extends CountBaseReport {
     constructor(containerId, branchId, urlAnalytics) {
-        super(containerId, branchId, ReportType.Revenue, urlAnalytics);
+        super(containerId, branchId, ReportType.NewUsers, urlAnalytics);
 
         this.nameReport = 'Количество новых пользователей';
+        this.dateTo = new Date();
         this.dateFrom = new Date(this.dateTo);
-        this.dateFrom.setDate(this.dateFrom.getDate() - 13);
+        this.dateFrom.setMonth(this.dateFrom.getMonth() - 3);
+        this.dateFrom.setDate(1);
         this.filter.DateFrom = this.dateFrom.toGMTString();
 
         this.init();
@@ -367,19 +367,21 @@ class DeliveryMethod extends BaseReport {
                     label: this.nameReport,
                     data: data,
                     backgroundColor: [
-                        'rgba(255, 206, 86, 0.7)',
+                        'rgba(255, 99, 132, 0.7)',
                         'rgba(153, 102, 255, 0.7)',
+
                     ],
                     borderColor: [
-                        'rgba(255, 206, 86, 1)',
+                        'rgba(255, 99, 132, 1)',
                         'rgba(153, 102, 255, 1)',
+
                     ],
-                    borderWidth: 2
+                    borderWidth: 1
                 }]
             },
             options: {
                 legend: {
-                    display: false,
+                    display: true,
                     labels: {
                         fontSize: 10
                     }

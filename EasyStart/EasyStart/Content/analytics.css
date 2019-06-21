@@ -8,8 +8,9 @@
     flex-wrap: wrap;
     align-content: baseline;
     overflow-x: hidden;
-    overflow-y:auto;
-    margin-top: 20px;
+    overflow-y: auto;
+    margin-top: 5px;
+    padding-bottom: 5px;
 }
 
 .chart-item {
@@ -25,15 +26,8 @@
     position:relative;
 }
 
-/*.big-chart-item {
-    width: 1000px;
-    height: 500px;
-}*/
-
-
 .chart-container {
     width: 90%;
-    /*height: 220px;*/
     padding: 20px;
 }
 

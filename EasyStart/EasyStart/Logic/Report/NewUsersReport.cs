@@ -6,14 +6,14 @@ using System.Web;
 
 namespace EasyStart.Logic.Report
 {
-    public class RevenueReport: CountBaseReport
+    public class NewUsersReport: CountBaseReport
     {
-        public RevenueReport(ReportFilter filter):base(filter)
+        public NewUsersReport(ReportFilter filter) : base(filter)
         { }
 
         protected override Dictionary<DateTime, double> GetData()
         {
-            return AnalyticsDataWrapper.GetRevenue(filter.DateFrom, filter.DateTo, filter.BranchId);
+            return AnalyticsDataWrapper.GetNewUsers(filter.DateFrom, filter.DateTo);
         }
     }
 }

@@ -185,6 +185,7 @@
     <Compile Include="Logic\Report\CountOrderReport.cs" />
     <Compile Include="Logic\Report\DeliveryMethodReport.cs" />
     <Compile Include="Logic\Report\IReport.cs" />
+    <Compile Include="Logic\Report\NewUsersReport.cs" />
     <Compile Include="Logic\Report\ReportFactory.cs" />
     <Compile Include="Logic\Report\RevenueReport.cs" />
     <Compile Include="Logic\Report\TopCategoriesReport.cs" />

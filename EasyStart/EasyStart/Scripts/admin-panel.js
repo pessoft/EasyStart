@@ -269,6 +269,7 @@ function loadAnalyticsReport() {
     new Top5Categories(containerId, currentBrunchId, URLAnalytics);
     new Top5Products(containerId, currentBrunchId, URLAnalytics);
     new DeliveryMethod(containerId, currentBrunchId, URLAnalytics);
+    new NewUsersReport(containerId, currentBrunchId, URLAnalytics);
 }
 
 function resetSearchForOrderNumber(containerId) {

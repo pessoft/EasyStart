@@ -91,5 +91,25 @@ namespace EasyStart.Logic
 
             return result;
         }
+
+        public static Dictionary<DateTime, double> GetNewUsers(DateTime dateFrom, DateTime dateTo)
+        {
+            Dictionary<DateTime, double> result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.Clients
+                        .Where(p => DbFunctions.TruncateTime(p.Date) >= dateFrom &&
+                                    DbFunctions.TruncateTime(p.Date) <= dateTo)
+                         .GroupBy(p => p.Date)
+                        .ToDictionary(p => p.Key, p => (double)p.Count());
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
     }
 }
