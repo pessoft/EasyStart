@@ -197,9 +197,20 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     var branch = db.Branches.FirstOrDefault(p => p.Id == id);
+                    var setting = db.Settings.FirstOrDefault(p => p.BranchId == id);
+                    var deliverySetting = db.DeliverySettings.FirstOrDefault(p => p.BranchId == id);
 
-                    db.Branches.Remove(branch);
+                    if(branch != null)
+                        db.Branches.Remove(branch);
+
+                    if(setting != null)
+                        db.Settings.Remove(setting);
+
+                    if(deliverySetting != null)
+                        db.DeliverySettings.Remove(deliverySetting);
+
                     db.SaveChanges();
+
                     success = true;
                 }
             }

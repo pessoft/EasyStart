@@ -1336,6 +1336,27 @@ function saveDeliverySetting() {
     $.post("/Admin/SaveDeliverySetting", setting, successCallBack(successFunc, loader));
 }
 
+function addNewBranchToAdditionalOrder(brachId, cityName) {
+    let option = `<option key="${brachId}">${cityName}</option>`;
+    let $additionaOrder = $("#show-additional-order");
+    let $additionaOrderHistory = $("#show-additional-history-order");
+
+    $additionaOrder.append(option);
+    $additionaOrder[0].sumo.reload()
+    $additionaOrderHistory.append(option);
+    $additionaOrderHistory[0].sumo.reload()
+}
+
+function removeBranchFromAdditionalOrder(brachId) {
+    let $additionaOrder = $("#show-additional-order");
+    let $additionaOrderHistory = $("#show-additional-history-order");
+
+    $additionaOrder.find(`option[key=${brachId}]`).remove();
+    $additionaOrder[0].sumo.reload()
+    $additionaOrderHistory.find(`option[key=${brachId}]`).remove();
+    $additionaOrderHistory[0].sumo.reload()
+}
+
 function addBranch() {
     let newBranch = {
         Login: $("#login-new-branch").val(),
@@ -1347,6 +1368,7 @@ function addBranch() {
         loader.stop();
         if (result.Success) {
             addBranchToList(result.Data);
+            addNewBranchToAdditionalOrder(result.Data.Id, result.Data.City);
             cancelDialog("#addBranchDialog");
         } else {
             showErrorMessage(result.ErrorMessage);
@@ -1406,7 +1428,7 @@ function removeBranch(e, id) {
             $(`[branch-id=${id}]`).fadeOut(500, function () {
                 $(this).remove();
             });
-
+            removeBranchFromAdditionalOrder(id);
         } else {
             showErrorMessage(result.ErrorMessage);
         }

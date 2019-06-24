@@ -37,10 +37,10 @@ namespace EasyStart.Controllers
             if (branchId != -1)
             {
                 var deliverySetting = DataWrapper.GetDeliverySetting(branchId); ;
-                ViewBag.ZoneId = deliverySetting.ZoneId;
+                ViewBag.ZoneId = deliverySetting == null ? DateTimeHepler.DEFAULT_ZONE_ID : deliverySetting.ZoneId;
                 ViewBag.Setting = DataWrapper.GetSetting(branchId);
                 ViewBag.DeliverySetting = deliverySetting;
-                ViewBag.DeliveryTimeTable = WeeklyDayHelper.ConvertTimeDeliveryToViev(deliverySetting.TimeDelivery);
+                ViewBag.DeliveryTimeTable = WeeklyDayHelper.ConvertTimeDeliveryToViev(deliverySetting?.TimeDelivery);
             }
             else
             {

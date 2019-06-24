@@ -43,7 +43,8 @@ namespace EasyStart.Logic
         {
             var view = new BranchSettingViewModel
             {
-                Id = setting.Id,
+                Id = branch.Id,
+                City = setting.City,
                 Addres = $"Адрес: г.{setting.City}, ул.{setting.Street}, д.{setting.HomeNumber}",
                 PhoneNumber = $"Номер телефона: {setting.PhoneNumber}",
                 Login = "Логин: " + (currentTypeBranch == TypeBranch.MainBranch ? branch.Login : templateLoginData),
