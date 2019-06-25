@@ -1894,8 +1894,8 @@ function bindUpdateStatusButton(order, containerId) {
     let $proccesed = $(`#${containerId} .btn-submit`);
     let $cancel = $(`#${containerId} .btn-cancel-order`);
 
-    $proccesed.unbind("clcik");
-    $cancel.unbind("clcik");
+    $proccesed.unbind("click");
+    $cancel.unbind("click");
 
     $proccesed.bind("click", () => changeOrderStatus(order.Id, OrderStatus.Processed));
     $cancel.bind("click", () => changeOrderStatus(order.Id, OrderStatus.Cancellation));
