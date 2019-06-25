@@ -811,14 +811,34 @@ namespace EasyStart.Logic
             return result;
         }
 
-        public static List<StockModel> GetStocks()
+        public static List<StockModel> GetStocks(int branchId)
         {
             List<StockModel> result = new List<StockModel>();
             try
             {
                 using (var db = new AdminPanelContext())
                 {
-                    result = db.Stocks.ToList();
+                    result = db.Stocks
+                        .Where(p => p.BranchId == branchId)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
+
+        public static List<StockModel> GetStocksVisible(int brnachId)
+        {
+            List<StockModel> result = new List<StockModel>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.Stocks
+                        .Where(p => p.BranchId == brnachId && p.Visible)
+                        .ToList();
                 }
             }
             catch (Exception ex)

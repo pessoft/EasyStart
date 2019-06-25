@@ -9,6 +9,7 @@ namespace EasyStart.Models
     public class StockModel
     {
         public int Id { get; set; }
+        public int BranchId { get; set; }
         public StockType StockType { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

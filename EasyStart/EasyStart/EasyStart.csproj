@@ -280,6 +280,10 @@
     <Compile Include="Migrations\201906170903015_AddDateRegisterClient.Designer.cs">
       <DependentUpon>201906170903015_AddDateRegisterClient.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201906250739261_AddBrnachIdToStock.cs" />
+    <Compile Include="Migrations\201906250739261_AddBrnachIdToStock.Designer.cs">
+      <DependentUpon>201906250739261_AddBrnachIdToStock.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\BranchModel.cs" />
@@ -491,6 +495,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906170903015_AddDateRegisterClient.resx">
       <DependentUpon>201906170903015_AddDateRegisterClient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906250739261_AddBrnachIdToStock.resx">
+      <DependentUpon>201906250739261_AddBrnachIdToStock.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

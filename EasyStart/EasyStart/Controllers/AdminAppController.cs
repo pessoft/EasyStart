@@ -17,151 +17,231 @@ namespace EasyStart
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class AdminAppController : ApiController
     {
-        [HttpGet]
-        public string TestSignal()
-        {
-            var order = new OrderModel { BranchId = 1};
-
-            new NewOrderHub().AddedNewOrder(order);
-            return "all ok";
-        }
-
         public Dictionary<int, string> GetAllowedCity()
         {
-            var alloweCityIds = DataWrapper.GetAllowedCity();
-            var cityDictionary = CityHelper.City
-                .Where(p => alloweCityIds.Exists(s => s == p.Key))
-                .ToDictionary(p => p.Key, p => p.Value);
+            try
+            {
+                var alloweCityIds = DataWrapper.GetAllowedCity();
+                var cityDictionary = CityHelper.City
+                    .Where(p => alloweCityIds.Exists(s => s == p.Key))
+                    .ToDictionary(p => p.Key, p => p.Value);
 
-            return cityDictionary;
+                return cityDictionary;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public List<CategoryModel> GetCategories()
         {
-            var categories = DataWrapper.GetCategoriesVisible();
+            try
+            {
+                var categories = DataWrapper.GetCategoriesVisible();
 
-            return categories;
+                return categories;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public List<ProductModel> GetProducts(int categoryId)
         {
-            var products = DataWrapper.GetProducts(categoryId);
+            try
+            {
+                var products = DataWrapper.GetProducts(categoryId);
 
-            return products;
+                return products;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public Dictionary<int, List<ProductModel>> GetAllProducts()
         {
-            var products = DataWrapper.GetAllProductsVisible()
+            try
+            {
+                var products = DataWrapper.GetAllProductsVisible()
                 .GroupBy(p => p.CategoryId)
                 .ToDictionary(p => p.Key, p => p.ToList());
 
-            return products;
+                return products;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public DeliverySettingModel GetDeliverySetting(int cityId)
         {
-            var deliverySetting = DataWrapper.GetDeliverySettingByCity(cityId);
+            try
+            {
+                var deliverySetting = DataWrapper.GetDeliverySettingByCity(cityId);
 
-            return deliverySetting;
+                return deliverySetting;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public SettingModel GetSetting(int cityId)
         {
-            var setting = DataWrapper.GetSettingByCity(cityId);
+            try
+            {
+                var setting = DataWrapper.GetSettingByCity(cityId);
 
-            return setting;
+                return setting;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         [HttpPost]
         public JsonResultModel SendOrder([FromBody]OrderModel order)
         {
-            var result = new JsonResultModel();
-            var deliverSetting = DataWrapper.GetDeliverySetting(order.BranchId);
-            order.Date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
-
-            var numberOrder = DataWrapper.SaveOrder(order);
-
-            if(numberOrder != -1)
+            try
             {
-                order.Id = numberOrder;
-                new NewOrderHub().AddedNewOrder(order);
+                var result = new JsonResultModel();
+                var deliverSetting = DataWrapper.GetDeliverySetting(order.BranchId);
+                order.Date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
 
-                result.Data = numberOrder;
-                result.Success = true;
+                var numberOrder = DataWrapper.SaveOrder(order);
+
+                if (numberOrder != -1)
+                {
+                    order.Id = numberOrder;
+                    new NewOrderHub().AddedNewOrder(order);
+
+                    result.Data = numberOrder;
+                    result.Success = true;
+                }
+
+                return result;
             }
-
-            return result;
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public List<OrderModel> GetHistoryOrder(int clientId)
         {
-            var historyOrder = DataWrapper.GetHistoryOrder(clientId);
+            try
+            {
+                var historyOrder = DataWrapper.GetHistoryOrder(clientId);
 
-            return historyOrder;
+                return historyOrder;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
         }
 
         [HttpPost]
         public void UpdateProducRating([FromBody]RatingProducUpdater ratingUp)
         {
-            var result = new JsonResultModel();
-            var product = DataWrapper.GetProduct(ratingUp.ProductId);
-            var votesCount = ++product.VotesCount;
-            var score = ratingUp.Score > 0 ? ratingUp.Score : 0;
-            var votesSum = product.VotesSum + score;
-            var rating = votesSum / votesCount;
+            try
+            {
+                var result = new JsonResultModel();
+                var product = DataWrapper.GetProduct(ratingUp.ProductId);
+                var votesCount = ++product.VotesCount;
+                var score = ratingUp.Score > 0 ? ratingUp.Score : 0;
+                var votesSum = product.VotesSum + score;
+                var rating = votesSum / votesCount;
 
-            DataWrapper.UpdateRating(ratingUp.ProductId, rating, votesCount, votesSum);
+                DataWrapper.UpdateRating(ratingUp.ProductId, rating, votesCount, votesSum);
+            }
+            catch (Exception ex)
+            { }
         }
 
         [HttpPost]
         public void SetProductReviews([FromBody]ProductReview review)
         {
-            if (review != null &&
-                !string.IsNullOrEmpty(review.PhoneNumber) &&
-                !string.IsNullOrEmpty(review.ReviewText) &&
-                review.ProductId > 0)
+            try
             {
-                var branchId = DataWrapper.GetBranchIdByCity(review.CityId);
-                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
-                review.Date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
+                if (review != null &&
+               !string.IsNullOrEmpty(review.PhoneNumber) &&
+               !string.IsNullOrEmpty(review.ReviewText) &&
+               review.ProductId > 0)
+                {
+                    var branchId = DataWrapper.GetBranchIdByCity(review.CityId);
+                    var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
+                    review.Date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
 
-                DataWrapper.SaveProductReviews(review);
+                    DataWrapper.SaveProductReviews(review);
+                }
             }
+            catch (Exception ex)
+            { }
         }
 
         public List<ProductReview> GetProductReviews(int productId)
         {
-            var reviews = DataWrapper.GetProductReviewsVisible(productId);
-
-            if(reviews != null && reviews.Any())
+            try
             {
-                reviews.ForEach(p =>
+                var reviews = DataWrapper.GetProductReviewsVisible(productId);
+
+                if (reviews != null && reviews.Any())
                 {
-                    var hideNumberPhone = new StringBuilder(p.PhoneNumber);
-                    hideNumberPhone[11] = '*';
-                    hideNumberPhone[12] = '*';
+                    reviews.ForEach(p =>
+                    {
+                        var hideNumberPhone = new StringBuilder(p.PhoneNumber);
+                        hideNumberPhone[11] = '*';
+                        hideNumberPhone[12] = '*';
 
-                    p.PhoneNumber = hideNumberPhone.ToString();
-                });
+                        p.PhoneNumber = hideNumberPhone.ToString();
+                    });
+                }
+
+                return reviews;
             }
-
-            return reviews;
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
-        public List<StockModel> GetStocks()
+        public List<StockModel> GetStocks(int cityId)
         {
-            var stocks = DataWrapper.GetStocksVisible();
+            try
+            {
+                var branchId = DataWrapper.GetBranchIdByCity(cityId);
+                var stocks = DataWrapper.GetStocksVisible(branchId);
 
-            return stocks;
+                return stocks;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         [HttpPost]
         public Client AddOrUpdateClient([FromBody]Client client)
         {
-            var newClient = DataWrapper.AddOrUpdateClient(client);
+            try
+            {
+                var newClient = DataWrapper.AddOrUpdateClient(client);
 
-            return newClient;
+                return newClient;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
     }
 }

@@ -421,6 +421,8 @@ namespace EasyStart.Controllers
                 stock.Image = "/images/default-image.jpg";
             }
 
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+            stock.BranchId = branchId;
             stock = DataWrapper.SaveStock(stock);
 
             if (stock != null)
@@ -480,7 +482,8 @@ namespace EasyStart.Controllers
         public JsonResult LoadStockList()
         {
             var result = new JsonResultModel();
-            var stock = DataWrapper.GetStocks();
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+            var stock = DataWrapper.GetStocks(branchId);
 
             if (stock != null)
             {
