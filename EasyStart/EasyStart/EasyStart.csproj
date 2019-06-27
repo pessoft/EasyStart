@@ -346,6 +346,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\main.css" />
     <Content Include="Images\default-image.jpg" />
+    <Content Include="Images\full-logo.png" />
     <Content Include="Images\full-logo-pink.png" />
     <Content Include="Images\full-logo-blue.png" />
     <Content Include="Images\loader.gif" />
