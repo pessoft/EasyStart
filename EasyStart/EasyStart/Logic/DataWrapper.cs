@@ -171,6 +171,24 @@ namespace EasyStart.Logic
             return branch;
         }
 
+        public static bool HasMainBranch()
+        {
+            var hasMainBranch = true;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var branch = db.Branches.FirstOrDefault(p => p.TypeBranch == TypeBranch.MainBranch);
+
+                    hasMainBranch = hasMainBranch != null;
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return hasMainBranch;
+        }
+
         public static bool SaveBranch(BranchModel branch)
         {
             var success = false;

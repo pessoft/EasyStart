@@ -176,6 +176,7 @@
     <Compile Include="Logic\DataWrapper.cs" />
     <Compile Include="Logic\DayWeekly.cs" />
     <Compile Include="Logic\DeliveryType.cs" />
+    <Compile Include="Logic\KeyGenerator.cs" />
     <Compile Include="Logic\List.cs" />
     <Compile Include="Logic\OrderStatus.cs" />
     <Compile Include="Logic\ProductType.cs" />

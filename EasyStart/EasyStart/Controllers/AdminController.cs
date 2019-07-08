@@ -25,28 +25,17 @@ namespace EasyStart.Controllers
                 .ToDictionary(p => p.Key,
                               p => CityHelper.GetCity(p.Value.CityId));
 
+            var deliverySetting = DataWrapper.GetDeliverySetting(branchId); ;
+
             ViewBag.Zones = DateTimeHepler.GetDisplayDictionary();
             ViewBag.CurrentBranch = branchId;
             ViewBag.BranchViews = branchViewvs != null && branchViewvs.Any() ? branchViewvs : null;
             ViewBag.City = CityHelper.City;
-            ViewBag.Setting = null;
-            ViewBag.DeliverySetting = null;
-            ViewBag.DeliveryTimeTable= null;
+            ViewBag.Setting = DataWrapper.GetSetting(branchId); ;
+            ViewBag.DeliverySetting = deliverySetting;
+            ViewBag.DeliveryTimeTable= WeeklyDayHelper.ConvertTimeDeliveryToViev(deliverySetting?.TimeDelivery);
             ViewBag.TypeBranch = typeBranch;
-            //branchId = -1;
-            if (branchId != -1)
-            {
-                var deliverySetting = DataWrapper.GetDeliverySetting(branchId); ;
-                ViewBag.ZoneId = deliverySetting == null ? DateTimeHepler.DEFAULT_ZONE_ID : deliverySetting.ZoneId;
-                ViewBag.Setting = DataWrapper.GetSetting(branchId);
-                ViewBag.DeliverySetting = deliverySetting;
-                ViewBag.DeliveryTimeTable = WeeklyDayHelper.ConvertTimeDeliveryToViev(deliverySetting?.TimeDelivery);
-            }
-            else
-            {
-                ViewBag.DeliveryTimeTable = WeeklyDayHelper.ConvertTimeDeliveryToViev();
-                ViewBag.ZoneId = DateTimeHepler.DEFAULT_ZONE_ID;
-            }
+            ViewBag.ZoneId = deliverySetting == null ? DateTimeHepler.DEFAULT_ZONE_ID : deliverySetting.ZoneId;
 
             return View();
         }
