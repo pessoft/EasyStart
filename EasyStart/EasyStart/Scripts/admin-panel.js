@@ -544,27 +544,59 @@ function addStock() {
 var SelectIdCategoryId;
 
 function updateCategory() {
-    let category = {
-        Id: $("#category-id").val(),
-        Name: $("#name-category").val(),
-        Image: $("#addCategoryDialog img").attr("src")
-    }
     let loader = new Loader($("#addCategoryDialog form"));
-    let successFunc = function (result, loader) {
-        loader.stop();
-        if (result.Success) {
-            let categoryItem = $(`[category-id=${category.Id}]`);
-            categoryItem.find(".category-item-image img").attr("src", category.Image);
-            categoryItem.find(".category-item-name").html(category.Name);
-
-            cancelDialog("#addCategoryDialog");
-        } else {
-            showErrorMessage(result.ErrorMessage);
-        }
-    }
     loader.start();
 
-    $.post("/Admin/UpdateCategory", category, successCallBack(successFunc, loader));
+    let files = $("#addCategoryDialog input[type=file]")[0].files;
+    var dataImage = new FormData();
+
+    for (var x = 0; x < files.length; x++) {
+        dataImage.append("file" + x, files[x]);
+    }
+
+    let uppFunc = (data) => {
+        let category = {
+            Id: $("#category-id").val(),
+            Name: $("#name-category").val(),
+            Image: data.URL
+        }
+
+        let successFunc = function (result, loader) {
+            loader.stop();
+            if (result.Success) {
+                let categoryItem = $(`[category-id=${category.Id}]`);
+                categoryItem.find(".category-item-image img").attr("src", category.Image);
+                categoryItem.find(".category-item-name").html(category.Name);
+
+                cancelDialog("#addCategoryDialog");
+            } else {
+                showErrorMessage(result.ErrorMessage);
+            }
+        }
+
+        $.post("/Admin/UpdateCategory", category, successCallBack(successFunc, loader));
+    }
+
+    if (files.length == 0) {
+        let data = {
+            URL: $("#addCategoryDialog img").attr("src")
+        }
+
+        addFunc(data);
+
+        return;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/Admin/UploadImage',
+        contentType: false,
+        processData: false,
+        data: dataImage,
+        success: function (data) {
+            uppFunc(data);
+        }
+    });
 }
 
 function addCategory() {
@@ -825,45 +857,76 @@ function addProduct() {
 }
 
 function updateProduct() {
-    let product = {
-        Id: $("#product-id").val(),
-        CategoryId: SelectIdCategoryId,
-        Name: $("#name-product").val(),
-        AdditionInfo: $("#product-additional-info").val(),
-        Price: $("#product-price").val(),
-        Description: $("#description-product").val(),
-        Image: $("#addProducDialog img").attr("src"),
-        ProductType: parseInt($("#product-type option:selected").attr("value"))
-    }
     let loader = new Loader($("#addProducDialog form"));
-    let successFunc = function (result, loader) {
-        loader.stop();
-        if (result.Success) {
-            var oldProduct = getProductById(product.Id);
-            oldProduct.Image = product.Image;
-            oldProduct.Name = product.Name;
-            oldProduct.AdditionInfo = product.AdditionInfo;
-            oldProduct.Price = product.Price;
-            oldProduct.Description = product.Description;
-            oldProduct.ProductType = product.ProductType;
-
-            let productItem = $(`[product-id=${product.Id}]`);
-            productItem.find(".product-item-image img").attr("src", product.Image);
-            productItem.find(".product-item-name").html(product.Name);
-            productItem.find(".product-item-additional-info").html(product.AdditionInfo);
-            productItem.find(".product-item-price span").html(product.Price);
-            productItem.find(".product-item-description").html(product.Description);
-            productItem.find(".product-type-item").html(product.ProductType);
-
-
-            cancelDialog("#addProducDialog");
-        } else {
-            showErrorMessage(result.ErrorMessage);
-        }
-    }
     loader.start();
 
-    $.post("/Admin/UpdateProduct", product, successCallBack(successFunc, loader));
+    let files = $("#addProducDialog input[type=file]")[0].files;
+    var dataImage = new FormData();
+
+    for (var x = 0; x < files.length; x++) {
+        dataImage.append("file" + x, files[x]);
+    }
+
+    let uppProduct = (data) => {
+        let product = {
+            Id: $("#product-id").val(),
+            CategoryId: SelectIdCategoryId,
+            Name: $("#name-product").val(),
+            AdditionInfo: $("#product-additional-info").val(),
+            Price: $("#product-price").val(),
+            Description: $("#description-product").val(),
+            Image: data.URL,
+            ProductType: parseInt($("#product-type option:selected").attr("value"))
+        }
+
+        let successFunc = function (result, loader) {
+            loader.stop();
+            if (result.Success) {
+                var oldProduct = getProductById(product.Id);
+                oldProduct.Image = product.Image;
+                oldProduct.Name = product.Name;
+                oldProduct.AdditionInfo = product.AdditionInfo;
+                oldProduct.Price = product.Price;
+                oldProduct.Description = product.Description;
+                oldProduct.ProductType = product.ProductType;
+
+                let productItem = $(`[product-id=${product.Id}]`);
+                productItem.find(".product-item-image img").attr("src", product.Image);
+                productItem.find(".product-item-name").html(product.Name);
+                productItem.find(".product-item-additional-info").html(product.AdditionInfo);
+                productItem.find(".product-item-price span").html(product.Price);
+                productItem.find(".product-item-description").html(product.Description);
+                productItem.find(".product-type-item").html(product.ProductType);
+
+
+                cancelDialog("#addProducDialog");
+            } else {
+                showErrorMessage(result.ErrorMessage);
+            }
+        }
+
+        $.post("/Admin/UpdateProduct", product, successCallBack(successFunc, loader));
+    }
+
+    if (files.length == 0) {
+        let data = {
+            URL: $("#addProducDialog img").attr("src")
+        }
+
+        uppProduct(data);
+        return;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/Admin/UploadImage',
+        contentType: false,
+        processData: false,
+        data: dataImage,
+        success: function (data) {
+            uppProduct(data);
+        }
+    });
 }
 
 function addStockToList(stock) {

@@ -1050,5 +1050,43 @@ namespace EasyStart.Logic
             catch (Exception ex)
             { }
         }
+
+        public static string GetCategoryImage(int id)
+        {
+            string image = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var result = db.Categories.FirstOrDefault(p => p.Id == id);
+
+                    image = result?.Image;
+
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return image;
+        }
+
+        public static string GetProductImage(int id)
+        {
+            string image = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var result = db.Products.FirstOrDefault(p => p.Id == id);
+
+                    image = result?.Image;
+
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return image;
+        }
     }
 }

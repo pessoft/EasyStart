@@ -139,6 +139,16 @@ namespace EasyStart.Controllers
             {
                 category.Image = "/images/default-image.jpg";
             }
+            else if (category.Id > 0)
+            {
+                var oldImage = DataWrapper.GetCategoryImage(category.Id);
+
+                if (oldImage != category.Image &&
+                   System.IO.File.Exists(Server.MapPath(oldImage)))
+                {
+                    System.IO.File.Delete(Server.MapPath(oldImage));
+                }
+            }
 
             category = DataWrapper.SaveCategory(category);
 
@@ -164,6 +174,16 @@ namespace EasyStart.Controllers
             if (!System.IO.File.Exists(Server.MapPath(product.Image)))
             {
                 product.Image = "/images/default-image.jpg";
+            }
+            else if (product.Id > 0)
+            {
+                var oldImage = DataWrapper.GetCategoryImage(product.Id);
+
+                if (oldImage != product.Image &&
+                   System.IO.File.Exists(Server.MapPath(oldImage)))
+                {
+                    System.IO.File.Delete(Server.MapPath(oldImage));
+                }
             }
 
             product = DataWrapper.SaveProduct(product);
@@ -336,6 +356,22 @@ namespace EasyStart.Controllers
         public JsonResult UpdateCategory(CategoryModel category)
         {
             var result = new JsonResultModel();
+
+            if (!System.IO.File.Exists(Server.MapPath(category.Image)))
+            {
+                category.Image = "/images/default-image.jpg";
+            }
+            else if(category.Id > 0)
+            {
+                var oldImage = DataWrapper.GetCategoryImage(category.Id);
+
+                if (oldImage != category.Image &&
+                    System.IO.File.Exists(Server.MapPath(oldImage)))
+                {
+                    System.IO.File.Delete(Server.MapPath(oldImage));
+                }
+            }
+
             var updateCategory = DataWrapper.UpdateCategory(category);
 
             if (updateCategory != null)
@@ -395,6 +431,22 @@ namespace EasyStart.Controllers
         public JsonResult UpdateProduct(ProductModel product)
         {
             var result = new JsonResultModel();
+
+            if (!System.IO.File.Exists(Server.MapPath(product.Image)))
+            {
+                product.Image = "/images/default-image.jpg";
+            }
+            else if (product.Id > 0)
+            {
+                var oldImage = DataWrapper.GetCategoryImage(product.Id);
+
+                if (oldImage != product.Image &&
+                    System.IO.File.Exists(Server.MapPath(oldImage)))
+                {
+                    System.IO.File.Delete(Server.MapPath(oldImage));
+                }
+            }
+
             var updateProduct = DataWrapper.UpdateProduct(product);
 
             if (updateProduct != null)
