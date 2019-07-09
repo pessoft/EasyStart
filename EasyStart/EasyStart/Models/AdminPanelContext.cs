@@ -8,6 +8,9 @@ namespace EasyStart.Models
 {
     public class AdminPanelContext: DbContext
     {
+        public AdminPanelContext() : base("MainContext")
+        { }
+
         public DbSet<CategoryModel> Categories { get; set; }
         public DbSet<ProductModel> Products { get; set; }
         public DbSet<BranchModel> Branches { get; set; }
