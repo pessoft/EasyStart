@@ -180,7 +180,7 @@ namespace EasyStart.Logic
                 {
                     var branch = db.Branches.FirstOrDefault(p => p.TypeBranch == TypeBranch.MainBranch);
 
-                    hasMainBranch = hasMainBranch != null;
+                    hasMainBranch = branch != null;
                 }
             }
             catch (Exception ex)
@@ -315,7 +315,7 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    var orderNumber = db.Categories.Count();
+                    var orderNumber = db.Categories.Count() + 1;
 
                     category.OrderNumber = orderNumber;
                     result = db.Categories.Add(category);
