@@ -308,6 +308,7 @@
     <Compile Include="Models\UpdaterOrderNumber.cs" />
     <Compile Include="Models\UpdaterOrderStatus.cs" />
     <Compile Include="Models\UpdaterVisible.cs" />
+    <Compile Include="Models\UserDataPhoneApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\CityHelper.cs" />

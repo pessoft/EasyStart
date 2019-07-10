@@ -1106,5 +1106,22 @@ namespace EasyStart.Logic
 
             return image;
         }
+
+        public static Client GetClient(int clinetId)
+        {
+            Client client = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    client = db.Clients.FirstOrDefault(p => p.Id == clinetId);
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return client;
+        }
     }
 }
