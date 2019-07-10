@@ -166,7 +166,7 @@ namespace EasyStart.Controllers
             }
             else if (product.Id > 0)
             {
-                var oldImage = DataWrapper.GetCategoryImage(product.Id);
+                var oldImage = DataWrapper.GetProductImage(product.Id);
 
                 if (oldImage != product.Image &&
                    System.IO.File.Exists(Server.MapPath(oldImage)))
@@ -427,7 +427,7 @@ namespace EasyStart.Controllers
             }
             else if (product.Id > 0)
             {
-                var oldImage = DataWrapper.GetCategoryImage(product.Id);
+                var oldImage = DataWrapper.GetProductImage(product.Id);
 
                 if (oldImage != product.Image &&
                     System.IO.File.Exists(Server.MapPath(oldImage)))

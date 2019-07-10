@@ -243,5 +243,32 @@ namespace EasyStart
                 return null;
             }
         }
+
+        [HttpPost]
+        public JsonResultModel CheckActualUserData([FromBody]UserDataPhoneApp userData)
+        {
+            var result = new JsonResultModel();
+            result.Success = true;
+            result.Data = false;
+
+            try
+            {
+                var setting = DataWrapper.GetSettingByCity(userData.CityId);
+                var client = DataWrapper.GetClient(userData.ClientId);
+                var isPhoneEquals = client != null ? client.PhoneNumber == userData.PhoneNumber : false;
+                if (setting !=null &&
+                    client != null &&
+                    isPhoneEquals)
+                {
+                    result.Data = true;
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return result;
+            }
+        }
     }
 }
