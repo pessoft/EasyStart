@@ -72,7 +72,7 @@ class BaseReport {
             bottom: fitsBottom,
             all: (fitsLeft && fitsTop && fitsRight && fitsBottom)
         };
-}
+    }
 
     initPeriod() {
         let options = {
@@ -314,6 +314,13 @@ class TopBaseReport extends BaseReport {
                     display: true,
                     text: this.nameReport,
                     fontSize: 18
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
                 }
             }
         }
