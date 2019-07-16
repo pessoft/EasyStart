@@ -36,6 +36,8 @@ namespace EasyStart.Controllers
             ViewBag.DeliveryTimeTable= WeeklyDayHelper.ConvertTimeDeliveryToViev(deliverySetting?.TimeDelivery);
             ViewBag.TypeBranch = typeBranch;
             ViewBag.ZoneId = deliverySetting == null ? DateTimeHepler.DEFAULT_ZONE_ID : deliverySetting.ZoneId;
+            ViewBag.YearsWork = DateTime.Now.Year == 2019 ? DateTime.Now.Year.ToString() : $"2019 - {DateTime.Now.Year}";
+
 
             return View();
         }

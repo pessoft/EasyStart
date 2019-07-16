@@ -15,8 +15,8 @@ namespace EasyStart
 
             routes.MapRoute(
                 name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "AdminLogin", id = UrlParameter.Optional }
+                url: "{controller}/{action}",
+                defaults: new { controller = "Home", action = "AdminLogin"}
             );
         }
     }
