@@ -11,6 +11,7 @@ using System.Web.Security;
 
 namespace EasyStart.Controllers
 {
+    [RedirectingAction]
     public class AdminController : Controller
     {
         // GET: Admin

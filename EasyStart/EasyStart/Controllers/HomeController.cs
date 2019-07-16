@@ -11,9 +11,15 @@ namespace EasyStart.Controllers
 {
     public class HomeController : Controller
     {
+        private bool useState = false;
+
+        public HomeController()
+        {
+            useState = UseMethod.GetCurrentState();
+        }
+
         public ActionResult AdminLogin()
         {
-
             if(!DataWrapper.HasMainBranch())
             {
                 var branch = new BranchModel
@@ -32,9 +38,16 @@ namespace EasyStart.Controllers
         [HttpPost]
         public JsonResult Login(LoginDataModel loginData)
         {
+            var result = new JsonResultModel();
+
+            if (!useState)
+            {
+                result.ErrorMessage = "Сервис не оплачен";
+                return Json(result);
+            }
 
             var branch = DataWrapper.GetBranch(loginData.Login, loginData.Password);
-            var result = new JsonResultModel();
+
 
             if (branch != null)
             {
