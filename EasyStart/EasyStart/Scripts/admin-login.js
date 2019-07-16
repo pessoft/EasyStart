@@ -14,6 +14,8 @@
     }
 
     if (!login || !password) {
+        showErrorMessage("Введите логин и пароль");
+        loader.stop();
         return;
     }
 
