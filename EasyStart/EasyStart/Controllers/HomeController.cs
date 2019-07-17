@@ -34,7 +34,7 @@ namespace EasyStart.Controllers
 
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("AdminPanel", "AdminController");
+                return RedirectToAction("AdminPanel", "Admin");
             }
 
             return View();
