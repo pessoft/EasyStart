@@ -21,12 +21,12 @@
                 <i class="fal fa-users-cog"></i>
             </div>
             <div class="group">
-                <input required type="text" name="login" id="login" value="" autocomplete="off"/>
+                <input required type="text" name="login" id="login" value="" readonly onfocus="this.removeAttribute('readonly')"/>
                 <span class="bar"></span>
                 <label>Логин</label>
             </div>
             <div class="group">
-                <input required type="password" onkeydown="loginByEnter(event)" name="password" id="password" value="" autocomplete="off"/>
+                <input required type="password" onkeydown="loginByEnter(event)" name="password" id="password" value="" readonly onfocus="this.removeAttribute('readonly')"/>
                 <span class="bar"></span>
                 <label>Пароль</label>
             </div>
