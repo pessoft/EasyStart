@@ -6,6 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="shortcut icon" href="~/Images/favico.ico" type="image/x-icon">
     <title>Панель администратора</title>
     @Styles.Render("~/main/css")
     @Styles.Render("~/admin-panel/css")
@@ -15,7 +16,7 @@
 </head>
 <body>
     <div class="header-menu">
-        <div class="logo-img">
+        <div class="logo-img menu-item" target-id="about-us">
             <img src="~/Images/logo.png" alt="Logo" />
         </div>
         <div class="menu-item menu-item-active" target-id="order" onclick="loadOrders();">
@@ -501,6 +502,21 @@
         </div>
         <div class="section hide" id="analytics">
             <div class="analytics-wrapper" id="analytics-wrapper">
+            </div>
+        </div>
+
+        <div class="section hide" id="about-us">
+            <div class="about-us-body">
+                <div class="about-header">
+                    <img src="~/Images/full-logo-pink.png" alt="Logo" />
+                </div>
+                <div class="about-us">
+                    <span>Разработчик: <a href="https://vk.com/pessoft" target="_blank">Alexey Pastukhov</a></span>
+                    <span>Телефон: <a href="tel:+7(960) 505-37-47">+7(960) 505-37-47</a></span>
+                    <span>Эл.почта: <a href="mailto:support@easy-start.site">support@easy-start.site</a></span>
+                    <span><a href="https://vk.com/easy_start_app" target="_blank">Мы ВКонтакте</a></span>
+                    <span>&#169 Easy Start @ViewBag.YearsWork </span>
+                </div>
             </div>
         </div>
     </div>

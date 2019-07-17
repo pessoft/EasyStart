@@ -14,6 +14,8 @@
     }
 
     if (!login || !password) {
+        showErrorMessage("Введите логин и пароль");
+        loader.stop();
         return;
     }
 
@@ -27,7 +29,6 @@
 
 function loginByEnter(event) {
     if (event.keyCode == 13) {
-        $("#action-login").focus();
         login();
     }
 }
