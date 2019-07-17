@@ -1,7 +1,4 @@
 ﻿$(document).ready(function () {
-    var evObj = document.createEvent('Events');
-    evObj.initEvent("click", true, false);
-
     bindSelectSumo();
     initHistoryOrderDatePicker();
 

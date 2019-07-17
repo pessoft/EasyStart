@@ -1,4 +1,9 @@
-﻿function login() {
+﻿$(document).ready(function () {
+	var evObj = document.createEvent('Events');
+    evObj.initEvent("click", true, false);
+});
+
+function login() {
     let loader = new Loader($("#login-form"));
 
     loader.start();
