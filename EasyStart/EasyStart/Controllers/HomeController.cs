@@ -32,6 +32,11 @@ namespace EasyStart.Controllers
                 DataWrapper.SaveBranch(branch);
             }
 
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("AdminPanel", "AdminController");
+            }
+
             return View();
         }
 
