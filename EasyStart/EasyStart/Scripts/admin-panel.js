@@ -93,7 +93,7 @@ function initHistoryOrderDatePicker() {
         OrderHistoryDatePicker.show();
     })
 
-    OrderHistoryDatePicker.selectDate([prevDate, prevDate]);
+    OrderHistoryDatePicker.selectDate([prevDate, new Date()]);
 }
 
 var AdditionalBranch = [];
