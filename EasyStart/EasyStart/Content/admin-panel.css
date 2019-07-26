@@ -109,8 +109,12 @@ dialog form {
 }
 
 .header-product-text {
-    font-size: 2em;
+    font-size: 1.7em;
     margin-bottom: 10px;
+}
+
+.header-product i {
+    font-size: 0.9em;
 }
 
 .header-product-add {
@@ -333,8 +337,16 @@ dialog {
     flex-direction: column;
 }
 
+    .stock-header i {
+        font-size: 0.9em;
+    }
+
+    .stock-header {
+        margin-bottom: 2%;
+    }
+
 .stock-header-text {
-    font-size: 2.5em;
+    font-size: 2em;
     margin-bottom: 10px;
 }
 
@@ -363,21 +375,25 @@ label[for=free-delivery] {
 }
 
 .branch-header {
-    font-size: 2em;
+    font-size: 1.7em;
     margin-bottom: 1%;
     padding-top: 2%;
 }
 
-.branch-list {
-    width: 45%;
-    height: 80%;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-top: 0.5%;
-}
+    .branch-header i {
+        font-size: 0.9em;
+    }
+
+    .branch-list {
+        width: 45%;
+        height: 80%;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-top: 0.5%;
+    }
 
 
 
@@ -448,7 +464,7 @@ label[for=free-delivery] {
     justify-content: center;
     align-items: center;
     flex-direction: row;
-    border-radius: 2px;
+    border-radius: 3px;
     padding: 1% 10px;
     margin: 0 auto;
     margin-bottom: 5px;
@@ -601,7 +617,7 @@ ul.options::-webkit-scrollbar-thumb,
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    border-radius: 2px;
+    border-radius: 3px;
     padding: 1%;
     margin: 0 auto;
     margin-bottom: 0.5%;
@@ -923,8 +939,9 @@ div.product-item:hover {
     width: 460px;
     max-height: 100%;
     color: #163f75cf;
-    box-shadow: 0px 0px 5px 0px #163f7569;
+    box-shadow: 0px 0px 5px 0px #0f1e322b;
     margin: 5px;
+    border-radius: 3px;
 }
 
 .stock-item-image {
@@ -1218,12 +1235,16 @@ div.product-item:hover {
     margin-bottom: 10px;
 }
 
-.order-info .orders-header {
-    height: 5%;
-}
+    .orders-header i {
+        font-size: 0.9em;
+    }
+
+    .order-info .orders-header {
+        height: 5%;
+    }
 
 .order-header-text {
-    font-size: 2em;
+    font-size: 1.7em;
     margin-bottom: 10px;
     text-align: center;
 }
@@ -1265,7 +1286,7 @@ div.product-item:hover {
     align-items: center;
     flex-direction: row;
     color: #163f75;
-    border-radius: 2px;
+    border-radius: 3px;
     position: relative;
     box-shadow: 0px 0px 5px 0px #0f1e322b;
     cursor: default;
@@ -1318,7 +1339,7 @@ div.product-item:hover {
 .order-description-number-header {
     width: 100%;
     text-align: center;
-    font-size: 1.2em;
+    font-size: 1.1em;
 }
 
 .order-description-date-header {
@@ -1349,9 +1370,9 @@ div.product-item:hover {
     justify-content: center;
     align-items: flex-start;
     flex-direction: column;
-    box-shadow: 0px 0px 5px 0px 0f1e322b;
+    box-shadow: 0px 0px 5px 0px #0f1e322b;
     margin-bottom: 10px;
-    border-radius: 2px;
+    border-radius: 3px;
 }
 
 #history .order-description-products-wrapper {
@@ -1364,7 +1385,7 @@ div.product-item:hover {
     box-shadow: 0px 0px 5px 0px #0f1e322b;
     margin-bottom: 10px;
     font-size: 0.9em;
-    border-radius: 2px;
+    border-radius: 3px;
 }
 
 .order-description-products {
@@ -1391,7 +1412,7 @@ div.product-item:hover {
     padding-left: 3%;
     width: 92%;
     border-bottom: none;
-    font-weight: 600;
+    font-size: 1.1em;
 }
 
     div.order-description-product:last-child {
@@ -1455,7 +1476,7 @@ div.order-description-additional-info:last-child {
     align-items: flex-start;
     flex-direction: row;
     box-shadow: 0px 0px 5px 0px #0f1e322b;
-    border-radius: 2px;
+    border-radius: 3px;
     margin-bottom: 10px;
 }
 
