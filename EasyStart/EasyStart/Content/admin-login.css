@@ -43,14 +43,14 @@
 .login-form {
     width: 400px;
     height: 250px;
-    box-shadow: 0px 0px 3px 0px #163f7569;
+    box-shadow: 0px 0px 5px 0px #0f1e322b;
     background-color: #0f1e3200;
     border-radius: 2px;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    position:relative;
+    position: relative;
 }
 
     .login-form input {
