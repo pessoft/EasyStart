@@ -407,7 +407,7 @@ label[for=free-delivery] {
     flex-direction: row;
     border-radius: 2px;
     padding: 1%;
-    box-shadow: 0px 0px 6px 0px #163f7569;
+    box-shadow: 0px 0px 5px 0px #0f1e322b;
     color: #163f75cf;
     margin: 0 auto;
     margin-bottom: 12px;
@@ -1251,7 +1251,7 @@ div.product-item:hover {
 
 .order-list {
     width: 100%;
-    height: 84%;
+    height: 95%;
     padding: 3% 0;
     position: relative;
     overflow-x: hidden;
@@ -1398,9 +1398,10 @@ div.product-item:hover {
 
 .order-description-product,
 .order-description-product-header {
-    width: 90%;
+    width: 92%;
     min-height: 35px;
-    padding: 5px 5%;
+    padding: 5px 0%;
+    margin: 0 4%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -1413,6 +1414,7 @@ div.product-item:hover {
     width: 92%;
     border-bottom: none;
     font-size: 1.1em;
+    margin: 0;
 }
 
     div.order-description-product:last-child {
@@ -1752,10 +1754,10 @@ div.take-info-item:nth-child(odd) {
     justify-content: center;
     align-items: center;
     position: absolute;
-    left: -20px;
+    left: -18px;
     bottom: -10px;
     font-size: 0.7em;
-    border-radius: 3px;
+    border-radius: 10px;
     background-color: #0f1e32;
     border: 1px solid;
     z-index: 999999999;
