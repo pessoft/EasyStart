@@ -68,7 +68,7 @@ const Pages = {
 var OrderHistoryDatePicker;
 function initHistoryOrderDatePicker() {
     var prevDate = new Date();
-    prevDate.setDate(prevDate.getDate() - 1);
+    prevDate.setDate(prevDate.getDate() - 30);
 
     let options = {
         position: "bottom center",
@@ -1722,6 +1722,11 @@ function loadOrders(reload = false) {
                 setEmptyOrders();
             } else {
                 renderOrders(Orders, Pages.Order);
+
+                let $orderItems = $(`#${Pages.Order} .order-item`);
+                if ($orderItems.length > 0) {
+                    selectOrder($orderItems[0], Pages.Order)
+                }
             }
         } else {
             showErrorMessage(data.ErrorMessage);
