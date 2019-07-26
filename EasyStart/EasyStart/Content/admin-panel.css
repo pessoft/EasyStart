@@ -453,7 +453,7 @@ label[for=free-delivery] {
     margin: 0 auto;
     margin-bottom: 5px;
     position: relative;
-    box-shadow: 0px 0px 5px 0px #163f7569;
+    box-shadow: 0px 0px 5px 0px #0f1e322b;
     color: #163f75cf;
     cursor: default;
 }
@@ -606,7 +606,7 @@ ul.options::-webkit-scrollbar-thumb,
     margin: 0 auto;
     margin-bottom: 0.5%;
     position: relative;
-    box-shadow: 0px 0px 5px 0px #163f7569;
+    box-shadow: 0px 0px 5px 0px #0f1e322b;
     color: #163f75cf;
     cursor: default;
 }
@@ -1258,7 +1258,7 @@ div.product-item:hover {
     width: 90%;
     padding: 0px 5px;
     margin: 0 auto;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     height: 50px;
     display: flex;
     justify-content: space-around;
@@ -1267,8 +1267,8 @@ div.product-item:hover {
     color: #163f75;
     border-radius: 2px;
     position: relative;
-    box-shadow: 0px 0px 3px 0px #163f7569;
-    cursor:default;
+    box-shadow: 0px 0px 5px 0px №0f1e322b;
+    cursor: default;
 }
 
 .order-item-date {
@@ -1341,17 +1341,18 @@ div.product-item:hover {
     color: #ce6a6b;
 }
 
-    .order-description-products-wrapper {
-        width: 96%;
-        padding: 10px 1%;
-        height: auto;
-        max-height: 50%;
-        justify-content: center;
-        align-items: flex-start;
-        flex-direction: column;
-        box-shadow: 0px 0px 3px 0px #163f7569;
-        margin-bottom: 10px;
-    }
+.order-description-products-wrapper {
+    width: 96%;
+    padding: 10px 1%;
+    height: auto;
+    max-height: 50%;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    box-shadow: 0px 0px 5px 0px 0f1e322b;
+    margin-bottom: 10px;
+    border-radius: 2px;
+}
 
 #history .order-description-products-wrapper {
     max-height: 51%;
@@ -1360,9 +1361,10 @@ div.product-item:hover {
 .order-description-products-additional-wrapper {
     width: 96%;
     padding: 0 1%;
-    box-shadow: 0px 0px 3px 0px #163f7569;
+    box-shadow: 0px 0px 5px 0px #0f1e322b;
     margin-bottom: 10px;
     font-size: 0.9em;
+    border-radius: 2px;
 }
 
 .order-description-products {
@@ -1452,7 +1454,8 @@ div.order-description-additional-info:last-child {
     justify-content: center;
     align-items: flex-start;
     flex-direction: row;
-    box-shadow: 0px 0px 3px 0px #163f7569;
+    box-shadow: 0px 0px 5px 0px #0f1e322b;
+    border-radius: 2px;
     margin-bottom: 10px;
 }
 
