@@ -1722,7 +1722,6 @@ div.take-info-item:nth-child(odd) {
 }
 
 .search-group-ico {
-    display: none;
     width: 12%;
     height: 100%;
     border-left: none;

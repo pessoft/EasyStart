@@ -618,10 +618,11 @@ namespace EasyStart.Controllers
         {
             var result = new JsonResultModel();
             var orders = DataWrapper.GetOrders(brnachIds);
+            var todayData = DataWrapper.GetDataOrdersByDate(brnachIds, DateTime.Now);
 
             if (orders != null)
             {
-                result.Data = orders;
+                result.Data = new { Orders = orders, TodayData = todayData };
                 result.Success = true;
             }
             else
@@ -699,6 +700,26 @@ namespace EasyStart.Controllers
             }
 
             DataWrapper.UpdateStatusOrder(data);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult GetTodayOrderData(List<int> brnachIds)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                var data = DataWrapper.GetDataOrdersByDate(brnachIds, DateTime.Now);
+                result.Data = data;
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
         }
     }
 }

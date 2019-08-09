@@ -312,6 +312,7 @@
     <Compile Include="Models\ReportResult.cs" />
     <Compile Include="Models\SettingModel.cs" />
     <Compile Include="Models\StockModel.cs" />
+    <Compile Include="Models\TodayDataOrdersModel.cs" />
     <Compile Include="Models\UpdaterOrderNumber.cs" />
     <Compile Include="Models\UpdaterOrderStatus.cs" />
     <Compile Include="Models\UpdaterVisible.cs" />

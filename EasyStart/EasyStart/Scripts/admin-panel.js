@@ -1695,7 +1695,6 @@ function getCurrentBranchId() {
     return $("#current-brnach").val();
 }
 
-
 var Orders = [];
 
 function loadOrders(reload = false) {
@@ -1704,7 +1703,7 @@ function loadOrders(reload = false) {
     }
 
     clearSearchInput(Pages.Order);
-    currentBranchId = getCurrentBranchId();
+    let currentBranchId = getCurrentBranchId();
     let brnachIds = [...AdditionalBranch];
     brnachIds.push(currentBranchId);
 
@@ -1716,8 +1715,9 @@ function loadOrders(reload = false) {
 
     let successFunc = function (data, loader) {
         if (data.Success) {
-            Orders = processingOrders(data.Data);
+            Orders = processingOrders(data.Data.Orders);
             showCountOrder(Orders.length);
+            setTodayDataOrders(data.Data.TodayData);
             if (Orders.length == 0) {
                 setEmptyOrders();
             } else {
@@ -2264,7 +2264,9 @@ function getHistoryOrderById(orderId) {
 
         setEmptyOrderInfo(Pages.Order);
         clearOrderDescriptionBlock(Pages.Order);
-        $.post("/Admin/UpdateSatsusOrder", { OrderId: orderId, Status: orderStatus }, null);
+        
+
+        $.post("/Admin/UpdateSatsusOrder", { OrderId: orderId, Status: orderStatus }, successCallBack(getTodayDataOrders));
 }
 
 function searchByOrderNumber(containerId) {
@@ -2289,6 +2291,8 @@ function showCountOrder(count) {
     } else {
         $orderCount.addClass("hide");
     }
+
+    OrderStatusBar.setCountNewOrder(count);
 }
 
 var NotifySoundNewOrder = new Audio('../Content/sounds/sound-new-order.mp3');
@@ -2306,6 +2310,52 @@ function notifySoundNewOrder() {
     if (soundOn) {
         NotifySoundNewOrder.stop();
         NotifySoundNewOrder.play();
+    }
+}
+
+function getTodayDataOrders() {
+    let currentBranchId = getCurrentBranchId();
+    let brnachIds = [...AdditionalBranch];
+    brnachIds.push(currentBranchId);
+
+    let successFunct = data => {
+        setTodayDataOrders(data.Data)
+    }
+
+    $.post("/Admin/GetTodayOrderData", { brnachIds: brnachIds }, successCallBack(successFunct));
+}
+
+function setTodayDataOrders(data) {
+    OrderStatusBar.setCountSuccessOrder(data.CountSuccesOrder);
+    OrderStatusBar.setCountCancelOrder(data.CountCancelOrder);
+    OrderStatusBar.setTodayRevenue(data.Revenue);
+}
+
+function getCurrentSectionId() {
+    return $(".section").attr("id");
+}
+
+class OrderStatusBar {
+
+    static setCountNewOrder(value) {
+        this.SetValue(".count-new-order", value);
+    }
+
+    static setCountSuccessOrder(value) {
+        this.SetValue(".count-success-order", value);
+    }
+
+    static setCountCancelOrder(value) {
+        this.SetValue(".count-cancel-order", value);
+    }
+
+    static setTodayRevenue(value) {
+        this.SetValue(".today-revenue-order", xFormatPrice(value));
+    }
+
+    static SetValue(qSelector, value) {
+        const currentSectionId = getCurrentSectionId();
+        $(`#${currentSectionId} ${qSelector} .status-bar-value`).html(value);
     }
 }
 

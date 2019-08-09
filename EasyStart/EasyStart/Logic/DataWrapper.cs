@@ -218,13 +218,13 @@ namespace EasyStart.Logic
                     var setting = db.Settings.FirstOrDefault(p => p.BranchId == id);
                     var deliverySetting = db.DeliverySettings.FirstOrDefault(p => p.BranchId == id);
 
-                    if(branch != null)
+                    if (branch != null)
                         db.Branches.Remove(branch);
 
-                    if(setting != null)
+                    if (setting != null)
                         db.Settings.Remove(setting);
 
-                    if(deliverySetting != null)
+                    if (deliverySetting != null)
                         db.DeliverySettings.Remove(deliverySetting);
 
                     db.SaveChanges();
@@ -257,7 +257,7 @@ namespace EasyStart.Logic
                         updateSetting.Email = setting.Email;
                         updateSetting.Vkontakte = setting.Vkontakte;
                         updateSetting.Instagram = setting.Instagram;
-                        updateSetting.Facebook= setting.Facebook;
+                        updateSetting.Facebook = setting.Facebook;
                     }
                     else
                     {
@@ -489,7 +489,7 @@ namespace EasyStart.Logic
                         .Orders
                         .FirstOrDefault(p => data.OrderId == p.Id);
 
-                    if(order != null)
+                    if (order != null)
                     {
                         order.OrderStatus = data.Status;
                     }
@@ -974,7 +974,7 @@ namespace EasyStart.Logic
                     var ids = dict.Keys.ToList(); ;
                     var data = db.Categories.Where(p => ids.Contains(p.Id));
 
-                    foreach(var up in data)
+                    foreach (var up in data)
                     {
                         up.OrderNumber = dict[up.Id];
                     }
@@ -1122,6 +1122,40 @@ namespace EasyStart.Logic
             { }
 
             return client;
+        }
+
+
+        public static TodayDataOrdersModel GetDataOrdersByDate(List<int> brandchIds, DateTime date)
+        {
+            var todatData = new TodayDataOrdersModel();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    db.Orders
+                        .Where(p => brandchIds.Contains(p.BranchId) &&
+                                    p.OrderStatus != OrderStatus.Processing &&
+                                    DbFunctions.TruncateTime(p.Date) == date.Date)
+                        .ToList()
+                        .ForEach(p =>
+                        {
+                            if (p.OrderStatus == OrderStatus.Processed)
+                            {
+                                ++todatData.CountSuccesOrder;
+                                todatData.Revenue += p.AmountPayDiscountDelivery;
+                            }
+
+                            if (p.OrderStatus == OrderStatus.Cancellation)
+                                ++todatData.CountCancelOrder;
+                        });
+                }
+            }
+            catch (Exception ex)
+            {
+                todatData = null;
+            }
+
+            return todatData;
         }
     }
 }
