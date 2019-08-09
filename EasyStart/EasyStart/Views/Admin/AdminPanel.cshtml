@@ -60,6 +60,106 @@
     <input type="hidden" id="current-brnach" value="@ViewBag.CurrentBranch">
     <div class="content">
         <div class="section" id="order">
+            <div class="order-wrapper-grid">
+                <div class="order-settings">
+                    <div class="setting-item">
+
+
+                        <div class="additional-order-item search-input">
+                            <div class="search-group">
+                                <div class="search-group-item search-group-input">
+                                    <input oninput="searchByOrderNumber('order')" placeholder="Введите номер заказа...">
+                                </div>
+                                <div class="search-group-item search-group-ico" style="
+    display: none;
+">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sm-font-size">
+                            поиск заказа
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="bg-font-size font-weight-bold">17</div>
+                        <div class="sm-font-size">новых заказов</div>
+                    </div>
+                    <div class="setting-item ">
+                        <div class="bg-font-size font-weight-bold success-color">239</div>
+                        <div class="sm-font-size">оформленно заказов</div>
+                    </div>
+                    <div class="setting-item ">
+                        <div class="bg-font-size font-weight-bold fail-color">4</div>
+                        <div class="sm-font-size">отменено заказов</div>
+                    </div>
+                    <div class="setting-item ">
+                        <div class="bg-font-size font-weight-bold text-no-wrap" style="
+">1 345 678</div>
+                        <div class="sm-font-size">выручка (руб.)</div>
+                    </div>
+                </div>
+                <div class="order-list-grid">
+                    <div class="order-item-grid">
+                        <div class="order-item-short-row grid-col-2 border-bottom">
+                            <div class="order-short-row-item order-short-aitems-start border-right ">
+                                <div class="flex-col-center">
+                                    <div class="bg-normal-font-size font-weight-bold text-no-wrap"># 10234</div>
+                                    <div>номер заказа</div>
+                                </div>
+
+
+                            </div>
+                            <div class="order-short-row-item order-short-aitems-end ">
+                                <div class="flex-col-center">
+                                    <div class="bg-normal-font-size  font-weight-bold text-no-wrap" style="
+">12 497<i class="fal fa-ruble-sign sm-font-size"></i></div>
+                                    <div style="">к оплате</div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="order-item-short-row border-bottom " style="">
+                            <div class="order-short-row-item">
+                                <div class="bg-normal-font-size" style="">
+                                    <i class="fal fa-phone-office"></i>
+                                </div>
+                                <div class="sm-font-size text-no-wrap" style=""> +7(960)160-59-46</div>
+                            </div>
+                            <div class="order-short-row-item">
+                                <div class="bg-normal-font-size" style="">
+                                    <i class="fal fa-user-alt"></i>
+                                </div>
+                                <div class="sm-font-size" style="">Алексей</div>
+                            </div>
+                            <div class="order-short-row-item">
+                                <div class="bg-normal-font-size" style="">
+                                    <i class="fal fa-hand-holding-box"></i>
+                                </div>
+                                <div class="sm-font-size" style="">Доставка</div>
+                            </div><div class="order-short-row-item">
+                                <div class="bg-normal-font-size" style="">
+                                    <i class="fal fa-cash-register"></i>
+                                </div>
+                                <div class="sm-font-size" style="">Наличиными</div>
+                            </div>
+                        </div>
+                        <div class="order-item-short-row ">
+                            <div class="col-span-4">
+                                <a>
+                                    Подробности заказа
+                                    <i class="fal fa-window-restore"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
             <div class="order-wrapper">
                 <div class="orders">
                     <div class="orders-header">
