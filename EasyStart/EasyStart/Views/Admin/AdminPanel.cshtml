@@ -1,5 +1,4 @@
-﻿*/
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -8,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link rel="shortcut icon" href="~/Images/favico.ico" type="image/x-icon">
     <title>Панель администратора</title>
+    @Styles.Render("~/odometer/css")
     @Styles.Render("~/main/css")
     @Styles.Render("~/admin-panel/css")
     @Styles.Render("~/sumoselect/css")
@@ -79,77 +79,23 @@
                     </div>
 
                     <div class="setting-item count-new-order">
-                        <div class="bg-font-size font-weight-bold status-bar-value"></div>
+                        <div class="bg-font-size font-weight-bold status-bar-value odometer odometer-theme-minimal"></div>
                         <div class="sm-font-size">новых заказов</div>
                     </div>
                     <div class="setting-item count-success-order">
-                        <div class="bg-font-size font-weight-bold success-color status-bar-value"></div>
+                        <div class="bg-font-size font-weight-bold success-color status-bar-value odometer odometer-theme-minimal"></div>
                         <div class="sm-font-size">оформленно заказов</div>
                     </div>
                     <div class="setting-item count-cancel-order">
-                        <div class="bg-font-size font-weight-bold fail-color status-bar-value"></div>
+                        <div class="bg-font-size font-weight-bold fail-color status-bar-value odometer odometer-theme-minimal"></div>
                         <div class="sm-font-size">отменено заказов</div>
                     </div>
                     <div class="setting-item today-revenue-order">
-                        <div class="bg-font-size font-weight-bold text-no-wrap status-bar-value"></div>
+                        <div class="bg-font-size font-weight-bold text-no-wrap status-bar-value odometer odometer-theme-minimal"></div>
                         <div class="sm-font-size">выручка (руб.)</div>
                     </div>
                 </div>
                 <div class="order-list-grid">
-                   
-                    <div class="order-item-grid">
-                        <div class="order-item-short-row grid-col-2 border-bottom">
-                            <div class="order-short-row-item order-short-aitems-start border-right ">
-                                <div class="flex-col-center">
-                                    <div class="bg-normal-font-size font-weight-bold text-no-wrap">----
-                                    # 
-                                    <span>10234</span>
-                                    </div>
-                                    <div>номер заказа</div>
-                                </div>
-                            </div>
-                            <div class="order-short-row-item order-short-aitems-end ">
-                                <div class="flex-col-center">
-                                    <div class="bg-normal-font-size font-weight-bold text-no-wrap">12 497<i class="fal fa-ruble-sign sm-font-size"></i></div>
-                                    <div >к оплате</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="order-item-short-row border-bottom " >
-                            <div class="order-short-row-item">
-                                <div class="bg-normal-font-size" >
-                                    <i class="fal fa-phone-office"></i>
-                                </div>
-                                <div class="sm-font-size text-no-wrap" > +7(960)160-59-46</div>
-                            </div>
-                            <div class="order-short-row-item">
-                                <div class="bg-normal-font-size" >
-                                    <i class="fal fa-user-alt"></i>
-                                </div>
-                                <div class="sm-font-size" >Алексей</div>
-                            </div>
-                            <div class="order-short-row-item">
-                                <div class="bg-normal-font-size" >
-                                    <i class="fal fa-hand-holding-box"></i>
-                                </div>
-                                <div class="sm-font-size" >Доставка</div>
-                            </div><div class="order-short-row-item">
-                                <div class="bg-normal-font-size" >
-                                    <i class="fal fa-cash-register"></i>
-                                </div>
-                                <div class="sm-font-size" >Наличиными</div>
-                            </div>
-                        </div>
-                        <div class="order-item-short-row ">
-                            <div class="col-span-4">
-                                <a>
-                                    Подробности заказа
-                                    <i class="fal fa-window-restore"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
 
@@ -1053,8 +999,77 @@
         </div>
     </template>
 
+    <template id="order-item-grid-template">
+        <div class="order-item-grid" style="display:none;">
+            <div class="order-item-short-row grid-col-2 border-bottom">
+
+                <div class="order-short-row-item order-short-aitems-start border-right order-item-number">
+                    <div class="flex-col-center">
+                        <div class="bg-normal-font-size font-weight-bold text-no-wrap">
+                            #
+                            <span class="order-item-value"></span>
+                        </div>
+                        <div>номер заказа</div>
+                    </div>
+                </div>
+
+                <div class="order-short-row-item order-short-aitems-end order-item-amount">
+                    <div class="flex-col-center">
+                        <div class="bg-normal-font-size font-weight-bold text-no-wrap">
+                            <span class="order-item-value"></span>
+                            <i class="fal fa-ruble-sign sm-font-size"></i>
+                        </div>
+                        <div>к оплате</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="order-item-short-row border-bottom ">
+                <div class="order-short-row-item order-item-phone">
+                    <div class="bg-normal-font-size">
+                        <i class="fal fa-phone-office"></i>
+                    </div>
+                    <div class="sm-font-size text-no-wrap order-item-value"></div>
+                </div>
+
+                <div class="order-short-row-item order-item-user-name">
+                    <div class="bg-normal-font-size">
+                        <i class="fal fa-user-alt"></i>
+                    </div>
+                    <div class="sm-font-size order-item-value">Алексей</div>
+                </div>
+
+                <div class="order-short-row-item order-item-type-delivery">
+                    <div class="bg-normal-font-size">
+                        <i class="fal fa-hand-holding-box"></i>
+                    </div>
+                    <div class="sm-font-size order-item-value text-no-wrap"></div>
+                </div>
+
+                <div class="order-short-row-item order-item-type-pay">
+                    <div class="bg-normal-font-size">
+                        <i class="fal fa-cash-register"></i>
+                    </div>
+                    <div class="sm-font-size order-item-value text-no-wrap"></div>
+                </div>
+            </div>
+
+            <div class="order-item-short-row order-item-show-details">
+                <div class="col-span-4">
+                    <a>
+                        Подробности заказа
+                        <i class="fal fa-window-restore"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </template>
+
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/signalr")
+    @Scripts.Render("~/bundles/odometer")
     <script src="~/signalr/hubs"></script>
     <script src="~/Scripts/singnal-logic.js"></script>
     @Scripts.Render("~/bundles/sumoselect")

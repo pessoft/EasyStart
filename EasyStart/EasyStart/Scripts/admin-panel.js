@@ -1722,7 +1722,7 @@ function loadOrders(reload = false) {
                 setEmptyOrders();
             } else {
                 renderOrders(Orders, Pages.Order);
-
+                CardOrderRenderer.renderOrders(Orders);
                 let $orderItems = $(`#${Pages.Order} .order-item`);
                 if ($orderItems.length > 0) {
                     selectOrder($orderItems[0], Pages.Order)
@@ -2229,7 +2229,7 @@ function getHistoryOrderById(orderId) {
             case DeliveryType.TakeYourSelf:
                 deliveryType = "Самовывоз";
                 break;
-            case BuyType.Delivery:
+            case DeliveryType.Delivery:
                 deliveryType = "Доставка курьером";
                 break;
         }
@@ -2271,14 +2271,14 @@ function getHistoryOrderById(orderId) {
 
 function searchByOrderNumber(containerId) {
     let searchNumber = $(`#${containerId} .search-input input`).val();
-    $(`#${containerId} .order-item`).each(function (index, e) {
+    $(`#${containerId} .order-item-grid`).each(function (index, e) {
         let $e = $(e);
         let orderNumber = $e.attr("order-id");
 
         if (orderNumber.includes(searchNumber)) {
-            $e.removeClass("hide");
+            $e.show("scale", {}, 400);
         } else {
-            $e.addClass("hide");
+            $e.hide("scale", {}, 400);
         }
     });
 }
@@ -2338,24 +2338,140 @@ function getCurrentSectionId() {
 class OrderStatusBar {
 
     static setCountNewOrder(value) {
-        this.SetValue(".count-new-order", value);
+        this.setValue(".count-new-order", value);
     }
 
     static setCountSuccessOrder(value) {
-        this.SetValue(".count-success-order", value);
+        this.setValue(".count-success-order", value);
     }
 
     static setCountCancelOrder(value) {
-        this.SetValue(".count-cancel-order", value);
+        this.setValue(".count-cancel-order", value);
     }
 
     static setTodayRevenue(value) {
-        this.SetValue(".today-revenue-order", xFormatPrice(value));
+        this.setValue(".today-revenue-order", getPriceValid(value));
     }
 
-    static SetValue(qSelector, value) {
+    static setValue(qSelector, value) {
         const currentSectionId = getCurrentSectionId();
-        $(`#${currentSectionId} ${qSelector} .status-bar-value`).html(value);
+        const selectorValueContainer = ".status-bar-value";
+        $(`#${currentSectionId} ${qSelector} ${selectorValueContainer}`).html(value);
     }
 }
 
+class CardOrder {
+    /**
+     * 
+     * @param {TodayOrder} cardData
+     */
+    constructor(cardData) {
+        const templateId = "order-item-grid-template";
+        this.data = cardData;
+        this.$htmlTemplate = $($(`#${templateId}`).html());
+    }
+
+    setAttrOrderId(value) {
+        this.$htmlTemplate.attr("order-id", value);
+    }
+
+    setOrderNumber(value) {
+        this.setValue(".order-item-number", value);
+    }
+
+    setAmount(value) {
+        this.setValue(".order-item-amount", value);
+    }
+
+    setPhoneNumber(value) {
+        this.setValue(".order-item-phone", value);
+    }
+
+    setUserName(value) {
+        this.setValue(".order-item-user-name", value);
+    }
+
+    setDeliverType(value) {
+        this.setValue(".order-item-type-delivery", value);
+    }
+
+    setPayType(value) {
+        this.setValue(".order-item-type-pay", value);
+    }
+
+    setValue(qSelector, value) {
+        const selectorValueContainer = ".order-item-value";
+        this.$htmlTemplate.find(`${qSelector} ${selectorValueContainer}`).html(value);
+    }
+
+    setDetailsClickAction(action) {
+        const eSenderContainer = ".order-item-show-details";
+        const $eSender = $(this.$htmlTemplate.find(`${eSenderContainer} a`))
+
+        $eSender.unbind("click");
+        $eSender.bind("click", action);
+    }
+
+    render() {
+        this.setAttrOrderId(this.data.OrderId);
+        this.setOrderNumber(this.data.OrderNumber);
+        this.setAmount(this.data.Amount);
+        this.setPhoneNumber(this.data.PhoneNumber);
+        this.setUserName(this.data.UserName);
+        this.setDeliverType(this.data.DeliveryType);
+        this.setPayType(this.data.PayType);
+        this.setDetailsClickAction(this.data.Action);
+
+        return this.$htmlTemplate;
+    }
+}
+
+class TodayOrder {
+    constructor(order, action) {
+        this.Action = () => { action(order.Id) };
+
+        this.convert(order);
+    }
+
+    convert(order) {
+        this.OrderId = order.Id;
+        this.OrderNumber = order.Id;
+        this.Amount = order.AmountPay;
+        this.PhoneNumber = order.PhoneNumber;
+        this.UserName = order.Name;
+        this.DeliveryType = getDeliveryType(order.DeliveryType);
+        this.PayType = getBuyType(order.BuyType);
+    }
+}
+
+class CardOrderRenderer {
+    static renderOrders(orders) {
+        for (let order of orders) {
+            this.renderOrder(order);
+        }
+    }
+
+    static renderOrder(order) {
+        const todayData = new TodayOrder(order, showOrderDetails);
+        const cardOrder = new CardOrder(todayData);
+
+        this.addCardToPage(cardOrder);
+    }
+
+    static addCardToPage(card) {
+        const currentSectionId = getCurrentSectionId();
+        const cardContainer = ".order-list-grid";
+        const cardRender = card.render()
+
+        $(`#${currentSectionId} ${cardContainer}`).append(cardRender);
+        this.showCard(cardRender);
+    }
+
+    static showCard(cardRender) {
+        $(cardRender).show("scale", {}, 400);
+    }
+}
+
+function showOrderDetails(orderId) {
+
+}

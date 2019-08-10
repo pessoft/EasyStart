@@ -492,6 +492,7 @@ namespace EasyStart.Logic
                     if (order != null)
                     {
                         order.OrderStatus = data.Status;
+                        order.UpdateDate = data.DateUpdate;
                     }
 
                     db.SaveChanges();
@@ -1135,7 +1136,7 @@ namespace EasyStart.Logic
                     db.Orders
                         .Where(p => brandchIds.Contains(p.BranchId) &&
                                     p.OrderStatus != OrderStatus.Processing &&
-                                    DbFunctions.TruncateTime(p.Date) == date.Date)
+                                    DbFunctions.TruncateTime(p.UpdateDate) == date.Date)
                         .ToList()
                         .ForEach(p =>
                         {

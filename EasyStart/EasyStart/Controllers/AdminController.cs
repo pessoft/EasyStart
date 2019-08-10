@@ -699,8 +699,18 @@ namespace EasyStart.Controllers
                 return;
             }
 
-            DataWrapper.UpdateStatusOrder(data);
-        }
+            try
+            {
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
+                var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
+                data.DateUpdate = date;
+
+                DataWrapper.UpdateStatusOrder(data);
+            }
+            catch(Exception ex)
+            { }
+                    }
 
         [HttpPost]
         [Authorize]
@@ -710,7 +720,11 @@ namespace EasyStart.Controllers
 
             try
             {
-                var data = DataWrapper.GetDataOrdersByDate(brnachIds, DateTime.Now);
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
+                var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
+                var data = DataWrapper.GetDataOrdersByDate(brnachIds, date);
+
                 result.Data = data;
                 result.Success = true;
             }

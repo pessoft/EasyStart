@@ -7,6 +7,7 @@
         showCountOrder(Orders.length);
         notifySoundNewOrder();
         renderOrder(newOrder);
+        CardOrderRenderer.renderOrder(newOrder);
     };
 
     $.connection.hub.start().done(function () {
