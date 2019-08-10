@@ -791,9 +791,93 @@
         </div>
     </dialog>
 
-    <dialog id="orderDetailsDialog">
-        <div class="order-details-wrapper">
 
+    <dialog id="orderDetailsDialog" class="default-color">
+        <div class="order-details-wrapper">
+            <div class="order-details-full-info order-details-block"></div>
+
+            <div class="order-details-short-info order-details-block">
+
+                <div class="order-details-short-info-item ">
+                    <div class="flex-col-center">
+                        <div class="bg-small-font-size font-weight-bold text-no-wrap">
+                            <span class="order-item-value">13456</span>
+                            <i class="far fa-ruble-sign sm-x-font-size"></i>
+
+                        </div>
+                        <div class="sm-font-size">к оплате</div>
+                    </div>
+                </div><div class="order-details-short-info-item">
+                    <div class="bg-normal-font-size">
+                        <i class="far fa-user"></i>
+                    </div>
+                    <div class="sm-font-size order-item-value">Кристина</div>
+                </div>
+                <div class="order-details-short-info-item">
+                    <div class="bg-normal-font-size">
+                        <i class="far fa-phone-office"></i>
+                    </div>
+                    <div class="sm-font-size text-no-wrap order-item-value">+7(920)434-52-94</div>
+                </div>
+
+
+
+                <div class="order-details-short-info-item">
+                    <div class="bg-normal-font-size">
+                        <i class="far fa-hand-holding-box"></i>
+                    </div>
+                    <div class="sm-font-size order-item-value text-no-wrap">Самовывоз</div>
+                </div>
+
+                <div class="order-details-short-info-item">
+                    <div class="bg-normal-font-size">
+                        <i class="far fa-cash-register"></i>
+                    </div>
+                    <div class="sm-font-size order-item-value text-no-wrap">Наличные</div>
+                </div>
+
+            </div>
+
+            <div class="order-details-products order-details-block"></div>
+
+            <div class="order-details-number-date order-details-block">
+
+                <div class="order-details-number border-right">
+                    <div class="flex-col-center">
+                        <div class="bg-small-font-size font-weight-bold text-no-wrap">
+                            #
+                            <span class="order-details-value">1327</span>
+                        </div>
+                        <div class="sm-font-size">номер заказа</div>
+                    </div>
+                </div>
+
+                <div class="order-details-date">
+                    <div class="flex-col-center">
+                        <div class="font-weight-bold text-no-wrap">
+                            <i class="far fa-calendar-alt"></i>
+                            <span class="order-details-value sm-x-font-size">10:50 10.07.2019</span>
+                        </div>
+                        <div class="sm-font-size">дата заказа</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="order-details-menu order-details-block">
+                <button class="order-details-menu-item border-right default-color btn-details-applay" style="
+">
+                    <i class="far fa-layer-plus"></i>Подтвердить
+                </button>
+                <button class="order-details-menu-item border-right default-color btn-details-cancel" style="
+">
+                    <i class="far fa-layer-minus"></i>Отменить
+                </button>
+                <button class="order-details-menu-item  default-color btn-details-close" onclick="Dialog.close($('#orderDetailsDialog'))" style="
+">
+                    <i class="far fa-share-square"></i>Закрыть
+                </button>
+            </div>
         </div>
     </dialog>
 
@@ -1023,7 +1107,7 @@
                     <div class="flex-col-center">
                         <div class="bg-normal-font-size font-weight-bold text-no-wrap">
                             <span class="order-item-value"></span>
-                            <i class="fal fa-ruble-sign sm-font-size"></i>
+                            <i class="far fa-ruble-sign sm-font-size"></i>
                         </div>
                         <div>к оплате</div>
                     </div>
