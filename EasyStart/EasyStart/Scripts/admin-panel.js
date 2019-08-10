@@ -7,7 +7,8 @@
             let addCategoryDialog = $(`#${dialogId}`);
 
             if (!predicate || predicate()) {
-                addCategoryDialog.trigger("showModal");
+                Dialog.showModal(addCategoryDialog);
+                //addCategoryDialog.trigger("showModal");
             }
 
             if (additionalFunc) {
@@ -308,7 +309,8 @@ function cancelDialog(e) {
     dialog.find("img").addClass("hide");
     dialog.find("option").removeAttr("selected");
     dialog.find("select").val("0")
-    dialog.trigger("close")
+    //dialog.trigger("close")
+    Dialog.close(dialog);
 }
 
 function operationCategory() {
@@ -400,7 +402,8 @@ function editStock(id) {
         dialog.find(".dialog-image-upload").addClass("hide");
     }
 
-    dialog.trigger("showModal");
+    //dialog.trigger("showModal");
+    Dialog.showModal(dialog);
 }
 
 function isVisibleStock(id) {
@@ -696,7 +699,8 @@ function editCategory(e, event) {
         dialog.find(".dialog-image-upload").addClass("hide");
     }
 
-    dialog.trigger("showModal");
+    //dialog.trigger("showModal");
+    Dialog.showModal(dialog);
 }
 
 function removeCategory(e, event) {
@@ -1118,7 +1122,8 @@ function editProduct(e, event) {
         dialog.find(".dialog-image-upload").addClass("hide");
     }
 
-    dialog.trigger("showModal");
+    //dialog.trigger("showModal");
+    Dialog.showModal(dialog);
 }
 
 function deleteConfirmation(callback) {
@@ -1134,7 +1139,8 @@ function deleteConfirmation(callback) {
     $dialog.find(".btn-submit").unbind("click");
     $dialog.find(".btn-submit").bind("click", clickFunc);
 
-    $dialog.trigger("showModal");
+    //$dialog.trigger("showModal");
+    Dialog.showModal(dialog);
 }
 
 function removeProduct(e, event) {
@@ -1628,7 +1634,8 @@ function openProductUserCallback(e, event) {
             setEmptyReview();
         }
 
-        $dialog.trigger("showModal");
+        //$dialog.trigger("showModal");
+        Dialog.showModal($dialog);
 
         loader.stop();
     };
@@ -2473,5 +2480,28 @@ class CardOrderRenderer {
 }
 
 function showOrderDetails(orderId) {
+    const detailsDialogId = "orderDetailsDialog";
+    const $dialog = $(`#${detailsDialogId}`);
 
+    //$dialog.trigger("showModal");
+    Dialog.showModal($dialog);
+}
+
+var  Dialog  = {
+    transition: null,
+    showModal: ($dialog) => {
+        $dialog = $($dialog);
+
+        $dialog.trigger("showModal");
+        this.transition = setTimeout(function () {
+            $dialog.addClass('dialog-scale');
+        }, 0.5);
+    },
+    close: ($dialog) => {
+        $dialog = $($dialog);
+
+        $dialog.trigger("close");
+        $dialog.removeClass('dialog-scale');
+        clearTimeout(this.transition);
+    }
 }

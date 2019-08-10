@@ -136,8 +136,8 @@ dialog form {
 
 dialog {
     border: none;
-    box-shadow: 1px 1px 10px 0px;
-    border-radius: 2px;
+    box-shadow: 0px 0px 8px 1px #0d1b2d61;
+    border-radius: 3px;
 }
 
     dialog img {
@@ -2055,3 +2055,19 @@ search-group-item search-group-ico {
 .grid-col-2 {
     grid-template-columns: 1fr 1fr;
 }
+
+.order-details-wrapper {
+    width: 975px;
+    height: 600px;
+}
+
+dialog {
+    visibility: hidden;
+    transform: scale(0.1);
+    transition: transform 200ms;
+}
+
+    dialog.dialog-scale {
+        visibility: visible;
+        transform: scale(1);
+    }
