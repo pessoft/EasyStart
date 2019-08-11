@@ -1967,7 +1967,7 @@ search-group-item search-group-ico {
 }
 
 .success-color {
-    color: #4CAF50;
+    color: #319857;
 }
 
 .fail-color {
@@ -2080,8 +2080,8 @@ dialog {
     width: 975px;
     height: 600px;
     display: grid;
-    grid-template-columns: 335px 310px 300px;
-    grid-template-rows: 90px 1fr 70px;
+    grid-template-columns: 350px 295px 300px;
+    grid-template-rows: 1fr 70px;
     grid-gap: 15px;
 }
 
@@ -2092,16 +2092,12 @@ dialog {
 }
 
 .order-details-full-info {
-    grid-row: span 3;
-}
-
-.order-details-short-info {
-    grid-column: span 2;
+    grid-row: span 2;
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: 1fr;
-    align-items: center;
-    justify-items: center;
+    grid-template-columns: 1fr;
+    grid-template-rows: 0.8fr 2.7fr 3fr;
+    grid-row-gap: 15px;
+    box-shadow: none;
 }
 
 .order-details-products {
@@ -2137,7 +2133,7 @@ button.order-details-menu-item i {
 }
 
 .btn-details-applay:hover {
-    color: #4CAF50;
+    color: #319857;
     transition: 0.8s;
 }
 
@@ -2157,12 +2153,68 @@ button.order-details-menu-item i {
     align-items: center;
 }
 
-.order-details-short-info-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 60%;
-    border-right: 1px solid #bdbdbd2b;
+.order-detailt-short {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
 }
+
+.order-details-short-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+}
+
+    .order-details-short-item i {
+        font-size: 1.5em;
+    }
+
+    .order-details-short-item span {
+        font-size: 0.7em;
+        margin-top: 6px;
+    }
+
+.order-details-full-info-block {
+    border-radius: 2px;
+    box-shadow: 0px 0px 5px 1px #0f1e322b;
+}
+
+.order-details-item {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(6,1fr);
+    padding: 20px 0;
+}
+
+.order-details-header {
+    font-weight: bold;
+    font-size: 1.3em;
+    padding: 0px 15px;
+    color: #505050;
+}
+
+.order-details-price-item {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    grid-template-rows: 1fr;
+    align-items: center;
+    border-bottom: 1px solid #bdbdbd2b;
+    margin: 0px 30px;
+}
+
+.order-details-price-label {
+    font-size: 0.93em;
+}
+
+.order-details-price-value {
+    justify-self: flex-end;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.order-details-address {
+    grid-template-rows: repeat(7,1fr);
+}
+
