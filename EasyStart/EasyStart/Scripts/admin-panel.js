@@ -1741,7 +1741,7 @@ function loadOrders(reload = false) {
                 setEmptyOrders();
             } else {
                 renderOrders(Orders, Pages.Order);
-                CardOrderRenderer.renderOrders(Orders, 800);
+                CardOrderRenderer.renderOrders(Orders, 600);
                 let $orderItems = $(`#${Pages.Order} .order-item`);
                 if ($orderItems.length > 0) {
                     selectOrder($orderItems[0], Pages.Order)
@@ -2468,7 +2468,7 @@ class CardOrderRenderer {
         let index = 0;
         for (let order of orders) {
             ++index
-            if (index > 4) {
+            if (index > 6) {
                 speed = 1;
             }
 
@@ -2493,7 +2493,10 @@ class CardOrderRenderer {
     }
 
     static showCard(cardRender, speed) {
-        $(cardRender).show("scale", {}, speed || 400);
+        if (speed == 1) 
+            $(cardRender).show();
+        else
+            $(cardRender).show("scale", {}, speed || 400);
     }
 }
 
