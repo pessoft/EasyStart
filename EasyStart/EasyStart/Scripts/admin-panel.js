@@ -1,6 +1,7 @@
 ﻿$(document).ready(function () {
     bindSelectSumo();
     initHistoryOrderDatePicker();
+    bindDialogCloseClickBackdor();
 
     let bindShowModal = function (id, dialogId, additionalFunc, predicate) {
         $(`#${id}`).bind("click", function () {
@@ -54,6 +55,17 @@
         loadOrders();
     }
 });
+
+function bindDialogCloseClickBackdor() {
+    $("dialog").bind('click', function (event) {
+        var rect = this.getBoundingClientRect();
+        var isInDialog = (rect.top <= event.clientY && event.clientY <= rect.top + rect.height
+            && rect.left <= event.clientX && event.clientX <= rect.left + rect.width);
+        if (!isInDialog) {
+            Dialog.close($(this));
+        }
+    });
+}
 
 const Pages = {
     Order: 'order',
@@ -1729,7 +1741,7 @@ function loadOrders(reload = false) {
                 setEmptyOrders();
             } else {
                 renderOrders(Orders, Pages.Order);
-                CardOrderRenderer.renderOrders(Orders);
+                CardOrderRenderer.renderOrders(Orders, 800);
                 let $orderItems = $(`#${Pages.Order} .order-item`);
                 if ($orderItems.length > 0) {
                     selectOrder($orderItems[0], Pages.Order)
@@ -2452,30 +2464,36 @@ class TodayOrder {
 }
 
 class CardOrderRenderer {
-    static renderOrders(orders) {
+    static renderOrders(orders, speed) {
+        let index = 0;
         for (let order of orders) {
-            this.renderOrder(order);
+            ++index
+            if (index > 4) {
+                speed = 1;
+            }
+
+            this.renderOrder(order, speed);
         }
     }
 
-    static renderOrder(order) {
+    static renderOrder(order, speed) {
         const todayData = new TodayOrder(order, showOrderDetails);
         const cardOrder = new CardOrder(todayData);
 
-        this.addCardToPage(cardOrder);
+        this.addCardToPage(cardOrder, speed); 
     }
 
-    static addCardToPage(card) {
+    static addCardToPage(card, speed) {
         const currentSectionId = getCurrentSectionId();
         const cardContainer = ".order-list-grid";
         const cardRender = card.render()
 
         $(`#${currentSectionId} ${cardContainer}`).append(cardRender);
-        this.showCard(cardRender);
+        this.showCard(cardRender, speed);
     }
 
-    static showCard(cardRender) {
-        $(cardRender).show("scale", {}, 400);
+    static showCard(cardRender, speed) {
+        $(cardRender).show("scale", {}, speed || 400);
     }
 }
 

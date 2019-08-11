@@ -2102,6 +2102,10 @@ dialog {
 
 .order-details-products {
     grid-column: span 2;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 450px;
+    padding: 20px 5px;
 }
 
 .order-details-menu {
@@ -2218,3 +2222,41 @@ button.order-details-menu-item i {
     grid-template-rows: repeat(7,1fr);
 }
 
+.order-details-product-list {
+    display: grid;
+    padding: 0 25px;
+    margin: 10px 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    grid-template-columns: 1fr;
+    grid-auto-rows: 55px;
+    grid-row-gap: 15px;
+}
+
+.order-details-product-item {
+    display: grid;
+    grid-template-columns: 55px 1fr;
+    grid-template-rows: 1fr;
+    align-items: center;
+    grid-column-gap: 8px;
+    font-size: 0.9em;
+}
+
+.order-details-product-img img {
+    width: 90%;
+    border-radius: 2px;
+    cursor: default;
+}
+
+.order-details-product-name-price {
+    width: 98%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 2.7fr 1fr;
+    grid-template-rows: 1fr;
+    align-items: center;
+}
+
+.grid-justify-self-flex-end {
+    justify-self: flex-end;
+}
