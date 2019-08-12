@@ -1807,8 +1807,8 @@ function loadHistoryOrders() {
 
     $.post("/Admin/LoadHistoryOrders", {
         BranchIds: brnachIds,
-        StartDate: OrderHistoryDatePicker.minRange.toGMTString(),
-        EndDate: OrderHistoryDatePicker.maxRange.toGMTString(),
+        StartDate: OrderHistoryDatePicker.minRange.toJSON(),
+        EndDate: OrderHistoryDatePicker.maxRange.toJSON(),
 
     }, successCallBack(successFunc, loader));
 }
