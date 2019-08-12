@@ -2195,6 +2195,7 @@ button.order-details-menu-item i {
     }
 
 .order-details-full-info-block {
+    align-items: center;
     border-radius: 2px;
     box-shadow: 0px 0px 5px 1px #0f1e322b;
 }
@@ -2286,4 +2287,8 @@ button.order-details-menu-item i {
 
 .margin-top5 {
     margin-top:5px;
+}
+
+button:disabled, button:disabled:hover {
+    color: #adadad;
 }

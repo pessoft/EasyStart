@@ -1798,6 +1798,8 @@ function loadHistoryOrders() {
                 clearOrdersContainer(Pages.HistoryOrder);
                 CardOrderRenderer.renderOrders(HistoryOrders, Pages.HistoryOrder, 600);
             }
+
+            changeHistoryOrderDataForStatusBar();
         } else {
             showErrorMessage(data.ErrorMessage);
         }
@@ -2321,6 +2323,10 @@ function searchByOrderNumber(containerId, isAnimation = true) {
                 $e.hide();
         }
     });
+
+    if (containerId == Pages.HistoryOrder) {
+        changeHistoryOrderDataForStatusBar();
+    }
 }
 
 function showCountOrder(count) {
@@ -2363,6 +2369,25 @@ function getTodayDataOrders(containerId) {
     }
 
     $.post("/Admin/GetTodayOrderData", { brnachIds: brnachIds }, successCallBack(successFunct));
+}
+
+function changeHistoryOrderDataForStatusBar() {
+    let historyOrderData = {
+        CountSuccesOrder: 0,
+        CountCancelOrder: 0,
+        Revenue: 0
+    }
+
+    HistoryOrders.forEach(v => {
+        if (v.OrderStatus == OrderStatus.Processed) {
+            ++historyOrderData.CountSuccesOrder;
+            historyOrderData.Revenue += v.AmountPayDiscountDelivery;
+        } else {
+            ++historyOrderData.CountCancelOrder;
+        }
+    })
+
+    setTodayDataOrders(historyOrderData, Pages.HistoryOrder)
 }
 
 function setTodayDataOrders(data, containerId) {
@@ -2477,8 +2502,9 @@ class CardOrder {
         this.$htmlTemplate.attr("order-id", value);
     }
 
-    setOrderNumber(value) {
+    setOrderNumber(value, status) {
         this.setValue(".order-item-number", value);
+        this.markNumberOrder(".order-item-number", status);
     }
 
     setAmount(value) {
@@ -2514,9 +2540,28 @@ class CardOrder {
         $eSender.bind("click", action);
     }
 
+    markNumberOrder(qSelector, status) {
+        const selectorLabelContainer = ".order-item-label";
+        let label = "";
+
+        switch (status) {
+            case OrderStatus.Processed:
+                label = StatusAtrr.Processed.numberOrderMark;
+                break;
+            case OrderStatus.Cancellation:
+                label = StatusAtrr.Cancellation.numberOrderMark;
+                break;
+            default:
+                label = StatusAtrr.Processing.numberOrderMark;
+                break;
+        }
+
+        this.$htmlTemplate.find(`${qSelector} ${selectorLabelContainer}`).html(label);
+    }
+
     render() {
         this.setAttrOrderId(this.data.OrderId);
-        this.setOrderNumber(this.data.OrderNumber);
+        this.setOrderNumber(this.data.OrderNumber, this.data.Status);
         this.setAmount(this.data.Amount);
         this.setPhoneNumber(this.data.PhoneNumber);
         this.setUserName(this.data.UserName);
@@ -2537,6 +2582,7 @@ class TodayOrder {
 
     convert(order) {
         this.OrderId = order.Id;
+        this.Status = order.OrderStatus;
         this.OrderNumber = order.Id;
         this.Amount = xFormatPrice(order.AmountPayDiscountDelivery);
         this.PhoneNumber = order.PhoneNumber;
@@ -2598,6 +2644,7 @@ class OrderDetailsData {
     convertBaseInfo(order) {
         this.OrderId = order.Id;
         this.OrderNumber = order.Id;
+        this.Status = order.OrderStatus;
         this.OrderDate = toStringDateAndTime(order.Date);
     }
 
@@ -2615,7 +2662,7 @@ class OrderDetailsData {
         this.DeliveryPrice = `${xFormatPrice(order.DeliveryPrice)} ${prefixRub}`;
         this.Discount = order.Discount == 0 ? `0${prefixPercent}` : `${order.Discount}${prefixPercent} (${xFormatPrice(order.AmountPay * order.Discount / 100)} ${prefixRub})`
         this.PayType = getBuyType(order.BuyType);
-        this.CashBack = `${xFormatPrice(order.CashBack)} ${prefixRub}`;
+        this.CashBack = order.CashBack > 0 ? `${xFormatPrice(order.CashBack - order.AmountPayDiscountDelivery)} ${prefixRub}`:`${xFormatPrice(order.CashBack)} ${prefixRub}`;
         this.AmountPayDiscountDelivery = `${xFormatPrice(order.AmountPayDiscountDelivery)} ${prefixRub}`;
     }
 
@@ -2663,7 +2710,8 @@ class OrderDetailsData {
 }
 
 var OrderDetailsQSelector = {
-    OderNumber: ".order-details-number .value",
+    OrderNumberBlock: ".order-details-number",//в истории заказов помечаем цветом оформленный или не оформленный ордер
+    OrderNumber: ".order-details-number .value",
     OrderDate: ".order-details-date .value",
     UserName: ".order-details-short-user-name .value",
     PhoneNumber: ".order-details-short-phone .value",
@@ -2685,6 +2733,20 @@ var OrderDetailsQSelector = {
     Comment: ".order-details-comment .value",
     ApplyBtn: ".order-details-menu .btn-details-apply",
     CancelBtn: ".order-details-menu .btn-details-cancel"
+}
+
+var StatusAtrr = {
+    Processed: {
+        cssColorClass: "success-color",
+        numberOrderMark: `<i class="fal fa-check-double sm-font-size"></i>`
+    },
+    Cancellation: {
+        cssColorClass: "fail-color",
+        numberOrderMark: `<i class="fal fa-trash-alt sm-font-size"></i>`
+    },
+    Processing: {
+        cssColorClass: "default-color",
+        numberOrderMark: `#`}
 }
 
 class OrderDetails {
@@ -2720,8 +2782,32 @@ class OrderDetails {
         this.setOrderListInfo();
     }
 
+    markOrderNumberColorStatus(status) {
+        const $block = this.$dialog.find(OrderDetailsQSelector.OrderNumberBlock);
+        let colorClass = ""
+
+        $block.removeClass(StatusAtrr.Processed.cssColorClass);
+        $block.removeClass(StatusAtrr.Cancellation.cssColorClass);
+        $block.removeClass(StatusAtrr.Processing.cssColorClass);
+
+        switch (status) {
+            case OrderStatus.Processed:
+                colorClass = StatusAtrr.Processed.cssColorClass;
+                break;
+            case OrderStatus.Cancellation:
+                colorClass = StatusAtrr.Cancellation.cssColorClass;
+                break;
+            default:
+                colorClass = StatusAtrr.Processing.cssColorClass;
+                break;
+        }
+
+        $block.addClass(colorClass);
+    }
+
     setBaseInfo() {
-        this.setValue(OrderDetailsQSelector.OderNumber, this.details.OrderNumber);
+        this.markOrderNumberColorStatus(this.details.Status);
+        this.setValue(OrderDetailsQSelector.OrderNumber, this.details.OrderNumber);
         this.setValue(OrderDetailsQSelector.OrderDate, this.details.OrderDate);
     }
 
@@ -2769,6 +2855,8 @@ class OrderDetails {
             $proccesed.attr("disabled", true);
             $cancel.attr("disabled", true);
         } else {
+            $proccesed.removeAttr("disabled");
+            $cancel.removeAttr("disabled");
             $proccesed.bind("click", actionOrder(OrderStatus.Processed));
             $cancel.bind("click", actionOrder(OrderStatus.Cancellation));
         }

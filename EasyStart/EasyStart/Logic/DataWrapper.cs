@@ -721,8 +721,8 @@ namespace EasyStart.Logic
                     orders = db.Orders
                         .Where(p => brandchIds.Contains(p.BranchId) &&
                                     p.OrderStatus != OrderStatus.Processing &&
-                                    DbFunctions.TruncateTime(p.Date) >= startDate.Date &&
-                                    DbFunctions.TruncateTime(p.Date) <= endDate.Date)
+                                    DbFunctions.TruncateTime(p.UpdateDate) >= startDate.Date &&
+                                    DbFunctions.TruncateTime(p.UpdateDate) <= endDate.Date)
                         .ToList();
                 }
             }
