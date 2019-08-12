@@ -1768,6 +1768,10 @@ function loadOrders(reload = false) {
 
 var HistoryOrders = [];
 
+function clearOrdersContainer(containerId) {
+    $(`#${containerId} .order-list-grid`).empty();
+}
+
 function loadHistoryOrders() {
     setEmptyOrderInfo(Pages.HistoryOrder);
 
@@ -1791,6 +1795,8 @@ function loadHistoryOrders() {
                 setEmptyHistoryOrders();
             } else {
                 renderOrders(HistoryOrders, Pages.HistoryOrder);
+                clearOrdersContainer(Pages.HistoryOrder);
+                CardOrderRenderer.renderOrders(HistoryOrders, Pages.HistoryOrder, 600);
             }
         } else {
             showErrorMessage(data.ErrorMessage);

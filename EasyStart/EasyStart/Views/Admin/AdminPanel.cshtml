@@ -73,7 +73,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="sm-font-size">
+                        <div class="sm-font-size margin-top5">
                             поиск заказа
                         </div>
                     </div>
@@ -192,7 +192,53 @@
             </div>
         </div>
         <div class="section hide" id="history">
-            <div class="order-wrapper">
+            <div class="order-wrapper-grid">
+                <div class="order-settings">
+                    <div class="setting-item">
+                        <div class="additional-order-item search-input">
+                            <div class="search-group">
+                                <div class="search-group-item search-group-input">
+                                    <input oninput="searchByOrderNumber('order')" placeholder="Введите номер заказа...">
+                                </div>
+                                <div class="search-group-item search-group-ico hide">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sm-font-size margin-top5">
+                            поиск заказа
+                        </div>
+                    </div>
+
+                    <div class="setting-item order-history-period">
+                        <i class="fal fa-calendar-alt bg-normal-font-size"></i>
+                        <div class="additional-order-item datepicker-input">
+                            <div>
+                                <div class="group">
+                                    <input required="" id="order-history-period" class="default-color super-sm-font-size">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting-item count-success-order">
+                        <div class="bg-font-size font-weight-bold success-color status-bar-value odometer odometer-theme-minimal">
+                        </div>
+                        <div class="sm-font-size">оформленно заказов</div>
+                    </div>
+                    <div class="setting-item count-cancel-order">
+                        <div class="bg-font-size font-weight-bold fail-color status-bar-value odometer odometer-theme-minimal"></div>
+                        <div class="sm-font-size">отменено заказов</div>
+                    </div>
+                    <div class="setting-item today-revenue-order">
+                        <div class="bg-font-size font-weight-bold text-no-wrap status-bar-value odometer odometer-theme-minimal"></div>
+                        <div class="sm-font-size">выручка (руб.)</div>
+                    </div>
+                </div>
+                <div class="order-list-grid">
+                </div>
+            </div>
+            <div class="order-wrapper hide">
                 <div class="orders">
                     <div class="orders-header">
                         <div class="order-header-text">
@@ -206,7 +252,7 @@
                                         Период:
                                     </span>
                                     <div class="group">
-                                        <input required id="order-history-period" />
+                                        @*<input required id="order-history-period" />*@
                                         <i class="fal fa-calendar-alt"></i>
                                     </div>
                                 </div>

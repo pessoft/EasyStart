@@ -1679,7 +1679,7 @@ div.take-info-item:nth-child(odd) {
 }
 
 .datepicker-input .group {
-    width: 54%;
+    /*width: 54%;*/
     cursor: pointer;
     margin-top: 0;
 }
@@ -2273,4 +2273,17 @@ button.order-details-menu-item i {
 
 .grid-justify-self-flex-end {
     justify-self: flex-end;
+}
+
+.datepicker-input {
+    height: 6px;
+    margin-top: 15px;
+}
+
+.super-sm-font-size {
+    font-size: 0.75em;
+}
+
+.margin-top5 {
+    margin-top:5px;
 }
