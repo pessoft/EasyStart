@@ -178,6 +178,16 @@
             this;
         }
 
+        Odometer.prototype.toStringPrice = function (num) {
+            var str = num.toString();
+
+            if (!isInteger(num)) {
+                str = num.toFixed(2);
+            }
+
+            return str;
+        };
+
         Odometer.prototype.renderInside = function () {
             this.inside = document.createElement('div');
             this.inside.className = 'odometer-inside';
@@ -336,7 +346,7 @@
                 }
             } else {
                 wholePart = !this.format.precision || !fractionalPart(value) || false;
-                _ref1 = value.toString().split('').reverse();
+                _ref1 = this.toStringPrice(value).split('').reverse();
                 for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
                     digit = _ref1[_j];
                     if (digit === '.') {
@@ -480,13 +490,15 @@
             return Math.ceil(Math.log(max + 1) / Math.log(10));
         };
 
+
+
         Odometer.prototype.getFractionalDigitCount = function () {
             var i, parser, parts, value, values, _i, _len;
             values = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-            parser = /^\-?\d*\.(\d*?)0*$/;
+            parser = /^\-?\d*\.(\d*?0+)$/;
             for (i = _i = 0, _len = values.length; _i < _len; i = ++_i) {
                 value = values[i];
-                values[i] = value.toString();
+                values[i] = this.toStringPrice(value);
                 parts = parser.exec(values[i]);
                 if (parts == null) {
                     values[i] = 0;

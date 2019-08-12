@@ -7,7 +7,8 @@
         showCountOrder(Orders.length);
         notifySoundNewOrder();
         renderOrder(newOrder);
-        CardOrderRenderer.renderOrder(newOrder);
+        removeEmptyOrders(Pages.Order);
+        CardOrderRenderer.renderOrder(newOrder, Pages.Order);
     };
 
     $.connection.hub.start().done(function () {

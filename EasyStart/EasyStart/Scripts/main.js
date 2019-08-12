@@ -39,6 +39,10 @@ function xFormatPrice(_number) {
     var decpoint = '.';
     var format_string = '# ';
 
+    if (!isInteger(_number)) {
+        decimal = 2;
+    }
+
     var r = parseFloat(_number)
 
     var exp10 = Math.pow(10, decimal);// приводим к правильному множителю

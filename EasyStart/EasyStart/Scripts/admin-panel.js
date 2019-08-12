@@ -287,7 +287,7 @@ function loadAnalyticsReport() {
 
 function resetSearchForOrderNumber(containerId) {
     clearSearchInput(containerId);
-    searchByOrderNumber(containerId);
+    searchByOrderNumber(containerId, false);
 }
 
 function clearSearchInput(containerId) {
@@ -1677,15 +1677,23 @@ function loadProductReviews(productId, callback) {
 }
 
 
-function setEmptyOrders() {
+function setEmptyOrders(containerId) {
+    containerId = containerId || getCurrentSectionId();
     let template = `
         <div class="empty-list">
-            <i class="fal fa-user-clock"></i>
+            <div class="empty-list-animation">
+            <img src="../Images/loader-empty-order.gif"/>
+            </div>
             <span>Пока нет ни одного заказа</span>
         </div>
     `;
 
-    $("#order .order-list").append(template);
+    $(`#${containerId} .order-list-grid`).append(template);
+}
+
+function removeEmptyOrders(containerId) {
+    containerId = containerId || getCurrentSectionId();
+    $(`#${containerId} .order-list-grid .empty-list`).remove();
 }
 
 function setEmptyHistoryOrders() {
@@ -1699,15 +1707,16 @@ function setEmptyHistoryOrders() {
     $("#history .order-list").append(template);
 }
 
-function setEmptyOrderInfo(containerId) {
-    let template = `
-        <div class="empty-list">
-            <i class="fal fa-info"></i>
-            <span>Что бы увидеть информацию о заказе, выберите нужный из колонки "Заказы"</span>
-        </div>
-    `;
+function setEmptyOrderInfo() {
+    //const containerId = getCurrentSectionId();
+    //let template = `
+    //    <div class="empty-list">
+    //        <i class="fal fa-info"></i>
+    //        <span>Что бы увидеть информацию о заказе, выберите нужный из колонки "Заказы"</span>
+    //    </div>
+    //`;
 
-    $(`#${containerId} .order-description`).append(template);
+    //$(`#${containerId} .order-list-grid`).append(template);
 }
 
 function getCurrentBranchId() {
@@ -1736,12 +1745,12 @@ function loadOrders(reload = false) {
         if (data.Success) {
             Orders = processingOrders(data.Data.Orders);
             showCountOrder(Orders.length);
-            setTodayDataOrders(data.Data.TodayData);
+            setTodayDataOrders(data.Data.TodayData, Pages.Order);
             if (Orders.length == 0) {
                 setEmptyOrders();
             } else {
                 renderOrders(Orders, Pages.Order);
-                CardOrderRenderer.renderOrders(Orders, 600);
+                CardOrderRenderer.renderOrders(Orders, Pages.Order, 600);
                 let $orderItems = $(`#${Pages.Order} .order-item`);
                 if ($orderItems.length > 0) {
                     selectOrder($orderItems[0], Pages.Order)
@@ -2095,17 +2104,17 @@ function getProductIdsForLoad(order) {
     return ids;
 }
 
-    function isInteger(num) {
-        return (num ^ 0) === num;
+function isInteger(num) {
+    return (num ^ 0) === num;
+}
+
+function getPriceValid(num) {
+    if (!isInteger(num)) {
+        num = num.toFixed(2);
     }
 
-    function getPriceValid(num) {
-        if (!isInteger(num)) {
-            num = num.toFixed(2);
-        }
-
-        return num;
-    }
+    return num;
+}
 
 function getProductIndexFromOrderCategory(productId) {
     let indexResult = 0;
@@ -2124,65 +2133,65 @@ function getProductIndexFromOrderCategory(productId) {
     return indexResult;
 }
 
-    function getDataOrderStr(order) {
-        let prefixRub = "руб.";
-        let prefixPercent = "%";
-        let prefixCount = "шт.";
-        let getProductsStr = () => {
-            let products = [];
-            for (let productId in order.ProductCount) {
-                let product = OrderProducts[productId];
-                let obj = {
-                    Index: `${getProductIndexFromOrderCategory(parseInt(productId))}.`,
-                    Name: product.Name,
-                    Count: `${order.ProductCount[productId]} ${prefixCount}`,
-                    Price: `${product.Price} ${prefixRub}`
-                }
-
-                products[productId] = obj;
+function getDataOrderStr(order) {
+    let prefixRub = "руб.";
+    let prefixPercent = "%";
+    let prefixCount = "шт.";
+    let getProductsStr = () => {
+        let products = [];
+        for (let productId in order.ProductCount) {
+            let product = OrderProducts[productId];
+            let obj = {
+                Index: `${getProductIndexFromOrderCategory(parseInt(productId))}.`,
+                Name: product.Name,
+                Count: `${order.ProductCount[productId]} ${prefixCount}`,
+                Price: `${product.Price} ${prefixRub}`
             }
 
-            return products;
-        };
-
-        let street = order.DeliveryType == DeliveryType.Delivery ? order.Street : $("#setting-street").val();
-        let homeNumber = order.DeliveryType == DeliveryType.Delivery ? order.HomeNumber : $("#setting-home").val();
-        let deliveryPrice = order.DeliveryPrice == 0 ? "Бесплатно" : `${getPriceValid(order.DeliveryPrice)} ${prefixRub}`;
-        let discount = order.Discount == 0 ? `0${prefixPercent}` : `${order.Discount}${prefixPercent} (${getPriceValid(order.AmountPay * order.Discount / 100)} ${prefixRub})`
-        let dataStr = {
-            amountPay: `${getPriceValid(order.AmountPay)} ${prefixRub}`,
-            amountPayDiscountDelivery: `${getPriceValid(order.AmountPayDiscountDelivery)} ${prefixRub}`,
-            apartamentNumber: order.ApartamentNumber,
-            buyType: getBuyType(order.BuyType),
-            cashBack: `Нужна сдача с ${order.CashBack} ${prefixRub}:`,
-            cashBackNumber: `${getPriceValid(order.CashBack - order.AmountPayDiscountDelivery)} ${prefixRub}`,
-            city: getCityNameById(order.CityId),
-            comment: order.Comment,
-            date: toStringDateAndTime(order.Date),
-            deliveryType: order.DeliveryType,
-            discount: discount,
-            entranceNumber: order.EntranceNumber,
-            homeNumber: homeNumber,
-            orderNumber: `№ ${order.Id}`,
-            intercomCode: order.IntercomCode,
-            level: order.Level,
-            name: order.Name,
-            needCashBack: order.NeedCashBack,
-            phoneNumber: order.PhoneNumber,
-            products: getProductsStr(),
-            street: street,
-            deliveryPrice: deliveryPrice,
-            level: order.Level
+            products[productId] = obj;
         }
 
-        return dataStr;
+        return products;
+    };
+
+    let street = order.DeliveryType == DeliveryType.Delivery ? order.Street : $("#setting-street").val();
+    let homeNumber = order.DeliveryType == DeliveryType.Delivery ? order.HomeNumber : $("#setting-home").val();
+    let deliveryPrice = order.DeliveryPrice == 0 ? "Бесплатно" : `${getPriceValid(order.DeliveryPrice)} ${prefixRub}`;
+    let discount = order.Discount == 0 ? `0${prefixPercent}` : `${order.Discount}${prefixPercent} (${getPriceValid(order.AmountPay * order.Discount / 100)} ${prefixRub})`
+    let dataStr = {
+        amountPay: `${getPriceValid(order.AmountPay)} ${prefixRub}`,
+        amountPayDiscountDelivery: `${getPriceValid(order.AmountPayDiscountDelivery)} ${prefixRub}`,
+        apartamentNumber: order.ApartamentNumber,
+        buyType: getBuyType(order.BuyType),
+        cashBack: `Нужна сдача с ${order.CashBack} ${prefixRub}:`,
+        cashBackNumber: `${getPriceValid(order.CashBack - order.AmountPayDiscountDelivery)} ${prefixRub}`,
+        city: getCityNameById(order.CityId),
+        comment: order.Comment,
+        date: toStringDateAndTime(order.Date),
+        deliveryType: order.DeliveryType,
+        discount: discount,
+        entranceNumber: order.EntranceNumber,
+        homeNumber: homeNumber,
+        orderNumber: `№ ${order.Id}`,
+        intercomCode: order.IntercomCode,
+        level: order.Level,
+        name: order.Name,
+        needCashBack: order.NeedCashBack,
+        phoneNumber: order.PhoneNumber,
+        products: getProductsStr(),
+        street: street,
+        deliveryPrice: deliveryPrice,
+        level: order.Level
     }
 
-    var OrderProducts = {};
-    var OrderCategoryes = {};
-    function loadProductById(ids, callback) {
-        $.post("/Admin/LoadOrderProducts", { ids: ids }, successCallBack(callback, null));
-    }
+    return dataStr;
+}
+
+var OrderProducts = {};
+var OrderCategoryes = {};
+function loadProductById(ids, callback) {
+    $.post("/Admin/LoadOrderProducts", { ids: ids }, successCallBack(callback, null));
+}
 
 function getOrderById(orderId) {
     return baseGetOrderByIrd(Orders, orderId);
@@ -2205,99 +2214,105 @@ function getHistoryOrderById(orderId) {
     return baseGetOrderByIrd(HistoryOrders, orderId);
 }
 
-    function getCityNameById(id) {
-        let $cityItem = $(`#setting-city-list [city-id=${id}]`);
-        let cityName = "";
+function getCityNameById(id) {
+    let $cityItem = $(`#setting-city-list [city-id=${id}]`);
+    let cityName = "";
 
-        if ($cityItem.length != 0) {
-            cityName = $cityItem.val();
-        }
-
-        return cityName;
+    if ($cityItem.length != 0) {
+        cityName = $cityItem.val();
     }
 
-    var BuyType = {
-        Cash: 1,
-        Card: 2
-    }
-
-    function getBuyType(id) {
-        let buyType = "";
-
-        switch (id) {
-            case BuyType.Cash:
-                buyType = "Наличные";
-                break;
-            case BuyType.Card:
-                buyType = "Банковская карта";
-                break;
-        }
-
-        return buyType;
-    }
-
-    var DeliveryType = {
-        TakeYourSelf: 1,
-        Delivery: 2
-    }
-
-    function getDeliveryType(id) {
-        let deliveryType = "";
-
-        switch (id) {
-            case DeliveryType.TakeYourSelf:
-                deliveryType = "Самовывоз";
-                break;
-            case DeliveryType.Delivery:
-                deliveryType = "Доставка курьером";
-                break;
-        }
-
-        return deliveryType;
-    }
-
-    const OrderStatus = {
-        Processing: 0,
-        Processed: 1,
-        Cancellation: 2
-    }
-
-    function changeOrderStatus(orderId, orderStatus) {
-        let $order = $(`#order [order-id=${orderId}]`);
-
-        $order.fadeOut(600, function () {
-            $(this.remove());
-            for (let i = 0; i < Orders.length; ++i) {
-                if (Orders[i].Id == orderId) {
-                    Orders.splice(i, 1);
-                    break;
-                }
-            }
-
-            showCountOrder(Orders.length);
-
-            if (Orders.length == 0) {
-                setEmptyOrders();
-            }
-        });
-
-        setEmptyOrderInfo(Pages.Order);
-        clearOrderDescriptionBlock(Pages.Order);
-        
-
-        $.post("/Admin/UpdateSatsusOrder", { OrderId: orderId, Status: orderStatus }, successCallBack(getTodayDataOrders));
+    return cityName;
 }
 
-function searchByOrderNumber(containerId) {
+var BuyType = {
+    Cash: 1,
+    Card: 2
+}
+
+function getBuyType(id) {
+    let buyType = "";
+
+    switch (id) {
+        case BuyType.Cash:
+            buyType = "Наличные";
+            break;
+        case BuyType.Card:
+            buyType = "Банковская карта";
+            break;
+    }
+
+    return buyType;
+}
+
+var DeliveryType = {
+    TakeYourSelf: 1,
+    Delivery: 2
+}
+
+function getDeliveryType(id) {
+    let deliveryType = "";
+
+    switch (id) {
+        case DeliveryType.TakeYourSelf:
+            deliveryType = "Самовывоз";
+            break;
+        case DeliveryType.Delivery:
+            deliveryType = "Доставка курьером";
+            break;
+    }
+
+    return deliveryType;
+}
+
+const OrderStatus = {
+    Processing: 0,
+    Processed: 1,
+    Cancellation: 2
+}
+
+function changeOrderStatus(orderId, orderStatus) {
+    let $order = $(`#order .order-list-grid [order-id=${orderId}]`);
+
+    $order.hide("scale", {}, 400, function () {
+        $(this.remove());
+        for (let i = 0; i < Orders.length; ++i) {
+            if (Orders[i].Id == orderId) {
+                Orders.splice(i, 1);
+                break;
+            }
+        }
+
+        showCountOrder(Orders.length);
+
+        if (Orders.length == 0) {
+            setEmptyOrders();
+        }
+    });
+
+    setEmptyOrderInfo(Pages.Order);
+    clearOrderDescriptionBlock(Pages.Order);
+
+
+    $.post("/Admin/UpdateSatsusOrder", { OrderId: orderId, Status: orderStatus }, successCallBack(() => getTodayDataOrders(Pages.Order)));
+}
+
+function searchByOrderNumber(containerId, isAnimation = true) {
     let searchNumber = $(`#${containerId} .search-input input`).val();
     $(`#${containerId} .order-item-grid`).each(function (index, e) {
         let $e = $(e);
         let orderNumber = $e.attr("order-id");
 
         if (orderNumber.includes(searchNumber)) {
-            $e.show("scale", {}, 400);
+            if (isAnimation)
+                $e.show("scale", {}, 400);
+            else
+                $e.show();
         } else {
-            $e.hide("scale", {}, 400);
+            if (isAnimation)
+                $e.hide("scale", {}, 400);
+            else
+                $e.hide();
         }
     });
 }
@@ -2311,7 +2326,7 @@ function showCountOrder(count) {
         $orderCount.addClass("hide");
     }
 
-    OrderStatusBar.setCountNewOrder(count);
+    OrderStatusBar.setCountNewOrder(count, Pages.Order);
 }
 
 var NotifySoundNewOrder = new Audio('../Content/sounds/sound-new-order.mp3');
@@ -2332,56 +2347,118 @@ function notifySoundNewOrder() {
     }
 }
 
-function getTodayDataOrders() {
+function getTodayDataOrders(containerId) {
     let currentBranchId = getCurrentBranchId();
     let brnachIds = [...AdditionalBranch];
     brnachIds.push(currentBranchId);
 
     let successFunct = data => {
-        setTodayDataOrders(data.Data)
+        setTodayDataOrders(data.Data, containerId)
     }
 
     $.post("/Admin/GetTodayOrderData", { brnachIds: brnachIds }, successCallBack(successFunct));
 }
 
-function setTodayDataOrders(data) {
-    OrderStatusBar.setCountSuccessOrder(data.CountSuccesOrder);
-    OrderStatusBar.setCountCancelOrder(data.CountCancelOrder);
-    OrderStatusBar.setTodayRevenue(data.Revenue);
+function setTodayDataOrders(data, containerId) {
+    OrderStatusBar.setCountSuccessOrder(data.CountSuccesOrder, containerId);
+    OrderStatusBar.setCountCancelOrder(data.CountCancelOrder, containerId);
+    OrderStatusBar.setTodayRevenue(data.Revenue, containerId);
 }
 
 function getCurrentSectionId() {
-    return $(".section").attr("id");
+    return $(".section:not(.hide)").attr("id")
 }
 
 class OrderStatusBar {
 
-    static setCountNewOrder(value) {
-        this.setValue(".count-new-order", value);
+    static setCountNewOrder(value, containerId) {
+        this.setValue(".count-new-order", value, containerId);
     }
 
-    static setCountSuccessOrder(value) {
-        this.setValue(".count-success-order", value);
+    static setCountSuccessOrder(value, containerId) {
+        this.setValue(".count-success-order", value, containerId);
     }
 
-    static setCountCancelOrder(value) {
-        this.setValue(".count-cancel-order", value);
+    static setCountCancelOrder(value, containerId) {
+        this.setValue(".count-cancel-order", value, containerId);
     }
 
-    static setTodayRevenue(value) {
-        this.setValue(".today-revenue-order", getPriceValid(value));
+    static setTodayRevenue(value, containerId) {
+        this.setValue(".today-revenue-order", getPriceValid(value), containerId);
     }
 
-    static setValue(qSelector, value) {
-        const currentSectionId = getCurrentSectionId();
+    static setValue(qSelector, value, containerId) {
         const selectorValueContainer = ".status-bar-value";
-        $(`#${currentSectionId} ${qSelector} ${selectorValueContainer}`).html(value);
+        $(`#${containerId} ${qSelector} ${selectorValueContainer}`).html(value);
+    }
+}
+
+function showOrderDetails(orderId) {
+    const currentSectionId = getCurrentSectionId();
+    const order = currentSectionId == Pages.HistoryOrder ? getHistoryOrderById(orderId) : getOrderById(orderId);
+    const getOrderDetails = () => {
+        const orderDetailsData = new OrderDetailsData(order)
+
+        return new OrderDetails(orderDetailsData);
+    }
+
+
+    let loader = new Loader($(`#${currentSectionId}`));
+    loader.start()
+
+    let productIdsforLoad = getProductIdsForLoad(order);
+
+    let callbackLoadProducts = function (data) {
+        if (data.Success) {
+            OrderCategoryes = {};
+            for (let categoryObj of data.Data) {
+                OrderCategoryes[categoryObj.CategoryId] = {
+                    Id: categoryObj.CategoryId,
+                    Name: categoryObj.CategoryName,
+                    ProductIds: categoryObj.Products.map(product => product.Id)
+                };
+
+                categoryObj.Products.forEach(product => OrderProducts[product.Id] = product);
+            }
+
+            loader.stop()
+            getOrderDetails().show();
+        } else {
+            loader.stop()
+            showErrorMessage(data.ErrorMessage);
+        }
+    }
+
+    if (productIdsforLoad.length == 0) {
+        loader.stop()
+        getOrderDetails().show();
+    } else {
+        loadProductById(productIdsforLoad, callbackLoadProducts);
+    }
+}
+
+var Dialog = {
+    transition: null,
+    showModal: ($dialog) => {
+        $dialog = $($dialog);
+
+        $dialog.trigger("showModal");
+        this.transition = setTimeout(function () {
+            $dialog.addClass('dialog-scale');
+        }, 0.5);
+    },
+    close: ($dialog) => {
+        $dialog = $($dialog);
+
+        $dialog.trigger("close");
+        $dialog.removeClass('dialog-scale');
+        clearTimeout(this.transition);
     }
 }
 
 class CardOrder {
     /**
-     * 
+     *
      * @param {TodayOrder} cardData
      */
     constructor(cardData) {
@@ -2455,7 +2532,7 @@ class TodayOrder {
     convert(order) {
         this.OrderId = order.Id;
         this.OrderNumber = order.Id;
-        this.Amount = order.AmountPay;
+        this.Amount = xFormatPrice(order.AmountPayDiscountDelivery);
         this.PhoneNumber = order.PhoneNumber;
         this.UserName = order.Name;
         this.DeliveryType = getDeliveryType(order.DeliveryType);
@@ -2464,7 +2541,7 @@ class TodayOrder {
 }
 
 class CardOrderRenderer {
-    static renderOrders(orders, speed) {
+    static renderOrders(orders,containerId, speed) {
         let index = 0;
         for (let order of orders) {
             ++index
@@ -2472,57 +2549,222 @@ class CardOrderRenderer {
                 speed = 1;
             }
 
-            this.renderOrder(order, speed);
+            this.renderOrder(order, containerId,  speed);
         }
     }
 
-    static renderOrder(order, speed) {
+    static renderOrder(order, containerId,  speed) {
         const todayData = new TodayOrder(order, showOrderDetails);
         const cardOrder = new CardOrder(todayData);
 
-        this.addCardToPage(cardOrder, speed); 
+        this.addCardToPage(cardOrder, containerId, speed);
     }
 
-    static addCardToPage(card, speed) {
-        const currentSectionId = getCurrentSectionId();
+    static addCardToPage(card, containerId, speed) {
         const cardContainer = ".order-list-grid";
         const cardRender = card.render()
 
-        $(`#${currentSectionId} ${cardContainer}`).append(cardRender);
+        $(`#${containerId} ${cardContainer}`).append(cardRender);
         this.showCard(cardRender, speed);
     }
 
     static showCard(cardRender, speed) {
-        if (speed == 1) 
+        if (speed == 1)
             $(cardRender).show();
         else
             $(cardRender).show("scale", {}, speed || 400);
     }
 }
 
-function showOrderDetails(orderId) {
-    const detailsDialogId = "orderDetailsDialog";
-    const $dialog = $(`#${detailsDialogId}`);
+class OrderDetailsData {
+    constructor(order) {
+        this.convert(order);
+    }
 
-    //$dialog.trigger("showModal");
-    Dialog.showModal($dialog);
+    convert(order) {
+        this.convertBaseInfo(order);
+        this.convertShortInfo(order);
+        this.convertAmountInfo(order);
+        this.convertAddressInfo(order);
+        this.converеOrderListInfo(order);
+    }
+
+    convertBaseInfo(order) {
+        this.OrderId = order.Id;
+        this.OrderNumber = order.Id;
+        this.OrderDate = toStringDateAndTime(order.Date);
+    }
+
+    convertShortInfo(order) {
+        this.UserName = order.Name;
+        this.PhoneNumber = order.PhoneNumber;
+        this.DeliveryType = getDeliveryType(order.DeliveryType);
+    }
+
+    convertAmountInfo(order) {
+        const prefixRub = "руб.";
+        const prefixPercent = "%";
+
+        this.AmountPay = `${xFormatPrice(order.AmountPay)} ${prefixRub}`;
+        this.DeliveryPrice = `${xFormatPrice(order.DeliveryPrice)} ${prefixRub}`;
+        this.Discount = order.Discount == 0 ? `0${prefixPercent}` : `${order.Discount}${prefixPercent} (${xFormatPrice(order.AmountPay * order.Discount / 100)} ${prefixRub})`
+        this.PayType = getBuyType(order.BuyType);
+        this.CashBack = `${xFormatPrice(order.CashBack)} ${prefixRub}`;
+        this.AmountPayDiscountDelivery = `${xFormatPrice(order.AmountPayDiscountDelivery)} ${prefixRub}`;
+    }
+
+    convertAddressInfo(order) {
+        this.City = getCityNameById(order.CityId);
+        this.Street = order.DeliveryType == DeliveryType.Delivery ? order.Street : $("#setting-street").val();
+        this.House = order.DeliveryType == DeliveryType.Delivery ? order.HomeNumber : $("#setting-home").val();
+        this.Apartament = order.DeliveryType == DeliveryType.Delivery ? order.ApartamentNumber : $("#setting-home").val();
+        this.Level = order.DeliveryType == DeliveryType.Delivery ? order.Level : "-";
+        this.IntercomCode = order.DeliveryType == DeliveryType.Delivery ? order.IntercomCode : "-";
+        this.Entrance = order.DeliveryType == DeliveryType.Delivery ? order.EntranceNumber : "-";
+    }
+
+    converеOrderListInfo(order) {
+        const prefixRub = "руб.";
+        this.OrderList = [];
+
+        for (let productId in order.ProductCount) {
+            const product = OrderProducts[productId];
+            const obj = {
+                Image: product.Image,
+                Name: product.Name,
+                Price: `${order.ProductCount[productId]} x ${product.Price} ${prefixRub}`
+            }
+
+            const view = this.convertOrderProducrToView(obj);
+            this.OrderList.push(view);
+        }
+    }
+
+    convertOrderProducrToView(product) {
+        return `
+            <div class="order-details-product-item ">
+                <div class="order-details-product-img">
+                    <img src="${product.Image}">
+                </div>
+                <div class="order-details-product-name-price border-bottom">
+                    <span>${product.Name}</span>
+                    <span class="font-weight-bold grid-justify-self-flex-end">${product.Price}</span>
+                </div>
+             </div>
+        `;
+    }
+
 }
 
-var  Dialog  = {
-    transition: null,
-    showModal: ($dialog) => {
-        $dialog = $($dialog);
+var OrderDetailsQSelector = {
+    OderNumber: ".order-details-number .value",
+    OrderDate: ".order-details-date .value",
+    UserName: ".order-details-short-user-name .value",
+    PhoneNumber: ".order-details-short-phone .value",
+    DeliveryType: ".order-details-short-delivery-type .value",
+    PriceAmount: ".order-details-price-amount .value",
+    DeliveryPrice: ".order-details-price-delivery .value",
+    Discount: ".order-details-price-discount .value",
+    PayType: ".order-details-price-pay-type .value",
+    CashBack: ".order-details-price-cashback .value",
+    PriceToPay: ".order-details-price-to-pay .value",
+    City: ".order-details-address-city .value",
+    Street: ".order-details-address-street .value",
+    House: ".order-details-address-house .value",
+    Apartament: ".order-details-address-apartment .value",
+    Level: ".order-details-address-level .value",
+    IntercomCode: ".order-details-address-intercom-code .value",
+    Entrance: ".order-details-address-entrance .value",
+    OrderList: ".order-details-product-list",
+    Comment: ".order-details-comment .value",
+    ApplyBtn: ".order-details-menu .btn-details-apply",
+    CancelBtn: ".order-details-menu .btn-details-cancel"
+}
 
-        $dialog.trigger("showModal");
-        this.transition = setTimeout(function () {
-            $dialog.addClass('dialog-scale');
-        }, 0.5);
-    },
-    close: ($dialog) => {
-        $dialog = $($dialog);
+class OrderDetails {
+    /**
+     *
+     * @param {OrderDetailsData} details
+     */
+    constructor(details) {
+        const detailsDialogId = "orderDetailsDialog";
+        this.$dialog = $(`#${detailsDialogId}`);
+        this.details = details;
+    }
 
-        $dialog.trigger("close");
-        $dialog.removeClass('dialog-scale');
-        clearTimeout(this.transition);
+    show() {
+        this.setValues();
+        this.buttonsConfig();
+        Dialog.showModal(this.$dialog);
+    }
+
+    close() {
+        Dialog.close(this.$dialog);
+    }
+
+    setValue(qSelectror, value) {
+        this.$dialog.find(qSelectror).html(value);
+    }
+
+    setValues() {
+        this.setBaseInfo();
+        this.setShortInfo();
+        this.setAmountInfo();
+        this.setAddressInfo();
+        this.setOrderListInfo();
+    }
+
+    setBaseInfo() {
+        this.setValue(OrderDetailsQSelector.OderNumber, this.details.OrderNumber);
+        this.setValue(OrderDetailsQSelector.OrderDate, this.details.OrderDate);
+    }
+
+    setShortInfo() {
+        this.setValue(OrderDetailsQSelector.UserName, this.details.UserName);
+        this.setValue(OrderDetailsQSelector.PhoneNumber, this.details.PhoneNumber);
+        this.setValue(OrderDetailsQSelector.DeliveryType, this.details.DeliveryType);
+    }
+
+    setAmountInfo() {
+        this.setValue(OrderDetailsQSelector.PriceAmount, this.details.AmountPay);
+        this.setValue(OrderDetailsQSelector.DeliveryPrice, this.details.DeliveryPrice);
+        this.setValue(OrderDetailsQSelector.Discount, this.details.Discount);
+        this.setValue(OrderDetailsQSelector.PayType, this.details.PayType);
+        this.setValue(OrderDetailsQSelector.CashBack, this.details.CashBack);
+        this.setValue(OrderDetailsQSelector.PriceToPay, this.details.AmountPayDiscountDelivery);
+    }
+
+    setAddressInfo() {
+        this.setValue(OrderDetailsQSelector.City, this.details.City);
+        this.setValue(OrderDetailsQSelector.Street, this.details.Street);
+        this.setValue(OrderDetailsQSelector.House, this.details.House);
+        this.setValue(OrderDetailsQSelector.Apartament, this.details.Apartament);
+        this.setValue(OrderDetailsQSelector.Level, this.details.Level);
+        this.setValue(OrderDetailsQSelector.IntercomCode, this.details.IntercomCode);
+        this.setValue(OrderDetailsQSelector.Entrance, this.details.Entrance);
+    }
+
+    setOrderListInfo() {
+        this.setValue(OrderDetailsQSelector.OrderList, this.details.OrderList);
+    }
+
+    buttonsConfig() {
+        const $proccesed = $(OrderDetailsQSelector.ApplyBtn);
+        const $cancel = $(OrderDetailsQSelector.CancelBtn);
+        const actionOrder = (orderStatus) => () => {
+            this.close();
+            changeOrderStatus(this.details.OrderId, orderStatus)
+        }
+
+        $proccesed.unbind("click");
+        $cancel.unbind("click");
+
+        if (getCurrentSectionId() == Pages.HistoryOrder) {
+            $proccesed.attr("disabled", true);
+            $cancel.attr("disabled", true);
+        } else {
+            $proccesed.bind("click", actionOrder(OrderStatus.Processed));
+            $cancel.bind("click", actionOrder(OrderStatus.Cancellation));
+        }
     }
 }

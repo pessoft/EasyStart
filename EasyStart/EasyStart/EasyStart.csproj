@@ -407,6 +407,7 @@
     <Content Include="Images\full-logo.png" />
     <Content Include="Images\full-logo-pink.png" />
     <Content Include="Images\full-logo-blue.png" />
+    <Content Include="Images\loader-empty-order.gif" />
     <Content Include="Images\loader.gif" />
     <Content Include="Images\loader_old.gif" />
     <Content Include="Images\logo.png" />
