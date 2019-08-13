@@ -1944,7 +1944,7 @@ const OrderStatus = {
 function changeOrderStatus(orderId, orderStatus) {
     let $order = $(`#order .order-list-grid [order-id=${orderId}]`);
 
-    $order.hide("scale", {}, 400, function () {
+    $order.hide(500, function () {
         $(this.remove());
         for (let i = 0; i < Orders.length; ++i) {
             if (Orders[i].Id == orderId) {
@@ -1971,12 +1971,12 @@ function searchByOrderNumber(containerId, isAnimation = true) {
 
         if (orderNumber.includes(searchNumber)) {
             if (isAnimation)
-                $e.show("scale", {}, 400);
+                $e.show(500);
             else
                 $e.show();
         } else {
             if (isAnimation)
-                $e.hide("scale", {}, 400);
+                $e.hide(500);
             else
                 $e.hide();
         }
@@ -2255,9 +2255,9 @@ class CardOrderRenderer {
         let index = 0;
         for (let order of orders) {
             ++index
-            if (index > 6) {
-                speed = 1;
-            }
+            //if (index > 6) {
+            //    speed = 1;
+            //}
 
             this.renderOrder(order, containerId,  speed);
         }
@@ -2282,7 +2282,7 @@ class CardOrderRenderer {
         if (speed == 1)
             $(cardRender).show();
         else
-            $(cardRender).show("scale", {}, speed || 400);
+            $(cardRender).show(speed || 500);
     }
 }
 
