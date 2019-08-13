@@ -9,7 +9,6 @@
 
             if (!predicate || predicate()) {
                 Dialog.showModal(addCategoryDialog);
-                //addCategoryDialog.trigger("showModal");
             }
 
             if (additionalFunc) {
@@ -321,7 +320,6 @@ function cancelDialog(e) {
     dialog.find("img").addClass("hide");
     dialog.find("option").removeAttr("selected");
     dialog.find("select").val("0")
-    //dialog.trigger("close")
     Dialog.close(dialog);
 }
 
@@ -431,7 +429,6 @@ function updateRenderStock(container, stock) {
     $stock.find(".stock-item-name").html(stock.Name);
     toggleVisibleSotck(container, stock);
 }
-
 
 function updateStock() {
     let files = $("#addStockDialog input[type=file]")[0].files;
@@ -1151,8 +1148,7 @@ function deleteConfirmation(callback) {
     $dialog.find(".btn-submit").unbind("click");
     $dialog.find(".btn-submit").bind("click", clickFunc);
 
-    //$dialog.trigger("showModal");
-    Dialog.showModal(dialog);
+    Dialog.showModal($dialog);
 }
 
 function removeProduct(e, event) {
@@ -1279,10 +1275,6 @@ function addPreviewImage(input) {
 
 function openDialogFile(id) {
     $(`#${id}`).click();
-}
-
-function checkRequreValid() {
-
 }
 
 function saveSetting() {
@@ -1676,7 +1668,6 @@ function loadProductReviews(productId, callback) {
     $.post("/Admin/LoadProductReviews", { productId: productId }, successCallBack(successFunc));
 }
 
-
 function setEmptyOrders(containerId) {
     containerId = containerId || getCurrentSectionId();
     let template = `
@@ -1694,29 +1685,6 @@ function setEmptyOrders(containerId) {
 function removeEmptyOrders(containerId) {
     containerId = containerId || getCurrentSectionId();
     $(`#${containerId} .order-list-grid .empty-list`).remove();
-}
-
-function setEmptyHistoryOrders() {
-    let template = `
-        <div class="empty-list">
-            <i class="fal fa-user-clock"></i>
-            <span>История заказов пуста</span>
-        </div>
-    `;
-
-    $("#history .order-list").append(template);
-}
-
-function setEmptyOrderInfo() {
-    //const containerId = getCurrentSectionId();
-    //let template = `
-    //    <div class="empty-list">
-    //        <i class="fal fa-info"></i>
-    //        <span>Что бы увидеть информацию о заказе, выберите нужный из колонки "Заказы"</span>
-    //    </div>
-    //`;
-
-    //$(`#${containerId} .order-list-grid`).append(template);
 }
 
 function getCurrentBranchId() {
@@ -1746,15 +1714,11 @@ function loadOrders(reload = false) {
             Orders = processingOrders(data.Data.Orders);
             showCountOrder(Orders.length);
             setTodayDataOrders(data.Data.TodayData, Pages.Order);
+
             if (Orders.length == 0) {
                 setEmptyOrders(Pages.Order);
             } else {
-                renderOrders(Orders, Pages.Order);
                 CardOrderRenderer.renderOrders(Orders, Pages.Order, 600);
-                let $orderItems = $(`#${Pages.Order} .order-item`);
-                if ($orderItems.length > 0) {
-                    selectOrder($orderItems[0], Pages.Order)
-                }
             }
         } else {
             showErrorMessage(data.ErrorMessage);
@@ -1773,8 +1737,6 @@ function clearOrdersContainer(containerId) {
 }
 
 function loadHistoryOrders() {
-    setEmptyOrderInfo(Pages.HistoryOrder);
-
     clearSearchInput(Pages.HistoryOrder);
     currentBranchId = getCurrentBranchId();
     let brnachIds = [...AdditionalHistoryBranch];
@@ -1790,13 +1752,12 @@ function loadHistoryOrders() {
     let successFunc = function (data, loader) {
         if (data.Success) {
             HistoryOrders = processingOrders(data.Data);
-
             clearOrdersContainer(Pages.HistoryOrder);
+
             if (HistoryOrders.length == 0) {
                 setEmptyOrders(Pages.HistoryOrder);
             } else {
                 removeEmptyOrders(Pages.HistoryOrder);
-                renderOrders(HistoryOrders, Pages.HistoryOrder);
                 CardOrderRenderer.renderOrders(HistoryOrders, Pages.HistoryOrder, 600);
             }
 
@@ -1814,42 +1775,6 @@ function loadHistoryOrders() {
         EndDate: OrderHistoryDatePicker.maxRange.toJSON(),
 
     }, successCallBack(successFunc, loader));
-}
-
-function renderOrders(orders, containerId) {
-    let templates = [];
-
-    for (let order of orders) {
-        templates.push(getTemplateOrderItem(order, containerId));
-    }
-
-    $(`#${containerId} .order-list`).html(templates);
-}
-
-function renderOrder(order) {
-    let $templateOrder = getTemplateOrderItem(order, Pages.Order);
-    let $container = $(`#${Pages.Order} .order-list`);
-
-    if ($container.find(".empty-list").length > 0) {
-        $container.html($templateOrder);
-    } else {
-        $container.append($templateOrder);
-    }
-
-}
-
-function getTemplateOrderItem(data, containerId) {
-    let $template = $($(`#order-item-template-${data.DeliveryType}`).html());
-    let orderNumber = `№ ${data.Id}`;
-    let date = toStringDateAndTime(data.Date);
-
-    $template.attr("order-id", data.Id);
-    $template.find(".order-item-number span").html(orderNumber);
-    $template.find(".order-item-date").html(date);
-
-    $template.bind("click", function () { selectOrder(this, containerId) });
-
-    return $template;
 }
 
 function jsonToDate(value) {
@@ -1891,13 +1816,6 @@ function toStringDateAndTime(date) {
     return dateStr;
 }
 
-function setActiveOrderItem(e, containerId = "order") {
-    $parent = getParentItemFromOrdersDOM(e);
-
-    $(`#${containerId} .order-item-active`).removeClass("order-item-active");
-    $parent.addClass("order-item-active");
-}
-
 function getParentItemFromOrdersDOM(e) {
     let $e = $(e);
     let cssClass = "order-item";
@@ -1915,192 +1833,6 @@ function getOrderIdFromItemOrdersDOM(e) {
     $parent = getParentItemFromOrdersDOM(e);
 
     return $parent.attr("order-id");
-}
-
-function selectOrder(e, containerId) {
-    setEmptyOrderInfo(containerId);
-
-    let orderId = getOrderIdFromItemOrdersDOM(e);
-
-    setActiveOrderItem(e, containerId);
-    clearOrderDescriptionBlock(containerId);
-    showInfoDesctiprionOrder(orderId, containerId);
-}
-
-function clearOrderDescriptionBlock(containerId) {
-    $(`#${containerId} .order-description-number-header`).empty();
-    $(`#${containerId} .order-description-date-header`).empty();
-    $(`#${containerId} .order-description-processed-header`).addClass("hide");
-    $(`#${containerId} .order-description-cancellation-header`).addClass("hide");
-    $(`#${containerId} .order-description-products`).empty();
-    $(`#${containerId} .to-pay .order-description-additional-info-value`).empty();
-
-    $(`#${containerId} .need-cashback .order-description-additional-info-value`).empty();
-    $(`#${containerId} .need-cashback`).addClass("hide");
-
-    $(`#${containerId} .order-user-name .order-description-additional-info-value`).empty();
-    $(`#${containerId} .order-user-phone .order-description-additional-info-value`).empty();
-    $(`#${containerId} .order-description-info-take`).empty();
-
-    $(`#${containerId} .order-description-info-comment .order-description-info-comment-text`).empty();
-    $(`#${containerId} .order-description-info-comment`).addClass("hide");
-}
-
-function showInfoDesctiprionOrder(orderId, containerId) {
-    let order = containerId == Pages.HistoryOrder ? getHistoryOrderById(orderId) : getOrderById(orderId);
-    let loader = new Loader($(`#${containerId} .order-description`));
-
-    loader.start()
-
-    let productIdsforLoad = getProductIdsForLoad(order);
-
-    let callbackLoadProducts = function (data) {
-        if (data.Success) {
-            OrderCategoryes = {};
-            for (let categoryObj of data.Data) {
-                OrderCategoryes[categoryObj.CategoryId] = {
-                    Id: categoryObj.CategoryId,
-                    Name: categoryObj.CategoryName,
-                    ProductIds: categoryObj.Products.map(product => product.Id)
-                };
-
-                categoryObj.Products.forEach(product => OrderProducts[product.Id] = product);
-            }
-
-            callbackShowDescription();
-        } else {
-            showErrorMessage(data.ErrorMessage);
-            $(`#${containerId} .order-description .empty-list`).remove();
-            loader.stop()
-        }
-    }
-
-    let callbackShowDescription = function () {
-        let dataStr = getDataOrderStr(order);
-
-        renderOrderNumberHeader(dataStr.orderNumber, dataStr.date, order.OrderStatus, containerId);
-        renderorderOrderProducts(dataStr.products, containerId);
-        renderOrderAdditionaInfo(dataStr, containerId);
-        renderOrderInfoTake(dataStr, containerId);
-        renderOrderComment(dataStr.comment, containerId);
-        bindUpdateStatusButton(order, containerId);
-        $(`#${containerId} .order-description .empty-list`).remove();
-        loader.stop()
-    }
-
-    if (productIdsforLoad.length == 0) {
-        callbackShowDescription();
-    } else {
-        loadProductById(productIdsforLoad, callbackLoadProducts);
-    }
-}
-
-function bindUpdateStatusButton(order, containerId) {
-    let $proccesed = $(`#${containerId} .btn-submit`);
-    let $cancel = $(`#${containerId} .btn-cancel-order`);
-
-    $proccesed.unbind("click");
-    $cancel.unbind("click");
-
-    $proccesed.bind("click", () => changeOrderStatus(order.Id, OrderStatus.Processed));
-    $cancel.bind("click", () => changeOrderStatus(order.Id, OrderStatus.Cancellation));
-}
-
-function renderOrderComment(comment, containerId) {
-    if (comment) {
-        let $comment = $(`#${containerId} .order-description-info-comment`);
-
-        $comment.removeClass("hide");
-        $comment.find(".order-description-info-comment-text").html(comment);
-    }
-}
-
-function renderorderOrderProducts(dataProducdtsStr, containerId) {
-    let templates = [];
-
-    for (let categoryId in OrderCategoryes) {
-        let category = OrderCategoryes[categoryId];
-        let $templateCategoryHeader = $($("#order-product-header-item-template").html());
-
-        $templateCategoryHeader.html(category.Name);
-        templates.push($templateCategoryHeader);
-
-        for (let productId of category.ProductIds) {
-            let product = dataProducdtsStr[productId];
-
-            let $template = $($("#order-product-item-template").html());
-
-            $template.find(".order-description-product-number").html(product.Index);
-            $template.find(".order-description-product-name").html(product.Name);
-            $template.find(".order-description-product-info-count").html(product.Count);
-            $template.find(".order-description-product-info-price").html(product.Price);
-
-            templates.push($template);
-        }
-
-        templates[templates.length - 1].addClass("not-border");
-    }
-
-    $(`#${containerId} .order-description-products`).html(templates);
-}
-
-function renderOrderAdditionaInfo(dataStr, containerId) {
-    $(`#${containerId} .to-pay .order-description-additional-info-value`).html(dataStr.amountPayDiscountDelivery);
-    $(`#${containerId} #need-cashback-header`).html(dataStr.cashBack);
-    $(`#${containerId} .need-cashback .order-description-additional-info-value`).html(dataStr.cashBackNumber);
-    $(`#${containerId} .order-user-name .order-description-additional-info-value`).html(dataStr.name);
-    $(`#${containerId} .order-user-phone .order-description-additional-info-value`).html(dataStr.phoneNumber);
-
-    if (dataStr.needCashBack) {
-        $(`#${containerId} .need-cashback`).removeClass("hide");
-    }
-}
-
-function renderOrderNumberHeader(numberOrder, date, orderType, containerId) {
-    $(`#${containerId} .order-description-number-header`).html(numberOrder);
-    $(`#${containerId} .order-description-date-header`).html(date);
-
-    switch (orderType) {
-        case OrderStatus.Processed:
-            $(`#${containerId} .order-description-processed-header`).removeClass("hide");
-            $(`#${containerId} .order-description-cancellation-header`).addClass("hide");
-            break;
-        case OrderStatus.Cancellation:
-            $(`#${containerId} .order-description-cancellation-header`).removeClass("hide");
-            $(`#${containerId} .order-description-processed-header`).addClass("hide");
-            break;
-    }
-}
-
-function renderOrderInfoTake(dataStr, containerId) {
-    let $payInfo = $($("#info-order-cost-template").html());
-    let $deliveryInfo = dataStr.deliveryType == DeliveryType.Delivery ?
-        $($("#info-order-delivery-template").html()) :
-        $($("#info-order-takeyorself-template").html());
-
-    $payInfo.find("#take-info-pay-type .take-info-item-value").html(dataStr.buyType);
-    $payInfo.find("#take-info-price .take-info-item-value").html(dataStr.amountPay);
-    $payInfo.find("#take-info-discount .take-info-item-value").html(dataStr.discount);
-    $payInfo.find("#take-info-delivery .take-info-item-value").html(dataStr.deliveryPrice);
-    $payInfo.find("#take-info-topay .take-info-item-value").html(dataStr.amountPayDiscountDelivery);
-
-    $deliveryInfo.find("#order-takeyorself-city .take-info-item-value").html(dataStr.city);
-    $deliveryInfo.find("#order-takeyorself-street .take-info-item-value").html(dataStr.street);
-    $deliveryInfo.find("#order-takeyorself-home .take-info-item-value").html(dataStr.homeNumber);
-
-    if (dataStr.deliveryType == DeliveryType.Delivery) {
-        $deliveryInfo.find("#order-delivery-city .take-info-item-value").html(dataStr.city);
-        $deliveryInfo.find("#order-delivery-street .take-info-item-value").html(dataStr.street);
-        $deliveryInfo.find("#order-delivery-home .take-info-item-value").html(dataStr.homeNumber);
-        $deliveryInfo.find("#order-delivery-apartment .take-info-item-value").html(dataStr.apartamentNumber);
-        $deliveryInfo.find("#order-delivery-level .take-info-item-value").html(dataStr.level);
-        $deliveryInfo.find("#order-delivery-intercom-code .take-info-item-value").html(dataStr.intercomCode);
-    }
-
-    let $descriptionItemTake = $(`#${containerId} .order-description-info-take`);
-
-    $descriptionItemTake.append($payInfo);
-    $descriptionItemTake.append($deliveryInfo);
 }
 
 function getProductIdsForLoad(order) {
@@ -2123,77 +1855,6 @@ function getPriceValid(num) {
     }
 
     return num;
-}
-
-function getProductIndexFromOrderCategory(productId) {
-    let indexResult = 0;
-    for (let categoryId in OrderCategoryes) {
-        let category = OrderCategoryes[categoryId];
-        let index = category.ProductIds.indexOf(productId);
-
-        if (index != -1) {
-            indexResult += ++index;
-            break;
-        } else {
-            indexResult += category.ProductIds.length;
-        }
-    }
-
-    return indexResult;
-}
-
-function getDataOrderStr(order) {
-    let prefixRub = "руб.";
-    let prefixPercent = "%";
-    let prefixCount = "шт.";
-    let getProductsStr = () => {
-        let products = [];
-        for (let productId in order.ProductCount) {
-            let product = OrderProducts[productId];
-            let obj = {
-                Index: `${getProductIndexFromOrderCategory(parseInt(productId))}.`,
-                Name: product.Name,
-                Count: `${order.ProductCount[productId]} ${prefixCount}`,
-                Price: `${product.Price} ${prefixRub}`
-            }
-
-            products[productId] = obj;
-        }
-
-        return products;
-    };
-
-    let street = order.DeliveryType == DeliveryType.Delivery ? order.Street : $("#setting-street").val();
-    let homeNumber = order.DeliveryType == DeliveryType.Delivery ? order.HomeNumber : $("#setting-home").val();
-    let deliveryPrice = order.DeliveryPrice == 0 ? "Бесплатно" : `${getPriceValid(order.DeliveryPrice)} ${prefixRub}`;
-    let discount = order.Discount == 0 ? `0${prefixPercent}` : `${order.Discount}${prefixPercent} (${getPriceValid(order.AmountPay * order.Discount / 100)} ${prefixRub})`
-    let dataStr = {
-        amountPay: `${getPriceValid(order.AmountPay)} ${prefixRub}`,
-        amountPayDiscountDelivery: `${getPriceValid(order.AmountPayDiscountDelivery)} ${prefixRub}`,
-        apartamentNumber: order.ApartamentNumber,
-        buyType: getBuyType(order.BuyType),
-        cashBack: `Нужна сдача с ${order.CashBack} ${prefixRub}:`,
-        cashBackNumber: `${getPriceValid(order.CashBack - order.AmountPayDiscountDelivery)} ${prefixRub}`,
-        city: getCityNameById(order.CityId),
-        comment: order.Comment,
-        date: toStringDateAndTime(order.Date),
-        deliveryType: order.DeliveryType,
-        discount: discount,
-        entranceNumber: order.EntranceNumber,
-        homeNumber: homeNumber,
-        orderNumber: `№ ${order.Id}`,
-        intercomCode: order.IntercomCode,
-        level: order.Level,
-        name: order.Name,
-        needCashBack: order.NeedCashBack,
-        phoneNumber: order.PhoneNumber,
-        products: getProductsStr(),
-        street: street,
-        deliveryPrice: deliveryPrice,
-        level: order.Level
-    }
-
-    return dataStr;
 }
 
 var OrderProducts = {};
@@ -2298,10 +1959,6 @@ function changeOrderStatus(orderId, orderStatus) {
             setEmptyOrders();
         }
     });
-
-    setEmptyOrderInfo(Pages.Order);
-    clearOrderDescriptionBlock(Pages.Order);
-
 
     $.post("/Admin/UpdateSatsusOrder", { OrderId: orderId, Status: orderStatus }, successCallBack(() => getTodayDataOrders(Pages.Order)));
 }

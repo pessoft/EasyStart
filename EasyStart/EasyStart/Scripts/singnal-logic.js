@@ -6,7 +6,6 @@
         Orders.push(newOrder);
         showCountOrder(Orders.length);
         notifySoundNewOrder();
-        renderOrder(newOrder);
         removeEmptyOrders(Pages.Order);
         CardOrderRenderer.renderOrder(newOrder, Pages.Order);
     };
