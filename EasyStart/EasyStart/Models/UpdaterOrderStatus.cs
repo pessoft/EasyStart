@@ -10,5 +10,6 @@ namespace EasyStart.Models
     {
         public int OrderId { get; set; }
         public OrderStatus Status { get; set; }
+        public DateTime DateUpdate { get; set; }
     }
 }

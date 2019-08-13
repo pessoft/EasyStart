@@ -618,10 +618,11 @@ namespace EasyStart.Controllers
         {
             var result = new JsonResultModel();
             var orders = DataWrapper.GetOrders(brnachIds);
+            var todayData = DataWrapper.GetDataOrdersByDate(brnachIds, DateTime.Now);
 
             if (orders != null)
             {
-                result.Data = orders;
+                result.Data = new { Orders = orders, TodayData = todayData };
                 result.Success = true;
             }
             else
@@ -698,7 +699,41 @@ namespace EasyStart.Controllers
                 return;
             }
 
-            DataWrapper.UpdateStatusOrder(data);
+            try
+            {
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
+                var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
+                data.DateUpdate = date;
+
+                DataWrapper.UpdateStatusOrder(data);
+            }
+            catch(Exception ex)
+            { }
+                    }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult GetTodayOrderData(List<int> brnachIds)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
+                var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
+                var data = DataWrapper.GetDataOrdersByDate(brnachIds, date);
+
+                result.Data = data;
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
         }
     }
 }

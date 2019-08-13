@@ -8,9 +8,13 @@ namespace EasyStart
         // Дополнительные сведения об объединении см. на странице https://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
+            bundles.Add(new ScriptBundle("~/bundles/odometer").Include(
+                        "~/Scripts/odometer/odometer.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js",
-                        "~/Scripts/jquery.unobtrusive-ajax.js"));
+                        "~/Scripts/jquery.unobtrusive-ajax.js",
+                        "~/Scripts/jquery-ui-1.12.1.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/sumoselect").Include(
                          "~/Scripts/jquery.sumoselect.min.js"));
@@ -68,6 +72,9 @@ namespace EasyStart
                    "~/Content/main.css",
                    "~/Content/fontawesome/css/all.css",
                    "~/Content/material-input.css"));
+
+            bundles.Add(new StyleBundle("~/odometer/css").Include(
+                  "~/Content/odometer/odometer-theme-minimal.css"));
         }
     }
 }

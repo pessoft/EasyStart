@@ -113,7 +113,9 @@ namespace EasyStart
             {
                 var result = new JsonResultModel();
                 var deliverSetting = DataWrapper.GetDeliverySetting(order.BranchId);
+
                 order.Date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
+                order.UpdateDate = order.Date;
 
                 var numberOrder = DataWrapper.SaveOrder(order);
 
