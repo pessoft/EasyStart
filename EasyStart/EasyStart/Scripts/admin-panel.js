@@ -1747,7 +1747,7 @@ function loadOrders(reload = false) {
             showCountOrder(Orders.length);
             setTodayDataOrders(data.Data.TodayData, Pages.Order);
             if (Orders.length == 0) {
-                setEmptyOrders();
+                setEmptyOrders(Pages.Order);
             } else {
                 renderOrders(Orders, Pages.Order);
                 CardOrderRenderer.renderOrders(Orders, Pages.Order, 600);
@@ -1791,11 +1791,12 @@ function loadHistoryOrders() {
         if (data.Success) {
             HistoryOrders = processingOrders(data.Data);
 
+            clearOrdersContainer(Pages.HistoryOrder);
             if (HistoryOrders.length == 0) {
-                setEmptyHistoryOrders();
+                setEmptyOrders(Pages.HistoryOrder);
             } else {
+                removeEmptyOrders(Pages.HistoryOrder);
                 renderOrders(HistoryOrders, Pages.HistoryOrder);
-                clearOrdersContainer(Pages.HistoryOrder);
                 CardOrderRenderer.renderOrders(HistoryOrders, Pages.HistoryOrder, 600);
             }
 
@@ -2642,10 +2643,12 @@ class OrderDetailsData {
     }
 
     convertBaseInfo(order) {
+        const commentEmptyTemplate = `<i class="fal fa-comment-slash"></i>Отсутсвтует</span>`;
         this.OrderId = order.Id;
         this.OrderNumber = order.Id;
         this.Status = order.OrderStatus;
         this.OrderDate = toStringDateAndTime(order.Date);
+        this.Comment = order.Comment || commentEmptyTemplate;
     }
 
     convertShortInfo(order) {
@@ -2780,6 +2783,7 @@ class OrderDetails {
         this.setAmountInfo();
         this.setAddressInfo();
         this.setOrderListInfo();
+        this.setComment();
     }
 
     markOrderNumberColorStatus(status) {
@@ -2838,6 +2842,10 @@ class OrderDetails {
 
     setOrderListInfo() {
         this.setValue(OrderDetailsQSelector.OrderList, this.details.OrderList);
+    }
+
+    setComment() {
+        this.setValue(OrderDetailsQSelector.Comment, this.details.Comment);
     }
 
     buttonsConfig() {
