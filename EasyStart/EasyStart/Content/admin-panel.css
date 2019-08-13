@@ -1120,7 +1120,7 @@ div.product-item:hover {
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
-    color: #163f75cf;
+    color: #ababab;
 }
 
 .product-user-callback-review-header {
@@ -1184,7 +1184,7 @@ div.product-item:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #163f75eb;
+    color: #757575;
 }
 
     .review-item-header i {
