@@ -324,13 +324,19 @@
                         <div class="group">
                             <input required type="text" id="price-delivery" value="@(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.PriceDelivery != 0 ? ViewBag.DeliverySetting.PriceDelivery : "")" />
                             <div class="bar"></div>
-                            <label>Стоимость доставки</label>
+                            <label>Стоимость доставки (руб.)</label>
                         </div>
-                        <div class="group">
+                        @*<div class="group">
                             <input required type="text" id="free-delivery" value="@(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.FreePriceDelivery != 0 ? ViewBag.DeliverySetting.FreePriceDelivery : "")" />
                             <div class="bar"></div>
-                            <label>Бесплатная доставка при заказе на сумму от</label>
-                        </div>
+                            <label>Бесплатная доставка при заказе на сумму от (руб.)</label>
+                        </div>*@
+                        <select id="area-delivery-list">
+                            <option selected disabled>
+                                Районы доставки
+                            </option>
+                        </select>
+                        <button class="btn btn-light" onclick="Dialog.showModal('#areaDeliverySettingDialog')">Настроить районы</button>
                     </div>
                 </div>
                 <div class="delivery-block smaller">
@@ -768,6 +774,17 @@
                     <i class="far fa-share-square"></i>Закрыть
                 </button>
             </div>
+        </div>
+    </dialog>
+
+    <dialog id="areaDeliverySettingDialog">
+        <div class="area-delivery-setting-wrapper">
+            <select></select>
+            <button class="area-delivery-setting-btn area-delivery-setting-close"><i class="fal fa-times"></i></button>
+            <input placeholder="Название района" id="area-name-delivery" type="text">
+            <input placeholder="Стоимость доставки" id="area-delivery-price" min="0" type="number">
+            <button class="area-delivery-setting-btn success-color"><i class="fal fa-save"></i></button>
+            <button class="area-delivery-setting-btn fail-color"><i class="fal fa-trash-alt"></i></button>
         </div>
     </dialog>
 

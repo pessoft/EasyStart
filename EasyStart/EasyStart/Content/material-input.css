@@ -30,7 +30,7 @@ textarea {
         outline: none;
     }
 
-        input:focus ~ label, 
+        input:focus ~ label,
         input:valid ~ label,
         textarea:focus ~ label,
         textarea:valid ~ label,
@@ -78,7 +78,7 @@ label {
     }
 
 
-    
+
 .btn {
     background: #fff;
     color: #959595;
@@ -129,6 +129,22 @@ label {
             background: #e1e1e1;
             color: #8b8b8b;
         }
+
+    .btn.btn-success {
+        background: #28a745;
+        color: #e7f5ff;
+    }
+
+        .btn.btn-success:hover {
+            background: #28a745;
+            color: #ebf2f7;
+        }
+
+    .btn.btn-light {
+        color: #375771;
+        background-color: #e2e6ea;
+        border-color: #dae0e5;
+    }
 
 .btn-box {
     text-align: center;
