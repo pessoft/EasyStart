@@ -2527,3 +2527,14 @@ class OrderDetails {
         }
     }
 }
+
+
+class AreaDelivery {
+    static openSetting() {
+
+    }
+
+    static closeSetting() {
+
+    }
+}
