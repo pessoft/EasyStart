@@ -1,6 +1,7 @@
 ﻿using EasyStart.Logic;
 using EasyStart.Models;
 using EasyStart.Utils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,7 +39,11 @@ namespace EasyStart.Controllers
             ViewBag.TypeBranch = typeBranch;
             ViewBag.ZoneId = deliverySetting == null ? DateTimeHepler.DEFAULT_ZONE_ID : deliverySetting.ZoneId;
             ViewBag.YearsWork = DateTime.Now.Year == 2019 ? DateTime.Now.Year.ToString() : $"2019 - {DateTime.Now.Year}";
-
+            ViewBag.AreaDeliveris = deliverySetting != null &&
+                                    deliverySetting.AreaDeliveries != null &&
+                                    deliverySetting.AreaDeliveries.Any() ?
+                                    JsonConvert.SerializeObject(deliverySetting.AreaDeliveries) :
+                                    JsonConvert.SerializeObject(new List<AreaDeliveryModel>());
 
             return View();
         }

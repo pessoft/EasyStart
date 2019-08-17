@@ -1372,7 +1372,7 @@ function getTimeDeliveryJSON() {
 function saveDeliverySetting() {
     let warnMgs = {
         PriceDelivery: "Укажите стоимость доставки",
-        FreePriceDelivery: "Укажите минимальную сумму заказа для бесплатной доставки",
+        FreePriceDelivery: "Укажите минимальные суммы закаов для бесплатной доставки в районы",
     }
 
     let priceDelivery = $("#price-delivery").val();
@@ -1382,7 +1382,8 @@ function saveDeliverySetting() {
         showWarningMessage(warnMgs.PriceDelivery);
         return;
     }
-    if (!freePriceDelivery || freePriceDelivery == 0) {
+
+    if (!AreaDelivery || AreaDelivery.length == 0) {
         showWarningMessage(warnMgs.FreePriceDelivery);
         return;
     }
@@ -1395,6 +1396,7 @@ function saveDeliverySetting() {
         PayCard: $("#payment-card").is(":checked"),
         PayCash: $("#payment-cash").is(":checked"),
         TimeDeliveryJSON: getTimeDeliveryJSON(),
+        AreaDeliveries: AreaDelivery
     }
     let loader = new Loader($("#delivery"));
     let successFunc = function (result, loader) {
@@ -2528,13 +2530,149 @@ class OrderDetails {
     }
 }
 
+function openSttingAreaDelivery() {
+    const setting = new AreaDeliverySetting()
 
-class AreaDelivery {
-    static openSetting() {
+    setting.render()
 
+    Dialog.showModal('#areaDeliverySettingDialog')
+}
+
+class AreaDeliverySetting {
+    constructor() {
+        this.bindAppendAreaDelivery()
     }
 
-    static closeSetting() {
+    bindAppendAreaDelivery() {
+        const $appendAreaBtn = $('.area-delivery-settings-add')
+        const actionClick = () => this.appendNewArea()
 
+        $appendAreaBtn.unbind('click')
+        $appendAreaBtn.bind('click', actionClick)
+    }
+
+    render() {
+        const items = []
+
+        if (AreaDelivery.length == 0) {
+            const epmty = this.renderEmpty()
+            items.push(epmty);
+        } else {
+            for (let area of AreaDelivery) {
+                let item = this.renderItem(area)
+
+                items.push(item)
+            }
+        }
+
+        this.setToPage(items)
+    }
+
+    setToPage(items) {
+        $('.area-delivery-settings-list').html(items)
+    }
+
+    renderEmpty() {
+        return `<div class="area-delivery-empty">Добавте районы доставки...</div>`
+    }
+
+    renderItem(areaDelivery) {
+        const priceWithPrefix = `${areaDelivery.MinPrice} руб.`
+        const actionEditClick = () => this.showEditDialog(areaDelivery.NameArea, areaDelivery.MinPrice, areaDelivery.UniqId)
+        const actionRemoveClick = () => this.removeAreaDelivery(areaDelivery.UniqId)
+        const template = `
+            <div class="area-delivery-settings-item border-bottom">
+                <span class="area-name">${areaDelivery.NameArea}</span>
+                <span class="area-delivery-price">${priceWithPrefix}</span>
+                <button class="area-delivery-settings-btn edit-btn"><i class="fal fa-edit"></i></button>
+                <button class="area-delivery-settings-btn remove-btn"><i class="fal fa-trash-alt"></i></button>
+            </div>`
+        const $item = $(template)
+
+        $item.find('.edit-btn').bind('click', actionEditClick)
+        $item.find('.remove-btn').bind('click', actionRemoveClick)
+
+        return $item
+    }
+
+    removeAreaDelivery(uniqId) {
+        const loader = new Loader('#areaDeliveryEditDialog')
+        loader.start()
+
+        let newAreaDelivery = []
+
+        for (let area of AreaDelivery) {
+            if (area.UniqId != uniqId) {
+                newAreaDelivery.push(area);
+            }
+        }
+
+        AreaDelivery = newAreaDelivery
+
+        this.render()
+        loader.stop()
+    }
+
+    appendNewArea() {
+        const uniqId = generateRandomString(10)
+
+        this.showEditDialog('', '', uniqId)
+    }
+
+    showEditDialog(name, minPrice, uniqId) {
+        $("#area-name").val(name)
+        $("#area-price").val(minPrice)
+        $("#area-uniqId").val(uniqId)
+
+        const actionSaveClick = () => this.saveAreaDelivery()
+        const saveBtn = $('#areaDeliveryEditDialog').find('.btn-submit')
+
+        saveBtn.unbind('click')
+        saveBtn.bind('click', actionSaveClick)
+
+        Dialog.showModal('#areaDeliveryEditDialog')
+    }
+
+    saveAreaDelivery() {
+        const loader = new Loader('#areaDeliveryEditDialog')
+        loader.start()
+
+        const name = $("#area-name").val()
+        const minPrice = $("#area-price").val()
+        const uniqId = $("#area-uniqId").val()
+        const areaDelivery = this.findAreaByUniqId(uniqId)
+
+        if (!name || !minPrice) {
+            showInfoMessage('Заполните все поля')
+            loader.stop()
+            return
+        }
+
+        if (areaDelivery) {
+            areaDelivery.NameArea = name
+            areaDelivery.MinPrice = minPrice
+        } else {
+            const newAreaDelivery = {
+                UniqId: uniqId,
+                NameArea: name,
+                MinPrice: minPrice
+            }
+
+            AreaDelivery.push(newAreaDelivery)
+        }
+
+        this.render()
+        loader.stop()
+        Dialog.close('#areaDeliveryEditDialog')
+    }
+
+    findAreaByUniqId(uniqId) {
+        for (let areaDelivery of AreaDelivery) {
+            if (areaDelivery.UniqId === uniqId) {
+                return areaDelivery
+            }
+        }
+
+        return null;
     }
 }

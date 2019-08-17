@@ -41,6 +41,24 @@ namespace EasyStart.Logic
             return setting;
         }
 
+        public static List<AreaDeliveryModel> GetAreaDeliveris(int delvierySettingId)
+        {
+            List<AreaDeliveryModel> areaDeliveries = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    areaDeliveries = db.AreaDeliveryModels
+                        .Where(p => p.DeliverySettingId == delvierySettingId)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return areaDeliveries;
+        }
+
         public static DeliverySettingModel GetDeliverySetting(int branchId)
         {
             DeliverySettingModel setting = null;
@@ -49,6 +67,7 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     setting = db.DeliverySettings.FirstOrDefault(p => p.BranchId == branchId);
+                    setting.AreaDeliveries = GetAreaDeliveris(setting.Id);
                 }
             }
             catch (Exception ex)
@@ -274,6 +293,60 @@ namespace EasyStart.Logic
             return success;
         }
 
+        public static bool SaveAreaDeliveries(List<AreaDeliveryModel> areaDeliveries)
+        {
+            var success = false;
+
+            if (areaDeliveries == null || !areaDeliveries.Any())
+                return success;
+
+            try
+            {
+                var dict = areaDeliveries.ToDictionary(p => p.UniqId);
+                var ids = dict.Keys.ToList();
+
+                using (var db = new AdminPanelContext())
+                {
+                    var allAreas = db.AreaDeliveryModels.ToList();
+                    var updates = allAreas
+                        .Where(x => ids.Contains(x.UniqId))
+                        .ToList();
+                    var newAreas = areaDeliveries
+                        .Where(p => !updates.Exists(x => p.UniqId == x.UniqId))
+                        .ToList();
+                    var removeAreas = allAreas
+                        .Where(x => !updates.Exists(p => p.UniqId == x.UniqId))
+                        .ToList();
+
+                    if (removeAreas != null && removeAreas.Any())
+                    {
+                        db.AreaDeliveryModels.RemoveRange(removeAreas);
+                    }
+
+                    if (updates != null)
+                    {
+                        updates.ForEach(p =>
+                        {
+                            p.NameArea = dict[p.UniqId].NameArea;
+                            p.MinPrice = dict[p.UniqId].MinPrice;
+                        });
+                    }
+
+                    if (areaDeliveries.Any())
+                    {
+                        db.AreaDeliveryModels.AddRange(newAreas);
+                    }
+
+                    db.SaveChanges();
+                    success = true;
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return success;
+        }
+
         public static bool SaveDeliverySetting(DeliverySettingModel setting)
         {
             var success = false;
@@ -288,7 +361,6 @@ namespace EasyStart.Logic
                         updateSetting.PayCard = setting.PayCard;
                         updateSetting.PayCash = setting.PayCash;
                         updateSetting.PriceDelivery = setting.PriceDelivery;
-                        updateSetting.FreePriceDelivery = setting.FreePriceDelivery;
                         updateSetting.TimeDeliveryJSON = setting.TimeDeliveryJSON;
                         updateSetting.ZoneId = setting.ZoneId;
                         updateSetting.IsSoundNotify = setting.IsSoundNotify;
@@ -299,7 +371,13 @@ namespace EasyStart.Logic
                     }
 
                     db.SaveChanges();
-                    success = true;
+
+                    var deliverySettingId = db.DeliverySettings.FirstOrDefault(p => p.BranchId == setting.BranchId);
+                    setting.AreaDeliveries.ForEach(p => p.DeliverySettingId = deliverySettingId.Id);
+
+                    var saveAreaSuccess = SaveAreaDeliveries(setting.AreaDeliveries);
+
+                    success = true && saveAreaSuccess;
                 }
             }
             catch (Exception ex)

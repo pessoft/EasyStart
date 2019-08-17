@@ -15,6 +15,9 @@
     @Styles.Render("~/datepicker/css")
 </head>
 <body>
+    <script>
+        var AreaDelivery = JSON.parse(@Html.Raw(Json.Encode(ViewBag.AreaDeliveris)))
+    </script>
     <div class="header-menu">
         <div class="logo-img menu-item" target-id="about-us">
             <img src="~/Images/logo.png" alt="Logo" />
@@ -326,17 +329,7 @@
                             <div class="bar"></div>
                             <label>Стоимость доставки (руб.)</label>
                         </div>
-                        @*<div class="group">
-                                <input required type="text" id="free-delivery" value="@(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.FreePriceDelivery != 0 ? ViewBag.DeliverySetting.FreePriceDelivery : "")" />
-                                <div class="bar"></div>
-                                <label>Бесплатная доставка при заказе на сумму от (руб.)</label>
-                            </div>*@
-                        <select id="area-delivery-list">
-                            <option selected disabled>
-                                Районы доставки
-                            </option>
-                        </select>
-                        <button class="btn btn-light" onclick="Dialog.showModal('#areaDeliverySettingDialog')">Настроить районы</button>
+                        <button class="btn btn-light" onclick="openSttingAreaDelivery()">Настроить районы доставкаи</button>
                     </div>
                 </div>
                 <div class="delivery-block smaller">
@@ -786,7 +779,7 @@
                 <i class="fal fa-times"></i>
             </button>
             <div class="area-delivery-settings">
-                <button class="area-delivery-settings-add" onclick="Dialog.showModal('#areaDeliveryEditDialog')">
+                <button class="area-delivery-settings-add">
                     <i class="fal fa-plus"></i>
                     Добавить регион
                 </button>
@@ -805,8 +798,9 @@
     <dialog id="areaDeliveryEditDialog">
         <div class="area-delivery-edit-wrapper">
             <div class="area-delivery-edit-inputs">
+                <input id="area-uniqId" type="hidden"  value="" />
                 <input id="area-name" type="text" placeholder="Название района">
-                <input id="area-price" type="text" placeholder="Стоимость доставки">
+                <input id="area-price" min="0" step="1" value="0" type="number" placeholder="Минимальная сумма заказа">
             </div>
             <div class="area-delivery-edit-menu">
                 <button class="btn btn-submit">Сохранить</button>
