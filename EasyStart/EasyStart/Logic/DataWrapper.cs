@@ -394,9 +394,26 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    var orderNumber = db.Categories.Count() + 1;
+                    var orderNumber = db.Categories.Where(p => p.BranchId == category.BranchId).Count() + 1;
 
                     category.OrderNumber = orderNumber;
+                    result = db.Categories.Add(category);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
+
+        public static CategoryModel SaveCategoryWihoutChangeOrderNumber(CategoryModel category)
+        {
+            CategoryModel result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
                     result = db.Categories.Add(category);
                     db.SaveChanges();
                 }
@@ -425,14 +442,14 @@ namespace EasyStart.Logic
             return result;
         }
 
-        public static List<CategoryModel> GetCategories()
+        public static List<CategoryModel> GetCategories(int branchId)
         {
             List<CategoryModel> result = new List<CategoryModel>();
             try
             {
                 using (var db = new AdminPanelContext())
                 {
-                    result = db.Categories.ToList();
+                    result = db.Categories.Where(p => p.BranchId == branchId).ToList();
                 }
             }
             catch (Exception ex)
@@ -441,7 +458,7 @@ namespace EasyStart.Logic
             return result;
         }
 
-        public static List<CategoryModel> GetCategoriesVisible()
+        public static List<CategoryModel> GetCategoriesVisible(int brancId)
         {
             List<CategoryModel> result = new List<CategoryModel>();
             try
@@ -449,7 +466,7 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     result = db.Categories
-                        .Where(p => p.Visible)
+                        .Where(p => p.BranchId == brancId &&  p.Visible)
                         .ToList();
                 }
             }
@@ -518,6 +535,21 @@ namespace EasyStart.Logic
             { }
 
             return result;
+        }
+
+        public static void SaveProductsWihoutChangeOrderNumber(List<ProductModel> products)
+        {
+            ProductModel result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    db.Products.AddRange(products);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            { }
         }
 
         public static List<ProductModel> GetProducts(int idCategory)
@@ -644,7 +676,7 @@ namespace EasyStart.Logic
             return result;
         }
 
-        public static List<ProductModel> GetAllProducts()
+        public static List<ProductModel> GetAllProducts(int branchId)
         {
             List<ProductModel> result = new List<ProductModel>();
             try
@@ -653,6 +685,7 @@ namespace EasyStart.Logic
                 {
                     result = db
                         .Products
+                        .Where(p => p.BranchId == branchId)
                         .ToList();
                 }
             }
@@ -662,7 +695,7 @@ namespace EasyStart.Logic
             return result;
         }
 
-        public static List<ProductModel> GetAllProductsVisible()
+        public static List<ProductModel> GetAllProductsVisible(int branchId)
         {
             List<ProductModel> result = new List<ProductModel>();
             try
@@ -670,8 +703,8 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     result = db
-                        .Products.
-                        Where(p => p.Visible)
+                        .Products
+                        .Where(p =>p.BranchId == branchId && p.Visible)
                         .ToList();
                 }
             }

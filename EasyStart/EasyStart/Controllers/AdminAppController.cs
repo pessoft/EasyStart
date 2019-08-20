@@ -34,11 +34,11 @@ namespace EasyStart
             }
         }
 
-        public List<CategoryModel> GetCategories()
+        public List<CategoryModel> GetCategories(int branchId)
         {
             try
             {
-                var categories = DataWrapper.GetCategoriesVisible();
+                var categories = DataWrapper.GetCategoriesVisible(branchId);
 
                 return categories;
             }
@@ -62,11 +62,11 @@ namespace EasyStart
             }
         }
 
-        public Dictionary<int, List<ProductModel>> GetAllProducts()
+        public Dictionary<int, List<ProductModel>> GetAllProducts(int branchId)
         {
             try
             {
-                var products = DataWrapper.GetAllProductsVisible()
+                var products = DataWrapper.GetAllProductsVisible(branchId)
                 .GroupBy(p => p.CategoryId)
                 .ToDictionary(p => p.Key, p => p.ToList());
 

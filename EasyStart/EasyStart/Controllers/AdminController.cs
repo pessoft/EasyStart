@@ -314,7 +314,8 @@ namespace EasyStart.Controllers
         public JsonResult LoadCategoryList()
         {
             var result = new JsonResultModel();
-            var categories = DataWrapper.GetCategories();
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+            var categories = DataWrapper.GetCategories(branchId);
 
             if (categories != null)
             {

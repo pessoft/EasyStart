@@ -172,6 +172,7 @@
     </Compile>
     <Compile Include="Hubs\NewOrderHub.cs" />
     <Compile Include="Logic\AnalyticsDataWrapper.cs" />
+    <Compile Include="Logic\BrachClone.cs" />
     <Compile Include="Logic\BuyType.cs" />
     <Compile Include="Logic\ConverterBranchSetting.cs" />
     <Compile Include="Logic\DataWrapper.cs" />
@@ -180,6 +181,7 @@
     <Compile Include="Logic\KeyGenerator.cs" />
     <Compile Include="Logic\List.cs" />
     <Compile Include="Logic\OrderStatus.cs" />
+    <Compile Include="Logic\ProductHelper.cs" />
     <Compile Include="Logic\ProductType.cs" />
     <Compile Include="Logic\RedirectingActionAttribute.cs" />
     <Compile Include="Logic\ReportType.cs" />
