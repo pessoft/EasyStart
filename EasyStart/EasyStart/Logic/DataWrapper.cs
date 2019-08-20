@@ -118,6 +118,7 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     setting = db.DeliverySettings.FirstOrDefault(p => p.BranchId == branchId);
+                    setting.AreaDeliveries = GetAreaDeliveris(setting.Id);
                 }
             }
             catch (Exception ex)
