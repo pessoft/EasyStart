@@ -21,11 +21,12 @@ namespace EasyStart.Logic
             };
         }
 
-        public static ProductModel Clone(this ProductModel product, int newCategoryId, string newImageName)
+        public static ProductModel Clone(this ProductModel product, int newBrachId, int newCategoryId, string newImageName)
         {
             return new ProductModel
             {
                 Id = -1,
+                BranchId = newBrachId,
                 Image = newImageName,
                 AdditionInfo = String.Copy(product.AdditionInfo),
                 CategoryId = newCategoryId,

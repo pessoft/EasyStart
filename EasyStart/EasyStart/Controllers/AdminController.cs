@@ -147,6 +147,9 @@ namespace EasyStart.Controllers
                 }
             }
 
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+
+            category.BranchId = branchId;
             category = DataWrapper.SaveCategory(category);
 
             if (category != null)
@@ -183,6 +186,9 @@ namespace EasyStart.Controllers
                 }
             }
 
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+
+            product.BranchId = branchId;
             product = DataWrapper.SaveProduct(product);
 
             if (product != null)
@@ -238,6 +244,9 @@ namespace EasyStart.Controllers
                     };
 
                     DataWrapper.SaveSetting(setting);
+
+                    var baseBrachClone = new BrachClone(Server, branchId, newBranchId);
+                    baseBrachClone.Clone();
 
                     var converter = new ConverterBranchSetting();
                     var branchView = converter.GetBranchSettingViews(branch, setting, typeBranch);
@@ -370,6 +379,9 @@ namespace EasyStart.Controllers
                 }
             }
 
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+
+            category.BranchId = branchId;
             var updateCategory = DataWrapper.UpdateCategory(category);
 
             if (updateCategory != null)
@@ -445,6 +457,9 @@ namespace EasyStart.Controllers
                 }
             }
 
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+
+            product.CategoryId = branchId;
             var updateProduct = DataWrapper.UpdateProduct(product);
 
             if (updateProduct != null)

@@ -58,8 +58,16 @@
 function bindDialogCloseClickBackdor() {
     $("dialog").bind('click', function (event) {
         var rect = this.getBoundingClientRect();
-        var isInDialog = (rect.top <= event.clientY && event.clientY <= rect.top + rect.height
-            && rect.left <= event.clientX && event.clientX <= rect.left + rect.width);
+        var isInDialog = false;
+
+        if (typeof (event.clientY) === typeof (undefined)) {
+            isInDialog = true;
+        }
+        else {
+            isInDialog = (rect.top <= event.clientY && event.clientY <= rect.top + rect.height
+                && rect.left <= event.clientX && event.clientX <= rect.left + rect.width);
+        }
+
         if (!isInDialog) {
             Dialog.close($(this));
         }
@@ -1443,7 +1451,7 @@ function addBranch() {
         loader.stop();
         if (result.Success) {
             addBranchToList(result.Data);
-            addNewBranchToAdditionalOrder(result.Data.Id, result.Data.City);
+            //addNewBranchToAdditionalOrder(result.Data.Id, result.Data.City);
             cancelDialog("#addBranchDialog");
         } else {
             showErrorMessage(result.ErrorMessage);
@@ -2253,7 +2261,7 @@ class TodayOrder {
 }
 
 class CardOrderRenderer {
-    static renderOrders(orders,containerId, speed) {
+    static renderOrders(orders, containerId, speed) {
         let index = 0;
         for (let order of orders) {
             ++index
@@ -2261,11 +2269,11 @@ class CardOrderRenderer {
             //    speed = 1;
             //}
 
-            this.renderOrder(order, containerId,  speed);
+            this.renderOrder(order, containerId, speed);
         }
     }
 
-    static renderOrder(order, containerId,  speed) {
+    static renderOrder(order, containerId, speed) {
         const todayData = new TodayOrder(order, showOrderDetails);
         const cardOrder = new CardOrder(todayData);
 
@@ -2324,7 +2332,7 @@ class OrderDetailsData {
         this.DeliveryPrice = `${xFormatPrice(order.DeliveryPrice)} ${prefixRub}`;
         this.Discount = order.Discount == 0 ? `0${prefixPercent}` : `${order.Discount}${prefixPercent} (${xFormatPrice(order.AmountPay * order.Discount / 100)} ${prefixRub})`
         this.PayType = getBuyType(order.BuyType);
-        this.CashBack = order.CashBack > 0 ? `${xFormatPrice(order.CashBack - order.AmountPayDiscountDelivery)} ${prefixRub}`:`${xFormatPrice(order.CashBack)} ${prefixRub}`;
+        this.CashBack = order.CashBack > 0 ? `${xFormatPrice(order.CashBack - order.AmountPayDiscountDelivery)} ${prefixRub}` : `${xFormatPrice(order.CashBack)} ${prefixRub}`;
         this.AmountPayDiscountDelivery = `${xFormatPrice(order.AmountPayDiscountDelivery)} ${prefixRub}`;
     }
 
@@ -2408,7 +2416,8 @@ var StatusAtrr = {
     },
     Processing: {
         cssColorClass: "default-color",
-        numberOrderMark: `#`}
+        numberOrderMark: `#`
+    }
 }
 
 class OrderDetails {

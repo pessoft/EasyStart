@@ -34,6 +34,27 @@ namespace EasyStart
             }
         }
 
+        public Dictionary<int, int> GetCityBranches()
+        {
+            var branchCityDict = new Dictionary<int, int>();
+
+            try
+            {
+                var alloweCityIds = DataWrapper.GetAllowedCity();
+
+                foreach (var cityId in alloweCityIds)
+                {
+                    var branchId = DataWrapper.GetBranchIdByCity(cityId);
+                    branchCityDict.Add(cityId, branchId);
+                }
+
+            }
+            catch (Exception ex)
+            { }
+
+            return branchCityDict;
+        }
+
         public List<CategoryModel> GetCategories(int branchId)
         {
             try
@@ -258,7 +279,7 @@ namespace EasyStart
                 var setting = DataWrapper.GetSettingByCity(userData.CityId);
                 var client = DataWrapper.GetClient(userData.ClientId);
                 var isPhoneEquals = client != null ? client.PhoneNumber == userData.PhoneNumber : false;
-                if (setting !=null &&
+                if (setting != null &&
                     client != null &&
                     isPhoneEquals)
                 {

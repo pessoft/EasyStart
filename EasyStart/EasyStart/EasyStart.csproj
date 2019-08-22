@@ -322,6 +322,10 @@
     <Compile Include="Migrations\201908170927015_ChangeAreaDeliveryKey.Designer.cs">
       <DependentUpon>201908170927015_ChangeAreaDeliveryKey.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908210524244_AddBrachIdInPridcuts.cs" />
+    <Compile Include="Migrations\201908210524244_AddBrachIdInPridcuts.Designer.cs">
+      <DependentUpon>201908210524244_AddBrachIdInPridcuts.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -612,6 +616,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908170927015_ChangeAreaDeliveryKey.resx">
       <DependentUpon>201908170927015_ChangeAreaDeliveryKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908210524244_AddBrachIdInPridcuts.resx">
+      <DependentUpon>201908210524244_AddBrachIdInPridcuts.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

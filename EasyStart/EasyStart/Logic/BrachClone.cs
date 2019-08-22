@@ -21,9 +21,9 @@ namespace EasyStart.Logic
             this.newBrachId = newBrachId;
         }
 
-        public  void Clone()
+        public void Clone()
         {
-
+            CloneCategories();
         }
 
         private void CloneCategories()
@@ -50,7 +50,7 @@ namespace EasyStart.Logic
             foreach (var product in baseProducts)
             {
                 var newImageName = CloneImage(product.Image);
-                var newProduct = product.Clone(newCategoryId, newImageName);
+                var newProduct = product.Clone(newBrachId, newCategoryId, newImageName);
 
                 newProdcts.Add(newProduct);
             }
@@ -58,15 +58,19 @@ namespace EasyStart.Logic
             DataWrapper.SaveProductsWihoutChangeOrderNumber(newProdcts);
         }
 
-        private string CloneImage(string imageName)
+        private string CloneImage(string imagePath)
         {
-            string fileName = System.IO.Path.GetFileName(server.MapPath("~/Images/Products/" + imageName));
+            if (string.IsNullOrEmpty(imagePath))
+                return "";
+
+            string baseFilePath = server.MapPath(imagePath);
+            string fileName = System.IO.Path.GetFileName(baseFilePath);
             string ext = fileName.Substring(fileName.LastIndexOf("."));
             string newFileName = String.Format(@"{0}{1}", System.Guid.NewGuid(), ext);
             string newPath = server.MapPath("~/Images/Products/" + newFileName);
-            File.Copy(fileName, newPath);
+            File.Copy(baseFilePath, newPath);
 
-            return newFileName;
+            return $"../Images/Products/{newFileName}";
         }
 
     }
