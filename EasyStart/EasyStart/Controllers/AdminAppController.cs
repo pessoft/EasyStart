@@ -17,6 +17,27 @@ namespace EasyStart
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class AdminAppController : ApiController
     {
+        public JsonResultModel GetLocation()
+        {
+            var result = new JsonResultModel();
+            result.Success = false;
+
+            try
+            {
+                var allowedCity = GetAllowedCity();
+                var cityBranches = GetCityBranches();
+
+                result.Data = new { cities = allowedCity, cityBranches };
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+            }
+
+            return result;
+        }
+
         public Dictionary<int, string> GetAllowedCity()
         {
             try
@@ -53,6 +74,69 @@ namespace EasyStart
             { }
 
             return branchCityDict;
+        }
+
+        [HttpPost]
+        public JsonResultModel GetMainData([FromBody] int branchId)
+        {
+            var result = new JsonResultModel();
+            result.Success = false;
+
+            if (branchId < 1)
+                return result;
+
+            try
+            {
+                var categories = GetCategories(branchId);
+                var products = GetAllProducts(branchId);
+                var deliverySettings = DataWrapper.GetDeliverySetting(branchId);
+                var organizationSettings = DataWrapper.GetSetting(branchId);
+                var stocks = DataWrapper.GetStocks(branchId);
+
+                //TO DO: вынести в метод
+                categories.ForEach(p =>
+                {
+                    if(!string.IsNullOrEmpty(p.Image))
+                    {
+                        p.Image = p.Image.Substring(2);
+                    }
+                });
+
+                stocks.ForEach(p =>
+                {
+                    if (!string.IsNullOrEmpty(p.Image))
+                    {
+                        p.Image = p.Image.Substring(2);
+                    }
+                });
+
+                foreach (var kv in products)
+                {
+                    kv.Value.ForEach(p =>
+                    {
+                        if (!string.IsNullOrEmpty(p.Image))
+                        {
+                            p.Image = p.Image.Substring(2);
+                        }
+                    });
+                }
+
+                result.Data = new
+                {
+                    categories,
+                    products,
+                    deliverySettings,
+                    organizationSettings,
+                    stocks
+                };
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+            }
+
+            return result;
         }
 
         public List<CategoryModel> GetCategories(int branchId)
