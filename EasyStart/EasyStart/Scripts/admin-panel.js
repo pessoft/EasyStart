@@ -2255,9 +2255,10 @@ class CardOrderRenderer {
         let index = 0;
         for (let order of orders) {
             ++index
-            //if (index > 6) {
-            //    speed = 1;
-            //}
+
+            if (index > 6) {
+                speed = 1;
+            }
 
             this.renderOrder(order, containerId,  speed);
         }
