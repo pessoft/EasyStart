@@ -925,6 +925,26 @@ namespace EasyStart.Logic
 
             return result;
         }
+
+        public static Dictionary<int, int> GetProductReviewsVisibleCount(List<int> productIds)
+        {
+            Dictionary<int, int> result = new Dictionary<int, int>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.ProductReviews
+                        .Where(p => productIds.Contains(p.ProductId) && p.Visible)
+                        .GroupBy(p => p.ProductId)
+                        .ToDictionary(p => p.Key, p => p.Count());
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
+
         public static StockModel SaveStock(StockModel stock)
         {
             StockModel result = null;

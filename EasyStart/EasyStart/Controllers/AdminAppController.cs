@@ -93,6 +93,19 @@ namespace EasyStart
                 var organizationSettings = DataWrapper.GetSetting(branchId);
                 var stocks = DataWrapper.GetStocks(branchId);
 
+                var productIds = products.Values.SelectMany(p => p.Select(s => s.Id)).ToList();
+                var reviewsCount = DataWrapper.GetProductReviewsVisibleCount(productIds);
+
+                foreach (var id in productIds)
+                {
+                    var outCount = 0;
+
+                    if (!reviewsCount.TryGetValue(id, out outCount))
+                    {
+                        reviewsCount.Add(id, 0);
+                    }
+                }
+
                 //TO DO: вынести в метод
                 categories.ForEach(p =>
                 {
@@ -127,7 +140,8 @@ namespace EasyStart
                     products,
                     deliverySettings,
                     organizationSettings,
-                    stocks
+                    stocks,
+                    reviewsCount
                 };
                 result.Success = true;
             }
@@ -295,8 +309,10 @@ namespace EasyStart
             { }
         }
 
-        public List<ProductReview> GetProductReviews(int productId)
+        [HttpPost]
+        public JsonResultModel GetProductReviews([FromBody]int productId)
         {
+            var result = new JsonResultModel();
             try
             {
                 var reviews = DataWrapper.GetProductReviewsVisible(productId);
@@ -311,14 +327,15 @@ namespace EasyStart
 
                         p.PhoneNumber = hideNumberPhone.ToString();
                     });
-                }
 
-                return reviews;
+                    result.Data = new { reviews };
+                    result.Success = true;
+                }
             }
             catch (Exception ex)
-            {
-                return null;
-            }
+            { }
+
+            return result;
         }
 
         public List<StockModel> GetStocks(int cityId)
