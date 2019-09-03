@@ -172,6 +172,7 @@
     </Compile>
     <Compile Include="Hubs\NewOrderHub.cs" />
     <Compile Include="Logic\AnalyticsDataWrapper.cs" />
+    <Compile Include="Logic\BrachClone.cs" />
     <Compile Include="Logic\BuyType.cs" />
     <Compile Include="Logic\ConverterBranchSetting.cs" />
     <Compile Include="Logic\DataWrapper.cs" />
@@ -180,6 +181,7 @@
     <Compile Include="Logic\KeyGenerator.cs" />
     <Compile Include="Logic\List.cs" />
     <Compile Include="Logic\OrderStatus.cs" />
+    <Compile Include="Logic\ProductHelper.cs" />
     <Compile Include="Logic\ProductType.cs" />
     <Compile Include="Logic\RedirectingActionAttribute.cs" />
     <Compile Include="Logic\ReportType.cs" />
@@ -319,6 +321,10 @@
     <Compile Include="Migrations\201908170927015_ChangeAreaDeliveryKey.cs" />
     <Compile Include="Migrations\201908170927015_ChangeAreaDeliveryKey.Designer.cs">
       <DependentUpon>201908170927015_ChangeAreaDeliveryKey.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908210524244_AddBrachIdInPridcuts.cs" />
+    <Compile Include="Migrations\201908210524244_AddBrachIdInPridcuts.Designer.cs">
+      <DependentUpon>201908210524244_AddBrachIdInPridcuts.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
@@ -610,6 +616,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908170927015_ChangeAreaDeliveryKey.resx">
       <DependentUpon>201908170927015_ChangeAreaDeliveryKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908210524244_AddBrachIdInPridcuts.resx">
+      <DependentUpon>201908210524244_AddBrachIdInPridcuts.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

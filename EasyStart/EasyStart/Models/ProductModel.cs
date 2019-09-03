@@ -10,6 +10,7 @@ namespace EasyStart.Models
     public class ProductModel
     {
         public int Id { get; set; }
+        public int BranchId { get; set; }
         public int CategoryId { get; set; }
         public string Name { get; set; }
         public string AdditionInfo { get; set; }
