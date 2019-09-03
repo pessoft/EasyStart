@@ -849,7 +849,7 @@ namespace EasyStart.Logic
         /// </summary>
         /// <param name="clientId"></param>
         /// <returns></returns>
-        public static List<OrderModel> GetHistoryOrder(int clientId)
+        public static List<OrderModel> GetHistoryOrder(int clientId, int branchId)
         {
             var histroyOrders = new List<OrderModel>();
             try
@@ -857,7 +857,7 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     histroyOrders = db.Orders
-                        .Where(p => p.ClientId == clientId)
+                        .Where(p => p.ClientId == clientId && p.BranchId == branchId)
                         .ToList();
                 }
             }

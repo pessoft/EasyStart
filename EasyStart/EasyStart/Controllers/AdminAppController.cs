@@ -157,11 +157,12 @@ namespace EasyStart
             }
         }
 
-        public List<OrderModel> GetHistoryOrder(int clientId)
+        [HttpPost]
+        public List<OrderModel> GetHistoryOrder([FromBody]DataHistoryForViewModel dataHistoryForLoad)
         {
             try
             {
-                var historyOrder = DataWrapper.GetHistoryOrder(clientId);
+                var historyOrder = DataWrapper.GetHistoryOrder(dataHistoryForLoad.ClientId, dataHistoryForLoad.BranchId);
 
                 return historyOrder;
             }
