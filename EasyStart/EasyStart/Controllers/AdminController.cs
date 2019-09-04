@@ -209,56 +209,64 @@ namespace EasyStart.Controllers
         public JsonResult AddBranch(NewBranchModel newBranch)
         {
             var result = new JsonResultModel();
-            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-            var typeBranch = DataWrapper.GetBranchType(branchId);
-            var newBranchId = DataWrapper.GetBranchId(newBranch.Login);
-
-            if (typeBranch != TypeBranch.MainBranch)
+            try
             {
-                result.ErrorMessage = "Вы не можете добавлять отделения";
-                return Json(result);
-            }
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var typeBranch = DataWrapper.GetBranchType(branchId);
+                var newBranchId = DataWrapper.GetBranchId(newBranch.Login);
 
-            var branch = new BranchModel
-            {
-                Login = newBranch.Login,
-                Password = newBranch.Password,
-                TypeBranch = Logic.TypeBranch.SubBranch
-            };
-
-
-            if (newBranchId == -1)
-            {
-                var success = DataWrapper.SaveBranch(branch);
-                if (!success)
+                if (typeBranch != TypeBranch.MainBranch)
                 {
-                    result.ErrorMessage = "При сохранении что то пошло не так";
+                    result.ErrorMessage = "Вы не можете добавлять отделения";
+                    return Json(result);
+                }
+
+                var branch = new BranchModel
+                {
+                    Login = newBranch.Login,
+                    Password = newBranch.Password,
+                    TypeBranch = Logic.TypeBranch.SubBranch
+                };
+
+
+                if (newBranchId == -1)
+                {
+                    var success = DataWrapper.SaveBranch(branch);
+                    if (!success)
+                    {
+                        result.ErrorMessage = "При сохранении что то пошло не так";
+                    }
+                    else
+                    {
+                        newBranchId = DataWrapper.GetBranchId(newBranch.Login);
+                        var setting = new SettingModel
+                        {
+                            BranchId = newBranchId,
+                            CityId = newBranch.CityId
+                        };
+
+                        DataWrapper.SaveSetting(setting);
+
+                        var baseBrachClone = new BrachClone(Server, branchId, newBranchId);
+                        baseBrachClone.Clone();
+
+                        var converter = new ConverterBranchSetting();
+                        var branchView = converter.GetBranchSettingViews(branch, setting, typeBranch);
+
+                        result.Data = branchView;
+                        result.Success = true;
+                    }
                 }
                 else
                 {
-                    newBranchId = DataWrapper.GetBranchId(newBranch.Login);
-                    var setting = new SettingModel
-                    {
-                        BranchId = newBranchId,
-                        CityId = newBranch.CityId
-                    };
-
-                    DataWrapper.SaveSetting(setting);
-
-                    var baseBrachClone = new BrachClone(Server, branchId, newBranchId);
-                    baseBrachClone.Clone();
-
-                    var converter = new ConverterBranchSetting();
-                    var branchView = converter.GetBranchSettingViews(branch, setting, typeBranch);
-
-                    result.Data = branchView;
-                    result.Success = true;
+                    result.ErrorMessage = "Учетная запись с таким логином уже существует";
                 }
             }
-            else
+            catch (Exception ex)
             {
-                result.ErrorMessage = "Учетная запись с таким логином уже существует";
+                result.ErrorMessage = ex.Message;
             }
+            
 
             return Json(result);
         }
@@ -268,32 +276,40 @@ namespace EasyStart.Controllers
         public JsonResult RemoveBranch(int id)
         {
             var result = new JsonResultModel();
-            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-            var typeBranch = DataWrapper.GetBranchType(branchId);
-
-            if (branchId == id)
+            try
             {
-                result.ErrorMessage = "Самоудаление не возможно";
-                return Json(result);
-            }
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var typeBranch = DataWrapper.GetBranchType(branchId);
 
-            if (typeBranch != TypeBranch.MainBranch)
-            {
-                result.ErrorMessage = "Вы не можете удалять отделения";
-            }
-            else
-            {
-                var success = DataWrapper.RemoveBranch(id);
-
-                if (success)
+                if (branchId == id)
                 {
-                    result.Success = success;
+                    result.ErrorMessage = "Самоудаление не возможно";
+                    return Json(result);
+                }
+
+                if (typeBranch != TypeBranch.MainBranch)
+                {
+                    result.ErrorMessage = "Вы не можете удалять отделения";
                 }
                 else
                 {
-                    result.ErrorMessage = "Отдедение не удалено";
+                    var success = DataWrapper.RemoveBranch(id);
+
+                    if (success)
+                    {
+                        result.Success = success;
+                    }
+                    else
+                    {
+                        result.ErrorMessage = "Отдедение не удалено";
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                result.ErrorMessage = ex.Message;
+            }
+          
 
             return Json(result);
         }
