@@ -41,6 +41,24 @@ namespace EasyStart.Logic
             return setting;
         }
 
+        public static List<AreaDeliveryModel> GetAreaDeliveris(int delvierySettingId)
+        {
+            List<AreaDeliveryModel> areaDeliveries = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    areaDeliveries = db.AreaDeliveryModels
+                        .Where(p => p.DeliverySettingId == delvierySettingId)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return areaDeliveries;
+        }
+
         public static DeliverySettingModel GetDeliverySetting(int branchId)
         {
             DeliverySettingModel setting = null;
@@ -49,6 +67,7 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     setting = db.DeliverySettings.FirstOrDefault(p => p.BranchId == branchId);
+                    setting.AreaDeliveries = GetAreaDeliveris(setting.Id);
                 }
             }
             catch (Exception ex)
@@ -99,6 +118,7 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     setting = db.DeliverySettings.FirstOrDefault(p => p.BranchId == branchId);
+                    setting.AreaDeliveries = GetAreaDeliveris(setting.Id);
                 }
             }
             catch (Exception ex)
@@ -218,13 +238,13 @@ namespace EasyStart.Logic
                     var setting = db.Settings.FirstOrDefault(p => p.BranchId == id);
                     var deliverySetting = db.DeliverySettings.FirstOrDefault(p => p.BranchId == id);
 
-                    if(branch != null)
+                    if (branch != null)
                         db.Branches.Remove(branch);
 
-                    if(setting != null)
+                    if (setting != null)
                         db.Settings.Remove(setting);
 
-                    if(deliverySetting != null)
+                    if (deliverySetting != null)
                         db.DeliverySettings.Remove(deliverySetting);
 
                     db.SaveChanges();
@@ -257,11 +277,65 @@ namespace EasyStart.Logic
                         updateSetting.Email = setting.Email;
                         updateSetting.Vkontakte = setting.Vkontakte;
                         updateSetting.Instagram = setting.Instagram;
-                        updateSetting.Facebook= setting.Facebook;
+                        updateSetting.Facebook = setting.Facebook;
                     }
                     else
                     {
                         db.Settings.Add(setting);
+                    }
+
+                    db.SaveChanges();
+                    success = true;
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return success;
+        }
+
+        public static bool SaveAreaDeliveries(List<AreaDeliveryModel> areaDeliveries)
+        {
+            var success = false;
+
+            if (areaDeliveries == null || !areaDeliveries.Any())
+                return success;
+
+            try
+            {
+                var dict = areaDeliveries.ToDictionary(p => p.UniqId);
+                var ids = dict.Keys.ToList();
+
+                using (var db = new AdminPanelContext())
+                {
+                    var allAreas = db.AreaDeliveryModels.ToList();
+                    var updates = allAreas
+                        .Where(x => ids.Contains(x.UniqId))
+                        .ToList();
+                    var newAreas = areaDeliveries
+                        .Where(p => !updates.Exists(x => p.UniqId == x.UniqId))
+                        .ToList();
+                    var removeAreas = allAreas
+                        .Where(x => !updates.Exists(p => p.UniqId == x.UniqId))
+                        .ToList();
+
+                    if (removeAreas != null && removeAreas.Any())
+                    {
+                        db.AreaDeliveryModels.RemoveRange(removeAreas);
+                    }
+
+                    if (updates != null)
+                    {
+                        updates.ForEach(p =>
+                        {
+                            p.NameArea = dict[p.UniqId].NameArea;
+                            p.MinPrice = dict[p.UniqId].MinPrice;
+                        });
+                    }
+
+                    if (areaDeliveries.Any())
+                    {
+                        db.AreaDeliveryModels.AddRange(newAreas);
                     }
 
                     db.SaveChanges();
@@ -288,7 +362,6 @@ namespace EasyStart.Logic
                         updateSetting.PayCard = setting.PayCard;
                         updateSetting.PayCash = setting.PayCash;
                         updateSetting.PriceDelivery = setting.PriceDelivery;
-                        updateSetting.FreePriceDelivery = setting.FreePriceDelivery;
                         updateSetting.TimeDeliveryJSON = setting.TimeDeliveryJSON;
                         updateSetting.ZoneId = setting.ZoneId;
                         updateSetting.IsSoundNotify = setting.IsSoundNotify;
@@ -299,7 +372,13 @@ namespace EasyStart.Logic
                     }
 
                     db.SaveChanges();
-                    success = true;
+
+                    var deliverySettingId = db.DeliverySettings.FirstOrDefault(p => p.BranchId == setting.BranchId);
+                    setting.AreaDeliveries.ForEach(p => p.DeliverySettingId = deliverySettingId.Id);
+
+                    var saveAreaSuccess = SaveAreaDeliveries(setting.AreaDeliveries);
+
+                    success = true && saveAreaSuccess;
                 }
             }
             catch (Exception ex)
@@ -315,9 +394,26 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    var orderNumber = db.Categories.Count() + 1;
+                    var orderNumber = db.Categories.Where(p => p.BranchId == category.BranchId).Count() + 1;
 
                     category.OrderNumber = orderNumber;
+                    result = db.Categories.Add(category);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
+
+        public static CategoryModel SaveCategoryWihoutChangeOrderNumber(CategoryModel category)
+        {
+            CategoryModel result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
                     result = db.Categories.Add(category);
                     db.SaveChanges();
                 }
@@ -346,14 +442,14 @@ namespace EasyStart.Logic
             return result;
         }
 
-        public static List<CategoryModel> GetCategories()
+        public static List<CategoryModel> GetCategories(int branchId)
         {
             List<CategoryModel> result = new List<CategoryModel>();
             try
             {
                 using (var db = new AdminPanelContext())
                 {
-                    result = db.Categories.ToList();
+                    result = db.Categories.Where(p => p.BranchId == branchId).ToList();
                 }
             }
             catch (Exception ex)
@@ -362,7 +458,7 @@ namespace EasyStart.Logic
             return result;
         }
 
-        public static List<CategoryModel> GetCategoriesVisible()
+        public static List<CategoryModel> GetCategoriesVisible(int brancId)
         {
             List<CategoryModel> result = new List<CategoryModel>();
             try
@@ -370,7 +466,7 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     result = db.Categories
-                        .Where(p => p.Visible)
+                        .Where(p => p.BranchId == brancId &&  p.Visible)
                         .ToList();
                 }
             }
@@ -441,6 +537,21 @@ namespace EasyStart.Logic
             return result;
         }
 
+        public static void SaveProductsWihoutChangeOrderNumber(List<ProductModel> products)
+        {
+            ProductModel result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    db.Products.AddRange(products);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            { }
+        }
+
         public static List<ProductModel> GetProducts(int idCategory)
         {
             List<ProductModel> result = new List<ProductModel>();
@@ -489,9 +600,10 @@ namespace EasyStart.Logic
                         .Orders
                         .FirstOrDefault(p => data.OrderId == p.Id);
 
-                    if(order != null)
+                    if (order != null)
                     {
                         order.OrderStatus = data.Status;
+                        order.UpdateDate = data.DateUpdate;
                     }
 
                     db.SaveChanges();
@@ -564,7 +676,7 @@ namespace EasyStart.Logic
             return result;
         }
 
-        public static List<ProductModel> GetAllProducts()
+        public static List<ProductModel> GetAllProducts(int branchId)
         {
             List<ProductModel> result = new List<ProductModel>();
             try
@@ -573,6 +685,7 @@ namespace EasyStart.Logic
                 {
                     result = db
                         .Products
+                        .Where(p => p.BranchId == branchId)
                         .ToList();
                 }
             }
@@ -582,7 +695,7 @@ namespace EasyStart.Logic
             return result;
         }
 
-        public static List<ProductModel> GetAllProductsVisible()
+        public static List<ProductModel> GetAllProductsVisible(int branchId)
         {
             List<ProductModel> result = new List<ProductModel>();
             try
@@ -590,8 +703,8 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     result = db
-                        .Products.
-                        Where(p => p.Visible)
+                        .Products
+                        .Where(p =>p.BranchId == branchId && p.Visible)
                         .ToList();
                 }
             }
@@ -720,8 +833,8 @@ namespace EasyStart.Logic
                     orders = db.Orders
                         .Where(p => brandchIds.Contains(p.BranchId) &&
                                     p.OrderStatus != OrderStatus.Processing &&
-                                    DbFunctions.TruncateTime(p.Date) >= startDate.Date &&
-                                    DbFunctions.TruncateTime(p.Date) <= endDate.Date)
+                                    DbFunctions.TruncateTime(p.UpdateDate) >= startDate.Date &&
+                                    DbFunctions.TruncateTime(p.UpdateDate) <= endDate.Date)
                         .ToList();
                 }
             }
@@ -736,7 +849,7 @@ namespace EasyStart.Logic
         /// </summary>
         /// <param name="clientId"></param>
         /// <returns></returns>
-        public static List<OrderModel> GetHistoryOrder(int clientId)
+        public static List<OrderModel> GetHistoryOrder(int clientId, int branchId)
         {
             var histroyOrders = new List<OrderModel>();
             try
@@ -744,7 +857,7 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     histroyOrders = db.Orders
-                        .Where(p => p.ClientId == clientId)
+                        .Where(p => p.ClientId == clientId && p.BranchId == branchId)
                         .ToList();
                 }
             }
@@ -974,7 +1087,7 @@ namespace EasyStart.Logic
                     var ids = dict.Keys.ToList(); ;
                     var data = db.Categories.Where(p => ids.Contains(p.Id));
 
-                    foreach(var up in data)
+                    foreach (var up in data)
                     {
                         up.OrderNumber = dict[up.Id];
                     }
@@ -1122,6 +1235,40 @@ namespace EasyStart.Logic
             { }
 
             return client;
+        }
+
+
+        public static TodayDataOrdersModel GetDataOrdersByDate(List<int> brandchIds, DateTime date)
+        {
+            var todatData = new TodayDataOrdersModel();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    db.Orders
+                        .Where(p => brandchIds.Contains(p.BranchId) &&
+                                    p.OrderStatus != OrderStatus.Processing &&
+                                    DbFunctions.TruncateTime(p.UpdateDate) == date.Date)
+                        .ToList()
+                        .ForEach(p =>
+                        {
+                            if (p.OrderStatus == OrderStatus.Processed)
+                            {
+                                ++todatData.CountSuccesOrder;
+                                todatData.Revenue += p.AmountPayDiscountDelivery;
+                            }
+
+                            if (p.OrderStatus == OrderStatus.Cancellation)
+                                ++todatData.CountCancelOrder;
+                        });
+                }
+            }
+            catch (Exception ex)
+            {
+                todatData = null;
+            }
+
+            return todatData;
         }
     }
 }

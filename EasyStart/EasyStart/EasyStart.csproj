@@ -172,6 +172,7 @@
     </Compile>
     <Compile Include="Hubs\NewOrderHub.cs" />
     <Compile Include="Logic\AnalyticsDataWrapper.cs" />
+    <Compile Include="Logic\BrachClone.cs" />
     <Compile Include="Logic\BuyType.cs" />
     <Compile Include="Logic\ConverterBranchSetting.cs" />
     <Compile Include="Logic\DataWrapper.cs" />
@@ -180,6 +181,7 @@
     <Compile Include="Logic\KeyGenerator.cs" />
     <Compile Include="Logic\List.cs" />
     <Compile Include="Logic\OrderStatus.cs" />
+    <Compile Include="Logic\ProductHelper.cs" />
     <Compile Include="Logic\ProductType.cs" />
     <Compile Include="Logic\RedirectingActionAttribute.cs" />
     <Compile Include="Logic\ReportType.cs" />
@@ -292,12 +294,46 @@
     <Compile Include="Migrations\201907161627456_AddUseTable.Designer.cs">
       <DependentUpon>201907161627456_AddUseTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908100946302_OrderModelUpdateDate.cs" />
+    <Compile Include="Migrations\201908100946302_OrderModelUpdateDate.Designer.cs">
+      <DependentUpon>201908100946302_OrderModelUpdateDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908170830125_AddAreaDelivery.cs" />
+    <Compile Include="Migrations\201908170830125_AddAreaDelivery.Designer.cs">
+      <DependentUpon>201908170830125_AddAreaDelivery.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908170834477_AddSettingIdAreaDelivery.cs" />
+    <Compile Include="Migrations\201908170834477_AddSettingIdAreaDelivery.Designer.cs">
+      <DependentUpon>201908170834477_AddSettingIdAreaDelivery.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908170836044_ChangeNameSettingIdAreaDelivery.cs" />
+    <Compile Include="Migrations\201908170836044_ChangeNameSettingIdAreaDelivery.Designer.cs">
+      <DependentUpon>201908170836044_ChangeNameSettingIdAreaDelivery.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908170837582_RemoveSettingIdAreaDelivery.cs" />
+    <Compile Include="Migrations\201908170837582_RemoveSettingIdAreaDelivery.Designer.cs">
+      <DependentUpon>201908170837582_RemoveSettingIdAreaDelivery.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908170838576_AddSeliverySettingIdAreaDelivery.cs" />
+    <Compile Include="Migrations\201908170838576_AddSeliverySettingIdAreaDelivery.Designer.cs">
+      <DependentUpon>201908170838576_AddSeliverySettingIdAreaDelivery.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908170927015_ChangeAreaDeliveryKey.cs" />
+    <Compile Include="Migrations\201908170927015_ChangeAreaDeliveryKey.Designer.cs">
+      <DependentUpon>201908170927015_ChangeAreaDeliveryKey.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908210524244_AddBrachIdInPridcuts.cs" />
+    <Compile Include="Migrations\201908210524244_AddBrachIdInPridcuts.Designer.cs">
+      <DependentUpon>201908210524244_AddBrachIdInPridcuts.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
+    <Compile Include="Models\AreaDeliveryModel.cs" />
     <Compile Include="Models\BranchModel.cs" />
     <Compile Include="Models\BranchSettingViewModel.cs" />
     <Compile Include="Models\BranchSignal.cs" />
     <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\DataHistoryForViewModel.cs" />
     <Compile Include="Models\DeliverySettingModel.cs" />
     <Compile Include="Models\HistoryOrderFilter.cs" />
     <Compile Include="Models\NewBranchModel.cs" />
@@ -312,6 +348,7 @@
     <Compile Include="Models\ReportResult.cs" />
     <Compile Include="Models\SettingModel.cs" />
     <Compile Include="Models\StockModel.cs" />
+    <Compile Include="Models\TodayDataOrdersModel.cs" />
     <Compile Include="Models\UpdaterOrderNumber.cs" />
     <Compile Include="Models\UpdaterOrderStatus.cs" />
     <Compile Include="Models\UpdaterVisible.cs" />
@@ -350,8 +387,50 @@
     <Content Include="Content\fontawesome\webfonts\fa-regular-400.svg" />
     <Content Include="Content\fontawesome\webfonts\fa-solid-900.svg" />
     <Content Include="Content\material-input.css" />
+    <Content Include="Content\odometer\odometer-theme-minimal.css" />
     <Content Include="Content\sounds\sound-new-order.mp3" />
     <Content Include="Content\sumoselect.min.css" />
+    <Content Include="Content\themes\base\accordion.css" />
+    <Content Include="Content\themes\base\all.css" />
+    <Content Include="Content\themes\base\autocomplete.css" />
+    <Content Include="Content\themes\base\base.css" />
+    <Content Include="Content\themes\base\button.css" />
+    <Content Include="Content\themes\base\core.css" />
+    <Content Include="Content\themes\base\datepicker.css" />
+    <Content Include="Content\themes\base\dialog.css" />
+    <Content Include="Content\themes\base\draggable.css" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_444444_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_555555_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777620_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777777_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\themes\base\jquery-ui.css" />
+    <Content Include="Content\themes\base\jquery-ui.min.css" />
+    <Content Include="Content\themes\base\menu.css" />
+    <Content Include="Content\themes\base\progressbar.css" />
+    <Content Include="Content\themes\base\resizable.css" />
+    <Content Include="Content\themes\base\selectable.css" />
+    <Content Include="Content\themes\base\selectmenu.css" />
+    <Content Include="Content\themes\base\slider.css" />
+    <Content Include="Content\themes\base\sortable.css" />
+    <Content Include="Content\themes\base\spinner.css" />
+    <Content Include="Content\themes\base\tabs.css" />
+    <Content Include="Content\themes\base\theme.css" />
+    <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\main.css" />
@@ -360,6 +439,7 @@
     <Content Include="Images\full-logo.png" />
     <Content Include="Images\full-logo-pink.png" />
     <Content Include="Images\full-logo-blue.png" />
+    <Content Include="Images\loader-empty-order.gif" />
     <Content Include="Images\loader.gif" />
     <Content Include="Images\loader_old.gif" />
     <Content Include="Images\logo.png" />
@@ -402,6 +482,8 @@
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
     <Content Include="Scripts\jquery.raty.min.js" />
     <Content Include="Scripts\jquery.signalR-2.4.1.js" />
     <Content Include="Scripts\jquery.signalR-2.4.1.min.js" />
@@ -418,6 +500,7 @@
     <Content Include="Scripts\blocksIt.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\notify.js" />
+    <Content Include="Scripts\odometer\odometer.js" />
     <Content Include="Scripts\singnal-logic.js" />
     <Content Include="Scripts\chart.js" />
     <Content Include="Web.config" />
@@ -513,6 +596,30 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201907161627456_AddUseTable.resx">
       <DependentUpon>201907161627456_AddUseTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908100946302_OrderModelUpdateDate.resx">
+      <DependentUpon>201908100946302_OrderModelUpdateDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908170830125_AddAreaDelivery.resx">
+      <DependentUpon>201908170830125_AddAreaDelivery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908170834477_AddSettingIdAreaDelivery.resx">
+      <DependentUpon>201908170834477_AddSettingIdAreaDelivery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908170836044_ChangeNameSettingIdAreaDelivery.resx">
+      <DependentUpon>201908170836044_ChangeNameSettingIdAreaDelivery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908170837582_RemoveSettingIdAreaDelivery.resx">
+      <DependentUpon>201908170837582_RemoveSettingIdAreaDelivery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908170838576_AddSeliverySettingIdAreaDelivery.resx">
+      <DependentUpon>201908170838576_AddSeliverySettingIdAreaDelivery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908170927015_ChangeAreaDeliveryKey.resx">
+      <DependentUpon>201908170927015_ChangeAreaDeliveryKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908210524244_AddBrachIdInPridcuts.resx">
+      <DependentUpon>201908210524244_AddBrachIdInPridcuts.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

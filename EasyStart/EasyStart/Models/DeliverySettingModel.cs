@@ -13,7 +13,6 @@ namespace EasyStart.Models
         public int Id { get; set; }
         public int BranchId { get; set; }
         public double PriceDelivery { get; set; }
-        public double FreePriceDelivery { get; set; }
         public bool PayCard { get; set; }
         public bool PayCash { get; set; }
 
@@ -24,6 +23,9 @@ namespace EasyStart.Models
         /// </summary>
         public string ZoneId { get; set; } = DateTimeHepler.DEFAULT_ZONE_ID;
         public string TimeDeliveryJSON { get; set; }
+
+        [NotMapped]
+        public List<AreaDeliveryModel> AreaDeliveries { get; set; }
 
         [NotMapped]
         public Dictionary<int, List<string>> TimeDelivery

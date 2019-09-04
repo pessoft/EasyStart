@@ -1,6 +1,7 @@
 ﻿using EasyStart.Logic;
 using EasyStart.Models;
 using EasyStart.Utils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,7 +39,11 @@ namespace EasyStart.Controllers
             ViewBag.TypeBranch = typeBranch;
             ViewBag.ZoneId = deliverySetting == null ? DateTimeHepler.DEFAULT_ZONE_ID : deliverySetting.ZoneId;
             ViewBag.YearsWork = DateTime.Now.Year == 2019 ? DateTime.Now.Year.ToString() : $"2019 - {DateTime.Now.Year}";
-
+            ViewBag.AreaDeliveris = deliverySetting != null &&
+                                    deliverySetting.AreaDeliveries != null &&
+                                    deliverySetting.AreaDeliveries.Any() ?
+                                    JsonConvert.SerializeObject(deliverySetting.AreaDeliveries) :
+                                    JsonConvert.SerializeObject(new List<AreaDeliveryModel>());
 
             return View();
         }
@@ -142,6 +147,9 @@ namespace EasyStart.Controllers
                 }
             }
 
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+
+            category.BranchId = branchId;
             category = DataWrapper.SaveCategory(category);
 
             if (category != null)
@@ -178,6 +186,9 @@ namespace EasyStart.Controllers
                 }
             }
 
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+
+            product.BranchId = branchId;
             product = DataWrapper.SaveProduct(product);
 
             if (product != null)
@@ -198,53 +209,64 @@ namespace EasyStart.Controllers
         public JsonResult AddBranch(NewBranchModel newBranch)
         {
             var result = new JsonResultModel();
-            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-            var typeBranch = DataWrapper.GetBranchType(branchId);
-            var newBranchId = DataWrapper.GetBranchId(newBranch.Login);
-
-            if (typeBranch != TypeBranch.MainBranch)
+            try
             {
-                result.ErrorMessage = "Вы не можете добавлять отделения";
-                return Json(result);
-            }
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var typeBranch = DataWrapper.GetBranchType(branchId);
+                var newBranchId = DataWrapper.GetBranchId(newBranch.Login);
 
-            var branch = new BranchModel
-            {
-                Login = newBranch.Login,
-                Password = newBranch.Password,
-                TypeBranch = Logic.TypeBranch.SubBranch
-            };
-
-
-            if (newBranchId == -1)
-            {
-                var success = DataWrapper.SaveBranch(branch);
-                if (!success)
+                if (typeBranch != TypeBranch.MainBranch)
                 {
-                    result.ErrorMessage = "При сохранении что то пошло не так";
+                    result.ErrorMessage = "Вы не можете добавлять отделения";
+                    return Json(result);
+                }
+
+                var branch = new BranchModel
+                {
+                    Login = newBranch.Login,
+                    Password = newBranch.Password,
+                    TypeBranch = Logic.TypeBranch.SubBranch
+                };
+
+
+                if (newBranchId == -1)
+                {
+                    var success = DataWrapper.SaveBranch(branch);
+                    if (!success)
+                    {
+                        result.ErrorMessage = "При сохранении что то пошло не так";
+                    }
+                    else
+                    {
+                        newBranchId = DataWrapper.GetBranchId(newBranch.Login);
+                        var setting = new SettingModel
+                        {
+                            BranchId = newBranchId,
+                            CityId = newBranch.CityId
+                        };
+
+                        DataWrapper.SaveSetting(setting);
+
+                        var baseBrachClone = new BrachClone(Server, branchId, newBranchId);
+                        baseBrachClone.Clone();
+
+                        var converter = new ConverterBranchSetting();
+                        var branchView = converter.GetBranchSettingViews(branch, setting, typeBranch);
+
+                        result.Data = branchView;
+                        result.Success = true;
+                    }
                 }
                 else
                 {
-                    newBranchId = DataWrapper.GetBranchId(newBranch.Login);
-                    var setting = new SettingModel
-                    {
-                        BranchId = newBranchId,
-                        CityId = newBranch.CityId
-                    };
-
-                    DataWrapper.SaveSetting(setting);
-
-                    var converter = new ConverterBranchSetting();
-                    var branchView = converter.GetBranchSettingViews(branch, setting, typeBranch);
-
-                    result.Data = branchView;
-                    result.Success = true;
+                    result.ErrorMessage = "Учетная запись с таким логином уже существует";
                 }
             }
-            else
+            catch (Exception ex)
             {
-                result.ErrorMessage = "Учетная запись с таким логином уже существует";
+                result.ErrorMessage = ex.Message;
             }
+            
 
             return Json(result);
         }
@@ -254,32 +276,40 @@ namespace EasyStart.Controllers
         public JsonResult RemoveBranch(int id)
         {
             var result = new JsonResultModel();
-            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-            var typeBranch = DataWrapper.GetBranchType(branchId);
-
-            if (branchId == id)
+            try
             {
-                result.ErrorMessage = "Самоудаление не возможно";
-                return Json(result);
-            }
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var typeBranch = DataWrapper.GetBranchType(branchId);
 
-            if (typeBranch != TypeBranch.MainBranch)
-            {
-                result.ErrorMessage = "Вы не можете удалять отделения";
-            }
-            else
-            {
-                var success = DataWrapper.RemoveBranch(id);
-
-                if (success)
+                if (branchId == id)
                 {
-                    result.Success = success;
+                    result.ErrorMessage = "Самоудаление не возможно";
+                    return Json(result);
+                }
+
+                if (typeBranch != TypeBranch.MainBranch)
+                {
+                    result.ErrorMessage = "Вы не можете удалять отделения";
                 }
                 else
                 {
-                    result.ErrorMessage = "Отдедение не удалено";
+                    var success = DataWrapper.RemoveBranch(id);
+
+                    if (success)
+                    {
+                        result.Success = success;
+                    }
+                    else
+                    {
+                        result.ErrorMessage = "Отдедение не удалено";
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                result.ErrorMessage = ex.Message;
+            }
+          
 
             return Json(result);
         }
@@ -309,7 +339,8 @@ namespace EasyStart.Controllers
         public JsonResult LoadCategoryList()
         {
             var result = new JsonResultModel();
-            var categories = DataWrapper.GetCategories();
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+            var categories = DataWrapper.GetCategories(branchId);
 
             if (categories != null)
             {
@@ -364,6 +395,9 @@ namespace EasyStart.Controllers
                 }
             }
 
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+
+            category.BranchId = branchId;
             var updateCategory = DataWrapper.UpdateCategory(category);
 
             if (updateCategory != null)
@@ -439,6 +473,9 @@ namespace EasyStart.Controllers
                 }
             }
 
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+
+            product.CategoryId = branchId;
             var updateProduct = DataWrapper.UpdateProduct(product);
 
             if (updateProduct != null)
@@ -618,10 +655,11 @@ namespace EasyStart.Controllers
         {
             var result = new JsonResultModel();
             var orders = DataWrapper.GetOrders(brnachIds);
+            var todayData = DataWrapper.GetDataOrdersByDate(brnachIds, DateTime.Now);
 
             if (orders != null)
             {
-                result.Data = orders;
+                result.Data = new { Orders = orders, TodayData = todayData };
                 result.Success = true;
             }
             else
@@ -698,7 +736,41 @@ namespace EasyStart.Controllers
                 return;
             }
 
-            DataWrapper.UpdateStatusOrder(data);
+            try
+            {
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
+                var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
+                data.DateUpdate = date;
+
+                DataWrapper.UpdateStatusOrder(data);
+            }
+            catch(Exception ex)
+            { }
+                    }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult GetTodayOrderData(List<int> brnachIds)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
+                var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
+                var data = DataWrapper.GetDataOrdersByDate(brnachIds, date);
+
+                result.Data = data;
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
         }
     }
 }

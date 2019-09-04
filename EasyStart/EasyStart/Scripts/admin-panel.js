@@ -1,13 +1,14 @@
 ﻿$(document).ready(function () {
     bindSelectSumo();
     initHistoryOrderDatePicker();
+    bindDialogCloseClickBackdor();
 
     let bindShowModal = function (id, dialogId, additionalFunc, predicate) {
         $(`#${id}`).bind("click", function () {
             let addCategoryDialog = $(`#${dialogId}`);
 
             if (!predicate || predicate()) {
-                addCategoryDialog.trigger("showModal");
+                Dialog.showModal(addCategoryDialog);
             }
 
             if (additionalFunc) {
@@ -53,6 +54,25 @@
         loadOrders();
     }
 });
+
+function bindDialogCloseClickBackdor() {
+    $("dialog").bind('click', function (event) {
+        var rect = this.getBoundingClientRect();
+        var isInDialog = false;
+
+        if (typeof (event.clientY) === typeof (undefined)) {
+            isInDialog = true;
+        }
+        else {
+            isInDialog = (rect.top <= event.clientY && event.clientY <= rect.top + rect.height
+                && rect.left <= event.clientX && event.clientX <= rect.left + rect.width);
+        }
+
+        if (!isInDialog) {
+            Dialog.close($(this));
+        }
+    });
+}
 
 const Pages = {
     Order: 'order',
@@ -274,7 +294,7 @@ function loadAnalyticsReport() {
 
 function resetSearchForOrderNumber(containerId) {
     clearSearchInput(containerId);
-    searchByOrderNumber(containerId);
+    searchByOrderNumber(containerId, false);
 }
 
 function clearSearchInput(containerId) {
@@ -308,7 +328,7 @@ function cancelDialog(e) {
     dialog.find("img").addClass("hide");
     dialog.find("option").removeAttr("selected");
     dialog.find("select").val("0")
-    dialog.trigger("close")
+    Dialog.close(dialog);
 }
 
 function operationCategory() {
@@ -400,7 +420,8 @@ function editStock(id) {
         dialog.find(".dialog-image-upload").addClass("hide");
     }
 
-    dialog.trigger("showModal");
+    //dialog.trigger("showModal");
+    Dialog.showModal(dialog);
 }
 
 function isVisibleStock(id) {
@@ -416,7 +437,6 @@ function updateRenderStock(container, stock) {
     $stock.find(".stock-item-name").html(stock.Name);
     toggleVisibleSotck(container, stock);
 }
-
 
 function updateStock() {
     let files = $("#addStockDialog input[type=file]")[0].files;
@@ -696,7 +716,8 @@ function editCategory(e, event) {
         dialog.find(".dialog-image-upload").addClass("hide");
     }
 
-    dialog.trigger("showModal");
+    //dialog.trigger("showModal");
+    Dialog.showModal(dialog);
 }
 
 function removeCategory(e, event) {
@@ -1118,7 +1139,8 @@ function editProduct(e, event) {
         dialog.find(".dialog-image-upload").addClass("hide");
     }
 
-    dialog.trigger("showModal");
+    //dialog.trigger("showModal");
+    Dialog.showModal(dialog);
 }
 
 function deleteConfirmation(callback) {
@@ -1134,7 +1156,7 @@ function deleteConfirmation(callback) {
     $dialog.find(".btn-submit").unbind("click");
     $dialog.find(".btn-submit").bind("click", clickFunc);
 
-    $dialog.trigger("showModal");
+    Dialog.showModal($dialog);
 }
 
 function removeProduct(e, event) {
@@ -1263,10 +1285,6 @@ function openDialogFile(id) {
     $(`#${id}`).click();
 }
 
-function checkRequreValid() {
-
-}
-
 function saveSetting() {
     let warnMsg = {
         City: "Выберите город из списка",
@@ -1362,7 +1380,7 @@ function getTimeDeliveryJSON() {
 function saveDeliverySetting() {
     let warnMgs = {
         PriceDelivery: "Укажите стоимость доставки",
-        FreePriceDelivery: "Укажите минимальную сумму заказа для бесплатной доставки",
+        FreePriceDelivery: "Укажите минимальные суммы закаов для бесплатной доставки в районы",
     }
 
     let priceDelivery = $("#price-delivery").val();
@@ -1372,7 +1390,8 @@ function saveDeliverySetting() {
         showWarningMessage(warnMgs.PriceDelivery);
         return;
     }
-    if (!freePriceDelivery || freePriceDelivery == 0) {
+
+    if (!AreaDelivery || AreaDelivery.length == 0) {
         showWarningMessage(warnMgs.FreePriceDelivery);
         return;
     }
@@ -1385,6 +1404,7 @@ function saveDeliverySetting() {
         PayCard: $("#payment-card").is(":checked"),
         PayCash: $("#payment-cash").is(":checked"),
         TimeDeliveryJSON: getTimeDeliveryJSON(),
+        AreaDeliveries: AreaDelivery
     }
     let loader = new Loader($("#delivery"));
     let successFunc = function (result, loader) {
@@ -1431,7 +1451,6 @@ function addBranch() {
         loader.stop();
         if (result.Success) {
             addBranchToList(result.Data);
-            addNewBranchToAdditionalOrder(result.Data.Id, result.Data.City);
             cancelDialog("#addBranchDialog");
         } else {
             showErrorMessage(result.ErrorMessage);
@@ -1491,7 +1510,6 @@ function removeBranch(e, id) {
             $(`[branch-id=${id}]`).fadeOut(500, function () {
                 $(this).remove();
             });
-            removeBranchFromAdditionalOrder(id);
         } else {
             showErrorMessage(result.ErrorMessage);
         }
@@ -1628,7 +1646,8 @@ function openProductUserCallback(e, event) {
             setEmptyReview();
         }
 
-        $dialog.trigger("showModal");
+        //$dialog.trigger("showModal");
+        Dialog.showModal($dialog);
 
         loader.stop();
     };
@@ -1657,44 +1676,28 @@ function loadProductReviews(productId, callback) {
     $.post("/Admin/LoadProductReviews", { productId: productId }, successCallBack(successFunc));
 }
 
-
-function setEmptyOrders() {
+function setEmptyOrders(containerId) {
+    containerId = containerId || getCurrentSectionId();
     let template = `
         <div class="empty-list">
-            <i class="fal fa-user-clock"></i>
+            <div class="empty-list-animation">
+            <img src="../Images/loader-empty-order.gif"/>
+            </div>
             <span>Пока нет ни одного заказа</span>
         </div>
     `;
 
-    $("#order .order-list").append(template);
+    $(`#${containerId} .order-list-grid`).append(template);
 }
 
-function setEmptyHistoryOrders() {
-    let template = `
-        <div class="empty-list">
-            <i class="fal fa-user-clock"></i>
-            <span>История заказов пуста</span>
-        </div>
-    `;
-
-    $("#history .order-list").append(template);
-}
-
-function setEmptyOrderInfo(containerId) {
-    let template = `
-        <div class="empty-list">
-            <i class="fal fa-info"></i>
-            <span>Что бы увидеть информацию о заказе, выберите нужный из колонки "Заказы"</span>
-        </div>
-    `;
-
-    $(`#${containerId} .order-description`).append(template);
+function removeEmptyOrders(containerId) {
+    containerId = containerId || getCurrentSectionId();
+    $(`#${containerId} .order-list-grid .empty-list`).remove();
 }
 
 function getCurrentBranchId() {
     return $("#current-brnach").val();
 }
-
 
 var Orders = [];
 
@@ -1704,7 +1707,7 @@ function loadOrders(reload = false) {
     }
 
     clearSearchInput(Pages.Order);
-    currentBranchId = getCurrentBranchId();
+    let currentBranchId = getCurrentBranchId();
     let brnachIds = [...AdditionalBranch];
     brnachIds.push(currentBranchId);
 
@@ -1716,17 +1719,14 @@ function loadOrders(reload = false) {
 
     let successFunc = function (data, loader) {
         if (data.Success) {
-            Orders = processingOrders(data.Data);
+            Orders = processingOrders(data.Data.Orders);
             showCountOrder(Orders.length);
-            if (Orders.length == 0) {
-                setEmptyOrders();
-            } else {
-                renderOrders(Orders, Pages.Order);
+            setTodayDataOrders(data.Data.TodayData, Pages.Order);
 
-                let $orderItems = $(`#${Pages.Order} .order-item`);
-                if ($orderItems.length > 0) {
-                    selectOrder($orderItems[0], Pages.Order)
-                }
+            if (Orders.length == 0) {
+                setEmptyOrders(Pages.Order);
+            } else {
+                CardOrderRenderer.renderOrders(Orders, Pages.Order, 600);
             }
         } else {
             showErrorMessage(data.ErrorMessage);
@@ -1740,9 +1740,11 @@ function loadOrders(reload = false) {
 
 var HistoryOrders = [];
 
-function loadHistoryOrders() {
-    setEmptyOrderInfo(Pages.HistoryOrder);
+function clearOrdersContainer(containerId) {
+    $(`#${containerId} .order-list-grid`).empty();
+}
 
+function loadHistoryOrders() {
     clearSearchInput(Pages.HistoryOrder);
     currentBranchId = getCurrentBranchId();
     let brnachIds = [...AdditionalHistoryBranch];
@@ -1758,12 +1760,16 @@ function loadHistoryOrders() {
     let successFunc = function (data, loader) {
         if (data.Success) {
             HistoryOrders = processingOrders(data.Data);
+            clearOrdersContainer(Pages.HistoryOrder);
 
             if (HistoryOrders.length == 0) {
-                setEmptyHistoryOrders();
+                setEmptyOrders(Pages.HistoryOrder);
             } else {
-                renderOrders(HistoryOrders, Pages.HistoryOrder);
+                removeEmptyOrders(Pages.HistoryOrder);
+                CardOrderRenderer.renderOrders(HistoryOrders, Pages.HistoryOrder, 600);
             }
+
+            changeHistoryOrderDataForStatusBar();
         } else {
             showErrorMessage(data.ErrorMessage);
         }
@@ -1773,46 +1779,10 @@ function loadHistoryOrders() {
 
     $.post("/Admin/LoadHistoryOrders", {
         BranchIds: brnachIds,
-        StartDate: OrderHistoryDatePicker.minRange.toGMTString(),
-        EndDate: OrderHistoryDatePicker.maxRange.toGMTString(),
+        StartDate: OrderHistoryDatePicker.minRange.toJSON(),
+        EndDate: OrderHistoryDatePicker.maxRange.toJSON(),
 
     }, successCallBack(successFunc, loader));
-}
-
-function renderOrders(orders, containerId) {
-    let templates = [];
-
-    for (let order of orders) {
-        templates.push(getTemplateOrderItem(order, containerId));
-    }
-
-    $(`#${containerId} .order-list`).html(templates);
-}
-
-function renderOrder(order) {
-    let $templateOrder = getTemplateOrderItem(order, Pages.Order);
-    let $container = $(`#${Pages.Order} .order-list`);
-
-    if ($container.find(".empty-list").length > 0) {
-        $container.html($templateOrder);
-    } else {
-        $container.append($templateOrder);
-    }
-
-}
-
-function getTemplateOrderItem(data, containerId) {
-    let $template = $($(`#order-item-template-${data.DeliveryType}`).html());
-    let orderNumber = `№ ${data.Id}`;
-    let date = toStringDateAndTime(data.Date);
-
-    $template.attr("order-id", data.Id);
-    $template.find(".order-item-number span").html(orderNumber);
-    $template.find(".order-item-date").html(date);
-
-    $template.bind("click", function () { selectOrder(this, containerId) });
-
-    return $template;
 }
 
 function jsonToDate(value) {
@@ -1854,13 +1824,6 @@ function toStringDateAndTime(date) {
     return dateStr;
 }
 
-function setActiveOrderItem(e, containerId = "order") {
-    $parent = getParentItemFromOrdersDOM(e);
-
-    $(`#${containerId} .order-item-active`).removeClass("order-item-active");
-    $parent.addClass("order-item-active");
-}
-
 function getParentItemFromOrdersDOM(e) {
     let $e = $(e);
     let cssClass = "order-item";
@@ -1880,192 +1843,6 @@ function getOrderIdFromItemOrdersDOM(e) {
     return $parent.attr("order-id");
 }
 
-function selectOrder(e, containerId) {
-    setEmptyOrderInfo(containerId);
-
-    let orderId = getOrderIdFromItemOrdersDOM(e);
-
-    setActiveOrderItem(e, containerId);
-    clearOrderDescriptionBlock(containerId);
-    showInfoDesctiprionOrder(orderId, containerId);
-}
-
-function clearOrderDescriptionBlock(containerId) {
-    $(`#${containerId} .order-description-number-header`).empty();
-    $(`#${containerId} .order-description-date-header`).empty();
-    $(`#${containerId} .order-description-processed-header`).addClass("hide");
-    $(`#${containerId} .order-description-cancellation-header`).addClass("hide");
-    $(`#${containerId} .order-description-products`).empty();
-    $(`#${containerId} .to-pay .order-description-additional-info-value`).empty();
-
-    $(`#${containerId} .need-cashback .order-description-additional-info-value`).empty();
-    $(`#${containerId} .need-cashback`).addClass("hide");
-
-    $(`#${containerId} .order-user-name .order-description-additional-info-value`).empty();
-    $(`#${containerId} .order-user-phone .order-description-additional-info-value`).empty();
-    $(`#${containerId} .order-description-info-take`).empty();
-
-    $(`#${containerId} .order-description-info-comment .order-description-info-comment-text`).empty();
-    $(`#${containerId} .order-description-info-comment`).addClass("hide");
-}
-
-function showInfoDesctiprionOrder(orderId, containerId) {
-    let order = containerId == Pages.HistoryOrder ? getHistoryOrderById(orderId) : getOrderById(orderId);
-    let loader = new Loader($(`#${containerId} .order-description`));
-
-    loader.start()
-
-    let productIdsforLoad = getProductIdsForLoad(order);
-
-    let callbackLoadProducts = function (data) {
-        if (data.Success) {
-            OrderCategoryes = {};
-            for (let categoryObj of data.Data) {
-                OrderCategoryes[categoryObj.CategoryId] = {
-                    Id: categoryObj.CategoryId,
-                    Name: categoryObj.CategoryName,
-                    ProductIds: categoryObj.Products.map(product => product.Id)
-                };
-
-                categoryObj.Products.forEach(product => OrderProducts[product.Id] = product);
-            }
-
-            callbackShowDescription();
-        } else {
-            showErrorMessage(data.ErrorMessage);
-            $(`#${containerId} .order-description .empty-list`).remove();
-            loader.stop()
-        }
-    }
-
-    let callbackShowDescription = function () {
-        let dataStr = getDataOrderStr(order);
-
-        renderOrderNumberHeader(dataStr.orderNumber, dataStr.date, order.OrderStatus, containerId);
-        renderorderOrderProducts(dataStr.products, containerId);
-        renderOrderAdditionaInfo(dataStr, containerId);
-        renderOrderInfoTake(dataStr, containerId);
-        renderOrderComment(dataStr.comment, containerId);
-        bindUpdateStatusButton(order, containerId);
-        $(`#${containerId} .order-description .empty-list`).remove();
-        loader.stop()
-    }
-
-    if (productIdsforLoad.length == 0) {
-        callbackShowDescription();
-    } else {
-        loadProductById(productIdsforLoad, callbackLoadProducts);
-    }
-}
-
-function bindUpdateStatusButton(order, containerId) {
-    let $proccesed = $(`#${containerId} .btn-submit`);
-    let $cancel = $(`#${containerId} .btn-cancel-order`);
-
-    $proccesed.unbind("click");
-    $cancel.unbind("click");
-
-    $proccesed.bind("click", () => changeOrderStatus(order.Id, OrderStatus.Processed));
-    $cancel.bind("click", () => changeOrderStatus(order.Id, OrderStatus.Cancellation));
-}
-
-function renderOrderComment(comment, containerId) {
-    if (comment) {
-        let $comment = $(`#${containerId} .order-description-info-comment`);
-
-        $comment.removeClass("hide");
-        $comment.find(".order-description-info-comment-text").html(comment);
-    }
-}
-
-function renderorderOrderProducts(dataProducdtsStr, containerId) {
-    let templates = [];
-
-    for (let categoryId in OrderCategoryes) {
-        let category = OrderCategoryes[categoryId];
-        let $templateCategoryHeader = $($("#order-product-header-item-template").html());
-
-        $templateCategoryHeader.html(category.Name);
-        templates.push($templateCategoryHeader);
-
-        for (let productId of category.ProductIds) {
-            let product = dataProducdtsStr[productId];
-
-            let $template = $($("#order-product-item-template").html());
-
-            $template.find(".order-description-product-number").html(product.Index);
-            $template.find(".order-description-product-name").html(product.Name);
-            $template.find(".order-description-product-info-count").html(product.Count);
-            $template.find(".order-description-product-info-price").html(product.Price);
-
-            templates.push($template);
-        }
-
-        templates[templates.length - 1].addClass("not-border");
-    }
-
-    $(`#${containerId} .order-description-products`).html(templates);
-}
-
-function renderOrderAdditionaInfo(dataStr, containerId) {
-    $(`#${containerId} .to-pay .order-description-additional-info-value`).html(dataStr.amountPayDiscountDelivery);
-    $(`#${containerId} #need-cashback-header`).html(dataStr.cashBack);
-    $(`#${containerId} .need-cashback .order-description-additional-info-value`).html(dataStr.cashBackNumber);
-    $(`#${containerId} .order-user-name .order-description-additional-info-value`).html(dataStr.name);
-    $(`#${containerId} .order-user-phone .order-description-additional-info-value`).html(dataStr.phoneNumber);
-
-    if (dataStr.needCashBack) {
-        $(`#${containerId} .need-cashback`).removeClass("hide");
-    }
-}
-
-function renderOrderNumberHeader(numberOrder, date, orderType, containerId) {
-    $(`#${containerId} .order-description-number-header`).html(numberOrder);
-    $(`#${containerId} .order-description-date-header`).html(date);
-
-    switch (orderType) {
-        case OrderStatus.Processed:
-            $(`#${containerId} .order-description-processed-header`).removeClass("hide");
-            $(`#${containerId} .order-description-cancellation-header`).addClass("hide");
-            break;
-        case OrderStatus.Cancellation:
-            $(`#${containerId} .order-description-cancellation-header`).removeClass("hide");
-            $(`#${containerId} .order-description-processed-header`).addClass("hide");
-            break;
-    }
-}
-
-function renderOrderInfoTake(dataStr, containerId) {
-    let $payInfo = $($("#info-order-cost-template").html());
-    let $deliveryInfo = dataStr.deliveryType == DeliveryType.Delivery ?
-        $($("#info-order-delivery-template").html()) :
-        $($("#info-order-takeyorself-template").html());
-
-    $payInfo.find("#take-info-pay-type .take-info-item-value").html(dataStr.buyType);
-    $payInfo.find("#take-info-price .take-info-item-value").html(dataStr.amountPay);
-    $payInfo.find("#take-info-discount .take-info-item-value").html(dataStr.discount);
-    $payInfo.find("#take-info-delivery .take-info-item-value").html(dataStr.deliveryPrice);
-    $payInfo.find("#take-info-topay .take-info-item-value").html(dataStr.amountPayDiscountDelivery);
-
-    $deliveryInfo.find("#order-takeyorself-city .take-info-item-value").html(dataStr.city);
-    $deliveryInfo.find("#order-takeyorself-street .take-info-item-value").html(dataStr.street);
-    $deliveryInfo.find("#order-takeyorself-home .take-info-item-value").html(dataStr.homeNumber);
-
-    if (dataStr.deliveryType == DeliveryType.Delivery) {
-        $deliveryInfo.find("#order-delivery-city .take-info-item-value").html(dataStr.city);
-        $deliveryInfo.find("#order-delivery-street .take-info-item-value").html(dataStr.street);
-        $deliveryInfo.find("#order-delivery-home .take-info-item-value").html(dataStr.homeNumber);
-        $deliveryInfo.find("#order-delivery-apartment .take-info-item-value").html(dataStr.apartamentNumber);
-        $deliveryInfo.find("#order-delivery-level .take-info-item-value").html(dataStr.level);
-        $deliveryInfo.find("#order-delivery-intercom-code .take-info-item-value").html(dataStr.intercomCode);
-    }
-
-    let $descriptionItemTake = $(`#${containerId} .order-description-info-take`);
-
-    $descriptionItemTake.append($payInfo);
-    $descriptionItemTake.append($deliveryInfo);
-}
-
 function getProductIdsForLoad(order) {
     let ids = [];
 
@@ -2076,94 +1853,23 @@ function getProductIdsForLoad(order) {
     return ids;
 }
 
-    function isInteger(num) {
-        return (num ^ 0) === num;
-    }
-
-    function getPriceValid(num) {
-        if (!isInteger(num)) {
-            num = num.toFixed(2);
-        }
-
-        return num;
-    }
-
-function getProductIndexFromOrderCategory(productId) {
-    let indexResult = 0;
-    for (let categoryId in OrderCategoryes) {
-        let category = OrderCategoryes[categoryId];
-        let index = category.ProductIds.indexOf(productId);
-
-        if (index != -1) {
-            indexResult += ++index;
-            break;
-        } else {
-            indexResult += category.ProductIds.length;
-        }
-    }
-
-    return indexResult;
+function isInteger(num) {
+    return (num ^ 0) === num;
 }
 
-    function getDataOrderStr(order) {
-        let prefixRub = "руб.";
-        let prefixPercent = "%";
-        let prefixCount = "шт.";
-        let getProductsStr = () => {
-            let products = [];
-            for (let productId in order.ProductCount) {
-                let product = OrderProducts[productId];
-                let obj = {
-                    Index: `${getProductIndexFromOrderCategory(parseInt(productId))}.`,
-                    Name: product.Name,
-                    Count: `${order.ProductCount[productId]} ${prefixCount}`,
-                    Price: `${product.Price} ${prefixRub}`
-                }
-
-                products[productId] = obj;
-            }
-
-            return products;
-        };
-
-        let street = order.DeliveryType == DeliveryType.Delivery ? order.Street : $("#setting-street").val();
-        let homeNumber = order.DeliveryType == DeliveryType.Delivery ? order.HomeNumber : $("#setting-home").val();
-        let deliveryPrice = order.DeliveryPrice == 0 ? "Бесплатно" : `${getPriceValid(order.DeliveryPrice)} ${prefixRub}`;
-        let discount = order.Discount == 0 ? `0${prefixPercent}` : `${order.Discount}${prefixPercent} (${getPriceValid(order.AmountPay * order.Discount / 100)} ${prefixRub})`
-        let dataStr = {
-            amountPay: `${getPriceValid(order.AmountPay)} ${prefixRub}`,
-            amountPayDiscountDelivery: `${getPriceValid(order.AmountPayDiscountDelivery)} ${prefixRub}`,
-            apartamentNumber: order.ApartamentNumber,
-            buyType: getBuyType(order.BuyType),
-            cashBack: `Нужна сдача с ${order.CashBack} ${prefixRub}:`,
-            cashBackNumber: `${getPriceValid(order.CashBack - order.AmountPayDiscountDelivery)} ${prefixRub}`,
-            city: getCityNameById(order.CityId),
-            comment: order.Comment,
-            date: toStringDateAndTime(order.Date),
-            deliveryType: order.DeliveryType,
-            discount: discount,
-            entranceNumber: order.EntranceNumber,
-            homeNumber: homeNumber,
-            orderNumber: `№ ${order.Id}`,
-            intercomCode: order.IntercomCode,
-            level: order.Level,
-            name: order.Name,
-            needCashBack: order.NeedCashBack,
-            phoneNumber: order.PhoneNumber,
-            products: getProductsStr(),
-            street: street,
-            deliveryPrice: deliveryPrice,
-            level: order.Level
-        }
-
-        return dataStr;
+function getPriceValid(num) {
+    if (!isInteger(num)) {
+        num = num.toFixed(2);
     }
 
-    var OrderProducts = {};
-    var OrderCategoryes = {};
-    function loadProductById(ids, callback) {
-        $.post("/Admin/LoadOrderProducts", { ids: ids }, successCallBack(callback, null));
-    }
+    return num;
+}
+
+var OrderProducts = {};
+var OrderCategoryes = {};
+function loadProductById(ids, callback) {
+    $.post("/Admin/LoadOrderProducts", { ids: ids }, successCallBack(callback, null));
+}
 
 function getOrderById(orderId) {
     return baseGetOrderByIrd(Orders, orderId);
@@ -2186,99 +1892,107 @@ function getHistoryOrderById(orderId) {
     return baseGetOrderByIrd(HistoryOrders, orderId);
 }
 
-    function getCityNameById(id) {
-        let $cityItem = $(`#setting-city-list [city-id=${id}]`);
-        let cityName = "";
+function getCityNameById(id) {
+    let $cityItem = $(`#setting-city-list [city-id=${id}]`);
+    let cityName = "";
 
-        if ($cityItem.length != 0) {
-            cityName = $cityItem.val();
-        }
-
-        return cityName;
+    if ($cityItem.length != 0) {
+        cityName = $cityItem.val();
     }
 
-    var BuyType = {
-        Cash: 1,
-        Card: 2
-    }
-
-    function getBuyType(id) {
-        let buyType = "";
-
-        switch (id) {
-            case BuyType.Cash:
-                buyType = "Наличные";
-                break;
-            case BuyType.Card:
-                buyType = "Банковская карта";
-                break;
-        }
-
-        return buyType;
-    }
-
-    var DeliveryType = {
-        TakeYourSelf: 1,
-        Delivery: 2
-    }
-
-    function getDeliveryType(id) {
-        let deliveryType = "";
-
-        switch (id) {
-            case DeliveryType.TakeYourSelf:
-                deliveryType = "Самовывоз";
-                break;
-            case BuyType.Delivery:
-                deliveryType = "Доставка курьером";
-                break;
-        }
-
-        return deliveryType;
-    }
-
-    const OrderStatus = {
-        Processing: 0,
-        Processed: 1,
-        Cancellation: 2
-    }
-
-    function changeOrderStatus(orderId, orderStatus) {
-        let $order = $(`#order [order-id=${orderId}]`);
-
-        $order.fadeOut(600, function () {
-            $(this.remove());
-            for (let i = 0; i < Orders.length; ++i) {
-                if (Orders[i].Id == orderId) {
-                    Orders.splice(i, 1);
-                    break;
-                }
-            }
-
-            showCountOrder(Orders.length);
-
-            if (Orders.length == 0) {
-                setEmptyOrders();
-            }
-        });
-
-        setEmptyOrderInfo(Pages.Order);
-        clearOrderDescriptionBlock(Pages.Order);
-        $.post("/Admin/UpdateSatsusOrder", { OrderId: orderId, Status: orderStatus }, null);
+    return cityName;
 }
 
-function searchByOrderNumber(containerId) {
+var BuyType = {
+    Cash: 1,
+    Card: 2
+}
+
+function getBuyType(id) {
+    let buyType = "";
+
+    switch (id) {
+        case BuyType.Cash:
+            buyType = "Наличные";
+            break;
+        case BuyType.Card:
+            buyType = "Банковская карта";
+            break;
+    }
+
+    return buyType;
+}
+
+var DeliveryType = {
+    TakeYourSelf: 1,
+    Delivery: 2
+}
+
+function getDeliveryType(id) {
+    let deliveryType = "";
+
+    switch (id) {
+        case DeliveryType.TakeYourSelf:
+            deliveryType = "Самовывоз";
+            break;
+        case DeliveryType.Delivery:
+            deliveryType = "Доставка курьером";
+            break;
+    }
+
+    return deliveryType;
+}
+
+const OrderStatus = {
+    Processing: 0,
+    Processed: 1,
+    Cancellation: 2
+}
+
+function changeOrderStatus(orderId, orderStatus) {
+    let $order = $(`#order .order-list-grid [order-id=${orderId}]`);
+
+    $order.hide(500, function () {
+        $(this.remove());
+        for (let i = 0; i < Orders.length; ++i) {
+            if (Orders[i].Id == orderId) {
+                Orders.splice(i, 1);
+                break;
+            }
+        }
+
+        showCountOrder(Orders.length);
+
+        if (Orders.length == 0) {
+            setEmptyOrders();
+        }
+    });
+
+    $.post("/Admin/UpdateSatsusOrder", { OrderId: orderId, Status: orderStatus }, successCallBack(() => getTodayDataOrders(Pages.Order)));
+}
+
+function searchByOrderNumber(containerId, isAnimation = true) {
     let searchNumber = $(`#${containerId} .search-input input`).val();
-    $(`#${containerId} .order-item`).each(function (index, e) {
+    $(`#${containerId} .order-item-grid`).each(function (index, e) {
         let $e = $(e);
         let orderNumber = $e.attr("order-id");
 
         if (orderNumber.includes(searchNumber)) {
-            $e.removeClass("hide");
+            if (isAnimation)
+                $e.show(500);
+            else
+                $e.show();
         } else {
-            $e.addClass("hide");
+            if (isAnimation)
+                $e.hide(500);
+            else
+                $e.hide();
         }
     });
+
+    if (containerId == Pages.HistoryOrder) {
+        changeHistoryOrderDataForStatusBar();
+    }
 }
 
 function showCountOrder(count) {
@@ -2289,6 +2003,8 @@ function showCountOrder(count) {
     } else {
         $orderCount.addClass("hide");
     }
+
+    OrderStatusBar.setCountNewOrder(count, Pages.Order);
 }
 
 var NotifySoundNewOrder = new Audio('../Content/sounds/sound-new-order.mp3');
@@ -2309,3 +2025,662 @@ function notifySoundNewOrder() {
     }
 }
 
+function getTodayDataOrders(containerId) {
+    let currentBranchId = getCurrentBranchId();
+    let brnachIds = [...AdditionalBranch];
+    brnachIds.push(currentBranchId);
+
+    let successFunct = data => {
+        setTodayDataOrders(data.Data, containerId)
+    }
+
+    $.post("/Admin/GetTodayOrderData", { brnachIds: brnachIds }, successCallBack(successFunct));
+}
+
+function changeHistoryOrderDataForStatusBar() {
+    let historyOrderData = {
+        CountSuccesOrder: 0,
+        CountCancelOrder: 0,
+        Revenue: 0
+    }
+
+    HistoryOrders.forEach(v => {
+        if (v.OrderStatus == OrderStatus.Processed) {
+            ++historyOrderData.CountSuccesOrder;
+            historyOrderData.Revenue += v.AmountPayDiscountDelivery;
+        } else {
+            ++historyOrderData.CountCancelOrder;
+        }
+    })
+
+    setTodayDataOrders(historyOrderData, Pages.HistoryOrder)
+}
+
+function setTodayDataOrders(data, containerId) {
+    OrderStatusBar.setCountSuccessOrder(data.CountSuccesOrder, containerId);
+    OrderStatusBar.setCountCancelOrder(data.CountCancelOrder, containerId);
+    OrderStatusBar.setTodayRevenue(data.Revenue, containerId);
+}
+
+function getCurrentSectionId() {
+    return $(".section:not(.hide)").attr("id")
+}
+
+class OrderStatusBar {
+
+    static setCountNewOrder(value, containerId) {
+        this.setValue(".count-new-order", value, containerId);
+    }
+
+    static setCountSuccessOrder(value, containerId) {
+        this.setValue(".count-success-order", value, containerId);
+    }
+
+    static setCountCancelOrder(value, containerId) {
+        this.setValue(".count-cancel-order", value, containerId);
+    }
+
+    static setTodayRevenue(value, containerId) {
+        this.setValue(".today-revenue-order", getPriceValid(value), containerId);
+    }
+
+    static setValue(qSelector, value, containerId) {
+        const selectorValueContainer = ".status-bar-value";
+        $(`#${containerId} ${qSelector} ${selectorValueContainer}`).html(value);
+    }
+}
+
+function showOrderDetails(orderId) {
+    const currentSectionId = getCurrentSectionId();
+    const order = currentSectionId == Pages.HistoryOrder ? getHistoryOrderById(orderId) : getOrderById(orderId);
+    const getOrderDetails = () => {
+        const orderDetailsData = new OrderDetailsData(order)
+
+        return new OrderDetails(orderDetailsData);
+    }
+
+
+    let loader = new Loader($(`#${currentSectionId}`));
+    loader.start()
+
+    let productIdsforLoad = getProductIdsForLoad(order);
+
+    let callbackLoadProducts = function (data) {
+        if (data.Success) {
+            OrderCategoryes = {};
+            for (let categoryObj of data.Data) {
+                OrderCategoryes[categoryObj.CategoryId] = {
+                    Id: categoryObj.CategoryId,
+                    Name: categoryObj.CategoryName,
+                    ProductIds: categoryObj.Products.map(product => product.Id)
+                };
+
+                categoryObj.Products.forEach(product => OrderProducts[product.Id] = product);
+            }
+
+            loader.stop()
+            getOrderDetails().show();
+        } else {
+            loader.stop()
+            showErrorMessage(data.ErrorMessage);
+        }
+    }
+
+    if (productIdsforLoad.length == 0) {
+        loader.stop()
+        getOrderDetails().show();
+    } else {
+        loadProductById(productIdsforLoad, callbackLoadProducts);
+    }
+}
+
+var Dialog = {
+    transition: null,
+    showModal: ($dialog) => {
+        $dialog = $($dialog);
+
+        $dialog.trigger("showModal");
+        this.transition = setTimeout(function () {
+            $dialog.addClass('dialog-scale');
+        }, 0.5);
+    },
+    close: ($dialog) => {
+        $dialog = $($dialog);
+
+        $dialog.trigger("close");
+        $dialog.removeClass('dialog-scale');
+        clearTimeout(this.transition);
+    }
+}
+
+class CardOrder {
+    /**
+     *
+     * @param {TodayOrder} cardData
+     */
+    constructor(cardData) {
+        const templateId = "order-item-grid-template";
+        this.data = cardData;
+        this.$htmlTemplate = $($(`#${templateId}`).html());
+    }
+
+    setAttrOrderId(value) {
+        this.$htmlTemplate.attr("order-id", value);
+    }
+
+    setOrderNumber(value, status) {
+        this.setValue(".order-item-number", value);
+        this.markNumberOrder(".order-item-number", status);
+    }
+
+    setAmount(value) {
+        this.setValue(".order-item-amount", value);
+    }
+
+    setPhoneNumber(value) {
+        this.setValue(".order-item-phone", value);
+    }
+
+    setUserName(value) {
+        this.setValue(".order-item-user-name", value);
+    }
+
+    setDeliverType(value) {
+        this.setValue(".order-item-type-delivery", value);
+    }
+
+    setPayType(value) {
+        this.setValue(".order-item-type-pay", value);
+    }
+
+    setValue(qSelector, value) {
+        const selectorValueContainer = ".order-item-value";
+        this.$htmlTemplate.find(`${qSelector} ${selectorValueContainer}`).html(value);
+    }
+
+    setDetailsClickAction(action) {
+        const eSenderContainer = ".order-item-show-details";
+        const $eSender = $(this.$htmlTemplate.find(`${eSenderContainer} a`))
+
+        $eSender.unbind("click");
+        $eSender.bind("click", action);
+    }
+
+    markNumberOrder(qSelector, status) {
+        const selectorLabelContainer = ".order-item-label";
+        let label = "";
+
+        switch (status) {
+            case OrderStatus.Processed:
+                label = StatusAtrr.Processed.numberOrderMark;
+                break;
+            case OrderStatus.Cancellation:
+                label = StatusAtrr.Cancellation.numberOrderMark;
+                break;
+            default:
+                label = StatusAtrr.Processing.numberOrderMark;
+                break;
+        }
+
+        this.$htmlTemplate.find(`${qSelector} ${selectorLabelContainer}`).html(label);
+    }
+
+    render() {
+        this.setAttrOrderId(this.data.OrderId);
+        this.setOrderNumber(this.data.OrderNumber, this.data.Status);
+        this.setAmount(this.data.Amount);
+        this.setPhoneNumber(this.data.PhoneNumber);
+        this.setUserName(this.data.UserName);
+        this.setDeliverType(this.data.DeliveryType);
+        this.setPayType(this.data.PayType);
+        this.setDetailsClickAction(this.data.Action);
+
+        return this.$htmlTemplate;
+    }
+}
+
+class TodayOrder {
+    constructor(order, action) {
+        this.Action = () => { action(order.Id) };
+
+        this.convert(order);
+    }
+
+    convert(order) {
+        this.OrderId = order.Id;
+        this.Status = order.OrderStatus;
+        this.OrderNumber = order.Id;
+        this.Amount = xFormatPrice(order.AmountPayDiscountDelivery);
+        this.PhoneNumber = order.PhoneNumber;
+        this.UserName = order.Name;
+        this.DeliveryType = getDeliveryType(order.DeliveryType);
+        this.PayType = getBuyType(order.BuyType);
+    }
+}
+
+class CardOrderRenderer {
+    static renderOrders(orders, containerId, speed) {
+        let index = 0;
+        for (let order of orders) {
+            ++index
+
+            if (index > 6) {
+                speed = 1;
+            }
+
+            this.renderOrder(order, containerId, speed);
+        }
+    }
+
+    static renderOrder(order, containerId, speed) {
+        const todayData = new TodayOrder(order, showOrderDetails);
+        const cardOrder = new CardOrder(todayData);
+
+        this.addCardToPage(cardOrder, containerId, speed);
+    }
+
+    static addCardToPage(card, containerId, speed) {
+        const cardContainer = ".order-list-grid";
+        const cardRender = card.render()
+
+        $(`#${containerId} ${cardContainer}`).append(cardRender);
+        this.showCard(cardRender, speed);
+    }
+
+    static showCard(cardRender, speed) {
+        if (speed == 1)
+            $(cardRender).show();
+        else
+            $(cardRender).show(speed || 500);
+    }
+}
+
+class OrderDetailsData {
+    constructor(order) {
+        this.convert(order);
+    }
+
+    convert(order) {
+        this.convertBaseInfo(order);
+        this.convertShortInfo(order);
+        this.convertAmountInfo(order);
+        this.convertAddressInfo(order);
+        this.converеOrderListInfo(order);
+    }
+
+    convertBaseInfo(order) {
+        const commentEmptyTemplate = `<i class="fal fa-comment-slash"></i>Отсутсвтует</span>`;
+        this.OrderId = order.Id;
+        this.OrderNumber = order.Id;
+        this.Status = order.OrderStatus;
+        this.OrderDate = toStringDateAndTime(order.Date);
+        this.Comment = order.Comment || commentEmptyTemplate;
+    }
+
+    convertShortInfo(order) {
+        this.UserName = order.Name;
+        this.PhoneNumber = order.PhoneNumber;
+        this.DeliveryType = getDeliveryType(order.DeliveryType);
+    }
+
+    convertAmountInfo(order) {
+        const prefixRub = "руб.";
+        const prefixPercent = "%";
+
+        this.AmountPay = `${xFormatPrice(order.AmountPay)} ${prefixRub}`;
+        this.DeliveryPrice = `${xFormatPrice(order.DeliveryPrice)} ${prefixRub}`;
+        this.Discount = order.Discount == 0 ? `0${prefixPercent}` : `${order.Discount}${prefixPercent} (${xFormatPrice(order.AmountPay * order.Discount / 100)} ${prefixRub})`
+        this.PayType = getBuyType(order.BuyType);
+        this.CashBack = order.CashBack > 0 ? `${xFormatPrice(order.CashBack - order.AmountPayDiscountDelivery)} ${prefixRub}` : `${xFormatPrice(order.CashBack)} ${prefixRub}`;
+        this.AmountPayDiscountDelivery = `${xFormatPrice(order.AmountPayDiscountDelivery)} ${prefixRub}`;
+    }
+
+    convertAddressInfo(order) {
+        this.City = getCityNameById(order.CityId);
+        this.Street = order.DeliveryType == DeliveryType.Delivery ? order.Street : $("#setting-street").val();
+        this.House = order.DeliveryType == DeliveryType.Delivery ? order.HomeNumber : $("#setting-home").val();
+        this.Apartament = order.DeliveryType == DeliveryType.Delivery ? order.ApartamentNumber : $("#setting-home").val();
+        this.Level = order.DeliveryType == DeliveryType.Delivery ? order.Level : "-";
+        this.IntercomCode = order.DeliveryType == DeliveryType.Delivery ? order.IntercomCode : "-";
+        this.Entrance = order.DeliveryType == DeliveryType.Delivery ? order.EntranceNumber : "-";
+    }
+
+    converеOrderListInfo(order) {
+        const prefixRub = "руб.";
+        this.OrderList = [];
+
+        for (let productId in order.ProductCount) {
+            const product = OrderProducts[productId];
+            const obj = {
+                Image: product.Image,
+                Name: product.Name,
+                Price: `${order.ProductCount[productId]} x ${product.Price} ${prefixRub}`
+            }
+
+            const view = this.convertOrderProducrToView(obj);
+            this.OrderList.push(view);
+        }
+    }
+
+    convertOrderProducrToView(product) {
+        return `
+            <div class="order-details-product-item ">
+                <div class="order-details-product-img">
+                    <img src="${product.Image}">
+                </div>
+                <div class="order-details-product-name-price border-bottom">
+                    <span>${product.Name}</span>
+                    <span class="font-weight-bold grid-justify-self-flex-end">${product.Price}</span>
+                </div>
+             </div>
+        `;
+    }
+
+}
+
+var OrderDetailsQSelector = {
+    OrderNumberBlock: ".order-details-number",//в истории заказов помечаем цветом оформленный или не оформленный ордер
+    OrderNumber: ".order-details-number .value",
+    OrderDate: ".order-details-date .value",
+    UserName: ".order-details-short-user-name .value",
+    PhoneNumber: ".order-details-short-phone .value",
+    DeliveryType: ".order-details-short-delivery-type .value",
+    PriceAmount: ".order-details-price-amount .value",
+    DeliveryPrice: ".order-details-price-delivery .value",
+    Discount: ".order-details-price-discount .value",
+    PayType: ".order-details-price-pay-type .value",
+    CashBack: ".order-details-price-cashback .value",
+    PriceToPay: ".order-details-price-to-pay .value",
+    City: ".order-details-address-city .value",
+    Street: ".order-details-address-street .value",
+    House: ".order-details-address-house .value",
+    Apartament: ".order-details-address-apartment .value",
+    Level: ".order-details-address-level .value",
+    IntercomCode: ".order-details-address-intercom-code .value",
+    Entrance: ".order-details-address-entrance .value",
+    OrderList: ".order-details-product-list",
+    Comment: ".order-details-comment .value",
+    ApplyBtn: ".order-details-menu .btn-details-apply",
+    CancelBtn: ".order-details-menu .btn-details-cancel"
+}
+
+var StatusAtrr = {
+    Processed: {
+        cssColorClass: "success-color",
+        numberOrderMark: `<i class="fal fa-check-double sm-font-size"></i>`
+    },
+    Cancellation: {
+        cssColorClass: "fail-color",
+        numberOrderMark: `<i class="fal fa-trash-alt sm-font-size"></i>`
+    },
+    Processing: {
+        cssColorClass: "default-color",
+        numberOrderMark: `#`
+    }
+}
+
+class OrderDetails {
+    /**
+     *
+     * @param {OrderDetailsData} details
+     */
+    constructor(details) {
+        const detailsDialogId = "orderDetailsDialog";
+        this.$dialog = $(`#${detailsDialogId}`);
+        this.details = details;
+    }
+
+    show() {
+        this.setValues();
+        this.buttonsConfig();
+        Dialog.showModal(this.$dialog);
+    }
+
+    close() {
+        Dialog.close(this.$dialog);
+    }
+
+    setValue(qSelectror, value) {
+        this.$dialog.find(qSelectror).html(value);
+    }
+
+    setValues() {
+        this.setBaseInfo();
+        this.setShortInfo();
+        this.setAmountInfo();
+        this.setAddressInfo();
+        this.setOrderListInfo();
+        this.setComment();
+    }
+
+    markOrderNumberColorStatus(status) {
+        const $block = this.$dialog.find(OrderDetailsQSelector.OrderNumberBlock);
+        let colorClass = ""
+
+        $block.removeClass(StatusAtrr.Processed.cssColorClass);
+        $block.removeClass(StatusAtrr.Cancellation.cssColorClass);
+        $block.removeClass(StatusAtrr.Processing.cssColorClass);
+
+        switch (status) {
+            case OrderStatus.Processed:
+                colorClass = StatusAtrr.Processed.cssColorClass;
+                break;
+            case OrderStatus.Cancellation:
+                colorClass = StatusAtrr.Cancellation.cssColorClass;
+                break;
+            default:
+                colorClass = StatusAtrr.Processing.cssColorClass;
+                break;
+        }
+
+        $block.addClass(colorClass);
+    }
+
+    setBaseInfo() {
+        this.markOrderNumberColorStatus(this.details.Status);
+        this.setValue(OrderDetailsQSelector.OrderNumber, this.details.OrderNumber);
+        this.setValue(OrderDetailsQSelector.OrderDate, this.details.OrderDate);
+    }
+
+    setShortInfo() {
+        this.setValue(OrderDetailsQSelector.UserName, this.details.UserName);
+        this.setValue(OrderDetailsQSelector.PhoneNumber, this.details.PhoneNumber);
+        this.setValue(OrderDetailsQSelector.DeliveryType, this.details.DeliveryType);
+    }
+
+    setAmountInfo() {
+        this.setValue(OrderDetailsQSelector.PriceAmount, this.details.AmountPay);
+        this.setValue(OrderDetailsQSelector.DeliveryPrice, this.details.DeliveryPrice);
+        this.setValue(OrderDetailsQSelector.Discount, this.details.Discount);
+        this.setValue(OrderDetailsQSelector.PayType, this.details.PayType);
+        this.setValue(OrderDetailsQSelector.CashBack, this.details.CashBack);
+        this.setValue(OrderDetailsQSelector.PriceToPay, this.details.AmountPayDiscountDelivery);
+    }
+
+    setAddressInfo() {
+        this.setValue(OrderDetailsQSelector.City, this.details.City);
+        this.setValue(OrderDetailsQSelector.Street, this.details.Street);
+        this.setValue(OrderDetailsQSelector.House, this.details.House);
+        this.setValue(OrderDetailsQSelector.Apartament, this.details.Apartament);
+        this.setValue(OrderDetailsQSelector.Level, this.details.Level);
+        this.setValue(OrderDetailsQSelector.IntercomCode, this.details.IntercomCode);
+        this.setValue(OrderDetailsQSelector.Entrance, this.details.Entrance);
+    }
+
+    setOrderListInfo() {
+        this.setValue(OrderDetailsQSelector.OrderList, this.details.OrderList);
+    }
+
+    setComment() {
+        this.setValue(OrderDetailsQSelector.Comment, this.details.Comment);
+    }
+
+    buttonsConfig() {
+        const $proccesed = $(OrderDetailsQSelector.ApplyBtn);
+        const $cancel = $(OrderDetailsQSelector.CancelBtn);
+        const actionOrder = (orderStatus) => () => {
+            this.close();
+            changeOrderStatus(this.details.OrderId, orderStatus)
+        }
+
+        $proccesed.unbind("click");
+        $cancel.unbind("click");
+
+        if (getCurrentSectionId() == Pages.HistoryOrder) {
+            $proccesed.attr("disabled", true);
+            $cancel.attr("disabled", true);
+        } else {
+            $proccesed.removeAttr("disabled");
+            $cancel.removeAttr("disabled");
+            $proccesed.bind("click", actionOrder(OrderStatus.Processed));
+            $cancel.bind("click", actionOrder(OrderStatus.Cancellation));
+        }
+    }
+}
+
+function openSttingAreaDelivery() {
+    const setting = new AreaDeliverySetting()
+
+    setting.render()
+
+    Dialog.showModal('#areaDeliverySettingDialog')
+}
+
+class AreaDeliverySetting {
+    constructor() {
+        this.bindAppendAreaDelivery()
+    }
+
+    bindAppendAreaDelivery() {
+        const $appendAreaBtn = $('.area-delivery-settings-add')
+        const actionClick = () => this.appendNewArea()
+
+        $appendAreaBtn.unbind('click')
+        $appendAreaBtn.bind('click', actionClick)
+    }
+
+    render() {
+        const items = []
+
+        if (AreaDelivery.length == 0) {
+            const epmty = this.renderEmpty()
+            items.push(epmty);
+        } else {
+            for (let area of AreaDelivery) {
+                let item = this.renderItem(area)
+
+                items.push(item)
+            }
+        }
+
+        this.setToPage(items)
+    }
+
+    setToPage(items) {
+        $('.area-delivery-settings-list').html(items)
+    }
+
+    renderEmpty() {
+        return `<div class="area-delivery-empty">Добавте районы доставки...</div>`
+    }
+
+    renderItem(areaDelivery) {
+        const priceWithPrefix = `${areaDelivery.MinPrice} руб.`
+        const actionEditClick = () => this.showEditDialog(areaDelivery.NameArea, areaDelivery.MinPrice, areaDelivery.UniqId)
+        const actionRemoveClick = () => this.removeAreaDelivery(areaDelivery.UniqId)
+        const template = `
+            <div class="area-delivery-settings-item border-bottom">
+                <span class="area-name">${areaDelivery.NameArea}</span>
+                <span class="area-delivery-price">${priceWithPrefix}</span>
+                <button class="area-delivery-settings-btn edit-btn"><i class="fal fa-edit"></i></button>
+                <button class="area-delivery-settings-btn remove-btn"><i class="fal fa-trash-alt"></i></button>
+            </div>`
+        const $item = $(template)
+
+        $item.find('.edit-btn').bind('click', actionEditClick)
+        $item.find('.remove-btn').bind('click', actionRemoveClick)
+
+        return $item
+    }
+
+    removeAreaDelivery(uniqId) {
+        const loader = new Loader('#areaDeliveryEditDialog')
+        loader.start()
+
+        let newAreaDelivery = []
+
+        for (let area of AreaDelivery) {
+            if (area.UniqId != uniqId) {
+                newAreaDelivery.push(area);
+            }
+        }
+
+        AreaDelivery = newAreaDelivery
+
+        this.render()
+        loader.stop()
+    }
+
+    appendNewArea() {
+        const uniqId = generateRandomString(10)
+
+        this.showEditDialog('', '', uniqId)
+    }
+
+    showEditDialog(name, minPrice, uniqId) {
+        $("#area-name").val(name)
+        $("#area-price").val(minPrice)
+        $("#area-uniqId").val(uniqId)
+
+        const actionSaveClick = () => this.saveAreaDelivery()
+        const saveBtn = $('#areaDeliveryEditDialog').find('.btn-submit')
+
+        saveBtn.unbind('click')
+        saveBtn.bind('click', actionSaveClick)
+
+        Dialog.showModal('#areaDeliveryEditDialog')
+    }
+
+    saveAreaDelivery() {
+        const loader = new Loader('#areaDeliveryEditDialog')
+        loader.start()
+
+        const name = $("#area-name").val()
+        const minPrice = $("#area-price").val()
+        const uniqId = $("#area-uniqId").val()
+        const areaDelivery = this.findAreaByUniqId(uniqId)
+
+        if (!name || !minPrice) {
+            showInfoMessage('Заполните все поля')
+            loader.stop()
+            return
+        }
+
+        if (areaDelivery) {
+            areaDelivery.NameArea = name
+            areaDelivery.MinPrice = minPrice
+        } else {
+            const newAreaDelivery = {
+                UniqId: uniqId,
+                NameArea: name,
+                MinPrice: minPrice
+            }
+
+            AreaDelivery.push(newAreaDelivery)
+        }
+
+        this.render()
+        loader.stop()
+        Dialog.close('#areaDeliveryEditDialog')
+    }
+
+    findAreaByUniqId(uniqId) {
+        for (let areaDelivery of AreaDelivery) {
+            if (areaDelivery.UniqId === uniqId) {
+                return areaDelivery
+            }
+        }
+
+        return null;
+    }
+}
