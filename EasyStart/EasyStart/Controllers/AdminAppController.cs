@@ -109,7 +109,7 @@ namespace EasyStart
                 //TO DO: вынести в метод
                 categories.ForEach(p =>
                 {
-                    if(!string.IsNullOrEmpty(p.Image))
+                    if (!string.IsNullOrEmpty(p.Image))
                     {
                         p.Image = p.Image.Substring(2);
                     }
@@ -294,14 +294,15 @@ namespace EasyStart
             try
             {
                 if (review != null &&
-               !string.IsNullOrEmpty(review.PhoneNumber) &&
-               !string.IsNullOrEmpty(review.ReviewText) &&
-               review.ProductId > 0)
+                   review.ClientId > 0 &&
+                   !string.IsNullOrEmpty(review.ReviewText) &&
+                   review.ProductId > 0)
                 {
                     var branchId = DataWrapper.GetBranchIdByCity(review.CityId);
                     var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
                     review.Date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
-
+                    var client = DataWrapper.GetClient(review.ClientId);
+                    review.Reviewer = client.UserName;
                     DataWrapper.SaveProductReviews(review);
                 }
             }
@@ -324,13 +325,21 @@ namespace EasyStart
                         var hideNumberPhone = new StringBuilder(p.PhoneNumber);
                         hideNumberPhone[11] = '*';
                         hideNumberPhone[12] = '*';
+                        hideNumberPhone[14] = '*';
 
                         p.PhoneNumber = hideNumberPhone.ToString();
+                        p.Reviewer += " " + p.PhoneNumber;
                     });
 
-                    result.Data = new { reviews };
+                    result.Data = reviews;
                     result.Success = true;
                 }
+                else
+                {
+                    result.Data = new List<ProductReview>();
+                }
+                
+                result.Success = true;
             }
             catch (Exception ex)
             { }
@@ -354,17 +363,30 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public Client AddOrUpdateClient([FromBody]Client client)
+        public JsonResultModel AddOrUpdateClient([FromBody]Client client)
         {
+            var result = new JsonResultModel();
             try
             {
+                if (string.IsNullOrEmpty(client.PhoneNumber) ||
+                    string.IsNullOrEmpty(client.UserName))
+                    return result;
+
                 var newClient = DataWrapper.AddOrUpdateClient(client);
 
-                return newClient;
+                result.Data = new
+                {
+                    clientId = newClient.Id,
+                    phoneNumber = newClient.PhoneNumber,
+                    userName = newClient.UserName
+                };
+                result.Success = true;
+
+                return result;
             }
             catch (Exception ex)
             {
-                return null;
+                return result;
             }
         }
 
