@@ -58,8 +58,16 @@
 function bindDialogCloseClickBackdor() {
     $("dialog").bind('click', function (event) {
         var rect = this.getBoundingClientRect();
-        var isInDialog = (rect.top <= event.clientY && event.clientY <= rect.top + rect.height
-            && rect.left <= event.clientX && event.clientX <= rect.left + rect.width);
+        var isInDialog = false;
+
+        if (typeof (event.clientY) === typeof (undefined)) {
+            isInDialog = true;
+        }
+        else {
+            isInDialog = (rect.top <= event.clientY && event.clientY <= rect.top + rect.height
+                && rect.left <= event.clientX && event.clientX <= rect.left + rect.width);
+        }
+
         if (!isInDialog) {
             Dialog.close($(this));
         }
@@ -1372,7 +1380,7 @@ function getTimeDeliveryJSON() {
 function saveDeliverySetting() {
     let warnMgs = {
         PriceDelivery: "Укажите стоимость доставки",
-        FreePriceDelivery: "Укажите минимальную сумму заказа для бесплатной доставки",
+        FreePriceDelivery: "Укажите минимальные суммы закаов для бесплатной доставки в районы",
     }
 
     let priceDelivery = $("#price-delivery").val();
@@ -1382,7 +1390,8 @@ function saveDeliverySetting() {
         showWarningMessage(warnMgs.PriceDelivery);
         return;
     }
-    if (!freePriceDelivery || freePriceDelivery == 0) {
+
+    if (!AreaDelivery || AreaDelivery.length == 0) {
         showWarningMessage(warnMgs.FreePriceDelivery);
         return;
     }
@@ -1395,6 +1404,7 @@ function saveDeliverySetting() {
         PayCard: $("#payment-card").is(":checked"),
         PayCash: $("#payment-cash").is(":checked"),
         TimeDeliveryJSON: getTimeDeliveryJSON(),
+        AreaDeliveries: AreaDelivery
     }
     let loader = new Loader($("#delivery"));
     let successFunc = function (result, loader) {
@@ -1441,7 +1451,7 @@ function addBranch() {
         loader.stop();
         if (result.Success) {
             addBranchToList(result.Data);
-            addNewBranchToAdditionalOrder(result.Data.Id, result.Data.City);
+            //addNewBranchToAdditionalOrder(result.Data.Id, result.Data.City);
             cancelDialog("#addBranchDialog");
         } else {
             showErrorMessage(result.ErrorMessage);
@@ -2251,7 +2261,7 @@ class TodayOrder {
 }
 
 class CardOrderRenderer {
-    static renderOrders(orders,containerId, speed) {
+    static renderOrders(orders, containerId, speed) {
         let index = 0;
         for (let order of orders) {
             ++index
@@ -2260,11 +2270,11 @@ class CardOrderRenderer {
                 speed = 1;
             }
 
-            this.renderOrder(order, containerId,  speed);
+            this.renderOrder(order, containerId, speed);
         }
     }
 
-    static renderOrder(order, containerId,  speed) {
+    static renderOrder(order, containerId, speed) {
         const todayData = new TodayOrder(order, showOrderDetails);
         const cardOrder = new CardOrder(todayData);
 
@@ -2323,7 +2333,7 @@ class OrderDetailsData {
         this.DeliveryPrice = `${xFormatPrice(order.DeliveryPrice)} ${prefixRub}`;
         this.Discount = order.Discount == 0 ? `0${prefixPercent}` : `${order.Discount}${prefixPercent} (${xFormatPrice(order.AmountPay * order.Discount / 100)} ${prefixRub})`
         this.PayType = getBuyType(order.BuyType);
-        this.CashBack = order.CashBack > 0 ? `${xFormatPrice(order.CashBack - order.AmountPayDiscountDelivery)} ${prefixRub}`:`${xFormatPrice(order.CashBack)} ${prefixRub}`;
+        this.CashBack = order.CashBack > 0 ? `${xFormatPrice(order.CashBack - order.AmountPayDiscountDelivery)} ${prefixRub}` : `${xFormatPrice(order.CashBack)} ${prefixRub}`;
         this.AmountPayDiscountDelivery = `${xFormatPrice(order.AmountPayDiscountDelivery)} ${prefixRub}`;
     }
 
@@ -2407,7 +2417,8 @@ var StatusAtrr = {
     },
     Processing: {
         cssColorClass: "default-color",
-        numberOrderMark: `#`}
+        numberOrderMark: `#`
+    }
 }
 
 class OrderDetails {
@@ -2526,5 +2537,152 @@ class OrderDetails {
             $proccesed.bind("click", actionOrder(OrderStatus.Processed));
             $cancel.bind("click", actionOrder(OrderStatus.Cancellation));
         }
+    }
+}
+
+function openSttingAreaDelivery() {
+    const setting = new AreaDeliverySetting()
+
+    setting.render()
+
+    Dialog.showModal('#areaDeliverySettingDialog')
+}
+
+class AreaDeliverySetting {
+    constructor() {
+        this.bindAppendAreaDelivery()
+    }
+
+    bindAppendAreaDelivery() {
+        const $appendAreaBtn = $('.area-delivery-settings-add')
+        const actionClick = () => this.appendNewArea()
+
+        $appendAreaBtn.unbind('click')
+        $appendAreaBtn.bind('click', actionClick)
+    }
+
+    render() {
+        const items = []
+
+        if (AreaDelivery.length == 0) {
+            const epmty = this.renderEmpty()
+            items.push(epmty);
+        } else {
+            for (let area of AreaDelivery) {
+                let item = this.renderItem(area)
+
+                items.push(item)
+            }
+        }
+
+        this.setToPage(items)
+    }
+
+    setToPage(items) {
+        $('.area-delivery-settings-list').html(items)
+    }
+
+    renderEmpty() {
+        return `<div class="area-delivery-empty">Добавте районы доставки...</div>`
+    }
+
+    renderItem(areaDelivery) {
+        const priceWithPrefix = `${areaDelivery.MinPrice} руб.`
+        const actionEditClick = () => this.showEditDialog(areaDelivery.NameArea, areaDelivery.MinPrice, areaDelivery.UniqId)
+        const actionRemoveClick = () => this.removeAreaDelivery(areaDelivery.UniqId)
+        const template = `
+            <div class="area-delivery-settings-item border-bottom">
+                <span class="area-name">${areaDelivery.NameArea}</span>
+                <span class="area-delivery-price">${priceWithPrefix}</span>
+                <button class="area-delivery-settings-btn edit-btn"><i class="fal fa-edit"></i></button>
+                <button class="area-delivery-settings-btn remove-btn"><i class="fal fa-trash-alt"></i></button>
+            </div>`
+        const $item = $(template)
+
+        $item.find('.edit-btn').bind('click', actionEditClick)
+        $item.find('.remove-btn').bind('click', actionRemoveClick)
+
+        return $item
+    }
+
+    removeAreaDelivery(uniqId) {
+        const loader = new Loader('#areaDeliveryEditDialog')
+        loader.start()
+
+        let newAreaDelivery = []
+
+        for (let area of AreaDelivery) {
+            if (area.UniqId != uniqId) {
+                newAreaDelivery.push(area);
+            }
+        }
+
+        AreaDelivery = newAreaDelivery
+
+        this.render()
+        loader.stop()
+    }
+
+    appendNewArea() {
+        const uniqId = generateRandomString(10)
+
+        this.showEditDialog('', '', uniqId)
+    }
+
+    showEditDialog(name, minPrice, uniqId) {
+        $("#area-name").val(name)
+        $("#area-price").val(minPrice)
+        $("#area-uniqId").val(uniqId)
+
+        const actionSaveClick = () => this.saveAreaDelivery()
+        const saveBtn = $('#areaDeliveryEditDialog').find('.btn-submit')
+
+        saveBtn.unbind('click')
+        saveBtn.bind('click', actionSaveClick)
+
+        Dialog.showModal('#areaDeliveryEditDialog')
+    }
+
+    saveAreaDelivery() {
+        const loader = new Loader('#areaDeliveryEditDialog')
+        loader.start()
+
+        const name = $("#area-name").val()
+        const minPrice = $("#area-price").val()
+        const uniqId = $("#area-uniqId").val()
+        const areaDelivery = this.findAreaByUniqId(uniqId)
+
+        if (!name || !minPrice) {
+            showInfoMessage('Заполните все поля')
+            loader.stop()
+            return
+        }
+
+        if (areaDelivery) {
+            areaDelivery.NameArea = name
+            areaDelivery.MinPrice = minPrice
+        } else {
+            const newAreaDelivery = {
+                UniqId: uniqId,
+                NameArea: name,
+                MinPrice: minPrice
+            }
+
+            AreaDelivery.push(newAreaDelivery)
+        }
+
+        this.render()
+        loader.stop()
+        Dialog.close('#areaDeliveryEditDialog')
+    }
+
+    findAreaByUniqId(uniqId) {
+        for (let areaDelivery of AreaDelivery) {
+            if (areaDelivery.UniqId === uniqId) {
+                return areaDelivery
+            }
+        }
+
+        return null;
     }
 }

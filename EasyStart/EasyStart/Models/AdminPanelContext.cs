@@ -6,7 +6,7 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class AdminPanelContext: DbContext
+    public class AdminPanelContext : DbContext
     {
         public AdminPanelContext() : base("MainContext")
         { }
@@ -16,6 +16,7 @@ namespace EasyStart.Models
         public DbSet<BranchModel> Branches { get; set; }
         public DbSet<SettingModel> Settings { get; set; }
         public DbSet<DeliverySettingModel> DeliverySettings { get; set; }
+        public DbSet<AreaDeliveryModel> AreaDeliveryModels { get; set; }
         public DbSet<OrderModel> Orders { get; set; }
         public DbSet<ProductReview> ProductReviews { get; set; }
         public DbSet<StockModel> Stocks { get; set; }

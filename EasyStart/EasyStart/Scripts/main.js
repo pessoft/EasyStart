@@ -7,8 +7,8 @@ function successCallBack(func, loader) {
     }
 }
 
-function generateRandomString() {
-    return Math.random().toString(36).slice(-6);
+function generateRandomString(length = 6) {
+    return Math.random().toString(36).slice(-length);
 }
 
 

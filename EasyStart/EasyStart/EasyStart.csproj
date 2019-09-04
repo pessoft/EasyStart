@@ -172,6 +172,7 @@
     </Compile>
     <Compile Include="Hubs\NewOrderHub.cs" />
     <Compile Include="Logic\AnalyticsDataWrapper.cs" />
+    <Compile Include="Logic\BrachClone.cs" />
     <Compile Include="Logic\BuyType.cs" />
     <Compile Include="Logic\ConverterBranchSetting.cs" />
     <Compile Include="Logic\DataWrapper.cs" />
@@ -180,6 +181,7 @@
     <Compile Include="Logic\KeyGenerator.cs" />
     <Compile Include="Logic\List.cs" />
     <Compile Include="Logic\OrderStatus.cs" />
+    <Compile Include="Logic\ProductHelper.cs" />
     <Compile Include="Logic\ProductType.cs" />
     <Compile Include="Logic\RedirectingActionAttribute.cs" />
     <Compile Include="Logic\ReportType.cs" />
@@ -296,12 +298,42 @@
     <Compile Include="Migrations\201908100946302_OrderModelUpdateDate.Designer.cs">
       <DependentUpon>201908100946302_OrderModelUpdateDate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908170830125_AddAreaDelivery.cs" />
+    <Compile Include="Migrations\201908170830125_AddAreaDelivery.Designer.cs">
+      <DependentUpon>201908170830125_AddAreaDelivery.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908170834477_AddSettingIdAreaDelivery.cs" />
+    <Compile Include="Migrations\201908170834477_AddSettingIdAreaDelivery.Designer.cs">
+      <DependentUpon>201908170834477_AddSettingIdAreaDelivery.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908170836044_ChangeNameSettingIdAreaDelivery.cs" />
+    <Compile Include="Migrations\201908170836044_ChangeNameSettingIdAreaDelivery.Designer.cs">
+      <DependentUpon>201908170836044_ChangeNameSettingIdAreaDelivery.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908170837582_RemoveSettingIdAreaDelivery.cs" />
+    <Compile Include="Migrations\201908170837582_RemoveSettingIdAreaDelivery.Designer.cs">
+      <DependentUpon>201908170837582_RemoveSettingIdAreaDelivery.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908170838576_AddSeliverySettingIdAreaDelivery.cs" />
+    <Compile Include="Migrations\201908170838576_AddSeliverySettingIdAreaDelivery.Designer.cs">
+      <DependentUpon>201908170838576_AddSeliverySettingIdAreaDelivery.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908170927015_ChangeAreaDeliveryKey.cs" />
+    <Compile Include="Migrations\201908170927015_ChangeAreaDeliveryKey.Designer.cs">
+      <DependentUpon>201908170927015_ChangeAreaDeliveryKey.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908210524244_AddBrachIdInPridcuts.cs" />
+    <Compile Include="Migrations\201908210524244_AddBrachIdInPridcuts.Designer.cs">
+      <DependentUpon>201908210524244_AddBrachIdInPridcuts.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
+    <Compile Include="Models\AreaDeliveryModel.cs" />
     <Compile Include="Models\BranchModel.cs" />
     <Compile Include="Models\BranchSettingViewModel.cs" />
     <Compile Include="Models\BranchSignal.cs" />
     <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\DataHistoryForViewModel.cs" />
     <Compile Include="Models\DeliverySettingModel.cs" />
     <Compile Include="Models\HistoryOrderFilter.cs" />
     <Compile Include="Models\NewBranchModel.cs" />
@@ -567,6 +599,27 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908100946302_OrderModelUpdateDate.resx">
       <DependentUpon>201908100946302_OrderModelUpdateDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908170830125_AddAreaDelivery.resx">
+      <DependentUpon>201908170830125_AddAreaDelivery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908170834477_AddSettingIdAreaDelivery.resx">
+      <DependentUpon>201908170834477_AddSettingIdAreaDelivery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908170836044_ChangeNameSettingIdAreaDelivery.resx">
+      <DependentUpon>201908170836044_ChangeNameSettingIdAreaDelivery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908170837582_RemoveSettingIdAreaDelivery.resx">
+      <DependentUpon>201908170837582_RemoveSettingIdAreaDelivery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908170838576_AddSeliverySettingIdAreaDelivery.resx">
+      <DependentUpon>201908170838576_AddSeliverySettingIdAreaDelivery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908170927015_ChangeAreaDeliveryKey.resx">
+      <DependentUpon>201908170927015_ChangeAreaDeliveryKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908210524244_AddBrachIdInPridcuts.resx">
+      <DependentUpon>201908210524244_AddBrachIdInPridcuts.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

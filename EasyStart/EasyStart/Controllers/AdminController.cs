@@ -1,6 +1,7 @@
 ﻿using EasyStart.Logic;
 using EasyStart.Models;
 using EasyStart.Utils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,7 +39,11 @@ namespace EasyStart.Controllers
             ViewBag.TypeBranch = typeBranch;
             ViewBag.ZoneId = deliverySetting == null ? DateTimeHepler.DEFAULT_ZONE_ID : deliverySetting.ZoneId;
             ViewBag.YearsWork = DateTime.Now.Year == 2019 ? DateTime.Now.Year.ToString() : $"2019 - {DateTime.Now.Year}";
-
+            ViewBag.AreaDeliveris = deliverySetting != null &&
+                                    deliverySetting.AreaDeliveries != null &&
+                                    deliverySetting.AreaDeliveries.Any() ?
+                                    JsonConvert.SerializeObject(deliverySetting.AreaDeliveries) :
+                                    JsonConvert.SerializeObject(new List<AreaDeliveryModel>());
 
             return View();
         }
@@ -142,6 +147,9 @@ namespace EasyStart.Controllers
                 }
             }
 
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+
+            category.BranchId = branchId;
             category = DataWrapper.SaveCategory(category);
 
             if (category != null)
@@ -178,6 +186,9 @@ namespace EasyStart.Controllers
                 }
             }
 
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+
+            product.BranchId = branchId;
             product = DataWrapper.SaveProduct(product);
 
             if (product != null)
@@ -233,6 +244,9 @@ namespace EasyStart.Controllers
                     };
 
                     DataWrapper.SaveSetting(setting);
+
+                    var baseBrachClone = new BrachClone(Server, branchId, newBranchId);
+                    baseBrachClone.Clone();
 
                     var converter = new ConverterBranchSetting();
                     var branchView = converter.GetBranchSettingViews(branch, setting, typeBranch);
@@ -309,7 +323,8 @@ namespace EasyStart.Controllers
         public JsonResult LoadCategoryList()
         {
             var result = new JsonResultModel();
-            var categories = DataWrapper.GetCategories();
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+            var categories = DataWrapper.GetCategories(branchId);
 
             if (categories != null)
             {
@@ -364,6 +379,9 @@ namespace EasyStart.Controllers
                 }
             }
 
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+
+            category.BranchId = branchId;
             var updateCategory = DataWrapper.UpdateCategory(category);
 
             if (updateCategory != null)
@@ -439,6 +457,9 @@ namespace EasyStart.Controllers
                 }
             }
 
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+
+            product.CategoryId = branchId;
             var updateProduct = DataWrapper.UpdateProduct(product);
 
             if (updateProduct != null)
