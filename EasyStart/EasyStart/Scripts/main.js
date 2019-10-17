@@ -55,3 +55,22 @@ function xFormatPrice(_number) {
     r = (rr[1] ? b + decpoint + rr[1] : b);
     return format_string.replace('#', r);
 }
+
+var ProductType = {
+    Normal: 0,
+    New: 1,
+    Hit: 2,
+    Stock: 4,
+    HotPeppers: 8,
+    Vegetarion: 16
+}
+
+class BitOperation {
+    static Add(item1, item2) {
+        return item1 | item2
+    }
+
+    static isHas(item, itemCheck) {
+        return (item & itemCheck) == itemCheck
+    }
+}

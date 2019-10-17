@@ -53,7 +53,17 @@
     if ($(".header-menu .menu-item-active").attr("target-id") == Pages.Order) {
         loadOrders();
     }
+
+    selectToSumoSelectProductType();
 });
+
+function selectToSumoSelectProductType() {
+    $("#addProducDialog #product-type").SumoSelect({
+        placeholder: 'Присвойте метки',
+        okCancelInMulti: true,
+        locale: ['ОК', 'Отмена', 'Выбрать все'],
+    });
+}
 
 function bindDialogCloseClickBackdor() {
     $("dialog").bind('click', function (event) {
@@ -839,7 +849,7 @@ function addProduct() {
             Price: $("#product-price").val(),
             Description: $("#description-product").val(),
             Image: data.URL,
-            ProductType: parseInt($("#product-type option:selected").attr("value"))
+            ProductType: getProductType($("#product-type option:selected"))
         }
         let successFunc = function (result, loader) {
             loader.stop();
@@ -897,7 +907,7 @@ function updateProduct() {
             Price: $("#product-price").val(),
             Description: $("#description-product").val(),
             Image: data.URL,
-            ProductType: parseInt($("#product-type option:selected").attr("value"))
+            ProductType: getProductType($("#product-type option:selected"))
         }
 
         let successFunc = function (result, loader) {
@@ -1129,18 +1139,15 @@ function editProduct(e, event) {
     dialog.find("#description-product").val(product.Description);
     dialog.find("img").attr("src", product.Image);
 
-    let $selectProductType = dialog.find("#product-type");
-    $selectProductType.find("option").removeAttr("selected");
-    $selectProductType.find(`[value=${product.ProductType}]`).attr("selected", true);
-
+    
 
     if (product.Image.indexOf("default") == -1) {
         dialog.find("img").removeClass("hide");
         dialog.find(".dialog-image-upload").addClass("hide");
     }
 
-    //dialog.trigger("showModal");
     Dialog.showModal(dialog);
+    setProductType(product.ProductType)
 }
 
 function deleteConfirmation(callback) {
@@ -2686,3 +2693,31 @@ class AreaDeliverySetting {
         return null;
     }
 }
+
+function getProductType($items) {
+    const productTypes = []
+    let productType = ProductType.Normal
+
+    $items.each(function () {
+        productTypes.push(parseInt($(this).attr('value')))
+    });
+
+    for (type of productTypes) {
+        productType = BitOperation.Add(productType, type)
+    }
+
+    return productType
+}
+
+function setProductType(productType) {
+    const $selectProductType = $('#product-type')
+    $selectProductType[0].sumo.unSelectAll()
+    $selectProductType[0].sumo.reload()
+
+    for (key in ProductType) {
+        const type = ProductType[key]
+        if (BitOperation.isHas(productType, type))
+            $selectProductType[0].sumo.selectItem(type.toString())
+    }
+
+} 
