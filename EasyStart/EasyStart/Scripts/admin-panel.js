@@ -1147,7 +1147,8 @@ function editProduct(e, event) {
     }
 
     Dialog.showModal(dialog);
-    setProductType(product.ProductType)
+
+    setProductType(product.ProductType)//работает только если show, поэтому вызывается после покада диалогового окна
 }
 
 function deleteConfirmation(callback) {
@@ -2575,7 +2576,7 @@ class AreaDeliverySetting {
             const epmty = this.renderEmpty()
             items.push(epmty);
         } else {
-            for (let area of AreaDelivery) {
+            for (let area of AreaDelivery.sort((a, b) => a.NameArea > b.NameArea ? 1 : -1)) {
                 let item = this.renderItem(area)
 
                 items.push(item)
@@ -2657,13 +2658,27 @@ class AreaDeliverySetting {
         const name = $("#area-name").val()
         const minPrice = $("#area-price").val()
         const uniqId = $("#area-uniqId").val()
-        const areaDelivery = this.findAreaByUniqId(uniqId)
+        const names = name.split(',').map(p => p.trim()).filter(p => p)
 
         if (!name || !minPrice) {
             showInfoMessage('Заполните все поля')
             loader.stop()
             return
         }
+
+        if (names.length > 1) 
+            this.multiSaveAreaDelivery(names, minPrice)
+        else
+            this.singleSaveAreaDelivery(name, minPrice, uniqId)
+
+        this.render()
+        loader.stop()
+
+        Dialog.close('#areaDeliveryEditDialog')
+    }
+
+    singleSaveAreaDelivery(name, minPrice, uniqId) {
+        const areaDelivery = this.findAreaByUniqId(uniqId)
 
         if (areaDelivery) {
             areaDelivery.NameArea = name
@@ -2677,15 +2692,41 @@ class AreaDeliverySetting {
 
             AreaDelivery.push(newAreaDelivery)
         }
+    }
 
-        this.render()
-        loader.stop()
-        Dialog.close('#areaDeliveryEditDialog')
+    multiSaveAreaDelivery(names, minPrice) {
+        for (name of names) {
+            const uniqId = generateRandomString(10)
+            const areaDelivery = this.findAreaByName(names)
+
+            if (areaDelivery) {
+                areaDelivery.NameArea = name
+                areaDelivery.MinPrice = minPrice
+            } else {
+                const newAreaDelivery = {
+                    UniqId: uniqId,
+                    NameArea: name,
+                    MinPrice: minPrice
+                }
+
+                AreaDelivery.push(newAreaDelivery)
+            }
+        }
     }
 
     findAreaByUniqId(uniqId) {
         for (let areaDelivery of AreaDelivery) {
             if (areaDelivery.UniqId === uniqId) {
+                return areaDelivery
+            }
+        }
+
+        return null;
+    }
+
+    findAreaByName(name) {
+        for (let areaDelivery of AreaDelivery) {
+            if (areaDelivery.NameArea === name) {
                 return areaDelivery
             }
         }
