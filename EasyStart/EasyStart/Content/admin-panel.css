@@ -2063,9 +2063,9 @@ button:disabled, button:disabled:hover {
 .area-delivery-setting-wrapper {
     display: grid;
     grid-template-columns: 550px 40px;
-    grid-template-rows: 40px 240px;
+    grid-template-rows: 30px 250px;
     grid-gap: 10px;
-    grid-row-gap: 12px;
+    grid-row-gap: 5px;
     padding: 10px;
     position: relative;
 }
@@ -2093,6 +2093,7 @@ button:disabled, button:disabled:hover {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 40px 1fr;
+    grid-row-gap: 10px;
 }
 
 .area-delivery-settings-add {
