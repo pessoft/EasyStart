@@ -55,7 +55,12 @@
     }
 
     selectToSumoSelectProductType();
+    bindChangePeriodWork();
 });
+
+function bindChangePeriodWork() {
+    $(".period-work-input").hunterTimePicker();
+}
 
 function selectToSumoSelectProductType() {
     $("#addProducDialog #product-type").SumoSelect({
@@ -1139,7 +1144,7 @@ function editProduct(e, event) {
     dialog.find("#description-product").val(product.Description);
     dialog.find("img").attr("src", product.Image);
 
-    
+
 
     if (product.Image.indexOf("default") == -1) {
         dialog.find("img").removeClass("hide");
@@ -1368,16 +1373,8 @@ function getTimeDeliveryJSON() {
     for (let day in DayWeekly) {
         let timeDay = $(`[day-id=${day}]`);
         let checked = timeDay.find("input[type=checkbox]").is(":checked");
-        let start = parseFloat(timeDay.find("[name=start]").val()).toFixed(2);
-        let end = parseFloat(timeDay.find("[name=end]").val()).toFixed(2);
-
-        if (isNaN(start)) {
-            start = "0.00";
-        }
-
-        if (isNaN(end)) {
-            end = "0.00";
-        }
+        let start = timeDay.find("[name=start]").val();
+        let end = timeDay.find("[name=end]").val();
 
         timeDays[DayWeekly[day]] = checked ? [start, end] : null;
     }
@@ -2666,7 +2663,7 @@ class AreaDeliverySetting {
             return
         }
 
-        if (names.length > 1) 
+        if (names.length > 1)
             this.multiSaveAreaDelivery(names, minPrice)
         else
             this.singleSaveAreaDelivery(name, minPrice, uniqId)

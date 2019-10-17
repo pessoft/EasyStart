@@ -865,7 +865,7 @@ div.product-item:hover {
     font-size: 0.9em;
 }
 
-.table-time input[type=number] {
+#delivery .table-time input[type=text] {
     width: 85px;
     height: 20px;
     text-align: center;

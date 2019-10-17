@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link rel="shortcut icon" href="~/Images/favico.ico" type="image/x-icon">
     <title>Панель администратора</title>
+    @Styles.Render("~/timepicker/css")
     @Styles.Render("~/odometer/css")
     @Styles.Render("~/main/css")
     @Styles.Render("~/admin-panel/css")
@@ -374,8 +375,8 @@
                                     <label for="day-@day.Item2" class="label-for">@day.Item1</label>
                                 </div>
                                 <div class="period-work">
-                                    <input type="number" name="start" min="0" max="24" step="0.1" placeholder="0.00" value="@day.Item3" />
-                                    <input type="number" name="end" min="0" max="24" step="0.1" placeholder="0.00" value="@day.Item4" />
+                                    <input type="text" class="period-work-input" name="start" min="0" max="24" step="0.1" placeholder="0.00" value="@day.Item3" />
+                                    <input type="text" readonly class="period-work-input" name="end" min="0" max="24" step="0.1" placeholder="0.00" value="@day.Item4" />
                                 </div>
                             </div>
                         }
@@ -921,6 +922,7 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/signalr")
     @Scripts.Render("~/bundles/odometer")
+    @Scripts.Render("~/bundles/timepicker")
     <script src="~/signalr/hubs"></script>
     <script src="~/Scripts/singnal-logic.js"></script>
     @Scripts.Render("~/bundles/sumoselect")
