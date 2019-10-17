@@ -346,7 +346,9 @@
     <Compile Include="Models\OrderModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\ProductReview.cs" />
-    <Compile Include="Models\RatingProducUpdater.cs" />
+    <Compile Include="Models\RatingProduct.cs" />
+    <Compile Include="Models\RatingProductMiddleware.cs" />
+    <Compile Include="Models\RatingProductUpdater.cs" />
     <Compile Include="Models\ReportFilter.cs" />
     <Compile Include="Models\ReportResult.cs" />
     <Compile Include="Models\SettingModel.cs" />

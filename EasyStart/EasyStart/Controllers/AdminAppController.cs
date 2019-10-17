@@ -228,9 +228,10 @@ namespace EasyStart
         [HttpPost]
         public JsonResultModel SendOrder([FromBody]OrderModel order)
         {
+            var result = new JsonResultModel();
+
             try
             {
-                var result = new JsonResultModel();
                 var deliverSetting = DataWrapper.GetDeliverySetting(order.BranchId);
 
                 order.Date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
@@ -251,41 +252,65 @@ namespace EasyStart
             }
             catch (Exception ex)
             {
-                return null;
+                return result;
             }
         }
 
-        public List<OrderModel> GetHistoryOrder(int clientId)
+        [HttpPost]
+        public JsonResultModel GetHistoryOrder([FromBody]int clientId)
         {
+            var result = new JsonResultModel();
+
             try
             {
                 var historyOrder = DataWrapper.GetHistoryOrder(clientId);
 
-                return historyOrder;
+                result.Data = historyOrder;
+                result.Success = true;
+
+                return result;
             }
             catch (Exception ex)
             {
-                return null;
+                return result;
             }
 
         }
 
         [HttpPost]
-        public void UpdateProducRating([FromBody]RatingProducUpdater ratingUp)
+        public JsonResultModel UpdateProductRating(RatingProductUpdater ratingUp)
         {
+            var result = new JsonResultModel();
+
             try
             {
-                var result = new JsonResultModel();
-                var product = DataWrapper.GetProduct(ratingUp.ProductId);
-                var votesCount = ++product.VotesCount;
-                var score = ratingUp.Score > 0 ? ratingUp.Score : 0;
-                var votesSum = product.VotesSum + score;
-                var rating = votesSum / votesCount;
+                ratingUp.Score = ratingUp.Score > 0 ? ratingUp.Score : 0;
 
-                DataWrapper.UpdateRating(ratingUp.ProductId, rating, votesCount, votesSum);
+                DataWrapper.SaveRating(new RatingProduct
+                {
+                    ClientId = ratingUp.ClientId,
+                    ProductId = ratingUp.ProductId,
+                    Score = ratingUp.Score
+                });
+                var rating = DataWrapper.GetProductRating(ratingUp.ProductId);
+
+                var product = DataWrapper.GetProduct(ratingUp.ProductId);
+                DataWrapper.UpdateRating(ratingUp.ProductId, rating.Rating, rating.VotesCount, rating.VotesSum);
+
+                result.Success = true;
+                result.Data = new
+                {
+                    CategoryId = product.CategoryId,
+                    ProductId = product.Id,
+                    rating.Rating,
+                    rating.VotesCount,
+                    rating.VotesSum
+                };
             }
             catch (Exception ex)
             { }
+
+            return result;
         }
 
         [HttpPost]

@@ -466,7 +466,7 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     result = db.Categories
-                        .Where(p => p.BranchId == brancId &&  p.Visible)
+                        .Where(p => p.BranchId == brancId && p.Visible)
                         .ToList();
                 }
             }
@@ -704,7 +704,7 @@ namespace EasyStart.Logic
                 {
                     result = db
                         .Products
-                        .Where(p =>p.BranchId == branchId && p.Visible)
+                        .Where(p => p.BranchId == branchId && p.Visible)
                         .ToList();
                 }
             }
@@ -1257,7 +1257,6 @@ namespace EasyStart.Logic
             return client;
         }
 
-
         public static TodayDataOrdersModel GetDataOrdersByDate(List<int> brandchIds, DateTime date)
         {
             var todatData = new TodayDataOrdersModel();
@@ -1289,6 +1288,57 @@ namespace EasyStart.Logic
             }
 
             return todatData;
+        }
+
+        public static RatingProductMiddleware GetProductRating(int productId)
+        {
+            RatingProductMiddleware rating = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var votes = db.RatingProducts.Where(p => p.ProductId == productId);
+                    var countTMP = votes.Count();
+                    var sumTMP = votes.Sum(p => p.Score);
+                    var ratingTMP = sumTMP / countTMP;
+
+                    rating = new RatingProductMiddleware
+                    {
+                        Rating = ratingTMP,
+                        VotesCount = countTMP,
+                        VotesSum = sumTMP
+                    };
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return rating;
+        }
+
+        public static void SaveRating(RatingProduct rating)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var findRating = db.RatingProducts.FirstOrDefault(p => p.ClientId == rating.ClientId && p.ProductId == rating.ProductId);
+
+                    if (findRating != null)
+                    {
+                        findRating.Score = rating.Score;
+                    }
+                    else
+                    {
+                        db.RatingProducts.Add(rating);
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            { }
         }
     }
 }
