@@ -22,9 +22,16 @@
             $('.Hunter-time-picker').remove();
             var _this = $(this);
             var offset = _this.offset();
-            var top = offset.top - 270 + 15;
+            var top = offset.top - 225;
+            var left = offset.left;
+            var windowWidth = $(window).width();
+
+            if (left + 390 > windowWidth) {
+                left -= (left + 390) - windowWidth + 10
+            }
+
             template.css({
-                'left': offset.left,
+                'left': left,
                 'top': top
             });
             buildTimePicker();
@@ -70,7 +77,7 @@
                     minute_html += '<li class="Hunter-minute" data-minute="' + dates.minute[j] + '">' + dates.minute[j] + '</li>';
                 }
             }
-            cur_time.find('.Hunter-minute-wrap').html(minute_html).css('left', '-' + (poi.left - 37) + 'px').show();
+            cur_time.find('.Hunter-minute-wrap').html(minute_html).css('left', '-' + (poi.left) + 'px').show();
         };
 
         function hourEvent() {
