@@ -330,6 +330,10 @@
     <Compile Include="Migrations\201909010925157_AddClientIdInReviewModel.Designer.cs">
       <DependentUpon>201909010925157_AddClientIdInReviewModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201910201751162_RankTable.cs" />
+    <Compile Include="Migrations\201910201751162_RankTable.Designer.cs">
+      <DependentUpon>201910201751162_RankTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -630,6 +634,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909010925157_AddClientIdInReviewModel.resx">
       <DependentUpon>201909010925157_AddClientIdInReviewModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910201751162_RankTable.resx">
+      <DependentUpon>201910201751162_RankTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
