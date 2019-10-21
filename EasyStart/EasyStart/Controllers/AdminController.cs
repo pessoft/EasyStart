@@ -1,4 +1,5 @@
 ﻿using EasyStart.Logic;
+using EasyStart.Logic.EmailNotification;
 using EasyStart.Models;
 using EasyStart.Utils;
 using Newtonsoft.Json;
