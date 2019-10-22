@@ -50,14 +50,6 @@ namespace EasyStart.Controllers
             return View();
         }
 
-        //test email
-        private void TestEmail()
-        {
-            var orderNotify = new OrderNotification(new OrderModel { Id = 999 }, new Email(), new List<string> { "sharpmsil@gmail.com" });
-
-            orderNotify.EmailNotify();
-        }
-
         [HttpPost]
         [Authorize]
         public JsonResult UploadImage()
@@ -98,7 +90,6 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SaveSetting(SettingModel setting)
         {
-            TestEmail();
             var branchId = DataWrapper.GetBranchId(User.Identity.Name);
             setting.BranchId = branchId;
             var successSave = DataWrapper.SaveSetting(setting);
