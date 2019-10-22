@@ -1456,7 +1456,6 @@ function addBranch() {
         loader.stop();
         if (result.Success) {
             addBranchToList(result.Data);
-            //addNewBranchToAdditionalOrder(result.Data.Id, result.Data.City);
             cancelDialog("#addBranchDialog");
         } else {
             showErrorMessage(result.ErrorMessage);
@@ -1516,7 +1515,6 @@ function removeBranch(e, id) {
             $(`[branch-id=${id}]`).fadeOut(500, function () {
                 $(this).remove();
             });
-            removeBranchFromAdditionalOrder(id);
         } else {
             showErrorMessage(result.ErrorMessage);
         }

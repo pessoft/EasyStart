@@ -178,6 +178,9 @@
     <Compile Include="Logic\DataWrapper.cs" />
     <Compile Include="Logic\DayWeekly.cs" />
     <Compile Include="Logic\DeliveryType.cs" />
+    <Compile Include="Logic\EmailNotification\Email.cs" />
+    <Compile Include="Logic\EmailNotification\IEmail.cs" />
+    <Compile Include="Logic\EmailNotification\OrderNotification.cs" />
     <Compile Include="Logic\KeyGenerator.cs" />
     <Compile Include="Logic\List.cs" />
     <Compile Include="Logic\OrderStatus.cs" />
@@ -341,6 +344,7 @@
     <Compile Include="Models\BranchSettingViewModel.cs" />
     <Compile Include="Models\BranchSignal.cs" />
     <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\DataHistoryForViewModel.cs" />
     <Compile Include="Models\DeliverySettingModel.cs" />
     <Compile Include="Models\HistoryOrderFilter.cs" />
     <Compile Include="Models\NewBranchModel.cs" />
@@ -528,6 +532,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Models\EmailNotification\" />
     <Folder Include="Views\Analytics\" />
   </ItemGroup>
   <ItemGroup>

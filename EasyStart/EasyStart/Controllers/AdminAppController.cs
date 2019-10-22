@@ -257,13 +257,13 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public JsonResultModel GetHistoryOrder([FromBody]int clientId)
+        public JsonResultModel GetHistoryOrder([FromBody]DataHistoryForViewModel dataHistoryForLoad)
         {
             var result = new JsonResultModel();
 
             try
             {
-                var historyOrder = DataWrapper.GetHistoryOrder(clientId);
+                var historyOrder = DataWrapper.GetHistoryOrder(dataHistoryForLoad.ClientId, dataHistoryForLoad.BranchId);
 
                 result.Data = historyOrder;
                 result.Success = true;
@@ -278,7 +278,7 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public JsonResultModel UpdateProductRating(RatingProductUpdater ratingUp)
+        public JsonResultModel UpdateProducRating([FromBody]RatingProductUpdater ratingUp)
         {
             var result = new JsonResultModel();
 
@@ -300,7 +300,7 @@ namespace EasyStart
                 result.Success = true;
                 result.Data = new
                 {
-                    CategoryId = product.CategoryId,
+                    product.CategoryId,
                     ProductId = product.Id,
                     rating.Rating,
                     rating.VotesCount,
