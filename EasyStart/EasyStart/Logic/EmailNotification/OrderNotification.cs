@@ -32,10 +32,10 @@ namespace EasyStart.Logic.EmailNotification
             MailMessage mailMessage = new MailMessage();
             mailMessage.To.Add(toEmail);
             mailMessage.Subject = $"Заказ #{order.Id}";
-            mailMessage.Body = "Hello my friend!";
+            mailMessage.Body = "test msg";
+            mailMessage.IsBodyHtml = true;
 
             return mailMessage;
         }
-
     }
 }
