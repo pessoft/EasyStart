@@ -29,6 +29,8 @@ namespace EasyStart
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             GlobalConfiguration.Configuration.Formatters.JsonFormatter.MediaTypeMappings.Add(new QueryStringMapping("json", "true", "application/json"));
+
+            Logger.InitLogger();
         }
     }
 }

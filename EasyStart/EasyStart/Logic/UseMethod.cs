@@ -82,6 +82,7 @@ namespace EasyStart.Logic
             catch (Exception ex)
             {
                 result = false;
+                Logger.Log.Error(ex);
             }
 
             return result;

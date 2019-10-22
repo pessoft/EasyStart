@@ -14,7 +14,9 @@ namespace EasyStart.Logic.EmailNotification
                 client.Send(mailMessage);
             }
             catch (Exception ex)
-            {}
+            {
+                Logger.Log.Error(ex);
+            }
         }
     }
 }
