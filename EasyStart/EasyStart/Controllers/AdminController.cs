@@ -1,4 +1,5 @@
 ﻿using EasyStart.Logic;
+using EasyStart.Logic.EmailNotification;
 using EasyStart.Models;
 using EasyStart.Utils;
 using Newtonsoft.Json;
@@ -44,8 +45,17 @@ namespace EasyStart.Controllers
                                     deliverySetting.AreaDeliveries.Any() ?
                                     JsonConvert.SerializeObject(deliverySetting.AreaDeliveries) :
                                     JsonConvert.SerializeObject(new List<AreaDeliveryModel>());
+            
 
             return View();
+        }
+
+        //test email
+        private void TestEmail()
+        {
+            var orderNotify = new OrderNotification(new OrderModel { Id = 999 }, new Email(), new List<string> { "sharpmsil@gmail.com" });
+
+            orderNotify.EmailNotify();
         }
 
         [HttpPost]
@@ -88,6 +98,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SaveSetting(SettingModel setting)
         {
+            TestEmail();
             var branchId = DataWrapper.GetBranchId(User.Identity.Name);
             setting.BranchId = branchId;
             var successSave = DataWrapper.SaveSetting(setting);

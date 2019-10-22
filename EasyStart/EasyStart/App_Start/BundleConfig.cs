@@ -47,6 +47,10 @@ namespace EasyStart
                         "~/Scripts/admin-panel.js",
                         "~/Scripts/analytics.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/timepicker").Include(
+                        
+                        "~/Scripts/jquery-timepicker.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/jquery-raty").Include(
                       "~/Scripts/jquery.raty.min.js"));
 
@@ -61,6 +65,9 @@ namespace EasyStart
             bundles.Add(new StyleBundle("~/admin-panel/css").Include(
                       "~/Content/admin-panel.css",
                       "~/Content/analytics.css"));
+
+            bundles.Add(new StyleBundle("~/timepicker/css").Include(
+                      "~/Content/timePicker.css"));
 
             bundles.Add(new StyleBundle("~/dragula/css").Include(
                        "~/Content/dragula.css"));

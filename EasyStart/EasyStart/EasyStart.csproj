@@ -178,6 +178,9 @@
     <Compile Include="Logic\DataWrapper.cs" />
     <Compile Include="Logic\DayWeekly.cs" />
     <Compile Include="Logic\DeliveryType.cs" />
+    <Compile Include="Logic\EmailNotification\Email.cs" />
+    <Compile Include="Logic\EmailNotification\IEmail.cs" />
+    <Compile Include="Logic\EmailNotification\OrderNotification.cs" />
     <Compile Include="Logic\KeyGenerator.cs" />
     <Compile Include="Logic\List.cs" />
     <Compile Include="Logic\OrderStatus.cs" />
@@ -326,6 +329,14 @@
     <Compile Include="Migrations\201908210524244_AddBrachIdInPridcuts.Designer.cs">
       <DependentUpon>201908210524244_AddBrachIdInPridcuts.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909010925157_AddClientIdInReviewModel.cs" />
+    <Compile Include="Migrations\201909010925157_AddClientIdInReviewModel.Designer.cs">
+      <DependentUpon>201909010925157_AddClientIdInReviewModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910201751162_RankTable.cs" />
+    <Compile Include="Migrations\201910201751162_RankTable.Designer.cs">
+      <DependentUpon>201910201751162_RankTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -343,7 +354,9 @@
     <Compile Include="Models\OrderModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\ProductReview.cs" />
-    <Compile Include="Models\RatingProducUpdater.cs" />
+    <Compile Include="Models\RatingProduct.cs" />
+    <Compile Include="Models\RatingProductMiddleware.cs" />
+    <Compile Include="Models\RatingProductUpdater.cs" />
     <Compile Include="Models\ReportFilter.cs" />
     <Compile Include="Models\ReportResult.cs" />
     <Compile Include="Models\SettingModel.cs" />
@@ -431,6 +444,7 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Content\timePicker.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\main.css" />
@@ -482,6 +496,7 @@
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-timepicker.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
     <Content Include="Scripts\jquery.raty.min.js" />
@@ -517,6 +532,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Models\EmailNotification\" />
     <Folder Include="Views\Analytics\" />
   </ItemGroup>
   <ItemGroup>
@@ -620,6 +636,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908210524244_AddBrachIdInPridcuts.resx">
       <DependentUpon>201908210524244_AddBrachIdInPridcuts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909010925157_AddClientIdInReviewModel.resx">
+      <DependentUpon>201909010925157_AddClientIdInReviewModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910201751162_RankTable.resx">
+      <DependentUpon>201910201751162_RankTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

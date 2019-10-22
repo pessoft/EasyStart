@@ -5,9 +5,11 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class RatingProducUpdater
+    public class RatingProduct
     {
-        public int ProductId {get;set;}
+        public int Id { get; set; }
+        public int ClientId { get; set; }
+        public int ProductId { get; set; }
         public double Score { get; set; }
     }
 }

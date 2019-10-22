@@ -53,7 +53,22 @@
     if ($(".header-menu .menu-item-active").attr("target-id") == Pages.Order) {
         loadOrders();
     }
+
+    selectToSumoSelectProductType();
+    bindChangePeriodWork();
 });
+
+function bindChangePeriodWork() {
+    $(".period-work-input").hunterTimePicker();
+}
+
+function selectToSumoSelectProductType() {
+    $("#addProducDialog #product-type").SumoSelect({
+        placeholder: 'Присвойте метки',
+        okCancelInMulti: true,
+        locale: ['ОК', 'Отмена', 'Выбрать все'],
+    });
+}
 
 function bindDialogCloseClickBackdor() {
     $("dialog").bind('click', function (event) {
@@ -839,7 +854,7 @@ function addProduct() {
             Price: $("#product-price").val(),
             Description: $("#description-product").val(),
             Image: data.URL,
-            ProductType: parseInt($("#product-type option:selected").attr("value"))
+            ProductType: getProductType($("#product-type option:selected"))
         }
         let successFunc = function (result, loader) {
             loader.stop();
@@ -897,7 +912,7 @@ function updateProduct() {
             Price: $("#product-price").val(),
             Description: $("#description-product").val(),
             Image: data.URL,
-            ProductType: parseInt($("#product-type option:selected").attr("value"))
+            ProductType: getProductType($("#product-type option:selected"))
         }
 
         let successFunc = function (result, loader) {
@@ -1129,9 +1144,6 @@ function editProduct(e, event) {
     dialog.find("#description-product").val(product.Description);
     dialog.find("img").attr("src", product.Image);
 
-    let $selectProductType = dialog.find("#product-type");
-    $selectProductType.find("option").removeAttr("selected");
-    $selectProductType.find(`[value=${product.ProductType}]`).attr("selected", true);
 
 
     if (product.Image.indexOf("default") == -1) {
@@ -1139,8 +1151,9 @@ function editProduct(e, event) {
         dialog.find(".dialog-image-upload").addClass("hide");
     }
 
-    //dialog.trigger("showModal");
     Dialog.showModal(dialog);
+
+    setProductType(product.ProductType)//работает только если show, поэтому вызывается после покада диалогового окна
 }
 
 function deleteConfirmation(callback) {
@@ -1360,16 +1373,8 @@ function getTimeDeliveryJSON() {
     for (let day in DayWeekly) {
         let timeDay = $(`[day-id=${day}]`);
         let checked = timeDay.find("input[type=checkbox]").is(":checked");
-        let start = parseFloat(timeDay.find("[name=start]").val()).toFixed(2);
-        let end = parseFloat(timeDay.find("[name=end]").val()).toFixed(2);
-
-        if (isNaN(start)) {
-            start = "0.00";
-        }
-
-        if (isNaN(end)) {
-            end = "0.00";
-        }
+        let start = timeDay.find("[name=start]").val();
+        let end = timeDay.find("[name=end]").val();
 
         timeDays[DayWeekly[day]] = checked ? [start, end] : null;
     }
@@ -2566,7 +2571,7 @@ class AreaDeliverySetting {
             const epmty = this.renderEmpty()
             items.push(epmty);
         } else {
-            for (let area of AreaDelivery) {
+            for (let area of AreaDelivery.sort((a, b) => a.NameArea > b.NameArea ? 1 : -1)) {
                 let item = this.renderItem(area)
 
                 items.push(item)
@@ -2648,13 +2653,27 @@ class AreaDeliverySetting {
         const name = $("#area-name").val()
         const minPrice = $("#area-price").val()
         const uniqId = $("#area-uniqId").val()
-        const areaDelivery = this.findAreaByUniqId(uniqId)
+        const names = name.split(',').map(p => p.trim()).filter(p => p)
 
         if (!name || !minPrice) {
             showInfoMessage('Заполните все поля')
             loader.stop()
             return
         }
+
+        if (names.length > 1)
+            this.multiSaveAreaDelivery(names, minPrice)
+        else
+            this.singleSaveAreaDelivery(name, minPrice, uniqId)
+
+        this.render()
+        loader.stop()
+
+        Dialog.close('#areaDeliveryEditDialog')
+    }
+
+    singleSaveAreaDelivery(name, minPrice, uniqId) {
+        const areaDelivery = this.findAreaByUniqId(uniqId)
 
         if (areaDelivery) {
             areaDelivery.NameArea = name
@@ -2668,10 +2687,26 @@ class AreaDeliverySetting {
 
             AreaDelivery.push(newAreaDelivery)
         }
+    }
 
-        this.render()
-        loader.stop()
-        Dialog.close('#areaDeliveryEditDialog')
+    multiSaveAreaDelivery(names, minPrice) {
+        for (name of names) {
+            const uniqId = generateRandomString(10)
+            const areaDelivery = this.findAreaByName(names)
+
+            if (areaDelivery) {
+                areaDelivery.NameArea = name
+                areaDelivery.MinPrice = minPrice
+            } else {
+                const newAreaDelivery = {
+                    UniqId: uniqId,
+                    NameArea: name,
+                    MinPrice: minPrice
+                }
+
+                AreaDelivery.push(newAreaDelivery)
+            }
+        }
     }
 
     findAreaByUniqId(uniqId) {
@@ -2683,4 +2718,42 @@ class AreaDeliverySetting {
 
         return null;
     }
+
+    findAreaByName(name) {
+        for (let areaDelivery of AreaDelivery) {
+            if (areaDelivery.NameArea === name) {
+                return areaDelivery
+            }
+        }
+
+        return null;
+    }
 }
+
+function getProductType($items) {
+    const productTypes = []
+    let productType = ProductType.Normal
+
+    $items.each(function () {
+        productTypes.push(parseInt($(this).attr('value')))
+    });
+
+    for (type of productTypes) {
+        productType = BitOperation.Add(productType, type)
+    }
+
+    return productType
+}
+
+function setProductType(productType) {
+    const $selectProductType = $('#product-type')
+    $selectProductType[0].sumo.unSelectAll()
+    $selectProductType[0].sumo.reload()
+
+    for (key in ProductType) {
+        const type = ProductType[key]
+        if (BitOperation.isHas(productType, type))
+            $selectProductType[0].sumo.selectItem(type.toString())
+    }
+
+} 

@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link rel="shortcut icon" href="~/Images/favico.ico" type="image/x-icon">
     <title>Панель администратора</title>
+    @Styles.Render("~/timepicker/css")
     @Styles.Render("~/odometer/css")
     @Styles.Render("~/main/css")
     @Styles.Render("~/admin-panel/css")
@@ -374,8 +375,8 @@
                                     <label for="day-@day.Item2" class="label-for">@day.Item1</label>
                                 </div>
                                 <div class="period-work">
-                                    <input type="number" name="start" min="0" max="24" step="0.1" placeholder="0.00" value="@day.Item3" />
-                                    <input type="number" name="end" min="0" max="24" step="0.1" placeholder="0.00" value="@day.Item4" />
+                                    <input type="text" class="period-work-input" name="start" min="0" max="24" step="0.1" placeholder="0.00" value="@day.Item3" />
+                                    <input type="text" readonly class="period-work-input" name="end" min="0" max="24" step="0.1" placeholder="0.00" value="@day.Item4" />
                                 </div>
                             </div>
                         }
@@ -409,87 +410,90 @@
 
     <dialog id="addCategoryDialog">
         <form onsubmit="operationCategory(); return false;" autocomplete="off">
-            <div class="enter-dialog-data">
-                <div class="header-dialog">
-                    <i class="fal fa-layer-plus"></i>
-                    Добавление категории
-                </div>
-                <div class="content-dialog-data">
-                    <input type="hidden" id="category-id">
-                    <div class="group">
-                        <input required type="text" id="name-category" />
-                        <span class="bar"></span>
-                        <label>Название категории</label>
+            <div class="dialog-container dialog-sm">
+                <div class="enter-dialog-data">
+                    <div class="header-dialog">
+                        <i class="fal fa-layer-plus"></i>
+                        Добавление категории
+                    </div>
+                    <div class="content-dialog-data">
+                        <input type="hidden" id="category-id">
+                        <div class="group">
+                            <input required type="text" id="name-category" />
+                            <span class="bar"></span>
+                            <label>Название категории</label>
+                        </div>
+                    </div>
+                    <div class="dialog-menu">
+                        <button class="btn btn-submit" type="submit">Ок</button>
+                        <button class="btn btn-cancel" type="reset" onclick="cancelDialog($('#addCategoryDialog'))">Отмена</button>
                     </div>
                 </div>
-                <div class="dialog-menu">
-                    <button class="btn btn-submit" type="submit">Ок</button>
-                    <button class="btn btn-cancel" type="reset" onclick="cancelDialog($('#addCategoryDialog'))">Отмена</button>
-                </div>
-            </div>
 
-            <div class="add-image-product">
-                <input type="file" id="add-category-image" accept="image/*" class="hide">
-                <div class="preview-image" onclick="openDialogFile('add-category-image')">
-                    <img src=""/images/default-image.jpg"" alt="your image" class="hide" />
-                    <div class="dialog-image-upload">
-                        <i class="fal fa-upload"></i>
-                        Загрузите изображение категории
+                <div class="add-image-product">
+                    <input type="file" id="add-category-image" accept="image/*" class="hide">
+                    <div class="preview-image" onclick="openDialogFile('add-category-image')">
+                        <img src=""/images/default-image.jpg"" alt="your image" class="hide" />
+                        <div class="dialog-image-upload">
+                            <i class="fal fa-upload"></i>
+                            Загрузите изображение категории
+                        </div>
                     </div>
                 </div>
             </div>
-
         </form>
     </dialog>
 
     <dialog id="addStockDialog">
         <form onsubmit="operationStock(); return false;" autocomplete="off">
-            <div class="enter-dialog-data">
-                <div class="header-dialog">
-                    <i class="fal fa-layer-plus"></i>
-                    Добавление акции
-                </div>
-                <div class="content-dialog-data">
-                    <input type="hidden" id="stock-id">
-                    <div class="stock-type">
-                        <div class="stock-type-header">
-                            Тип акции
+            <div class="dialog-container">
+                <div class="enter-dialog-data">
+                    <div class="header-dialog">
+                        <i class="fal fa-layer-plus"></i>
+                        Добавление акции
+                    </div>
+                    <div class="content-dialog-data">
+                        <input type="hidden" id="stock-id">
+                        <div class="stock-type">
+                            <div class="stock-type-header">
+                                Тип акции
+                            </div>
+                            <select id="stock-type">
+                                <option value="0" selected>Другой тип</option>
+                                <option value="1">Скидка при первом заказем с доставкой</option>
+                                <option value="2">Скидка при заказе с самовывозом</option>
+                            </select>
                         </div>
-                        <select id="stock-type">
-                            <option value="0" selected>Другой тип</option>
-                            <option value="1">Скидка при первом заказем с доставкой</option>
-                            <option value="2">Скидка при заказе с самовывозом</option>
-                        </select>
+                        <div class="group">
+                            <input required type="text" id="name-stock" />
+                            <span class="bar"></span>
+                            <label>Название акции</label>
+                        </div>
+                        <div class="group">
+                            <input type="number" required id="stock-discount" min="0" step="1" value="0" />
+                            <span class="bar"></span>
+                            <label>Размер скидки (в процентах)</label>
+                        </div>
+                        <div class="group">
+                            <textarea id="description-stock"></textarea>
+                            <span class="bar"></span>
+                            <label>Описание акции</label>
+                        </div>
                     </div>
-                    <div class="group">
-                        <input required type="text" id="name-stock" />
-                        <span class="bar"></span>
-                        <label>Название акции</label>
-                    </div>
-                    <div class="group">
-                        <input type="number" required id="stock-discount" min="0" step="1" value="0" />
-                        <span class="bar"></span>
-                        <label>Размер скидки (в процентах)</label>
-                    </div>
-                    <div class="group">
-                        <textarea id="description-stock"></textarea>
-                        <span class="bar"></span>
-                        <label>Описание акции</label>
+                    <div class="dialog-menu">
+                        <button class="btn btn-submit" type="submit">Ок</button>
+                        <button class="btn btn-cancel" type="reset" onclick="cancelDialog($('#addStockDialog'))">Отмена</button>
                     </div>
                 </div>
-                <div class="dialog-menu">
-                    <button class="btn btn-submit" type="submit">Ок</button>
-                    <button class="btn btn-cancel" type="reset" onclick="cancelDialog($('#addStockDialog'))">Отмена</button>
-                </div>
-            </div>
 
-            <div class="add-image-product">
-                <input type="file" id="add-stock-image" accept="image/*" class="hide">
-                <div class="preview-image" onclick="openDialogFile('add-stock-image')">
-                    <img src="#" alt="your image" class="hide" />
-                    <div class="dialog-image-upload">
-                        <i class="fal fa-upload"></i>
-                        Загрузите изображение
+                <div class="add-image-product">
+                    <input type="file" id="add-stock-image" accept="image/*" class="hide">
+                    <div class="preview-image" onclick="openDialogFile('add-stock-image')">
+                        <img src="#" alt="your image" class="hide" />
+                        <div class="dialog-image-upload">
+                            <i class="fal fa-upload"></i>
+                            Загрузите изображение
+                        </div>
                     </div>
                 </div>
             </div>
@@ -498,62 +502,62 @@
 
     <dialog id="addProducDialog">
         <form onsubmit="operationProduct(); return false;" autocomplete="off">
-
-            <div class="enter-dialog-data">
-                <div class="header-dialog">
-                    <i class="fal fa-layer-plus"></i>
-                    Добавление продукта
-                </div>
-                <div class="content-dialog-data">
-                    <input type="hidden" id="product-id">
-                    <div class="product-type">
-                        <div class="product-type-header">
-                            Тип продука
+            <div class="dialog-container">
+                <div class="enter-dialog-data">
+                    <div class="header-dialog">
+                        <i class="fal fa-layer-plus"></i>
+                        Добавление продукта
+                    </div>
+                    <div class="content-dialog-data">
+                        <input type="hidden" id="product-id">
+                        <div class="product-type">
+                            <div class="product-type-header">
+                                Маркировка блюда
+                            </div>
+                            <select multiple id="product-type">
+                                <option value="1">Новинка</option>
+                                <option value="2">Хит</option>
+                                <option value="4">Участвует в акции</option>
+                                <option value="8">Острое</option>
+                                <option value="16">Вегетарианское</option>
+                            </select>
                         </div>
-                        <select id="product-type">
-                            <option value="0" selected>Обычный</option>
-                            <option value="1">Новинка</option>
-                            <option value="2">Хит</option>
-                            <option value="3">Участвует в акции</option>
-                            <option value="4">Острое</option>
-                            <option value="5">Вегетарианское</option>
-                        </select>
-                    </div>
-                    <div class="group">
-                        <input required type="text" id="name-product" />
-                        <span class="bar"></span>
-                        <label>Название продукта</label>
-                    </div>
-                    <div class="group">
-                        <input required type="text" maxlength="20" id="product-additional-info" />
-                        <span class="bar"></span>
-                        <label>Информация о количестве, массе или объеме</label>
-                    </div>
-                    <div class="group">
-                        <input type="number" required id="product-price" min="0" step="0.1" />
-                        <span class="bar"></span>
-                        <label>Цена (в рублях)</label>
-                    </div>
+                        <div class="group">
+                            <input required type="text" id="name-product" />
+                            <span class="bar"></span>
+                            <label>Название продукта</label>
+                        </div>
+                        <div class="group">
+                            <input required type="text" maxlength="20" id="product-additional-info" />
+                            <span class="bar"></span>
+                            <label>Информация о количестве, массе или объеме</label>
+                        </div>
+                        <div class="group">
+                            <input type="number" required id="product-price" min="0" step="0.1" />
+                            <span class="bar"></span>
+                            <label>Цена (в рублях)</label>
+                        </div>
 
-                    <div class="group">
-                        <textarea id="description-product"></textarea>
-                        <span class="bar"></span>
-                        <label>Описание продукта</label>
+                        <div class="group">
+                            <textarea id="description-product"></textarea>
+                            <span class="bar"></span>
+                            <label>Описание продукта</label>
+                        </div>
+                    </div>
+                    <div class="dialog-menu">
+                        <button class="btn btn-submit" type="submit">Ок</button>
+                        <button class="btn btn-cancel" type="reset" onclick="cancelDialog($('#addProducDialog'))">Отмена</button>
                     </div>
                 </div>
-                <div class="dialog-menu">
-                    <button class="btn btn-submit" type="submit">Ок</button>
-                    <button class="btn btn-cancel" type="reset" onclick="cancelDialog($('#addProducDialog'))">Отмена</button>
-                </div>
-            </div>
 
-            <div class="add-image-product">
-                <input type="file" id="add-product-image" accept="image/*" class="hide">
-                <div class="preview-image" onclick="openDialogFile('add-product-image')">
-                    <img src="#" alt="your image" class="hide" />
-                    <div class="dialog-image-upload">
-                        <i class="fal fa-upload"></i>
-                        Загрузите изображение продукта
+                <div class="add-image-product">
+                    <input type="file" id="add-product-image" accept="image/*" class="hide">
+                    <div class="preview-image" onclick="openDialogFile('add-product-image')">
+                        <img src="#" alt="your image" class="hide" />
+                        <div class="dialog-image-upload">
+                            <i class="fal fa-upload"></i>
+                            Загрузите изображение продукта
+                        </div>
                     </div>
                 </div>
             </div>
@@ -798,7 +802,7 @@
     <dialog id="areaDeliveryEditDialog">
         <div class="area-delivery-edit-wrapper">
             <div class="area-delivery-edit-inputs">
-                <input id="area-uniqId" type="hidden"  value="" />
+                <input id="area-uniqId" type="hidden" value="" />
                 <input id="area-name" type="text" placeholder="Название района">
                 <input id="area-price" min="0" step="1" value="0" type="number" placeholder="Минимальная сумма заказа">
             </div>
@@ -918,6 +922,7 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/signalr")
     @Scripts.Render("~/bundles/odometer")
+    @Scripts.Render("~/bundles/timepicker")
     <script src="~/signalr/hubs"></script>
     <script src="~/Scripts/singnal-logic.js"></script>
     @Scripts.Render("~/bundles/sumoselect")

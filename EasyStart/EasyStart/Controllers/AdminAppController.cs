@@ -17,6 +17,27 @@ namespace EasyStart
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class AdminAppController : ApiController
     {
+        public JsonResultModel GetLocation()
+        {
+            var result = new JsonResultModel();
+            result.Success = false;
+
+            try
+            {
+                var allowedCity = GetAllowedCity();
+                var cityBranches = GetCityBranches();
+
+                result.Data = new { cities = allowedCity, cityBranches };
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+            }
+
+            return result;
+        }
+
         public Dictionary<int, string> GetAllowedCity()
         {
             try
@@ -53,6 +74,83 @@ namespace EasyStart
             { }
 
             return branchCityDict;
+        }
+
+        [HttpPost]
+        public JsonResultModel GetMainData([FromBody] int branchId)
+        {
+            var result = new JsonResultModel();
+            result.Success = false;
+
+            if (branchId < 1)
+                return result;
+
+            try
+            {
+                var categories = GetCategories(branchId);
+                var products = GetAllProducts(branchId);
+                var deliverySettings = DataWrapper.GetDeliverySetting(branchId);
+                var organizationSettings = DataWrapper.GetSetting(branchId);
+                var stocks = DataWrapper.GetStocks(branchId);
+
+                var productIds = products.Values.SelectMany(p => p.Select(s => s.Id)).ToList();
+                var reviewsCount = DataWrapper.GetProductReviewsVisibleCount(productIds);
+
+                foreach (var id in productIds)
+                {
+                    var outCount = 0;
+
+                    if (!reviewsCount.TryGetValue(id, out outCount))
+                    {
+                        reviewsCount.Add(id, 0);
+                    }
+                }
+
+                //TO DO: вынести в метод
+                categories.ForEach(p =>
+                {
+                    if (!string.IsNullOrEmpty(p.Image))
+                    {
+                        p.Image = p.Image.Substring(2);
+                    }
+                });
+
+                stocks.ForEach(p =>
+                {
+                    if (!string.IsNullOrEmpty(p.Image))
+                    {
+                        p.Image = p.Image.Substring(2);
+                    }
+                });
+
+                foreach (var kv in products)
+                {
+                    kv.Value.ForEach(p =>
+                    {
+                        if (!string.IsNullOrEmpty(p.Image))
+                        {
+                            p.Image = p.Image.Substring(2);
+                        }
+                    });
+                }
+
+                result.Data = new
+                {
+                    categories,
+                    products,
+                    deliverySettings,
+                    organizationSettings,
+                    stocks,
+                    reviewsCount
+                };
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+            }
+
+            return result;
         }
 
         public List<CategoryModel> GetCategories(int branchId)
@@ -130,9 +228,10 @@ namespace EasyStart
         [HttpPost]
         public JsonResultModel SendOrder([FromBody]OrderModel order)
         {
+            var result = new JsonResultModel();
+
             try
             {
-                var result = new JsonResultModel();
                 var deliverSetting = DataWrapper.GetDeliverySetting(order.BranchId);
 
                 order.Date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
@@ -153,42 +252,65 @@ namespace EasyStart
             }
             catch (Exception ex)
             {
-                return null;
+                return result;
             }
         }
 
         [HttpPost]
-        public List<OrderModel> GetHistoryOrder([FromBody]DataHistoryForViewModel dataHistoryForLoad)
+        public JsonResultModel GetHistoryOrder([FromBody]DataHistoryForViewModel dataHistoryForLoad)
         {
+            var result = new JsonResultModel();
+
             try
             {
                 var historyOrder = DataWrapper.GetHistoryOrder(dataHistoryForLoad.ClientId, dataHistoryForLoad.BranchId);
 
-                return historyOrder;
+                result.Data = historyOrder;
+                result.Success = true;
+
+                return result;
             }
             catch (Exception ex)
             {
-                return null;
+                return result;
             }
 
         }
 
         [HttpPost]
-        public void UpdateProducRating([FromBody]RatingProducUpdater ratingUp)
+        public JsonResultModel UpdateProducRating([FromBody]RatingProductUpdater ratingUp)
         {
+            var result = new JsonResultModel();
+
             try
             {
-                var result = new JsonResultModel();
-                var product = DataWrapper.GetProduct(ratingUp.ProductId);
-                var votesCount = ++product.VotesCount;
-                var score = ratingUp.Score > 0 ? ratingUp.Score : 0;
-                var votesSum = product.VotesSum + score;
-                var rating = votesSum / votesCount;
+                ratingUp.Score = ratingUp.Score > 0 ? ratingUp.Score : 0;
 
-                DataWrapper.UpdateRating(ratingUp.ProductId, rating, votesCount, votesSum);
+                DataWrapper.SaveRating(new RatingProduct
+                {
+                    ClientId = ratingUp.ClientId,
+                    ProductId = ratingUp.ProductId,
+                    Score = ratingUp.Score
+                });
+                var rating = DataWrapper.GetProductRating(ratingUp.ProductId);
+
+                var product = DataWrapper.GetProduct(ratingUp.ProductId);
+                DataWrapper.UpdateRating(ratingUp.ProductId, rating.Rating, rating.VotesCount, rating.VotesSum);
+
+                result.Success = true;
+                result.Data = new
+                {
+                    product.CategoryId,
+                    ProductId = product.Id,
+                    rating.Rating,
+                    rating.VotesCount,
+                    rating.VotesSum
+                };
             }
             catch (Exception ex)
             { }
+
+            return result;
         }
 
         [HttpPost]
@@ -197,14 +319,15 @@ namespace EasyStart
             try
             {
                 if (review != null &&
-               !string.IsNullOrEmpty(review.PhoneNumber) &&
-               !string.IsNullOrEmpty(review.ReviewText) &&
-               review.ProductId > 0)
+                   review.ClientId > 0 &&
+                   !string.IsNullOrEmpty(review.ReviewText) &&
+                   review.ProductId > 0)
                 {
                     var branchId = DataWrapper.GetBranchIdByCity(review.CityId);
                     var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
                     review.Date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
-
+                    var client = DataWrapper.GetClient(review.ClientId);
+                    review.Reviewer = client.UserName;
                     DataWrapper.SaveProductReviews(review);
                 }
             }
@@ -212,8 +335,10 @@ namespace EasyStart
             { }
         }
 
-        public List<ProductReview> GetProductReviews(int productId)
+        [HttpPost]
+        public JsonResultModel GetProductReviews([FromBody]int productId)
         {
+            var result = new JsonResultModel();
             try
             {
                 var reviews = DataWrapper.GetProductReviewsVisible(productId);
@@ -225,17 +350,26 @@ namespace EasyStart
                         var hideNumberPhone = new StringBuilder(p.PhoneNumber);
                         hideNumberPhone[11] = '*';
                         hideNumberPhone[12] = '*';
+                        hideNumberPhone[14] = '*';
 
                         p.PhoneNumber = hideNumberPhone.ToString();
+                        p.Reviewer += " " + p.PhoneNumber;
                     });
-                }
 
-                return reviews;
+                    result.Data = reviews;
+                    result.Success = true;
+                }
+                else
+                {
+                    result.Data = new List<ProductReview>();
+                }
+                
+                result.Success = true;
             }
             catch (Exception ex)
-            {
-                return null;
-            }
+            { }
+
+            return result;
         }
 
         public List<StockModel> GetStocks(int cityId)
@@ -254,17 +388,30 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public Client AddOrUpdateClient([FromBody]Client client)
+        public JsonResultModel AddOrUpdateClient([FromBody]Client client)
         {
+            var result = new JsonResultModel();
             try
             {
+                if (string.IsNullOrEmpty(client.PhoneNumber) ||
+                    string.IsNullOrEmpty(client.UserName))
+                    return result;
+
                 var newClient = DataWrapper.AddOrUpdateClient(client);
 
-                return newClient;
+                result.Data = new
+                {
+                    clientId = newClient.Id,
+                    phoneNumber = newClient.PhoneNumber,
+                    userName = newClient.UserName
+                };
+                result.Success = true;
+
+                return result;
             }
             catch (Exception ex)
             {
-                return null;
+                return result;
             }
         }
 
