@@ -34,7 +34,15 @@ namespace EasyStart.Controllers
 
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("AdminPanel", "Admin");
+                if (!useState)
+                {
+                    FormsAuthentication.SignOut();
+                }
+                else
+                {
+                    return RedirectToAction("AdminPanel", "Admin");
+                }
+                
             }
 
             return View();
