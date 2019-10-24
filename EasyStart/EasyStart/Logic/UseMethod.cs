@@ -56,7 +56,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
         }
 
         public static bool GetCurrentState()

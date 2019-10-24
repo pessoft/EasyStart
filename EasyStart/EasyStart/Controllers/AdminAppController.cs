@@ -38,6 +38,7 @@ namespace EasyStart
             catch (Exception ex)
             {
                 result.Success = false;
+                Logger.Log.Error(ex);
             }
 
             return result;
@@ -56,6 +57,7 @@ namespace EasyStart
             }
             catch (Exception ex)
             {
+                Logger.Log.Error(ex);
                 return null;
             }
         }
@@ -76,7 +78,9 @@ namespace EasyStart
 
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return branchCityDict;
         }
@@ -152,6 +156,7 @@ namespace EasyStart
             }
             catch (Exception ex)
             {
+                Logger.Log.Error(ex);
                 result.Success = false;
             }
 
@@ -168,6 +173,7 @@ namespace EasyStart
             }
             catch (Exception ex)
             {
+                Logger.Log.Error(ex);
                 return null;
             }
         }
@@ -182,6 +188,7 @@ namespace EasyStart
             }
             catch (Exception ex)
             {
+                Logger.Log.Error(ex);
                 return null;
             }
         }
@@ -198,6 +205,7 @@ namespace EasyStart
             }
             catch (Exception ex)
             {
+                Logger.Log.Error(ex);
                 return null;
             }
         }
@@ -212,6 +220,7 @@ namespace EasyStart
             }
             catch (Exception ex)
             {
+                Logger.Log.Error(ex);
                 return null;
             }
         }
@@ -226,6 +235,7 @@ namespace EasyStart
             }
             catch (Exception ex)
             {
+                Logger.Log.Error(ex);
                 return null;
             }
         }
@@ -274,6 +284,7 @@ namespace EasyStart
             }
             catch (Exception ex)
             {
+                Logger.Log.Error(ex);
                 return result;
             }
         }
@@ -294,6 +305,7 @@ namespace EasyStart
             }
             catch (Exception ex)
             {
+                Logger.Log.Error(ex);
                 return result;
             }
 
@@ -330,7 +342,9 @@ namespace EasyStart
                 };
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -354,7 +368,9 @@ namespace EasyStart
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
         }
 
         [HttpPost]
@@ -389,7 +405,9 @@ namespace EasyStart
                 result.Success = true;
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -405,6 +423,7 @@ namespace EasyStart
             }
             catch (Exception ex)
             {
+                Logger.Log.Error(ex);
                 return null;
             }
         }
@@ -433,6 +452,7 @@ namespace EasyStart
             }
             catch (Exception ex)
             {
+                Logger.Log.Error(ex);
                 return result;
             }
         }
@@ -460,6 +480,7 @@ namespace EasyStart
             }
             catch (Exception ex)
             {
+                Logger.Log.Error(ex);
                 return result;
             }
         }
