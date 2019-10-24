@@ -1,5 +1,4 @@
 ﻿using EasyStart.Logic;
-using EasyStart.Logic.EmailNotification;
 using EasyStart.Models;
 using EasyStart.Utils;
 using Newtonsoft.Json;
@@ -36,7 +35,7 @@ namespace EasyStart.Controllers
             ViewBag.City = CityHelper.City;
             ViewBag.Setting = DataWrapper.GetSetting(branchId); ;
             ViewBag.DeliverySetting = deliverySetting;
-            ViewBag.DeliveryTimeTable= WeeklyDayHelper.ConvertTimeDeliveryToViev(deliverySetting?.TimeDelivery);
+            ViewBag.DeliveryTimeTable = WeeklyDayHelper.ConvertTimeDeliveryToViev(deliverySetting?.TimeDelivery);
             ViewBag.TypeBranch = typeBranch;
             ViewBag.ZoneId = deliverySetting == null ? DateTimeHepler.DEFAULT_ZONE_ID : deliverySetting.ZoneId;
             ViewBag.YearsWork = DateTime.Now.Year == 2019 ? DateTime.Now.Year.ToString() : $"2019 - {DateTime.Now.Year}";
@@ -45,7 +44,6 @@ namespace EasyStart.Controllers
                                     deliverySetting.AreaDeliveries.Any() ?
                                     JsonConvert.SerializeObject(deliverySetting.AreaDeliveries) :
                                     JsonConvert.SerializeObject(new List<AreaDeliveryModel>());
-            
 
             return View();
         }
@@ -80,6 +78,7 @@ namespace EasyStart.Controllers
             }
             catch (Exception ex)
             {
+                Logger.Log.Error(ex);
                 result.ErrorMessage = "При загрузки изображения что то пошло не так";
             }
 
@@ -266,9 +265,10 @@ namespace EasyStart.Controllers
             }
             catch (Exception ex)
             {
+                Logger.Log.Error(ex);
                 result.ErrorMessage = ex.Message;
             }
-            
+
 
             return Json(result);
         }
@@ -309,9 +309,10 @@ namespace EasyStart.Controllers
             }
             catch (Exception ex)
             {
+                Logger.Log.Error(ex);
                 result.ErrorMessage = ex.Message;
             }
-          
+
 
             return Json(result);
         }
@@ -386,7 +387,7 @@ namespace EasyStart.Controllers
             {
                 category.Image = "/images/default-image.jpg";
             }
-            else if(category.Id > 0)
+            else if (category.Id > 0)
             {
                 var oldImage = DataWrapper.GetCategoryImage(category.Id);
 
@@ -733,7 +734,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public void UpdateSatsusOrder(UpdaterOrderStatus data)
         {
-            if(data.Status == OrderStatus.Processing)
+            if (data.Status == OrderStatus.Processing)
             {
                 return;
             }
@@ -747,9 +748,11 @@ namespace EasyStart.Controllers
 
                 DataWrapper.UpdateStatusOrder(data);
             }
-            catch(Exception ex)
-            { }
-                    }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
 
         [HttpPost]
         [Authorize]
@@ -769,6 +772,7 @@ namespace EasyStart.Controllers
             }
             catch (Exception ex)
             {
+                Logger.Log.Error(ex);
                 result.ErrorMessage = ex.Message;
             }
 

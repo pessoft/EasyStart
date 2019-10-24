@@ -311,9 +311,14 @@
             <div class="section-wrapper">
                 <div class="delivery-block smaller">
                     <div class="delivery-header">
-                        Звуковой сигнал
+                        Дополнительные уведомления
                     </div>
                     <div class="delivery-content">
+                        <div class="group">
+                            <input required type="text" id="notify-email" value="@(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.NotificationEmail != null ? ViewBag.DeliverySetting.NotificationEmail : "")" />
+                            <div class="bar"></div>
+                            <label>Email оповещение</label>
+                        </div>
                         <div class="checkbox-item sound-notify">
                             <input type="checkbox" id="sound-nodify" @(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.IsSoundNotify ? "checked" : "") />
                             <label for="sound-nodify" class="label-for">Оповещать звуковым сигналом о новом заказе</label>

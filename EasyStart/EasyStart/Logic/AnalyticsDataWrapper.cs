@@ -25,7 +25,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -46,7 +48,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -66,7 +70,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -87,7 +93,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -107,7 +115,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }

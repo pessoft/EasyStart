@@ -1,0 +1,155 @@
+<html>
+
+<head>
+    <style type='text/css'>
+        body {
+            background-color: #F8F8F8;
+            font-size: 0.95em;
+        }
+
+        .sm-margin {
+            margin-block-start: 0.67em;
+            margin-block-end: 0.15em;
+        }
+
+        .main-color {
+            color: #222;
+        }
+
+        .secondary-color {
+            color: #505050;
+        }
+
+        .wrapper {
+            display: grid;
+            justify-content: center;
+        }
+
+        .order-info {
+            width: 390px;
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: 115px auto;
+            border: 2px solid #187bca;
+            border-radius: 2px;
+            padding: 0 20px;
+            font-family: Helvetica, Arial;
+            background-color: #fff;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            border-bottom: 1px solid #187bca6b;
+        }
+
+        .logo {
+            height: 115px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .order-number {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .block {
+            color: #505050;
+        }
+
+        .content-info {
+            padding-left: 10px;
+            margin-bottom: 5px;
+        }
+
+        .checkout-price {
+            margin-top: 12px;
+            padding-bottom: 10px;
+            width: 100%;
+            height: 100%;
+            font-size: 2em;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        h2 {
+            margin-block-start: 10px;
+            margin-block-end: 10px;
+        }
+
+        table {
+            width: 100%;
+            font-size: 0.95em;
+        }
+
+            table tr {
+                height: 25px;
+            }
+
+        td {
+            min-width: 110px;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class='wrapper'>
+        <div class='order-info main-color'>
+            <div class='logo-container'>
+                <img class='logo' src='https://easy-start-test.site/Images/full-logo-pink.png'>
+            </div>
+            <div class="order-number">
+                <h1 class="sm-margin">Заказ #{orderNumber}</h1>
+                <h5 class="sm-margin">{orderDate}</h5>
+            </div>
+            <div class='block'>
+                <h2>Заказчик</h2>
+                <div class='content-info'>Имя: <span class='main-color'>{customerName}</span></div>
+                <div class='content-info'>Номер телефона: <span class='main-color'>{customerNumberPhone}</span></div>
+            </div>
+            <div class='block'>
+                <h2>Адрес доставки</h2>
+                <table class='content-info secondary-color'>
+                    <tbody>
+                        {orderAddress}
+                </table>
+            </div>
+            <div class='block'>
+                <h2>Состав заказа</h2>
+                <table class='content-info secondary-color'>
+                    <tbody>
+                        {productsInfo}
+                    </tbody>
+                </table>
+            </div>
+            <div class='block'>
+                <h2>Стоимость заказа</h2>
+                <table class='content-info secondary-color'>
+                    <tbody>
+                        {orderCheckoutPrice}
+                    </tbody>
+                </table>
+            </div>
+            <div class='block'>
+                <h2>Комментарий к заказу</h2>
+                <p class="content-info">
+                    {orderComment}
+                </p>
+            </div>
+            <div class='block'>
+                <div class='content-info checkout-price'>
+                    <span>Итого:</span>
+                    <span>{orderPrice}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

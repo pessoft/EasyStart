@@ -20,7 +20,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return settingDict;
         }
@@ -36,7 +38,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return setting;
         }
@@ -54,7 +58,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return areaDeliveries;
         }
@@ -71,7 +77,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return setting;
         }
@@ -87,7 +95,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return setting == null ? -1 : setting.BranchId;
         }
@@ -104,7 +114,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return setting;
         }
@@ -122,7 +134,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return setting;
         }
@@ -138,7 +152,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return branch == null ? -1 : branch.Id;
         }
@@ -154,7 +170,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return branch == null ? TypeBranch.SubBranch : branch.TypeBranch;
         }
@@ -170,7 +188,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return branches;
         }
@@ -186,7 +206,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return branch;
         }
@@ -204,7 +226,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return hasMainBranch;
         }
@@ -222,7 +246,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return success;
         }
@@ -253,7 +279,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return success;
         }
@@ -289,7 +317,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return success;
         }
@@ -343,7 +373,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return success;
         }
@@ -365,6 +397,7 @@ namespace EasyStart.Logic
                         updateSetting.TimeDeliveryJSON = setting.TimeDeliveryJSON;
                         updateSetting.ZoneId = setting.ZoneId;
                         updateSetting.IsSoundNotify = setting.IsSoundNotify;
+                        updateSetting.NotificationEmail = setting.NotificationEmail;
                     }
                     else
                     {
@@ -382,7 +415,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return success;
         }
@@ -402,7 +437,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -419,7 +456,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -437,7 +476,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -453,7 +494,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -471,7 +514,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -491,7 +536,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -510,7 +557,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return success;
         }
@@ -532,7 +581,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -549,7 +600,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
         }
 
         public static List<ProductModel> GetProducts(int idCategory)
@@ -566,7 +619,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -585,7 +640,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -610,7 +667,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
         }
 
         public static void UpdateRating(int productId, double rating, int votesCount, double votesSum)
@@ -635,7 +694,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
         }
 
         public static ProductModel GetProduct(int productId)
@@ -652,7 +713,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -671,7 +734,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -690,7 +755,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -709,7 +776,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -734,7 +803,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -755,7 +826,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return success;
         }
@@ -781,7 +854,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return alloweCity;
         }
@@ -799,7 +874,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return numberOrder;
         }
@@ -818,7 +895,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return orders;
         }
@@ -839,7 +918,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return orders;
         }
@@ -862,7 +943,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return histroyOrders;
         }
@@ -881,7 +964,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return success;
         }
@@ -901,7 +986,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -921,7 +1008,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -940,7 +1029,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -957,7 +1048,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -975,7 +1068,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -993,7 +1088,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -1011,7 +1108,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -1032,7 +1131,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return success;
         }
@@ -1060,7 +1161,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -1092,7 +1195,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return clinet;
         }
@@ -1116,7 +1221,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
         }
 
         //to do вынести в общий метод с категориями
@@ -1139,7 +1246,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
         }
 
         public static void UpdateVisibleCategory(UpdaterVisible upData)
@@ -1159,7 +1268,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
         }
 
         public static void UpdateVisibleProduct(UpdaterVisible upData)
@@ -1179,7 +1290,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
         }
 
         public static void UpdateVisibleReview(UpdaterVisible upData)
@@ -1199,7 +1312,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
         }
 
         public static string GetCategoryImage(int id)
@@ -1216,7 +1331,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return image;
         }
@@ -1235,7 +1352,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return image;
         }
@@ -1252,14 +1371,16 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return client;
         }
 
         public static TodayDataOrdersModel GetDataOrdersByDate(List<int> brandchIds, DateTime date)
         {
-            var todatData = new TodayDataOrdersModel();
+            var todayData = new TodayDataOrdersModel();
             try
             {
                 using (var db = new AdminPanelContext())
@@ -1273,21 +1394,22 @@ namespace EasyStart.Logic
                         {
                             if (p.OrderStatus == OrderStatus.Processed)
                             {
-                                ++todatData.CountSuccesOrder;
-                                todatData.Revenue += p.AmountPayDiscountDelivery;
+                                ++todayData.CountSuccesOrder;
+                                todayData.Revenue += p.AmountPayDiscountDelivery;
                             }
 
                             if (p.OrderStatus == OrderStatus.Cancellation)
-                                ++todatData.CountCancelOrder;
+                                ++todayData.CountCancelOrder;
                         });
                 }
             }
             catch (Exception ex)
             {
-                todatData = null;
+                Logger.Log.Error(ex);
+                todayData = null;
             }
 
-            return todatData;
+            return todayData;
         }
 
         public static RatingProductMiddleware GetProductRating(int productId)
@@ -1312,7 +1434,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return rating;
         }
@@ -1338,7 +1462,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
         }
     }
 }
