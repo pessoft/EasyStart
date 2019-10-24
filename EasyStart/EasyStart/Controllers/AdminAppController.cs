@@ -260,10 +260,11 @@ namespace EasyStart
                     result.Data = numberOrder;
                     result.Success = true;
 
-                    var server = System.Web.HttpContext.Current.Server;
+                    var currentContext = System.Web.HttpContext.Current;
                     Task.Run(() =>
                     {
-                        var emailTemplate = File.ReadAllText(server.MapPath("~/Resource/EmailTemplate.html"));
+                        System.Web.HttpContext.Current = currentContext;
+                        var emailTemplate = File.ReadAllText(currentContext.Server.MapPath("~/Resource/EmailTemplate.html"));
                         var setting = DataWrapper.GetSetting(order.BranchId);
                         var products = DataWrapper.GetOrderProducts(order.ProductCount.Keys.ToList());
                         var optionsNotification = new OptionsNotificationNewOrderModel
