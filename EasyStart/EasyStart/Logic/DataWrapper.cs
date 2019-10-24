@@ -365,6 +365,7 @@ namespace EasyStart.Logic
                         updateSetting.TimeDeliveryJSON = setting.TimeDeliveryJSON;
                         updateSetting.ZoneId = setting.ZoneId;
                         updateSetting.IsSoundNotify = setting.IsSoundNotify;
+                        updateSetting.NotificationEmail = setting.NotificationEmail;
                     }
                     else
                     {

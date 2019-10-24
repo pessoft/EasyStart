@@ -1,5 +1,4 @@
 ﻿using EasyStart.Logic;
-using EasyStart.Logic.EmailNotification;
 using EasyStart.Models;
 using EasyStart.Utils;
 using Newtonsoft.Json;
@@ -45,7 +44,6 @@ namespace EasyStart.Controllers
                                     deliverySetting.AreaDeliveries.Any() ?
                                     JsonConvert.SerializeObject(deliverySetting.AreaDeliveries) :
                                     JsonConvert.SerializeObject(new List<AreaDeliveryModel>());
-            
 
             return View();
         }

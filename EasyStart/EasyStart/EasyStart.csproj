@@ -162,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Attributes\DescriptionAttribute.cs" />
     <Compile Include="Controllers\AdminAppController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -173,6 +174,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="HtmlRenderer\EmailOrderBodyHtmlRenderer.cs" />
+    <Compile Include="HtmlRenderer\IHtmlRenderer.cs" />
+    <Compile Include="HtmlRenderer\Models\OrderIfnoModel.cs" />
+    <Compile Include="HtmlRenderer\Models\ProductInfoModel.cs" />
     <Compile Include="Hubs\NewOrderHub.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Logic\AnalyticsDataWrapper.cs" />
@@ -182,11 +187,13 @@
     <Compile Include="Logic\DataWrapper.cs" />
     <Compile Include="Logic\DayWeekly.cs" />
     <Compile Include="Logic\DeliveryType.cs" />
-    <Compile Include="Logic\EmailNotification\Email.cs" />
-    <Compile Include="Logic\EmailNotification\IEmail.cs" />
-    <Compile Include="Logic\EmailNotification\OrderNotification.cs" />
+    <Compile Include="Logic\Notification\EmailNotification\Email.cs" />
+    <Compile Include="Logic\Notification\EmailNotification\IEmail.cs" />
+    <Compile Include="Logic\Notification\EmailNotification\OrderEmailNotification.cs" />
     <Compile Include="Logic\KeyGenerator.cs" />
     <Compile Include="Logic\List.cs" />
+    <Compile Include="Logic\Notification\NotifyNewOrderManager.cs" />
+    <Compile Include="Logic\OrderHelper.cs" />
     <Compile Include="Logic\OrderStatus.cs" />
     <Compile Include="Logic\ProductHelper.cs" />
     <Compile Include="Logic\ProductType.cs" />
@@ -204,6 +211,7 @@
     <Compile Include="Logic\Report\TopProductsReport.cs" />
     <Compile Include="Logic\StockType.cs" />
     <Compile Include="Logic\TypeBranch.cs" />
+    <Compile Include="Logic\UriHelper.cs" />
     <Compile Include="Logic\UseMethod.cs" />
     <Compile Include="Migrations\201904240619364_InitialCreate.cs" />
     <Compile Include="Migrations\201904240619364_InitialCreate.Designer.cs">
@@ -337,6 +345,10 @@
     <Compile Include="Migrations\201909010925157_AddClientIdInReviewModel.Designer.cs">
       <DependentUpon>201909010925157_AddClientIdInReviewModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201910230557316_AddedNotificationEmailDeliverySetting.cs" />
+    <Compile Include="Migrations\201910230557316_AddedNotificationEmailDeliverySetting.Designer.cs">
+      <DependentUpon>201910230557316_AddedNotificationEmailDeliverySetting.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -351,6 +363,7 @@
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\JsonResultModel.cs" />
     <Compile Include="Models\LoginDataModel.cs" />
+    <Compile Include="Models\Notification\OptionsNotificationNewOrderModel.cs" />
     <Compile Include="Models\OrderModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\ProductReview.cs" />
@@ -371,6 +384,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\CityHelper.cs" />
     <Compile Include="Utils\DateTimeHepler.cs" />
+    <Compile Include="Utils\EnumHelper.cs" />
     <Compile Include="Utils\WeeklyDayHelper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -466,6 +480,7 @@
     <Content Include="Images\rating\star-half.png" />
     <Content Include="Images\rating\star-off.png" />
     <Content Include="Images\rating\star-on.png" />
+    <Content Include="Resource\EmailTemplate.html" />
     <Content Include="Scripts\admin-login.js" />
     <Content Include="Scripts\admin-panel.js" />
     <Content Include="Resource\City.json" />
@@ -535,7 +550,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Logs\" />
-    <Folder Include="Models\EmailNotification\" />
     <Folder Include="Views\Analytics\" />
   </ItemGroup>
   <ItemGroup>
@@ -642,6 +656,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909010925157_AddClientIdInReviewModel.resx">
       <DependentUpon>201909010925157_AddClientIdInReviewModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910230557316_AddedNotificationEmailDeliverySetting.resx">
+      <DependentUpon>201910230557316_AddedNotificationEmailDeliverySetting.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

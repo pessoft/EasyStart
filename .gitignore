@@ -244,3 +244,4 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 /EasyStart/EasyStart/Images/Products/
+/EasyStart/EasyStart/Logs/errors.log.2019-10-23

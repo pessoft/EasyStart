@@ -1405,6 +1405,7 @@ function saveDeliverySetting() {
         PriceDelivery: priceDelivery,
         FreePriceDelivery: freePriceDelivery,
         IsSoundNotify: $("#sound-nodify").is(":checked"),
+        NotificationEmail: $("#notify-email").val(),
         ZoneId: $("#delivery-time-zone").val(),
         PayCard: $("#payment-card").is(":checked"),
         PayCash: $("#payment-cash").is(":checked"),

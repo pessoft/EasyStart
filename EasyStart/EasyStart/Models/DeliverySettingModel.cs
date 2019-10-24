@@ -18,6 +18,8 @@ namespace EasyStart.Models
 
         public bool IsSoundNotify { get; set; }
 
+        public string NotificationEmail { get; set; }
+
         /// <summary>
         /// Time Zone Id
         /// </summary>

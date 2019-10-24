@@ -1,14 +1,19 @@
 ﻿using EasyStart.Hubs;
 using EasyStart.Logic;
+using EasyStart.Logic.Notification;
+using EasyStart.Logic.Notification.EmailNotification;
 using EasyStart.Models;
+using EasyStart.Models.Notification;
 using EasyStart.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
@@ -242,10 +247,27 @@ namespace EasyStart
                 if (numberOrder != -1)
                 {
                     order.Id = numberOrder;
-                    new NewOrderHub().AddedNewOrder(order);
-
                     result.Data = numberOrder;
                     result.Success = true;
+
+                    var server = System.Web.HttpContext.Current.Server;
+                    Task.Run(() =>
+                    {
+                        var emailTemplate = File.ReadAllText(server.MapPath("~/Resource/EmailTemplate.html"));
+                        var setting = DataWrapper.GetSetting(order.BranchId);
+                        var products = DataWrapper.GetOrderProducts(order.ProductCount.Keys.ToList());
+                        var optionsNotification = new OptionsNotificationNewOrderModel
+                        {
+                            DomainUr = Request.RequestUri.GetBaseUrl(),
+                            Email = new Email(),
+                            EmailBodyHTMLTemplate = emailTemplate,
+                            Order = order,
+                            OrderInfo = order.GetOrderInfo(setting, products),
+                            ToEmail = string.IsNullOrEmpty(deliverSetting.NotificationEmail) ? null : new List<string> { deliverSetting.NotificationEmail }
+                        };
+
+                        new NotifyNewOrderManager(optionsNotification).AllNotify();
+                    });
                 }
 
                 return result;
