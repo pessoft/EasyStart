@@ -1,0 +1,49 @@
+﻿.section-promotion {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 80px 1fr;
+    box-shadow: 0px 0px 5px 1px #0f1e322b;
+}
+
+.promotion-menu {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.04em;
+}
+
+    .promotion-menu ul {
+        width: 98%;
+        margin: 0;
+        padding-left: 5px;
+        border-bottom: 1px solid #0f1e322b;
+        padding-bottom: 9px;
+        padding-inline-start: 0px;
+    }
+
+    .promotion-menu li {
+        display: inline;
+        list-style-type: none;
+        padding: 10px;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+    }
+
+        .promotion-menu li:hover {
+            background-color: #e2e2e2;
+            cursor: pointer;
+        }
+
+.promotion-menu-active {
+    border: 1px solid #0f1e322b;
+    border-bottom-color: #f5f5f5;
+    background-color: #f5f5f5;
+    color: #505050;
+}
+
+.promotion-content {
+    height: 75vh;
+    z-index: -1;
+    background-color: #f5f5f5;
+}

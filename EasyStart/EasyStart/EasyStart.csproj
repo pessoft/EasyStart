@@ -415,6 +415,7 @@
     <Content Include="Content\fontawesome\webfonts\fa-solid-900.svg" />
     <Content Include="Content\material-input.css" />
     <Content Include="Content\odometer\odometer-theme-minimal.css" />
+    <Content Include="Content\promotion.css" />
     <Content Include="Content\sounds\sound-new-order.mp3" />
     <Content Include="Content\sumoselect.min.css" />
     <Content Include="Content\themes\base\accordion.css" />
@@ -531,6 +532,7 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\notify.js" />
     <Content Include="Scripts\odometer\odometer.js" />
+    <Content Include="Scripts\promotion\promotion.js" />
     <Content Include="Scripts\singnal-logic.js" />
     <Content Include="Scripts\chart.js" />
     <Content Include="Web.config">

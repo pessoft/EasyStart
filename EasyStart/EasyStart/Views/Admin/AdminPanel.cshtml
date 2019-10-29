@@ -14,6 +14,7 @@
     @Styles.Render("~/sumoselect/css")
     @Styles.Render("~/dragula/css")
     @Styles.Render("~/datepicker/css")
+    @Styles.Render("~/promotion/css")
 </head>
 <body>
     <script>
@@ -36,9 +37,9 @@
             <i class="fal fa-cart-arrow-down"></i>
             Товары
         </div>
-        <div class="menu-item" target-id="stock">
-            <i class="fal fa-badge-percent"></i>
-            Акции
+        <div class="menu-item" target-id="promotino">
+            <i class="fal fa-rocket"></i>
+            Продвижение
         </div>
         <div class="menu-item" target-id="branch" onclick="loadBranchList();">
             <i class="fal fa-code-branch"></i>
@@ -189,7 +190,28 @@
                 </div>
             </div>
         </div>
-        <div class="section hide" id="stock">
+
+        <div class="section hide" id="promotino">
+            <div class="section-grid-wrapper">
+                <div class="section-header ">
+                    Продвижение
+                    <i class="fal fa-rocket"></i>
+                </div>
+                <div class="section-content section-promotion">
+                    <div class="promotion-menu">
+                        <ul>
+                            <li class="promotion-menu-active"><i class="fal fa-badge-percent"></i> Акции</li>
+                            <li><i class="fal fa-gift-card"></i> Купоны</li>
+                            <li><i class="fal fa-hands-usd"></i> Кешбек</li>
+                            <li><i class="fal fa-handshake"></i> Партнерская программа</li>
+                        </ul>
+                    </div>
+                    <div class="promotion-content"></div>
+                </div>
+            </div>
+        </div>
+
+        @*<div class="section hide" id="stock">
             <div class="stock-header">
                 <div class="stock-header-text">
                     Акции
@@ -208,7 +230,7 @@
                 <div class="stock-list" id="stock-list">
                 </div>
             </div>
-        </div>
+        </div>*@
         <div class="section hide" id="branch">
             <div class="branch-header">
                 Отделения
@@ -938,6 +960,7 @@
     @Scripts.Render("~/bundles/dragula")
     @Scripts.Render("~/bundles/jquery-raty")
     @Scripts.Render("~/bundles/darepicker")
+    @Scripts.Render("~/bundles/promotion")
 
 </body>
 </html>
