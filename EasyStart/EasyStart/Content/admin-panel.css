@@ -1380,19 +1380,22 @@ div.take-info-item:nth-child(odd) {
 }
 
 #order .SumoSelect > .CaptionCont > span,
-#history .SumoSelect > .CaptionCont > span {
+#history .SumoSelect > .CaptionCont > span,
+#stockDialog .SumoSelect > .CaptionCont > span {
     font-size: 0.85em;
 }
 
 #order .SumoSelect,
-#history .SumoSelect {
+#history .SumoSelect,
+#stockDialog .SumoSelect {
     width: 90%;
     margin: 5px;
 }
 
     #order .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
     #history .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
-    #addProducDialog .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i {
+    #addProducDialog .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
+    #stockDialog .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i {
         background-color: #163f75b0;
     }
 
@@ -1449,7 +1452,8 @@ div.take-info-item:nth-child(odd) {
 }
 
 #order .SumoSelect > .CaptionCont,
-#history .SumoSelect > .CaptionCont {
+#history .SumoSelect > .CaptionCont
+#stockDialog .SumoSelect > .CaptionCont {
     min-height: 17px;
     display: flex;
     justify-content: flex-start;
@@ -2076,7 +2080,7 @@ button:disabled, button:disabled:hover {
     color: #505050;
 }
 
-.area-delivery-setting-close {
+.dialog-btn-close {
     font-size: 1.2em;
     justify-self: center;
     position: absolute;
@@ -2086,6 +2090,7 @@ button:disabled, button:disabled:hover {
     cursor: pointer;
     background-color: #fff;
     border: none;
+    z-index: 999;
 }
 
 .area-delivery-settings {
@@ -2104,6 +2109,15 @@ button:disabled, button:disabled:hover {
     background-color: #fff;
     border: none;
 }
+
+    .area-delivery-settings-add i {
+        transition-duration: 500ms;
+        transition-property: transform;
+    }
+
+    .area-delivery-settings-add:hover i {
+        transform: rotate(90deg);
+    }
 
 .area-delivery-settings-list {
     display: grid;
@@ -2190,7 +2204,8 @@ button:disabled, button:disabled:hover {
     color: #bbb;
 }
 
-#addProducDialog .SumoSelect {
+#addProducDialog .SumoSelect,
+#stockDialog .SumoSelect {
     min-width: 320px;
     min-height: 25px;
     border-color: #c6c6c6;
@@ -2198,14 +2213,16 @@ button:disabled, button:disabled:hover {
     border-radius: 3px;
 }
 
-    #addProducDialog .SumoSelect .CaptionCont label {
+    #addProducDialog .SumoSelect .CaptionCont label,
+    #stockDialog .SumoSelect .CaptionCont label {
         color: initial;
         pointer-events: initial;
         left: initial;
         transition: initial;
     }
 
-    #addProducDialog .SumoSelect .optWrapper label {
+    #addProducDialog .SumoSelect .optWrapper label,
+    #stockDialog .SumoSelect .optWrapper label {
         color: initial;
         position: initial;
         pointer-events: initial;
@@ -2237,9 +2254,26 @@ button:disabled, button:disabled:hover {
 .section-header {
     font-size: 2em;
     margin-bottom: 10px;
-    text-align:center;
+    text-align: center;
 }
 
 .section-content {
     display: grid
 }
+
+.simple-text-btn {
+    font-size: 0.9em;
+    color: #1d73b7;
+    cursor: pointer;
+    background-color: #fff;
+    border: none;
+}
+
+    .dialog-btn-close:active,
+    .simple-text-btn:active,
+    .area-delivery-settings-add:active,
+    .area-delivery-settings-btn:active,
+    .order-details-menu-item:active,
+    .promotion-btn-settings-add:active {
+        outline: none;
+    }

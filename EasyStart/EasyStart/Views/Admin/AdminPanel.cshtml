@@ -37,7 +37,7 @@
             <i class="fal fa-cart-arrow-down"></i>
             Товары
         </div>
-        <div class="menu-item" target-id="promotino">
+        <div class="menu-item" target-id="promotion">
             <i class="fal fa-rocket"></i>
             Продвижение
         </div>
@@ -191,46 +191,67 @@
             </div>
         </div>
 
-        <div class="section hide" id="promotino">
+        <div class="section hide" id="promotion">
             <div class="section-grid-wrapper">
                 <div class="section-header ">
                     Продвижение
                     <i class="fal fa-rocket"></i>
                 </div>
-                <div class="section-content section-promotion">
+                <div class="section-content promotion-section">
                     <div class="promotion-menu">
                         <ul>
-                            <li class="promotion-menu-active"><i class="fal fa-badge-percent"></i> Акции</li>
-                            <li><i class="fal fa-gift-card"></i> Купоны</li>
-                            <li><i class="fal fa-hands-usd"></i> Кешбек</li>
-                            <li><i class="fal fa-handshake"></i> Партнерская программа</li>
+                            <li target-id="pormotion-stock" class="promotion-menu-active"><i class="fal fa-badge-percent"></i> Акции</li>
+                            <li target-id="pormotion-coupons"><i class="fal fa-gift-card"></i> Купоны</li>
+                            <li target-id="pormotion-cashback"><i class="fal fa-hands-usd"></i> Кешбек</li>
+                            <li target-id="pormotion-partners"><i class="fal fa-handshake"></i> Партнерская программа</li>
                         </ul>
                     </div>
-                    <div class="promotion-content"></div>
+                    <div class="promotion-content-wrapper">
+                        <div id="pormotion-stock" class="promotion-content promotion-some-settings">
+                            <div class="promotion-some-settings-header">
+                                <button id="btn-add-stock" class="promotion-btn-settings-add" onclick="StockManger.addNewStock()">
+                                    <i class="fal fa-plus"></i>
+                                    Добавить акцию
+                                </button>
+                            </div>
+                            <div class="promotion-some-settings-content"></div>
+                        </div>
+                        <div id="pormotion-coupons" class="promotion-content promotion-some-settings hide">
+                            <div class="promotion-some-settings-header">
+                                <button id="btn-add-coupons" class="promotion-btn-settings-add">
+                                    <i class="fal fa-plus"></i>
+                                    Добавить купон
+                                </button>
+                            </div>
+                            <div class="promotion-some-settings-content"></div>
+                        </div>
+                        <div id="pormotion-cashback" class="promotion-content promotion-setting hide"></div>
+                        <div id="pormotion-partners" class="promotion-content promotion-setting hide"></div>
+                    </div>
                 </div>
             </div>
         </div>
 
         @*<div class="section hide" id="stock">
-            <div class="stock-header">
-                <div class="stock-header-text">
-                    Акции
-                    <i class="fal fa-badge-percent"></i>
+                <div class="stock-header">
+                    <div class="stock-header-text">
+                        Акции
+                        <i class="fal fa-badge-percent"></i>
+                    </div>
+                    <div class="stock-header-add" id="add-stock">
+                        <i class="fal fa-plus"></i>
+                        Добавить акцию
+                    </div>
                 </div>
-                <div class="stock-header-add" id="add-stock">
-                    <i class="fal fa-plus"></i>
-                    Добавить акцию
+                <div class="content-wrapper">
+                    <div class="empty-list">
+                        <i class="fal fa-smile-plus"></i>
+                        <span>Пока нет ни одной акции</span>
+                    </div>
+                    <div class="stock-list" id="stock-list">
+                    </div>
                 </div>
-            </div>
-            <div class="content-wrapper">
-                <div class="empty-list">
-                    <i class="fal fa-smile-plus"></i>
-                    <span>Пока нет ни одной акции</span>
-                </div>
-                <div class="stock-list" id="stock-list">
-                </div>
-            </div>
-        </div>*@
+            </div>*@
         <div class="section hide" id="branch">
             <div class="branch-header">
                 Отделения
@@ -471,61 +492,61 @@
         </form>
     </dialog>
 
-    <dialog id="addStockDialog">
-        <form onsubmit="operationStock(); return false;" autocomplete="off">
-            <div class="dialog-container">
-                <div class="enter-dialog-data">
-                    <div class="header-dialog">
-                        <i class="fal fa-layer-plus"></i>
-                        Добавление акции
-                    </div>
-                    <div class="content-dialog-data">
-                        <input type="hidden" id="stock-id">
-                        <div class="stock-type">
-                            <div class="stock-type-header">
-                                Тип акции
+    @*<dialog id="addStockDialog">
+            <form onsubmit="operationStock(); return false;" autocomplete="off">
+                <div class="dialog-container">
+                    <div class="enter-dialog-data">
+                        <div class="header-dialog">
+                            <i class="fal fa-layer-plus"></i>
+                            Добавление акции
+                        </div>
+                        <div class="content-dialog-data">
+                            <input type="hidden" id="stock-id">
+                            <div class="stock-type">
+                                <div class="stock-type-header">
+                                    Тип акции
+                                </div>
+                                <select id="stock-type">
+                                    <option value="0" selected>Другой тип</option>
+                                    <option value="1">Скидка при первом заказем с доставкой</option>
+                                    <option value="2">Скидка при заказе с самовывозом</option>
+                                </select>
                             </div>
-                            <select id="stock-type">
-                                <option value="0" selected>Другой тип</option>
-                                <option value="1">Скидка при первом заказем с доставкой</option>
-                                <option value="2">Скидка при заказе с самовывозом</option>
-                            </select>
+                            <div class="group">
+                                <input required type="text" id="name-stock" />
+                                <span class="bar"></span>
+                                <label>Название акции</label>
+                            </div>
+                            <div class="group">
+                                <input type="number" required id="stock-discount" min="0" step="1" value="0" />
+                                <span class="bar"></span>
+                                <label>Размер скидки (в процентах)</label>
+                            </div>
+                            <div class="group">
+                                <textarea id="description-stock"></textarea>
+                                <span class="bar"></span>
+                                <label>Описание акции</label>
+                            </div>
                         </div>
-                        <div class="group">
-                            <input required type="text" id="name-stock" />
-                            <span class="bar"></span>
-                            <label>Название акции</label>
-                        </div>
-                        <div class="group">
-                            <input type="number" required id="stock-discount" min="0" step="1" value="0" />
-                            <span class="bar"></span>
-                            <label>Размер скидки (в процентах)</label>
-                        </div>
-                        <div class="group">
-                            <textarea id="description-stock"></textarea>
-                            <span class="bar"></span>
-                            <label>Описание акции</label>
+                        <div class="dialog-menu">
+                            <button class="btn btn-submit" type="submit">Ок</button>
+                            <button class="btn btn-cancel" type="reset" onclick="cancelDialog($('#addStockDialog'))">Отмена</button>
                         </div>
                     </div>
-                    <div class="dialog-menu">
-                        <button class="btn btn-submit" type="submit">Ок</button>
-                        <button class="btn btn-cancel" type="reset" onclick="cancelDialog($('#addStockDialog'))">Отмена</button>
-                    </div>
-                </div>
 
-                <div class="add-image-product">
-                    <input type="file" id="add-stock-image" accept="image/*" class="hide">
-                    <div class="preview-image" onclick="openDialogFile('add-stock-image')">
-                        <img src="#" alt="your image" class="hide" />
-                        <div class="dialog-image-upload">
-                            <i class="fal fa-upload"></i>
-                            Загрузите изображение
+                    <div class="add-image-product">
+                        <input type="file" id="add-stock-image" accept="image/*" class="hide">
+                        <div class="preview-image" onclick="openDialogFile('add-stock-image')">
+                            <img src="#" alt="your image" class="hide" />
+                            <div class="dialog-image-upload">
+                                <i class="fal fa-upload"></i>
+                                Загрузите изображение
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </form>
-    </dialog>
+            </form>
+        </dialog>*@
 
     <dialog id="addProducDialog">
         <form onsubmit="operationProduct(); return false;" autocomplete="off">
@@ -806,7 +827,7 @@
             <div class="area-delivery-setting-header">
                 Районы доставки
             </div>
-            <button class="area-delivery-setting-close" onclick="Dialog.close('#areaDeliverySettingDialog')">
+            <button class="dialog-btn-close" onclick="Dialog.close('#areaDeliverySettingDialog')">
                 <i class="fal fa-times"></i>
             </button>
             <div class="area-delivery-settings">
@@ -836,6 +857,86 @@
             <div class="area-delivery-edit-menu">
                 <button class="btn btn-submit">Сохранить</button>
                 <button class="btn btn-cancel" onclick="Dialog.close('#areaDeliveryEditDialog')">Отменить</button>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="stockDialog">
+        <div class="promotion-stock-dialog-wrapper">
+            <input type="hidden" value="" />
+            <button class="dialog-btn-close" onclick="Dialog.close('#stockDialog')">
+                <i class="fal fa-times"></i>
+            </button>
+            <div class="promotion-stock-dialog-slide" id="stock-slide-1">
+                <div class="promotion-stock-dialog-slide-header">Длительность акции</div>
+                <div class="promotion-stock-dialog-slide-content">
+                    <select id="stock-type-period"  onchange="StockManger.onStockTypePeriodChange()">
+                        <option value="-1" disabled selected>
+                            Выберите продолжительность акции
+                        </option>
+                        <option value="1">Разовая</option>
+                        <option value="2">Не ограниченная по времени</option>
+                        <option value="3">Ограниченная по времени</option>
+                    </select>
+                    <select id="stock-one-type-subtype" style="display:none">
+                        <option value="-1" disabled selected>Выберите тип разовой акции</option>
+                        <option value="1">Первый заказ через приложение</option>
+                        <option value="2">Один заказ через приложение</option>
+                    </select>
+                </div>
+                <div class="promotion-stock-dialog-slide-footer">
+                    <button disabled class="simple-text-btn promotion-margrin-row" onclick="StockManger.nextStockSlide('stock-slide-2','stock-slide-1')">
+                        Далее
+                    </button>
+                </div>
+            </div>
+            <div class="promotion-stock-dialog-slide" id="stock-slide-2" style="display:none">
+                <div class="promotion-stock-dialog-slide-header">Предмет акции</div>
+                <div class="promotion-stock-dialog-slide-content">контент</div>
+                <div class="promotion-stock-dialog-slide-footer">
+                    <button class="simple-text-btn promotion-margrin-row" onclick="StockManger.prevStockSlide('stock-slide-1','stock-slide-2')">
+                        Назад
+                    </button>
+                    <button class="simple-text-btn promotion-margrin-row" onclick="StockManger.nextStockSlide('stock-slide-3','stock-slide-2')">
+                        Далее
+                    </button>
+                </div>
+            </div>
+            <div class="promotion-stock-dialog-slide" id="stock-slide-3" style="display:none">
+                <div class="promotion-stock-dialog-slide-header">Условия акции</div>
+                <div class="promotion-stock-dialog-slide-content">контент</div>
+                <div class="promotion-stock-dialog-slide-footer">
+                    <button class="simple-text-btn promotion-margrin-row" onclick="StockManger.prevStockSlide('stock-slide-2','stock-slide-3')">
+                        Назад
+                    </button>
+                    <button class="simple-text-btn promotion-margrin-row" onclick="StockManger.nextStockSlide('stock-slide-4','stock-slide-3')">
+                        Далее
+                    </button>
+                </div>
+            </div>
+            <div class="promotion-stock-dialog-slide" id="stock-slide-4" style="display:none">
+                <div class="promotion-stock-dialog-slide-header">Описание акции</div>
+                <div class="promotion-stock-dialog-slide-content">контент</div>
+                <div class="promotion-stock-dialog-slide-footer">
+                    <button class="simple-text-btn promotion-margrin-row" onclick="StockManger.prevStockSlide('stock-slide-3','stock-slide-4')">
+                        Назад
+                    </button>
+                    <button class="simple-text-btn promotion-margrin-row" onclick="StockManger.nextStockSlide('stock-slide-5','stock-slide-4')">
+                        Далее
+                    </button>
+                </div>
+            </div>
+            <div class="promotion-stock-dialog-slide" id="stock-slide-5" style="display:none">
+                <div class="promotion-stock-dialog-slide-header">Изображение акции</div>
+                <div class="promotion-stock-dialog-slide-content">контент</div>
+                <div class="promotion-stock-dialog-slide-footer">
+                    <button class="simple-text-btn promotion-margrin-row" onclick="StockManger.prevStockSlide('stock-slide-4','stock-slide-5')">
+                        Назад
+                    </button>
+                    <button class="simple-text-btn promotion-margrin-row" onclick="">
+                        Сохранить
+                    </button>
+                </div>
             </div>
         </div>
     </dialog>

@@ -1,31 +1,32 @@
-﻿.section-promotion {
+﻿.promotion-section {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 80px 1fr;
+    grid-template-rows: 60px 1fr;
     box-shadow: 0px 0px 5px 1px #0f1e322b;
+    border-radius: 3px;
 }
 
 .promotion-menu {
     width: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
-    font-size: 1.04em;
+    align-items: flex-end;
+    font-size: 0.95em;
 }
 
     .promotion-menu ul {
         width: 98%;
         margin: 0;
         padding-left: 5px;
-        border-bottom: 1px solid #0f1e322b;
-        padding-bottom: 9px;
+        border-bottom: 1px solid #bdbdbd35;
+        padding-bottom: 11px;
         padding-inline-start: 0px;
     }
 
     .promotion-menu li {
         display: inline;
         list-style-type: none;
-        padding: 10px;
+        padding: 12px 10px;
         border-top-left-radius: 3px;
         border-top-right-radius: 3px;
     }
@@ -36,14 +37,100 @@
         }
 
 .promotion-menu-active {
-    border: 1px solid #0f1e322b;
+    border: 1px solid #bdbdbd35;
     border-bottom-color: #f5f5f5;
     background-color: #f5f5f5;
     color: #505050;
 }
 
-.promotion-content {
+.promotion-content-wrapper {
     height: 75vh;
-    z-index: -1;
     background-color: #f5f5f5;
 }
+
+.promotion-content {
+    width: 96%;
+    height: 96%;
+}
+
+.promotion-some-settings {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 50px 1fr;
+    grid-row-gap: 2%;
+    padding: 1% 2%;
+}
+
+.promotion-setting {
+}
+
+.promotion-some-settings-header {
+    display: grid;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.promotion-some-settings-content {
+    border: 1px solid #bdbdbd35;
+}
+
+.promotion-btn-settings-add {
+    justify-self: center;
+    font-size: 0.9em;
+    color: #1d73b7;
+    cursor: pointer;
+    background-color: #f5f5f5;
+    border: none;
+}
+
+    .promotion-btn-settings-add i {
+        transition-duration: 500ms;
+        transition-property: transform;
+    }
+
+    .promotion-btn-settings-add:hover i {
+        transform: rotate(90deg);
+    }
+
+.promotion-stock-dialog-wrapper {
+    position: relative;
+    width: 350px;
+    height: 450px;
+    display:flex;
+    flex-direction: row;
+}
+
+.promotion-stock-dialog-slide {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 50px 1fr 50px;
+    grid-row-gap: 10px;
+    width: 350px;
+    height: 450px;
+    position:relative;
+}
+
+.promotion-stock-dialog-slide-header {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.4em;
+    color: #505050;
+}
+
+.promotion-stock-dialog-slide-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction:column;
+}
+.promotion-stock-dialog-slide-footer {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.promotion-margrin-row {
+    margin: 0 5px
+}
+
