@@ -94,10 +94,11 @@
 
 .promotion-stock-dialog-wrapper {
     position: relative;
-    width: 350px;
-    height: 450px;
-    display:flex;
+    width: 300px;
+    height: 380px;
+    display: flex;
     flex-direction: row;
+    color: #505050;
 }
 
 .promotion-stock-dialog-slide {
@@ -105,8 +106,8 @@
     grid-template-columns: 1fr;
     grid-template-rows: 50px 1fr 50px;
     grid-row-gap: 10px;
-    width: 350px;
-    height: 450px;
+    width: 300px;
+    height: 380px;
     position:relative;
 }
 
@@ -134,3 +135,10 @@
     margin: 0 5px
 }
 
+#stockDialog .SumoSelect {
+    min-width: 290px;
+    min-height: 25px;
+    border-color: #c6c6c6;
+    color: #0f1e328f;
+    border-radius: 3px;
+}

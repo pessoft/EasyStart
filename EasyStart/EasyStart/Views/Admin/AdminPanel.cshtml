@@ -870,22 +870,28 @@
             <div class="promotion-stock-dialog-slide" id="stock-slide-1">
                 <div class="promotion-stock-dialog-slide-header">Длительность акции</div>
                 <div class="promotion-stock-dialog-slide-content">
-                    <select id="stock-type-period"  onchange="StockManger.onStockTypePeriodChange()">
-                        <option value="-1" disabled selected>
-                            Выберите продолжительность акции
-                        </option>
-                        <option value="1">Разовая</option>
-                        <option value="2">Не ограниченная по времени</option>
-                        <option value="3">Ограниченная по времени</option>
-                    </select>
-                    <select id="stock-one-type-subtype" style="display:none">
-                        <option value="-1" disabled selected>Выберите тип разовой акции</option>
-                        <option value="1">Первый заказ через приложение</option>
-                        <option value="2">Один заказ через приложение</option>
-                    </select>
+                    <div>
+                        <h4>Тип акции</h4>
+                        <select id="stock-type-period" onchange="StockManger.onStockTypePeriodChange()">
+                            <option value="0" disabled selected>
+                                Выберите продолжительность акции
+                            </option>
+                            <option value="1">Разовая</option>
+                            <option value="2">Не ограниченная по времени</option>
+                            <option value="3">Ограниченная по времени</option>
+                        </select>
+                    </div>
+                    <div id="stock-one-type-subtype-container" style="display:none">
+                        <h4>Тип одноразовой акции</h4>
+                        <select id="stock-one-type-subtype" onchange="StockManger.btnNextToggle()">
+                            <option value="0" disabled selected>Выберите тип разовой акции</option>
+                            <option value="1">Первый заказ через приложение</option>
+                            <option value="2">Один заказ через приложение</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="promotion-stock-dialog-slide-footer">
-                    <button disabled class="simple-text-btn promotion-margrin-row" onclick="StockManger.nextStockSlide('stock-slide-2','stock-slide-1')">
+                    <button disabled class="simple-text-btn promotion-margrin-row promotion-stock-next" onclick="StockManger.nextStockSlide('stock-slide-2','stock-slide-1')">
                         Далее
                     </button>
                 </div>
@@ -894,10 +900,10 @@
                 <div class="promotion-stock-dialog-slide-header">Предмет акции</div>
                 <div class="promotion-stock-dialog-slide-content">контент</div>
                 <div class="promotion-stock-dialog-slide-footer">
-                    <button class="simple-text-btn promotion-margrin-row" onclick="StockManger.prevStockSlide('stock-slide-1','stock-slide-2')">
+                    <button class="simple-text-btn promotion-margrin-row promotion-stock-prev" onclick="StockManger.prevStockSlide('stock-slide-1','stock-slide-2')">
                         Назад
                     </button>
-                    <button class="simple-text-btn promotion-margrin-row" onclick="StockManger.nextStockSlide('stock-slide-3','stock-slide-2')">
+                    <button class="simple-text-btn promotion-margrin-row promotion-stock-next" onclick="StockManger.nextStockSlide('stock-slide-3','stock-slide-2')">
                         Далее
                     </button>
                 </div>
@@ -906,10 +912,10 @@
                 <div class="promotion-stock-dialog-slide-header">Условия акции</div>
                 <div class="promotion-stock-dialog-slide-content">контент</div>
                 <div class="promotion-stock-dialog-slide-footer">
-                    <button class="simple-text-btn promotion-margrin-row" onclick="StockManger.prevStockSlide('stock-slide-2','stock-slide-3')">
+                    <button class="simple-text-btn promotion-margrin-row promotion-stock-prev" onclick="StockManger.prevStockSlide('stock-slide-2','stock-slide-3')">
                         Назад
                     </button>
-                    <button class="simple-text-btn promotion-margrin-row" onclick="StockManger.nextStockSlide('stock-slide-4','stock-slide-3')">
+                    <button class="simple-text-btn promotion-margrin-row promotion-stock-next" onclick="StockManger.nextStockSlide('stock-slide-4','stock-slide-3')">
                         Далее
                     </button>
                 </div>
@@ -918,10 +924,10 @@
                 <div class="promotion-stock-dialog-slide-header">Описание акции</div>
                 <div class="promotion-stock-dialog-slide-content">контент</div>
                 <div class="promotion-stock-dialog-slide-footer">
-                    <button class="simple-text-btn promotion-margrin-row" onclick="StockManger.prevStockSlide('stock-slide-3','stock-slide-4')">
+                    <button class="simple-text-btn promotion-margrin-row promotion-stock-prev" onclick="StockManger.prevStockSlide('stock-slide-3','stock-slide-4')">
                         Назад
                     </button>
-                    <button class="simple-text-btn promotion-margrin-row" onclick="StockManger.nextStockSlide('stock-slide-5','stock-slide-4')">
+                    <button class="simple-text-btn promotion-margrin-row promotion-stock-next" onclick="StockManger.nextStockSlide('stock-slide-5','stock-slide-4')">
                         Далее
                     </button>
                 </div>
@@ -930,7 +936,7 @@
                 <div class="promotion-stock-dialog-slide-header">Изображение акции</div>
                 <div class="promotion-stock-dialog-slide-content">контент</div>
                 <div class="promotion-stock-dialog-slide-footer">
-                    <button class="simple-text-btn promotion-margrin-row" onclick="StockManger.prevStockSlide('stock-slide-4','stock-slide-5')">
+                    <button class="simple-text-btn promotion-margrin-row promotion-stock-prev" onclick="StockManger.prevStockSlide('stock-slide-4','stock-slide-5')">
                         Назад
                     </button>
                     <button class="simple-text-btn promotion-margrin-row" onclick="">

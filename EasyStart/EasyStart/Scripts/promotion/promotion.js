@@ -13,7 +13,7 @@ function changePromotionActiveMenu(e) {
 }
 
 const SotckTypePeriod = {
-    OneOff:1,
+    OneOff: 1,
     Infinity: 2,
     ToDate: 3
 }
@@ -30,7 +30,7 @@ var StockManger = {
         }
 
         Dialog.showModal($stockDialog)
-        //$stockDialog.find('select').SumoSelect()
+        $stockDialog.find('select').SumoSelect()
     },
     saveStockFromDialog: function () {
     },
@@ -48,18 +48,38 @@ var StockManger = {
     },
     onStockTypePeriodChange: function () {
         const $e = $('#stock-type-period')
+        const animationOption = { effect: "scale", direction: "horizontal"}
 
         if ($e.find('option:selected').val() == SotckTypePeriod.OneOff) {
-            const $stockOneTypeSubtype = $('#stock-one-type-subtype')
-            $stockOneTypeSubtype.show('slow')
-            //$stockOneTypeSubtype[0].sumo.reload()
+            $('#stock-one-type-subtype-container').show(animationOption, '', 250)
+
         } else {
-            const $stockOneTypeSubtype = $('#stock-one-type-subtype')
-            $stockOneTypeSubtype.hide('slow')
-            //$stockOneTypeSubtype[0].sumo.reload()
+            $('#stock-one-type-subtype-container').hide(animationOption, '', 250)
         }
-            
+
+        this.btnNextToggle()
+    },
+    btnNextToggle: function () {
+        const stockType = parseInt($('#stock-type-period option:selected').val())
+
+        switch (stockType) {
+            case SotckTypePeriod.OneOff:
+                const valOneType = $('#stock-one-type-subtype').val()
+
+                if (valOneType)
+                    $("#stock-slide-1 .promotion-stock-next").removeAttr('disabled')
+                else
+                    $("#stock-slide-1 .promotion-stock-next").attr('disabled', true)
+                break
+            case SotckTypePeriod.Infinity:
+                $("#stock-slide-1 .promotion-stock-next").removeAttr('disabled')
+                break
+            case SotckTypePeriod.ToDate:
+                $("#stock-slide-1 .promotion-stock-next").attr('disabled', true)
+                break
+        }
     }
 }
+
 
 
