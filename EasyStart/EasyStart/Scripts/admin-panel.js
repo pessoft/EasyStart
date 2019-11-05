@@ -56,6 +56,7 @@
 
     selectToSumoSelectProductType();
     bindChangePeriodWork();
+    bindCustomDialogToggleEvent();
 });
 
 function bindChangePeriodWork() {
@@ -86,7 +87,10 @@ function bindDialogCloseClickBackdor() {
         if (!isInDialog) {
             Dialog.close($(this));
         }
-    });
+    })
+
+    $('.custom-dialog').bind('click', function () { Dialog.close($(this)) })
+    $('.custom-dialog .custom-dialog-body').bind('click', (event) => event.stopPropagation())
 }
 
 const Pages = {

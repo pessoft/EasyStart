@@ -142,3 +142,30 @@
     color: #0f1e328f;
     border-radius: 3px;
 }
+
+.stock-castom-period {
+    width: 290px;
+    min-height: 25px;
+    border-radius: 3px;
+    padding: 0;
+    margin: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #A4A4A4;
+}
+
+    .stock-castom-period i {
+        font-size: 1.1em;
+        cursor: pointer;
+    }
+
+    .stock-castom-period input {
+        border: none;
+        padding: 0 5px;
+        width: auto;
+        text-align: center;
+        cursor: pointer;
+        color: #0f1e328f;
+    }

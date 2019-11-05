@@ -74,3 +74,30 @@ class BitOperation {
         return (item & itemCheck) == itemCheck
     }
 }
+
+function bindCustomDialogToggleEvent(id) {
+    const $items = id ? $(`#${id}`) : $('.custom-dialog')
+
+    bindCustomDialogShowEvent($items)
+    bindCustomDialogCloseEvent($items)
+}
+
+function bindCustomDialogShowEvent($items) {
+    const event = () => {
+        const animationOption = { effect: "scale", direction: "horizontal" }
+       
+        $items.addClass('custom-dialog-flex')
+        $items.find('.custom-dialog-body').show(animationOption,'', 150)
+    }
+
+    $items.bind('showModal', event)
+}
+
+function bindCustomDialogCloseEvent($items) {
+    const event = () => {
+        $items.removeClass('custom-dialog-flex')
+        $items.find('.custom-dialog-body').hide()
+    }
+
+    $items.bind('close', event)
+}

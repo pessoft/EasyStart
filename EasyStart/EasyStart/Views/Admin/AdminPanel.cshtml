@@ -128,8 +128,7 @@
                         <div class="additional-order-item datepicker-input">
                             <div>
                                 <div class="group">
-                                    <input required="" id="order-history-period" class="default-color super-sm-font-size">
-
+                                    <input readonly required id="order-history-period" class="default-color super-sm-font-size">
                                 </div>
                             </div>
                         </div>
@@ -861,91 +860,100 @@
         </div>
     </dialog>
 
-    <dialog id="stockDialog">
-        <div class="promotion-stock-dialog-wrapper">
-            <input type="hidden" value="" />
-            <button class="dialog-btn-close" onclick="Dialog.close('#stockDialog')">
-                <i class="fal fa-times"></i>
-            </button>
-            <div class="promotion-stock-dialog-slide" id="stock-slide-1">
-                <div class="promotion-stock-dialog-slide-header">Длительность акции</div>
-                <div class="promotion-stock-dialog-slide-content">
-                    <div>
-                        <h4>Тип акции</h4>
-                        <select id="stock-type-period" onchange="StockManger.onStockTypePeriodChange()">
-                            <option value="0" disabled selected>
-                                Выберите продолжительность акции
-                            </option>
-                            <option value="1">Разовая</option>
-                            <option value="2">Не ограниченная по времени</option>
-                            <option value="3">Ограниченная по времени</option>
-                        </select>
+    <div id="stockDialog" class="custom-dialog">
+        <div class="custom-dialog-body">
+            <div class="promotion-stock-dialog-wrapper">
+                <input type="hidden" value="" />
+                <button class="dialog-btn-close" onclick="Dialog.close('#stockDialog')">
+                    <i class="fal fa-times"></i>
+                </button>
+                <div class="promotion-stock-dialog-slide" id="stock-slide-1">
+                    <div class="promotion-stock-dialog-slide-header">Длительность акции</div>
+                    <div class="promotion-stock-dialog-slide-content">
+                        <div class="promotion-stock-index-block">
+                            <h4>Тип акции</h4>
+                            <select id="stock-type-period" onchange="StockManger.onStockTypePeriodChange()">
+                                <option value="0" disabled selected>
+                                    Выберите продолжительность акции
+                                </option>
+                                <option value="1">Разовая</option>
+                                <option value="2">Не ограниченная по времени</option>
+                                <option value="3">Ограниченная по времени</option>
+                            </select>
+                        </div>
+                        <div id="stock-one-type-subtype-container" style="display:none" class="promotion-stock-index-block hide-block">
+                            <h4>Тип одноразовой акции</h4>
+                            <select id="stock-one-type-subtype" onchange="StockManger.btnNextToggle()">
+                                <option value="0" disabled selected>Выберите тип разовой акции</option>
+                                <option value="1">Первый заказ через приложение</option>
+                                <option value="2">Один заказ через приложение</option>
+                            </select>
+                        </div>
+                        <div id="stock-type-calendar-container" style="display:none" class="promotion-stock-index-block hide-block">
+                            <h4>Период акции</h4>
+                            <div class="stock-castom-period">
+                                <input readonly required="" id="stock-type-calendar-period" class="default-color">
+                                <i class="fal fa-calendar-alt"></i>
+                            </div>
+                        </div>
                     </div>
-                    <div id="stock-one-type-subtype-container" style="display:none">
-                        <h4>Тип одноразовой акции</h4>
-                        <select id="stock-one-type-subtype" onchange="StockManger.btnNextToggle()">
-                            <option value="0" disabled selected>Выберите тип разовой акции</option>
-                            <option value="1">Первый заказ через приложение</option>
-                            <option value="2">Один заказ через приложение</option>
-                        </select>
+                    <div class="promotion-stock-dialog-slide-footer">
+                        <button disabled class="simple-text-btn promotion-margrin-row promotion-stock-next" onclick="StockManger.nextStockSlide('stock-slide-2','stock-slide-1')">
+                            Далее
+                        </button>
                     </div>
                 </div>
-                <div class="promotion-stock-dialog-slide-footer">
-                    <button disabled class="simple-text-btn promotion-margrin-row promotion-stock-next" onclick="StockManger.nextStockSlide('stock-slide-2','stock-slide-1')">
-                        Далее
-                    </button>
+                <div class="promotion-stock-dialog-slide" id="stock-slide-2" style="display:none">
+                    <div class="promotion-stock-dialog-slide-header">Предмет акции</div>
+                    <div class="promotion-stock-dialog-slide-content">контент</div>
+                    <div class="promotion-stock-dialog-slide-footer">
+                        <button class="simple-text-btn promotion-margrin-row promotion-stock-prev" onclick="StockManger.prevStockSlide('stock-slide-1','stock-slide-2')">
+                            Назад
+                        </button>
+                        <button class="simple-text-btn promotion-margrin-row promotion-stock-next" onclick="StockManger.nextStockSlide('stock-slide-3','stock-slide-2')">
+                            Далее
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div class="promotion-stock-dialog-slide" id="stock-slide-2" style="display:none">
-                <div class="promotion-stock-dialog-slide-header">Предмет акции</div>
-                <div class="promotion-stock-dialog-slide-content">контент</div>
-                <div class="promotion-stock-dialog-slide-footer">
-                    <button class="simple-text-btn promotion-margrin-row promotion-stock-prev" onclick="StockManger.prevStockSlide('stock-slide-1','stock-slide-2')">
-                        Назад
-                    </button>
-                    <button class="simple-text-btn promotion-margrin-row promotion-stock-next" onclick="StockManger.nextStockSlide('stock-slide-3','stock-slide-2')">
-                        Далее
-                    </button>
+                <div class="promotion-stock-dialog-slide" id="stock-slide-3" style="display:none">
+                    <div class="promotion-stock-dialog-slide-header">Условия акции</div>
+                    <div class="promotion-stock-dialog-slide-content">контент</div>
+                    <div class="promotion-stock-dialog-slide-footer">
+                        <button class="simple-text-btn promotion-margrin-row promotion-stock-prev" onclick="StockManger.prevStockSlide('stock-slide-2','stock-slide-3')">
+                            Назад
+                        </button>
+                        <button class="simple-text-btn promotion-margrin-row promotion-stock-next" onclick="StockManger.nextStockSlide('stock-slide-4','stock-slide-3')">
+                            Далее
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div class="promotion-stock-dialog-slide" id="stock-slide-3" style="display:none">
-                <div class="promotion-stock-dialog-slide-header">Условия акции</div>
-                <div class="promotion-stock-dialog-slide-content">контент</div>
-                <div class="promotion-stock-dialog-slide-footer">
-                    <button class="simple-text-btn promotion-margrin-row promotion-stock-prev" onclick="StockManger.prevStockSlide('stock-slide-2','stock-slide-3')">
-                        Назад
-                    </button>
-                    <button class="simple-text-btn promotion-margrin-row promotion-stock-next" onclick="StockManger.nextStockSlide('stock-slide-4','stock-slide-3')">
-                        Далее
-                    </button>
+                <div class="promotion-stock-dialog-slide" id="stock-slide-4" style="display:none">
+                    <div class="promotion-stock-dialog-slide-header">Описание акции</div>
+                    <div class="promotion-stock-dialog-slide-content">контент</div>
+                    <div class="promotion-stock-dialog-slide-footer">
+                        <button class="simple-text-btn promotion-margrin-row promotion-stock-prev" onclick="StockManger.prevStockSlide('stock-slide-3','stock-slide-4')">
+                            Назад
+                        </button>
+                        <button class="simple-text-btn promotion-margrin-row promotion-stock-next" onclick="StockManger.nextStockSlide('stock-slide-5','stock-slide-4')">
+                            Далее
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div class="promotion-stock-dialog-slide" id="stock-slide-4" style="display:none">
-                <div class="promotion-stock-dialog-slide-header">Описание акции</div>
-                <div class="promotion-stock-dialog-slide-content">контент</div>
-                <div class="promotion-stock-dialog-slide-footer">
-                    <button class="simple-text-btn promotion-margrin-row promotion-stock-prev" onclick="StockManger.prevStockSlide('stock-slide-3','stock-slide-4')">
-                        Назад
-                    </button>
-                    <button class="simple-text-btn promotion-margrin-row promotion-stock-next" onclick="StockManger.nextStockSlide('stock-slide-5','stock-slide-4')">
-                        Далее
-                    </button>
-                </div>
-            </div>
-            <div class="promotion-stock-dialog-slide" id="stock-slide-5" style="display:none">
-                <div class="promotion-stock-dialog-slide-header">Изображение акции</div>
-                <div class="promotion-stock-dialog-slide-content">контент</div>
-                <div class="promotion-stock-dialog-slide-footer">
-                    <button class="simple-text-btn promotion-margrin-row promotion-stock-prev" onclick="StockManger.prevStockSlide('stock-slide-4','stock-slide-5')">
-                        Назад
-                    </button>
-                    <button class="simple-text-btn promotion-margrin-row" onclick="">
-                        Сохранить
-                    </button>
+                <div class="promotion-stock-dialog-slide" id="stock-slide-5" style="display:none">
+                    <div class="promotion-stock-dialog-slide-header">Изображение акции</div>
+                    <div class="promotion-stock-dialog-slide-content">контент</div>
+                    <div class="promotion-stock-dialog-slide-footer">
+                        <button class="simple-text-btn promotion-margrin-row promotion-stock-prev" onclick="StockManger.prevStockSlide('stock-slide-4','stock-slide-5')">
+                            Назад
+                        </button>
+                        <button class="simple-text-btn promotion-margrin-row" onclick="">
+                            Сохранить
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </dialog>
+    </div>
 
     <template id="review-item-template">
         <div class="review-item">
