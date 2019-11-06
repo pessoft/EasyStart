@@ -108,7 +108,7 @@
     grid-row-gap: 10px;
     width: 300px;
     height: 380px;
-    position:relative;
+    position: relative;
 }
 
 .promotion-stock-dialog-slide-header {
@@ -123,8 +123,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction:column;
+    flex-direction: column;
 }
+
 .promotion-stock-dialog-slide-footer {
     display: flex;
     justify-content: center;
@@ -169,3 +170,50 @@
         cursor: pointer;
         color: #0f1e328f;
     }
+
+.stock-type-discount-setting,
+.stock-type-bonus-setting {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 290px;
+    margin: 5px
+}
+
+.stock-type-bonus-setting {
+    flex-direction: column;
+}
+
+    .stock-type-discount-setting .group,
+    #stockDialog .stock-type-discount-setting .group input,
+    #stockDialog .stock-type-discount-setting .group .bar,
+    #stockDialog .stock-type-discount-setting input:focus ~ .bar:before {
+        width: 220px;
+    }
+
+
+#stockDialog .stock-type-discount-setting .SumoSelect {
+    min-width: 65px;
+    width: 65px;
+    margin: 0;
+    margin-left: 5px
+    
+}
+
+.stock-type-bonus-setting .group,
+#stockDialog .stock-type-bonus-setting .group input,
+#stockDialog .stock-type-bonus-setting .group .bar,
+#stockDialog .stock-type-bonus-setting input:focus ~ .bar:before {
+    width: 290px;
+}
+
+#stockDialog .stock-type-bonus-setting .SumoSelect {
+    min-width: 290px;
+    width: 290px;
+    margin: 0;
+}
+
+#stockDialog .stock-type-bonus-setting .SumoSelect ul {
+    overflow:hidden;
+}

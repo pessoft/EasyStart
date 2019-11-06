@@ -45,6 +45,18 @@ const SotckTypePeriod = {
     ToDate: 3
 }
 
+const RewardType = {
+    Unknown: 0,
+    Discout: 1,
+    Products: 2
+}
+
+const DiscountType = {
+    Unknown: 0,
+    Percent: 1,
+    Ruble: 2
+}
+
 var StockManger = {
     addNewStock: function () {
         this.cleanStockDialog()
@@ -96,6 +108,11 @@ var StockManger = {
             $(`#${eIdShow}`).show("slide", { direction: "left" }, 100)
         });
     },
+    slide: {
+        StockType: 1,
+        RewardType: 2,
+        ConditionType: 3
+    },
     onStockTypePeriodChange: function () {
         const animationOption = { effect: "scale", direction: "horizontal" }
         const stockType = parseInt($('#stock-type-period option:selected').val())
@@ -122,25 +139,105 @@ var StockManger = {
         else if ($hideBlock.length == 0)
             callback()
 
-        this.btnNextToggle()
+        this.btnNextToggle(this.slide.StockType)
     },
-    btnNextToggle: function () {
-        const stockType = parseInt($('#stock-type-period option:selected').val())
+    btnNextToggle: function (slide) {
+        const stockTypeToggle = () => {
+            const stockType = parseInt($('#stock-type-period option:selected').val())
 
-        switch (stockType) {
-            case SotckTypePeriod.OneOff:
-                const valOneType = $('#stock-one-type-subtype').val()
+            switch (stockType) {
+                case SotckTypePeriod.OneOff:
+                    const valOneType = $('#stock-one-type-subtype').val()
 
-                if (valOneType)
+                    if (valOneType)
+                        $("#stock-slide-1 .promotion-stock-next").removeAttr('disabled')
+                    else
+                        $("#stock-slide-1 .promotion-stock-next").attr('disabled', true)
+                    break
+                case SotckTypePeriod.Infinity:
+                case SotckTypePeriod.ToDate:
                     $("#stock-slide-1 .promotion-stock-next").removeAttr('disabled')
-                else
-                    $("#stock-slide-1 .promotion-stock-next").attr('disabled', true)
+                    break
+            }
+        }
+
+        const rewardTypeToggle = () => {
+            const rewardType = parseInt($('#stock-type-reward option:selected').val())
+
+            switch (rewardType) {
+                case RewardType.Discout:
+                    const val = parseInt($('#stock-discount-val').val())
+
+                    if (Number.isNaN(val) || val == 0)
+                        $("#stock-slide-2 .promotion-stock-next").attr('disabled', true)
+                    else
+                        $("#stock-slide-2 .promotion-stock-next").removeAttr('disabled')
+                        
+                    break
+                case RewardType.Products:
+                    $("#stock-slide-2 .promotion-stock-next").attr('disabled', true)
+                    break
+            }
+        }
+
+        switch (slide) {
+            case this.slide.StockType:
+                stockTypeToggle()
                 break
-            case SotckTypePeriod.Infinity:
-            case SotckTypePeriod.ToDate:
-                $("#stock-slide-1 .promotion-stock-next").removeAttr('disabled')
+            case this.slide.RewardType:
+                rewardTypeToggle()
                 break
         }
+    },
+    onRewardChangeType: function () {
+        const animationOption = { effect: "scale", direction: "horizontal" }
+        const rewardType = parseInt($('#stock-type-reward option:selected').val())
+        const callback = () => {
+            switch (rewardType) {
+                case RewardType.Discout:
+                    $('#stock-type-discount-container').show(animationOption, '', 150)
+                    break
+                case RewardType.Products:
+                    $('#stock-type-products-container').show(animationOption, '', 150)
+                    break
+            }
+        }
+
+        const $hideBlock = $('#stock-slide-2 .promotion-stock-index-block.hide-block:visible')
+        if (rewardType != RewardType.Unknown && $hideBlock.length > 0)
+            $hideBlock.each(function () {
+                $(this).hide(
+                    animationOption,
+                    '',
+                    150,
+                    callback)
+            })
+        else if ($hideBlock.length == 0)
+            callback()
+
+        this.btnNextToggle(this.slide.RewardType)
+    },
+    onDicountChange: function () {
+        const discountType = parseInt($('#discount-type option:selected').val())
+        let val = parseInt($('#stock-discount-val').val())
+
+        if (Number.isNaN(val)) 
+            val = ''
+        else if (discountType == DiscountType.Percent) {
+            if (val < 0)
+                val = 0
+            else if (val > 100)
+                val = 100
+        }
+        else if (val < 0)
+            val = 0
+
+        $('#stock-discount-val').val(val)
+
+        this.btnNextToggle(this.slide.RewardType)
+    },
+    onDiscountTypeChange: function () {
+        this.onDicountChange()
     }
 }
 

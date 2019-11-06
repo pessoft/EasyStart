@@ -883,7 +883,7 @@
                         </div>
                         <div id="stock-one-type-subtype-container" style="display:none" class="promotion-stock-index-block hide-block">
                             <h4>Тип одноразовой акции</h4>
-                            <select id="stock-one-type-subtype" onchange="StockManger.btnNextToggle()">
+                            <select id="stock-one-type-subtype" onchange="StockManger.btnNextToggle(StockManger.slide.StockType)">
                                 <option value="0" disabled selected>Выберите тип разовой акции</option>
                                 <option value="1">Первый заказ через приложение</option>
                                 <option value="2">Один заказ через приложение</option>
@@ -905,7 +905,52 @@
                 </div>
                 <div class="promotion-stock-dialog-slide" id="stock-slide-2" style="display:none">
                     <div class="promotion-stock-dialog-slide-header">Предмет акции</div>
-                    <div class="promotion-stock-dialog-slide-content">контент</div>
+                    <div class="promotion-stock-dialog-slide-content">
+                        <div class="promotion-stock-index-block">
+                            <h4>Тип вознаграждения</h4>
+                            <select id="stock-type-reward" onchange="StockManger.onRewardChangeType()">
+                                <option value="0" disabled selected>
+                                    Выберите тип вознагрождения
+                                </option>
+                                <option value="1">Скидка</option>
+                                <option value="2">Блюда</option>
+                            </select>
+                        </div>
+                        <div id="stock-type-discount-container" style="display:none" class="promotion-stock-index-block hide-block">
+                            <h4>Настройка скидки</h4>
+                            <div class="stock-type-discount-setting">
+                                <div class="group">
+                                    <input id="stock-discount-val" required type="number" min="0" oninput="StockManger.onDicountChange()" />
+                                    <span class="bar"></span>
+                                    <label>Размер скидки</label>
+                                </div>
+                                <select id="discount-type" onchange="StockManger.onDiscountTypeChange()">
+                                    <option value="1">%</option>
+                                    <option value="2">&#8381;</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="stock-type-products-container" style="display:none" class="promotion-stock-index-block hide-block">
+                            <h4>Настройки блюд</h4>
+                            <div class="stock-type-bonus-setting">
+                                <div class="group">
+                                    <input id="stock-products-count" required value="1" type="number" min="0" oninput="" />
+                                    <span class="bar"></span>
+                                    <label>Количество бонусных блюд</label>
+                                </div>
+                                <select multiple placeholder="Выберите блюда">
+                                    <optgroup label="Супы">
+                                        <option value="1">Том-Ям суп из кокосового молока с морепродуктами</option>
+                                        <option value="2">Японский сливочный суп с лососем, кальмаром и креветкой</option>
+                                    </optgroup>
+                                    <optgroup label="Другие супы">
+                                        <option value="1">Том-Ям суп из кокосового молока с морепродуктами</option>
+                                        <option value="2">Японский сливочный суп с лососем, кальмаром и креветкой</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     <div class="promotion-stock-dialog-slide-footer">
                         <button class="simple-text-btn promotion-margrin-row promotion-stock-prev" onclick="StockManger.prevStockSlide('stock-slide-1','stock-slide-2')">
                             Назад
