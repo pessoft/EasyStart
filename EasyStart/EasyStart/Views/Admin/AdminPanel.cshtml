@@ -19,6 +19,8 @@
 <body>
     <script>
         var AreaDelivery = JSON.parse(@Html.Raw(Json.Encode(ViewBag.AreaDeliveris)))
+        var ProductsForPromotion = JSON.parse(@Html.Raw(Json.Encode(ViewBag.ProductsForPromotion)))
+        var CategoryDictionary = JSON.parse(@Html.Raw(Json.Encode(ViewBag.CategoryDictionary)))
     </script>
     <div class="header-menu">
         <div class="logo-img menu-item" target-id="about-us">
@@ -37,7 +39,7 @@
             <i class="fal fa-cart-arrow-down"></i>
             Товары
         </div>
-        <div class="menu-item" target-id="promotion">
+        <div class="menu-item" target-id="promotion" onclick="activePromotion();">
             <i class="fal fa-rocket"></i>
             Продвижение
         </div>
@@ -932,13 +934,13 @@
                         </div>
                         <div id="stock-type-products-container" style="display:none" class="promotion-stock-index-block hide-block">
                             <h4>Настройки блюд</h4>
-                            <div class="stock-type-bonus-setting">
+                            <div class="stock-type-bonus-setting" id="bonus-products-setting">
                                 <div class="group">
                                     <input id="stock-products-count" required value="1" type="number" min="0" oninput="" />
                                     <span class="bar"></span>
                                     <label>Количество бонусных блюд</label>
                                 </div>
-                                <select multiple placeholder="Выберите блюда">
+                                <select class="stock-custom-select" multiple placeholder="Выберите блюда" id="bonus-product-items">
                                     <optgroup label="Супы">
                                         <option value="1">Том-Ям суп из кокосового молока с морепродуктами</option>
                                         <option value="2">Японский сливочный суп с лососем, кальмаром и креветкой</option>

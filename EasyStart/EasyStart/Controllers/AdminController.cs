@@ -19,31 +19,52 @@ namespace EasyStart.Controllers
         [Authorize]
         public ActionResult AdminPanel()
         {
-            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-            var typeBranch = DataWrapper.GetBranchType(branchId);
-            var converter = new ConverterBranchSetting();
-            var branchViewvs = DataWrapper.GetAllSettingDictionary()
-                .Where(p => p.Value.CityId > 0 && p.Key != branchId)
-                .ToDictionary(p => p.Key,
-                              p => CityHelper.GetCity(p.Value.CityId));
+            try
+            {
 
-            var deliverySetting = DataWrapper.GetDeliverySetting(branchId); ;
 
-            ViewBag.Zones = DateTimeHepler.GetDisplayDictionary();
-            ViewBag.CurrentBranch = branchId;
-            ViewBag.BranchViews = branchViewvs != null && branchViewvs.Any() ? branchViewvs : null;
-            ViewBag.City = CityHelper.City;
-            ViewBag.Setting = DataWrapper.GetSetting(branchId); ;
-            ViewBag.DeliverySetting = deliverySetting;
-            ViewBag.DeliveryTimeTable = WeeklyDayHelper.ConvertTimeDeliveryToViev(deliverySetting?.TimeDelivery);
-            ViewBag.TypeBranch = typeBranch;
-            ViewBag.ZoneId = deliverySetting == null ? DateTimeHepler.DEFAULT_ZONE_ID : deliverySetting.ZoneId;
-            ViewBag.YearsWork = DateTime.Now.Year == 2019 ? DateTime.Now.Year.ToString() : $"2019 - {DateTime.Now.Year}";
-            ViewBag.AreaDeliveris = deliverySetting != null &&
-                                    deliverySetting.AreaDeliveries != null &&
-                                    deliverySetting.AreaDeliveries.Any() ?
-                                    JsonConvert.SerializeObject(deliverySetting.AreaDeliveries) :
-                                    JsonConvert.SerializeObject(new List<AreaDeliveryModel>());
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var typeBranch = DataWrapper.GetBranchType(branchId);
+                var converter = new ConverterBranchSetting();
+                var branchViewvs = DataWrapper.GetAllSettingDictionary()
+                    .Where(p => p.Value.CityId > 0 && p.Key != branchId)
+                    .ToDictionary(p => p.Key,
+                                  p => CityHelper.GetCity(p.Value.CityId));
+
+                var deliverySetting = DataWrapper.GetDeliverySetting(branchId); ;
+
+                ViewBag.Zones = DateTimeHepler.GetDisplayDictionary();
+                ViewBag.CurrentBranch = branchId;
+                ViewBag.BranchViews = branchViewvs != null && branchViewvs.Any() ? branchViewvs : null;
+                ViewBag.City = CityHelper.City;
+                ViewBag.Setting = DataWrapper.GetSetting(branchId); ;
+                ViewBag.DeliverySetting = deliverySetting;
+                ViewBag.DeliveryTimeTable = WeeklyDayHelper.ConvertTimeDeliveryToViev(deliverySetting?.TimeDelivery);
+                ViewBag.TypeBranch = typeBranch;
+                ViewBag.ZoneId = deliverySetting == null ? DateTimeHepler.DEFAULT_ZONE_ID : deliverySetting.ZoneId;
+                ViewBag.YearsWork = DateTime.Now.Year == 2019 ? DateTime.Now.Year.ToString() : $"2019 - {DateTime.Now.Year}";
+                ViewBag.AreaDeliveris = deliverySetting != null &&
+                                        deliverySetting.AreaDeliveries != null &&
+                                        deliverySetting.AreaDeliveries.Any() ?
+                                        JsonConvert.SerializeObject(deliverySetting.AreaDeliveries) :
+                                        JsonConvert.SerializeObject(new List<AreaDeliveryModel>());
+
+                var products = DataWrapper.GetAllProductsVisibleDictionary(branchId);
+                ViewBag.ProductsForPromotion = products != null && products.Any() ?
+                                        JsonConvert.SerializeObject(products) :
+                                        JsonConvert.SerializeObject(new List<AreaDeliveryModel>());
+
+                var categoryDictionary = DataWrapper.GetCategoriesVisible(branchId)
+                    .GroupBy(p => p.Id).
+                    ToDictionary(p => p.Key, p => p.First().Name);
+                ViewBag.CategoryDictionary = categoryDictionary != null && categoryDictionary.Any() ?
+                                        JsonConvert.SerializeObject(categoryDictionary) :
+                                        JsonConvert.SerializeObject(new List<AreaDeliveryModel>());
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            } 
 
             return View();
         }

@@ -69,12 +69,12 @@ var StockManger = {
         }
 
         Dialog.showModal($stockDialog)
-        $stockDialog.find('select').SumoSelect()
+        $stockDialog.find('select').not('.stock-custom-select').SumoSelect()
     },
     saveStockFromDialog: function () {
     },
     cleanStockDialog: function () {
-        $('#stockDialog select').each(function (i) {
+        $('#stockDialog select').not('.stock-custom-select').each(function (i) {
             const sumo = $(this)[0].sumo
 
             if (sumo)
@@ -241,5 +241,46 @@ var StockManger = {
     }
 }
 
+async function activePromotion() {
+    const idSelect = 'bonus-product-items'
+    const $contentWrapper = $('#bonus-products-setting')
+    const $select = $contentWrapper.find(`#${idSelect}`)
 
+    if ($select.length > 0 && $select[0].sumo)
+        $select[0].sumo.unload()
+
+    $select.remove()
+
+    if (ProductsForPromotion) {
+        const $newSelect = $(`<select class="stock-custom-select" multiple placeholder="Выберите блюда" id="${idSelect}"></select>`)
+        const selectContent = []
+
+        for (let categoryId in ProductsForPromotion) {
+            const categoryName = CategoryDictionary[categoryId]
+            const products = ProductsForPromotion[categoryId]
+
+            let options = ''
+            for (let product of products) {
+                options += `<option value='${product.Id}'>${product.Name}</option>`
+            }
+            const optgroup = `<optgroup label='${categoryName}'>${options}</optgroup>`
+
+            selectContent.push(optgroup)
+        }
+
+        $newSelect.append(selectContent)
+        $contentWrapper.append($newSelect)
+        
+        const $select = $(`#${idSelect}`)
+        const sumoOptions = {
+            search: true,
+            searchText: 'Поиск...',
+            noMatch: 'Нет совпадений для "{0}"',
+            captionFormat: 'Выбрано блюд: {0}',
+            captionFormatAllSelected: 'Выбраны все блюда: {0}'
+        }
+
+        $select.SumoSelect(sumoOptions)
+    }
+}
 

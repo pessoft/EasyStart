@@ -762,6 +762,34 @@ namespace EasyStart.Logic
             return result;
         }
 
+        public static Dictionary<int, List<ProductModel>> GetAllProductsVisibleDictionary(int branchId)
+        {
+            var result = new Dictionary<int, List<ProductModel>>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var products = db
+                        .Products
+                        .Where(p => p.BranchId == branchId && p.Visible)
+                        .ToList();
+
+                    if (products != null && products.Any())
+                    {
+                        result = products
+                            .GroupBy(p => p.CategoryId)
+                            .ToDictionary(p => p.Key, p => p.ToList());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
         public static List<ProductModel> GetAllProductsVisible(int branchId)
         {
             List<ProductModel> result = new List<ProductModel>();

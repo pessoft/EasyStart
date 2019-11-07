@@ -215,5 +215,5 @@
 }
 
 #stockDialog .stock-type-bonus-setting .SumoSelect ul {
-    overflow:hidden;
+    overflow-x:hidden;
 }

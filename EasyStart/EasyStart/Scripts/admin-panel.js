@@ -89,8 +89,12 @@ function bindDialogCloseClickBackdor() {
         }
     })
 
-    $('.custom-dialog').bind('click', function () { Dialog.close($(this)) })
-    $('.custom-dialog .custom-dialog-body').bind('click', (event) => event.stopPropagation())
+    $('.custom-dialog').bind('click', function (event) {
+        if ($(event.target).hasClass('custom-dialog'))
+            Dialog.close($(this))
+    })
+
+    //$('.custom-dialog .custom-dialog-body').bind('click', (event) => event.stopPropagation())
 }
 
 const Pages = {
