@@ -71,7 +71,12 @@
 }
 
 .promotion-some-settings-content {
+    position: relative;
     border: 1px solid #bdbdbd35;
+}
+
+#promotion .empty-list {
+    font-size: 1.5em;
 }
 
 .promotion-btn-settings-add {
@@ -94,11 +99,12 @@
 
 .promotion-stock-dialog-wrapper {
     position: relative;
-    width: 300px;
-    height: 380px;
+    width: 310px;
+    height: 400px;
     display: flex;
     flex-direction: row;
     color: #505050;
+    cursor: default;
 }
 
 .promotion-stock-dialog-slide {
@@ -107,7 +113,7 @@
     grid-template-rows: 50px 1fr 50px;
     grid-row-gap: 10px;
     width: 300px;
-    height: 380px;
+    height: 400px;
     position: relative;
 }
 
@@ -137,7 +143,7 @@
 }
 
 #stockDialog .SumoSelect {
-    min-width: 290px;
+    min-width: 300px;
     min-height: 25px;
     border-color: #c6c6c6;
     color: #0f1e328f;
@@ -145,7 +151,7 @@
 }
 
 .stock-castom-period {
-    width: 290px;
+    width: 300px;
     min-height: 25px;
     border-radius: 3px;
     padding: 0;
@@ -177,7 +183,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    width: 290px;
+    width: 300px;
     margin: 5px
 }
 
@@ -185,12 +191,12 @@
     flex-direction: column;
 }
 
-    .stock-type-discount-setting .group,
-    #stockDialog .stock-type-discount-setting .group input,
-    #stockDialog .stock-type-discount-setting .group .bar,
-    #stockDialog .stock-type-discount-setting input:focus ~ .bar:before {
-        width: 220px;
-    }
+.stock-type-discount-setting .group,
+#stockDialog .stock-type-discount-setting .group input,
+#stockDialog .stock-type-discount-setting .group .bar,
+#stockDialog .stock-type-discount-setting input:focus ~ .bar:before {
+    width: 220px;
+}
 
 
 #stockDialog .stock-type-discount-setting .SumoSelect {
@@ -198,22 +204,98 @@
     width: 65px;
     margin: 0;
     margin-left: 5px
-    
 }
 
 .stock-type-bonus-setting .group,
 #stockDialog .stock-type-bonus-setting .group input,
 #stockDialog .stock-type-bonus-setting .group .bar,
-#stockDialog .stock-type-bonus-setting input:focus ~ .bar:before {
-    width: 290px;
+#stockDialog .stock-type-bonus-setting input:focus ~ .bar:before,
+#stockDialog #stock-condition-summ-container .group input,
+#stockDialog #stock-condition-summ-container .group .bar,
+#stockDialog #stock-condition-summ-container input:focus ~ .bar:before {
+    width: 300px;
 }
 
-#stockDialog .stock-type-bonus-setting .SumoSelect {
-    min-width: 290px;
-    width: 290px;
+#stockDialog .stock-type-bonus-setting .SumoSelect,
+#stockDialog #stock-condition-products-container .SumoSelect {
+    min-width: 300px;
+    width: 300px;
     margin: 0;
 }
 
-#stockDialog .stock-type-bonus-setting .SumoSelect ul {
-    overflow-x:hidden;
+    #stockDialog .stock-type-bonus-setting .SumoSelect ul {
+        overflow-x: hidden;
+    }
+
+.stock-setting-condition-count-products {
+    width: 300px;
+    height: 100px;
+    border: 1px solid #bdbdbd70;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: 2px;
+}
+
+.stock-product-count-item {
+    display: grid;
+    grid-template-columns: 1fr 60px;
+    grid-template-rows: 33px;
+    overflow: hidden;
+    border-bottom: 1px solid #bdbdbd70;
+    align-items: center;
+}
+
+    .stock-product-count-item span {
+        white-space: nowrap;
+        overflow: hidden;
+        padding: 5px;
+        text-overflow: ellipsis;
+        font-size: 0.75em;
+    }
+
+    .stock-product-count-item input {
+        height: 100%;
+        border: none;
+        border: none;
+        text-align: center;
+        width: 60px;
+        border-left: 1px solid #bdbdbd70;
+    }
+
+.stock-setting-condition-count-products::-webkit-scrollbar,
+#promotion-stock-description::-webkit-scrollbar {
+    width: 0.45em;
+}
+
+.stock-setting-condition-count-products::-webkit-scrollbar-track,
+#promotion-stock-description::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
+    border-radius: 30px;
+}
+
+.stock-setting-condition-count-products::-webkit-scrollbar-thumb,
+#promotion-stock-description::-webkit-scrollbar-thumb {
+    background-color: #163f752e;
+    border-radius: 2px;
+}
+
+    .stock-setting-condition-count-products::-webkit-scrollbar-thumb:hover,
+    #promotion-stock-description::-webkit-scrollbar-thumb:hover, {
+        background-color: #163f75c9;
+    }
+
+.general-description-input {
+    border: 1px solid #A4A4A4;
+    border-radius: 2px;
+    width: 300px;
+    height: 25px;
+    padding: 0 5px;
+    color: #0f1e328f;
+    font-size: 0.8em;
+}
+
+textarea.general-description-input {
+    height: 145px;
+    padding: 5px;
+    font-size: 1em;
 }

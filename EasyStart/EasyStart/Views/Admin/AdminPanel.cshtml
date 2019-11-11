@@ -215,7 +215,12 @@
                                     Добавить акцию
                                 </button>
                             </div>
-                            <div class="promotion-some-settings-content"></div>
+                            <div class="promotion-some-settings-content">
+                                <div class="empty-list">
+                                    <i class="fal fa-smile-plus"></i>
+                                    <span>Добавте акции</span>
+                                </div>
+                            </div>
                         </div>
                         <div id="pormotion-coupons" class="promotion-content promotion-some-settings hide">
                             <div class="promotion-some-settings-header">
@@ -936,20 +941,10 @@
                             <h4>Настройки блюд</h4>
                             <div class="stock-type-bonus-setting" id="bonus-products-setting">
                                 <div class="group">
-                                    <input id="stock-products-count" required value="1" type="number" min="0" oninput="" />
+                                    <input id="stock-products-count" required value="1" type="number" min="0" oninput="StockManger.onAllowedBonusCountChange()" />
                                     <span class="bar"></span>
                                     <label>Количество бонусных блюд</label>
                                 </div>
-                                <select class="stock-custom-select" multiple placeholder="Выберите блюда" id="bonus-product-items">
-                                    <optgroup label="Супы">
-                                        <option value="1">Том-Ям суп из кокосового молока с морепродуктами</option>
-                                        <option value="2">Японский сливочный суп с лососем, кальмаром и креветкой</option>
-                                    </optgroup>
-                                    <optgroup label="Другие супы">
-                                        <option value="1">Том-Ям суп из кокосового молока с морепродуктами</option>
-                                        <option value="2">Японский сливочный суп с лососем, кальмаром и креветкой</option>
-                                    </optgroup>
-                                </select>
                             </div>
                         </div>
                     </div>
@@ -964,7 +959,45 @@
                 </div>
                 <div class="promotion-stock-dialog-slide" id="stock-slide-3" style="display:none">
                     <div class="promotion-stock-dialog-slide-header">Условия акции</div>
-                    <div class="promotion-stock-dialog-slide-content">контент</div>
+                    <div class="promotion-stock-dialog-slide-content">
+                        <div class="promotion-stock-index-block">
+                            <h4>Триггер акции</h4>
+                            <select id="stock-condition-type" onchange="StockManger.onTriggerConditionChangeType()">
+                                <option value="0" disabled selected>
+                                    Выберите тригер акции
+                                </option>
+                                <option value="1">Вручение заказа</option>
+                                <option value="2">Сумма заказа</option>
+                                <option value="3">Блюда</option>
+                            </select>
+                        </div>
+                        <div id="stock-condition-delivery-container" style="display:none" class="promotion-stock-index-block hide-block">
+                            <h4>Способ вручения заказа</h4>
+                            <select id="stock-condition-delivery-type" onchange="StockManger.onStockConditionDeliveryTypeChange()">
+                                <option value="0" disabled selected>
+                                    Выберите способ вручения заказа
+                                </option>
+                                <option value="1">Самовывоз</option>
+                                <option value="2">Доставка курьером</option>
+                            </select>
+                        </div>
+                        <div id="stock-condition-summ-container" style="display:none" class="promotion-stock-index-block hide-block">
+                            <h4>Сумма заказа</h4>
+                            <div class="group">
+                                <input id="stock-condition-sum-count" required type="number" min="0" oninput="StockManger.onStockConditionSumChange()" />
+                                <span class="bar"></span>
+                                <label>Минимальная сумма заказа</label>
+                            </div>
+                        </div>
+                        <div id="stock-condition-products-container" style="display:none" class="promotion-stock-index-block hide-block">
+                            <h4>Настройка блюд</h4>
+                        </div>
+                        <div id="stock-condition-products-count-container" style="display:none" class="promotion-stock-index-block hide-block">
+                            <h4>Настройка количества блюд</h4>
+                            <div class="stock-setting-condition-count-products">
+                            </div>
+                        </div>
+                    </div>
                     <div class="promotion-stock-dialog-slide-footer">
                         <button class="simple-text-btn promotion-margrin-row promotion-stock-prev" onclick="StockManger.prevStockSlide('stock-slide-2','stock-slide-3')">
                             Назад
@@ -976,7 +1009,16 @@
                 </div>
                 <div class="promotion-stock-dialog-slide" id="stock-slide-4" style="display:none">
                     <div class="promotion-stock-dialog-slide-header">Описание акции</div>
-                    <div class="promotion-stock-dialog-slide-content">контент</div>
+                    <div class="promotion-stock-dialog-slide-content">
+                        <div  class="promotion-stock-index-block">
+                            <h4>Название акции</h4>
+                            <input id="promotion-stock-name" type="text" oninput="StockManger.onGeniralDescriptionChange()" class="default-color general-description-input">
+                        </div>
+                        <div class="promotion-stock-index-block">
+                            <h4>Подробное описание акции</h4>
+                            <textarea id="promotion-stock-description" oninput="StockManger.onGeniralDescriptionChange()" class="general-description-input"></textarea>
+                        </div>
+                    </div>
                     <div class="promotion-stock-dialog-slide-footer">
                         <button class="simple-text-btn promotion-margrin-row promotion-stock-prev" onclick="StockManger.prevStockSlide('stock-slide-3','stock-slide-4')">
                             Назад
