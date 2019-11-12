@@ -103,6 +103,18 @@ var StockManger = {
         $('#stockDialog .promotion-stock-index-block.hide-block').hide()
         $('#stockDialog .promotion-stock-dialog-slide').hide()
         $('#stockDialog #stock-slide-1').show()
+        $('#stockDialog img').removeAttr('src').addClass('hide')
+        $('#stockDialog .dialog-image-upload').removeClass('hide')
+        $('#stockDialog textarea').val('')
+        $('#stockDialog input[type=text]').val('')
+        $('#stockDialog input[type = file]').val('')
+        $('#stock-discount-val').val('')
+        $('#stock-products-count').val(1)
+        $('#bonus-product-items')[0].sumo.unSelectAll()
+        $('#discount-type').removeAttr('selected').find('option[value=1]').attr('selected', true)
+        $('#stock-condition-sum-count').val('')
+        $('#condition-product-items')[0].sumo.unSelectAll()
+
 
         $(".promotion-stock-next").attr('disabled', true)
 
@@ -233,9 +245,9 @@ var StockManger = {
                     if (self.productsCountConditional
                         && Object.keys(self.productsCountConditional).length > 0) {
                         for (let key in self.productsCountConditional) {
-                            const val = parseInt(self.productsCountConditional[key])
+                            const val = parseInt(self.productsCountConditional[key].count)
 
-                            if (Number.isNaN(key) || val < 1) {
+                            if (Number.isNaN(val) || val < 1) {
                                 disabledNextAction()
                                 return
                             }
@@ -412,8 +424,10 @@ var StockManger = {
             $(`#${idProductsCount} .stock-setting-condition-count-products`).html(countItems)
             $(`#${idProductsCount}`).show(animationOption, '', 150)
         }
-        else
+        else {
+            this.productsCountConditional = {}
             $(`#${idProductsCount}`).hide(animationOption, '', 150)
+        }
 
         this.btnNextToggle(this.slide.ConditionType)
     },
@@ -438,6 +452,14 @@ var StockManger = {
     },
     onGeniralDescriptionChange: function () {
         this.btnNextToggle(this.slide.GeneralDescriptionType)
+    },
+    toggleSave: function (e) {
+        const $e = $(e)
+
+        if ($e.attr('src'))
+            $("#stock-slide-5 .promotion-stock-next").removeAttr('disabled')
+        else 
+            $("#stock-slide-5 .promotion-stock-next").attr('disabled', true)
     }
 }
 

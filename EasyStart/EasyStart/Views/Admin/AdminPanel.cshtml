@@ -1030,12 +1030,23 @@
                 </div>
                 <div class="promotion-stock-dialog-slide" id="stock-slide-5" style="display:none">
                     <div class="promotion-stock-dialog-slide-header">Изображение акции</div>
-                    <div class="promotion-stock-dialog-slide-content">контент</div>
+                    <div class="promotion-stock-dialog-slide-content">
+                        <div class="add-image-product">
+                            <input type="file" id="add-stock-image" accept="image/*" class="hide">
+                            <div class="preview-image promotion-stock-preview-image " onclick="openDialogFile('add-stock-image')">
+                                <img  alt="your image" class="hide" onload="StockManger.toggleSave(this)">
+                                <div class="dialog-image-upload">
+                                    <i class="fal fa-upload"></i>
+                                    Загрузите изображение
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="promotion-stock-dialog-slide-footer">
                         <button class="simple-text-btn promotion-margrin-row promotion-stock-prev" onclick="StockManger.prevStockSlide('stock-slide-4','stock-slide-5')">
                             Назад
                         </button>
-                        <button class="simple-text-btn promotion-margrin-row" onclick="">
+                        <button class="simple-text-btn promotion-margrin-row promotion-stock-next" onclick="">
                             Сохранить
                         </button>
                     </div>

@@ -1291,6 +1291,11 @@ function addPreviewImage(input) {
 
         reader.onload = function (e) {
             let dialog = $(input).parents("dialog");
+            dialog = dialog.length > 0 ? dialog : $(input).parents(".custom-dialog");
+
+            if (dialog.le == 0 )
+                return;
+
             let img = dialog.find("img");
 
             dialog.find(".dialog-image-upload").addClass("hide");
