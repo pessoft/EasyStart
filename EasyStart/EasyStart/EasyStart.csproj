@@ -187,6 +187,7 @@
     <Compile Include="Logic\DataWrapper.cs" />
     <Compile Include="Logic\DayWeekly.cs" />
     <Compile Include="Logic\DeliveryType.cs" />
+    <Compile Include="Logic\DiscountType.cs" />
     <Compile Include="Logic\Notification\EmailNotification\Email.cs" />
     <Compile Include="Logic\Notification\EmailNotification\IEmail.cs" />
     <Compile Include="Logic\Notification\EmailNotification\OrderEmailNotification.cs" />
@@ -209,7 +210,11 @@
     <Compile Include="Logic\Report\RevenueReport.cs" />
     <Compile Include="Logic\Report\TopCategoriesReport.cs" />
     <Compile Include="Logic\Report\TopProductsReport.cs" />
-    <Compile Include="Logic\StockType.cs" />
+    <Compile Include="Logic\RewardType.cs" />
+    <Compile Include="Logic\StockConditionDeliveryType.cs" />
+    <Compile Include="Logic\StockConditionTriggerType.cs" />
+    <Compile Include="Logic\StockOneTypeSubtype.cs" />
+    <Compile Include="Logic\StockTypePeriod.cs" />
     <Compile Include="Logic\TypeBranch.cs" />
     <Compile Include="Logic\UriHelper.cs" />
     <Compile Include="Logic\UseMethod.cs" />
@@ -348,6 +353,22 @@
     <Compile Include="Migrations\201910230557316_AddedNotificationEmailDeliverySetting.cs" />
     <Compile Include="Migrations\201910230557316_AddedNotificationEmailDeliverySetting.Designer.cs">
       <DependentUpon>201910230557316_AddedNotificationEmailDeliverySetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911180920323_NewStockModel.cs" />
+    <Compile Include="Migrations\201911180920323_NewStockModel.Designer.cs">
+      <DependentUpon>201911180920323_NewStockModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911181449024_NewConditionCountProductsStockModel.cs" />
+    <Compile Include="Migrations\201911181449024_NewConditionCountProductsStockModel.Designer.cs">
+      <DependentUpon>201911181449024_NewConditionCountProductsStockModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911181450188_RemoveConditionCountProductsStockModel.cs" />
+    <Compile Include="Migrations\201911181450188_RemoveConditionCountProductsStockModel.Designer.cs">
+      <DependentUpon>201911181450188_RemoveConditionCountProductsStockModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911181501273_AddProductsBounusJSONStockModel.cs" />
+    <Compile Include="Migrations\201911181501273_AddProductsBounusJSONStockModel.Designer.cs">
+      <DependentUpon>201911181501273_AddProductsBounusJSONStockModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
@@ -661,6 +682,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201910230557316_AddedNotificationEmailDeliverySetting.resx">
       <DependentUpon>201910230557316_AddedNotificationEmailDeliverySetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911180920323_NewStockModel.resx">
+      <DependentUpon>201911180920323_NewStockModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911181449024_NewConditionCountProductsStockModel.resx">
+      <DependentUpon>201911181449024_NewConditionCountProductsStockModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911181450188_RemoveConditionCountProductsStockModel.resx">
+      <DependentUpon>201911181450188_RemoveConditionCountProductsStockModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911181501273_AddProductsBounusJSONStockModel.resx">
+      <DependentUpon>201911181501273_AddProductsBounusJSONStockModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

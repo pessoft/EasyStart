@@ -215,7 +215,7 @@
                                     Добавить акцию
                                 </button>
                             </div>
-                            <div class="promotion-some-settings-content">
+                            <div id="stock-list" class="promotion-some-settings-content">
                                 <div class="empty-list">
                                     <i class="fal fa-smile-plus"></i>
                                     <span>Добавте акции</span>
@@ -238,26 +238,6 @@
             </div>
         </div>
 
-        @*<div class="section hide" id="stock">
-                <div class="stock-header">
-                    <div class="stock-header-text">
-                        Акции
-                        <i class="fal fa-badge-percent"></i>
-                    </div>
-                    <div class="stock-header-add" id="add-stock">
-                        <i class="fal fa-plus"></i>
-                        Добавить акцию
-                    </div>
-                </div>
-                <div class="content-wrapper">
-                    <div class="empty-list">
-                        <i class="fal fa-smile-plus"></i>
-                        <span>Пока нет ни одной акции</span>
-                    </div>
-                    <div class="stock-list" id="stock-list">
-                    </div>
-                </div>
-            </div>*@
         <div class="section hide" id="branch">
             <div class="branch-header">
                 Отделения
@@ -497,63 +477,7 @@
             </div>
         </form>
     </dialog>
-
-    @*<dialog id="addStockDialog">
-            <form onsubmit="operationStock(); return false;" autocomplete="off">
-                <div class="dialog-container">
-                    <div class="enter-dialog-data">
-                        <div class="header-dialog">
-                            <i class="fal fa-layer-plus"></i>
-                            Добавление акции
-                        </div>
-                        <div class="content-dialog-data">
-                            <input type="hidden" id="stock-id">
-                            <div class="stock-type">
-                                <div class="stock-type-header">
-                                    Тип акции
-                                </div>
-                                <select id="stock-type">
-                                    <option value="0" selected>Другой тип</option>
-                                    <option value="1">Скидка при первом заказем с доставкой</option>
-                                    <option value="2">Скидка при заказе с самовывозом</option>
-                                </select>
-                            </div>
-                            <div class="group">
-                                <input required type="text" id="name-stock" />
-                                <span class="bar"></span>
-                                <label>Название акции</label>
-                            </div>
-                            <div class="group">
-                                <input type="number" required id="stock-discount" min="0" step="1" value="0" />
-                                <span class="bar"></span>
-                                <label>Размер скидки (в процентах)</label>
-                            </div>
-                            <div class="group">
-                                <textarea id="description-stock"></textarea>
-                                <span class="bar"></span>
-                                <label>Описание акции</label>
-                            </div>
-                        </div>
-                        <div class="dialog-menu">
-                            <button class="btn btn-submit" type="submit">Ок</button>
-                            <button class="btn btn-cancel" type="reset" onclick="cancelDialog($('#addStockDialog'))">Отмена</button>
-                        </div>
-                    </div>
-
-                    <div class="add-image-product">
-                        <input type="file" id="add-stock-image" accept="image/*" class="hide">
-                        <div class="preview-image" onclick="openDialogFile('add-stock-image')">
-                            <img src="#" alt="your image" class="hide" />
-                            <div class="dialog-image-upload">
-                                <i class="fal fa-upload"></i>
-                                Загрузите изображение
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </dialog>*@
-
+    
     <dialog id="addProducDialog">
         <form onsubmit="operationProduct(); return false;" autocomplete="off">
             <div class="dialog-container">
@@ -867,7 +791,7 @@
         </div>
     </dialog>
 
-    <div id="stockDialog" class="custom-dialog">
+    <div id="stockDialog" class="custom-dialog" stock-id="-1">
         <div class="custom-dialog-body">
             <div class="promotion-stock-dialog-wrapper">
                 <input type="hidden" value="" />
@@ -1046,7 +970,7 @@
                         <button class="simple-text-btn promotion-margrin-row promotion-stock-prev" onclick="StockManger.prevStockSlide('stock-slide-4','stock-slide-5')">
                             Назад
                         </button>
-                        <button class="simple-text-btn promotion-margrin-row promotion-stock-next" onclick="">
+                        <button class="simple-text-btn promotion-margrin-row promotion-stock-next" onclick="StockManger.saveStockFromDialog()">
                             Сохранить
                         </button>
                     </div>
@@ -1078,9 +1002,6 @@
                 <div class="stock-item-name">
                 </div>
                 <div class="stock-item-menu">
-                    <div class="stock-menu-el stock-visible">
-                        <i class="fal fa-eye"></i>
-                    </div>
                     <div class="stock-menu-el stock-edit">
                         <i class="fal fa-edit"></i>
                     </div>

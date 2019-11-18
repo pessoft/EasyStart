@@ -418,7 +418,7 @@ namespace EasyStart
             try
             {
                 var branchId = DataWrapper.GetBranchIdByCity(cityId);
-                var stocks = DataWrapper.GetStocksVisible(branchId);
+                var stocks = DataWrapper.GetStocks(branchId);
 
                 return stocks;
             }

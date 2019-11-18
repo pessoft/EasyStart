@@ -517,7 +517,7 @@ namespace EasyStart.Controllers
 
         [HttpPost]
         [Authorize]
-        public JsonResult AddStock(StockModel stock)
+        public JsonResult SaveStock(StockModel stock)
         {
             var result = new JsonResultModel();
 
@@ -528,6 +528,7 @@ namespace EasyStart.Controllers
 
             var branchId = DataWrapper.GetBranchId(User.Identity.Name);
             stock.BranchId = branchId;
+            stock.IsDeleted = false;
             stock = DataWrapper.SaveStock(stock);
 
             if (stock != null)
@@ -557,26 +558,6 @@ namespace EasyStart.Controllers
             else
             {
                 result.ErrorMessage = "Акция не удалена";
-            }
-
-            return Json(result);
-        }
-
-        [HttpPost]
-        [Authorize]
-        public JsonResult UpdateStock(StockModel sotck)
-        {
-            var result = new JsonResultModel();
-            var updateStock = DataWrapper.UpdateStock(sotck);
-
-            if (updateStock != null)
-            {
-                result.Data = updateStock;
-                result.Success = true;
-            }
-            else
-            {
-                result.ErrorMessage = "Акция не обновлена";
             }
 
             return Json(result);

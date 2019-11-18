@@ -1071,6 +1071,18 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
+                    if (stock.Id != -1)
+                    {
+                        var oldStock = db.Stocks.FirstOrDefault(p => p.Id == stock.Id);
+
+                        if (oldStock != null)
+                        {
+                            oldStock.IsDeleted = true;
+                        }
+
+                        db.SaveChanges();
+                    }
+
                     result = db.Stocks.Add(stock);
                     db.SaveChanges();
                 }
@@ -1091,47 +1103,7 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     result = db.Stocks
-                        .Where(p => p.BranchId == branchId)
-                        .ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log.Error(ex);
-            }
-
-            return result;
-        }
-
-        public static List<StockModel> GetStocksVisible(int brnachId)
-        {
-            List<StockModel> result = new List<StockModel>();
-            try
-            {
-                using (var db = new AdminPanelContext())
-                {
-                    result = db.Stocks
-                        .Where(p => p.BranchId == brnachId && p.Visible)
-                        .ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log.Error(ex);
-            }
-
-            return result;
-        }
-
-        public static List<StockModel> GetStocksVisible()
-        {
-            List<StockModel> result = new List<StockModel>();
-            try
-            {
-                using (var db = new AdminPanelContext())
-                {
-                    result = db.Stocks
-                        .Where(p => p.Visible)
+                        .Where(p => p.BranchId == branchId && !p.IsDeleted)
                         .ToList();
                 }
             }
@@ -1152,7 +1124,7 @@ namespace EasyStart.Logic
                 {
                     var removeStock = db.Stocks.FirstOrDefault(p => p.Id == id);
 
-                    db.Stocks.Remove(removeStock);
+                    removeStock.IsDeleted = true;
                     db.SaveChanges();
 
                     success = true;
@@ -1164,36 +1136,6 @@ namespace EasyStart.Logic
             }
 
             return success;
-        }
-
-        public static StockModel UpdateStock(StockModel stock)
-        {
-            StockModel result = null;
-            try
-            {
-                using (var db = new AdminPanelContext())
-                {
-                    result = db.Stocks.FirstOrDefault(p => p.Id == stock.Id);
-
-                    if (result != null)
-                    {
-                        result.Description = stock.Description;
-                        result.Discount = stock.Discount;
-                        result.Image = stock.Image;
-                        result.Name = stock.Name;
-                        result.StockType = stock.StockType;
-                        result.Visible = stock.Visible;
-                    }
-
-                    db.SaveChanges();
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log.Error(ex);
-            }
-
-            return result;
         }
 
         public static Client AddOrUpdateClient(Client clinet)

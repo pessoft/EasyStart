@@ -45,6 +45,12 @@ const SotckTypePeriod = {
     ToDate: 3
 }
 
+const StockOneTypeSubtype = {
+    Unknown: 0,
+    FirstOrder: 1,
+    OneOrder: 2
+}
+
 const RewardType = {
     Unknown: 0,
     Discout: 1,
@@ -85,6 +91,108 @@ var StockManger = {
         $stockDialog.find('select').not('.stock-custom-select').SumoSelect()
     },
     saveStockFromDialog: function () {
+        let loader = new Loader($("#stockDialog .custom-dialog-body"));
+        loader.start();
+
+        let files = $("#stockDialog input[type=file]")[0].files;
+        var dataImage = new FormData();
+
+        for (var x = 0; x < files.length; x++) {
+            dataImage.append("file" + x, files[x]);
+        }
+
+        const getAllowedBounusProductsJSON = () => {
+            const prodictIds = []
+            $('#bonus-product-items option:selected').each(function () {
+                prodictIds.push(parseInt($(this).val()))
+            })
+
+            return JSON.stringify(prodictIds)
+        }
+
+        const getConditionCountProductsJSON = () => {
+            const dict = {} //key - productId, value - count
+
+            $('#stock-condition-products-count-container .stock-product-count-item').each(function () {
+                const $self = $(this)
+                const id = $self.find('span').attr('product-id')
+                const count = parseInt($self.find('input').val())
+
+                dict[id] = count
+            })
+
+            return JSON.stringify(dict);
+        }
+
+        const getIntValue = str => {
+            let value = parseInt(str)
+
+            if (Number.isNaN(value))
+                value = 0
+
+            return value
+        }
+
+        const stock = {
+            id: $('#stockDialog').attr('stock-id'),
+            stockPeriodType: parseInt($('#stock-type-period option:selected').val()),
+            stockOneTypeSubtype: parseInt($('#stock-one-type-subtype option:selected').val()),
+            stockFromDate: $("#stock-type-calendar-period").data("datepicker").selectedDates[0].toJSON(),
+            stockToDate: $("#stock-type-calendar-period").data("datepicker").selectedDates[1].toJSON(),
+            rewardType: parseInt($('#stock-type-reward option:selected').val()),
+            discountValue: getIntValue($('#stock-discount-val').val()),
+            discountType: parseInt($('#discount-type option:selected').val()),
+            countBounusProducts: parseInt($('#stock-products-count').val()),
+            allowedBounusProductsJSON: getAllowedBounusProductsJSON(),
+            conditionType: parseInt($('#stock-condition-type option:selected').val()),
+            conditionDeliveryType: parseInt($('#stock-condition-delivery-type option:selected').val()),
+            conditionOrderSum: getIntValue($('#stock-condition-sum-count').val()),
+            conditionCountProductsJSON: getConditionCountProductsJSON(),
+            name: $('#promotion-stock-name').val(),
+            description: $('#promotion-stock-description').val(),
+            image: ''
+        }
+
+        const saveFunc = function (data) {
+            stock.image = data.URL
+           
+            const successFunc = function (result, loader) {
+                loader.stop();
+                if (result.Success) {
+                    $("#stock-list .empty-list").remove();
+
+                    StockList.push(result.Data);
+                    addStockToList(result.Data);
+                    cancelDialog("#stockDialog");
+                } else {
+                    showErrorMessage(result.ErrorMessage);
+                }
+            }
+
+            $.post("/Admin/SaveStock", stock, successCallBack(successFunc, loader));
+        }
+
+        if (files.length == 0) {
+            let data = {
+                URL: $("#stockDialog img").attr("src")
+            }
+
+            saveFunc(data);
+
+            return;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/Admin/UploadImage',
+            contentType: false,
+            processData: false,
+            data: dataImage,
+            success: function (data) {
+                saveFunc(data);
+            }
+        });
+        
     },
     cleanStockDialog: function () {
         this.productsCountConditional = {}
@@ -96,6 +204,7 @@ var StockManger = {
                 sumo.unload()
         })
 
+        $('#stockDialog').attr('stock-id', -1)
         $('#stockDialog select option').removeAttr('disabled')
         $('#stockDialog select option').removeAttr('selected')
         $('#stockDialog select option[value=0]').attr('selected', true)
@@ -408,7 +517,7 @@ var StockManger = {
                 const data = this.productsCountConditional[productId]
                 const product = ProductsForPromotion[data.categoryId].filter(p => p.Id == productId)[0]
 
-                const span = `<span title="${product.Name}">${product.Name}</span>`
+                const span = `<span product-id="${productId}" title="${product.Name}">${product.Name}</span>`
                 const iNumber = `<input 
                                     onfocusout="StockManger.onStockConditionProductsFocusOut(${productId}, this)"
                                     onchange="StockManger.onStockConditionProductCountChange(${productId}, this)"

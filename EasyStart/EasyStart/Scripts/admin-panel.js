@@ -101,7 +101,7 @@ const Pages = {
     Order: 'order',
     HistoryOrder: 'history',
     Products: 'products',
-    Stock: 'stock',
+    Promotion: 'promotion',
     Branch: 'branch',
     Settong: 'setting',
     Delivery: 'delivery',
@@ -292,7 +292,7 @@ function prevChangedPage(page) {
 
 function postChangedPage(page) {
     switch (page) {
-        case Pages.Stock:
+        case Pages.Promotion:
             loadStockList();
             break
         case Pages.Analytics: {
@@ -459,129 +459,6 @@ function updateRenderStock(container, stock) {
     $stock.find("img").attr("src", stock.Image);
     $stock.find(".stock-item-name").html(stock.Name);
     toggleVisibleSotck(container, stock);
-}
-
-function updateStock() {
-    let files = $("#addStockDialog input[type=file]")[0].files;
-    var dataImage = new FormData();
-
-    for (var x = 0; x < files.length; x++) {
-        dataImage.append("file" + x, files[x]);
-    }
-
-    let functUpdate = function (data) {
-        let stockId = $("#stock-id").val();
-        let stock = {
-            Id: stockId,
-            Name: $("#name-stock").val(),
-            Discount: $("#stock-discount").val(),
-            Description: $("#description-stock").val(),
-            Image: data.URL,
-            Visible: isVisibleStock(stockId),
-            StockType: parseInt($("#stock-type option:selected").attr("value"))
-        }
-
-        let loader = new Loader($("#addStockDialog form"));
-        let successFunc = function (result, loader) {
-            loader.stop();
-            if (result.Success) {
-                let index = getIndexStockById(result.Data.Id);
-                StockList[index] = result.Data;
-
-                let $stock = $(`[stock-id=${result.Data.Id}]`);
-
-                updateRenderStock($stock, result.Data);
-                cancelDialog("#addStockDialog");
-            } else {
-                showErrorMessage(result.ErrorMessage);
-            }
-        }
-        loader.start();
-
-        $.post("/Admin/UpdateStock", stock, successCallBack(successFunc, loader));
-    }
-
-
-
-    if (files.length == 0) {
-        let data = {
-            URL: $("#addStockDialog img").attr("src")
-        }
-
-        functUpdate(data);
-        return;
-    }
-
-    $.ajax({
-        type: 'POST',
-        url: '/Admin/UploadImage',
-        contentType: false,
-        processData: false,
-        data: dataImage,
-        success: function (data) {
-            functUpdate(data);
-        }
-    });
-}
-
-function updateVisibleStock(stock) {
-    $.post("/Admin/UpdateStock", stock, null);
-}
-
-function addStock() {
-    let loader = new Loader($("#addStockDialog  form"));
-    loader.start();
-
-    let files = $("#addStockDialog input[type=file]")[0].files;
-    var dataImage = new FormData();
-
-    for (var x = 0; x < files.length; x++) {
-        dataImage.append("file" + x, files[x]);
-    }
-
-    let addFunc = function (data) {
-        let stock = {
-            Name: $("#name-stock").val(),
-            Discount: $("#stock-discount").val(),
-            Description: $("#description-stock").val(),
-            Image: data.URL,
-            Visible: true,
-            StockType: parseInt($("#stock-type option:selected").attr("value"))
-        }
-        let successFunc = function (result, loader) {
-            loader.stop();
-            if (result.Success) {
-                $("#stock .empty-list").remove();
-                StockList.push(result.Data);
-                addStockToList(result.Data);
-                cancelDialog("#addStockDialog");
-            } else {
-                showErrorMessage(result.ErrorMessage);
-            }
-        }
-
-        $.post("/Admin/AddStock", stock, successCallBack(successFunc, loader));
-    }
-
-    if (files.length == 0) {
-        let data = {
-            URL: $("#addStockDialog img").attr("src")
-        }
-
-        addFunc(data);
-        return;
-    }
-
-    $.ajax({
-        type: 'POST',
-        url: '/Admin/UploadImage',
-        contentType: false,
-        processData: false,
-        data: dataImage,
-        success: function (data) {
-            addFunc(data);
-        }
-    });
 }
 
 var SelectIdCategoryId;
@@ -976,7 +853,6 @@ function updateProduct() {
 function addStockToList(stock) {
     let $template = $($("#stock-item-template").html());
 
-    $template.find("#stock-id").val(stock.Id);
     $template.attr("stock-id", stock.Id);
     $template.find("img").attr("src", stock.Image);
     $template.find(".stock-item-name").html(stock.Name);
@@ -988,23 +864,9 @@ function addStockToList(stock) {
     $template.find(".stock-edit").bind("click", function () {
         editStock(stock.Id);
     });
-    $template.find(".stock-visible").bind("click", function () {
-        let changeStock = getStockById(stock.Id);
-
-        changeStock.Visible = !changeStock.Visible;
-        toggleVisibleSotck($template, changeStock);
-        updateVisibleStock(changeStock);
-    });
     toggleVisibleSotck($template, stock);
 
     $("#stock-list").append($template);
-    $template.find("img").one("load", function () {
-        initBlocks();
-    }).each(function () {
-        if (this.complete) {
-            $(this).trigger('load');
-        }
-    });
 }
 
 function toggleVisibleSotck(container, stock) {
@@ -1115,7 +977,6 @@ function addProductToList(product) {
 }
 
 function clearStockList() {
-    $("#stock .empty-list").remove();
     $("#stock-list").empty();
 }
 
@@ -1224,7 +1085,7 @@ function loadStockList() {
         StockList.length > 0) {
         addAllItemStock(StockList);
     } else {
-        let loader = new Loader($("#stock .content-wrapper"));
+        let loader = new Loader($("#stock-list"));
         let successFunc = function (result, loader) {
             loader.stop();
             if (result.Success) {
@@ -1568,7 +1429,7 @@ function setEmptyStockInfo() {
         </div>
     `;
 
-    $("#stock .content-wrapper").append(template);
+    $("#stock-list").append(template);
 }
 
 function setEmptyReview() {
