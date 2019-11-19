@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Serialization;
 
 namespace EasyStart.Models
 {
@@ -15,7 +16,7 @@ namespace EasyStart.Models
         public StockTypePeriod StockTypePeriod { get; set; }
         public StockOneTypeSubtype StockOneTypeSubtype { get; set; }
         public DateTime StockFromDate { get; set; }
-        public DateTime stockToDate { get; set; }
+        public DateTime StockToDate { get; set; }
         public RewardType RewardType { get; set; }
         public int DiscountValue { get; set; }
         public DiscountType DiscountType { get; set; }
@@ -43,6 +44,7 @@ namespace EasyStart.Models
         public string ConditionCountProductsJSON { get; set; }
 
         [NotMapped]
+        [ScriptIgnore]
         public Dictionary<int, int> ConditionCountProducts
         {
             get

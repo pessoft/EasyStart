@@ -101,3 +101,12 @@ function bindCustomDialogCloseEvent($items) {
 
     $items.bind('close', event)
 }
+
+function getCategoryIdByProductIdForPromotion(productId) {
+    for (let categoryId in ProductsForPromotion) {
+        const products = ProductsForPromotion[categoryId].filter(p => p.Id == productId)
+
+        if (products && products.length > 0)
+            return products[0].CategoryId
+    }
+}

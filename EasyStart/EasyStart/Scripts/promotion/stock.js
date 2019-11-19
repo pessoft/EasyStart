@@ -80,6 +80,7 @@ var StockManger = {
                     if (!result.Data || result.Data.length == 0) {
                         self.setEmptyStockInfo();
                     } else {
+                        result.Data.forEach(p => self.processingLoadStockData(p))
                         self.stockList = result.Data;
                         self.addAllItemStock(self.stockList);
                     }
@@ -107,7 +108,7 @@ var StockManger = {
             this.addStockToList(stock);
         }
     },
-    addStockToList: function (stock) {
+    getStockTileTemplate: function (stock) {
         let $template = $($("#stock-item-template").html());
         const self = this
 
@@ -123,6 +124,16 @@ var StockManger = {
             self.editStock(stock.Id);
         });
 
+        return $template
+    },
+    replaceStockInList: function (stock, replaceStockId) {
+        let $template = this.getStockTileTemplate(stock)
+
+        $(`#stock-list [stock-id="${replaceStockId}"]`).replaceWith($template);
+    },
+    addStockToList: function (stock) {
+        let $template = this.getStockTileTemplate(stock)
+
         $("#stock-list").append($template);
     },
     addNewStock: function () {
@@ -131,15 +142,107 @@ var StockManger = {
     },
     showStock: function (stockId) {
         const $stockDialog = $('#stockDialog')
+
         if (stockId) {
-            //set stock in stock dialog
+            this.setStockData(stockId)
         }
 
         Dialog.showModal($stockDialog)
         $stockDialog.find('select').not('.stock-custom-select').SumoSelect()
     },
+    setStockData: function (stockId) {
+        const data = this.getStockById(stockId)
+
+        $('#stockDialog').attr('stock-id', data.Id)
+        $(".promotion-stock-next").removeAttr('disabled')
+
+        this.setSockTypePeriod(data)
+        this.setStockReward(data)
+        this.setStockCondition(data)
+        this.setStockGeneralDescription(data)
+        this.setStockImage(data)
+    },
+    setSockTypePeriod: function (data) {
+        $(`#stock-type-period option[value="${data.StockTypePeriod}"]`).attr('selected', true)
+
+        switch (data.StockTypePeriod) {
+            case SotckTypePeriod.OneOff:
+                $('#stock-one-type-subtype-container').show()
+                $(`#stock-one-type-subtype option[value="${data.StockOneTypeSubtype}"]`).attr('selected', true)
+                break;
+            case SotckTypePeriod.ToDate:
+                $('#stock-type-calendar-container').show()
+
+                let datePicker = $("#stock-type-calendar-period").data("datepicker");
+                datePicker.selectDate([data.StockFromDate, data.StockToDate]);
+                break;
+        }
+    },
+    setStockReward: function (data) {
+        $(`#stock-type-reward option[value="${data.RewardType}"]`).attr('selected', true)
+
+        switch (data.RewardType) {
+            case RewardType.Discout:
+                $('#stock-type-discount-container').show()
+
+                $('#stock-discount-val').val(data.DiscountValue)
+                $(`#discount-type option[value="${data.DiscountType}"]`).attr('selected', true)
+                break;
+            case RewardType.Products:
+                $('#stock-type-products-container').show()
+
+                $('#stock-products-count').val(data.CountBounusProducts)
+                data.AllowedBounusProducts.forEach(p => {
+                    $(`#bonus-product-items`)[0].sumo.selectItem(p.toString())
+                })
+                break;
+        }
+    },
+    setStockCondition: function (data) {
+        $(`#stock-condition-type option[value="${data.ConditionType}"]`).attr('selected', true)
+
+        switch (data.ConditionType) {
+            case StockConditionTriggerType.DeliveryOrder:
+                $('#stock-condition-delivery-container').show()
+                $(`#stock-condition-delivery-type option[value="${data.ConditionDeliveryType}"]`).attr('selected', true)
+                break;
+            case StockConditionTriggerType.SummOrder:
+                $('#stock-condition-summ-container').show()
+                $('#stock-condition-sum-count').val(data.ConditionOrderSum)
+                break;
+            case StockConditionTriggerType.ProductsOrder:
+                $('#stock-condition-products-container').show()
+                $('#stock-condition-products-count-container').show()
+
+                for (let productId in data.ConditionCountProducts) {
+                    $(`#condition-product-items`)[0].sumo.selectItem(productId.toString())
+
+                    this.productsCountConditional[productId] = {
+                        categoryId: getCategoryIdByProductIdForPromotion(productId),
+                        count: data.ConditionCountProducts[productId]
+                    }
+                }
+
+                const countItems = this.getProductCountConditionalItems()
+                $(`#stock-condition-products-count-container .stock-setting-condition-count-products`).html(countItems)
+
+                break;
+        }
+    },
+    setStockGeneralDescription: function (data) {
+        $('#promotion-stock-name').val(data.Name)
+        $('#promotion-stock-description').val(data.Description)
+    },
+    setStockImage: function (data) {
+        const $img = $('#stockDialog img')
+        $img.attr("src", data.Image);
+        $img.removeClass("hide");
+
+        $('#stockDialog .dialog-image-upload').addClass('hide')
+    },
     saveStockFromDialog: function () {
         const self = this
+        const stockIdToRemove = parseInt($('#stockDialog').attr('stock-id'))
         let loader = new Loader($("#stockDialog .custom-dialog-body"));
         loader.start();
 
@@ -184,7 +287,7 @@ var StockManger = {
 
         const stock = {
             id: $('#stockDialog').attr('stock-id'),
-            stockPeriodType: parseInt($('#stock-type-period option:selected').val()),
+            stockTypePeriod: parseInt($('#stock-type-period option:selected').val()),
             stockOneTypeSubtype: parseInt($('#stock-one-type-subtype option:selected').val()),
             stockFromDate: $("#stock-type-calendar-period").data("datepicker").selectedDates[0].toJSON(),
             stockToDate: $("#stock-type-calendar-period").data("datepicker").selectedDates[1].toJSON(),
@@ -209,9 +312,15 @@ var StockManger = {
                 loader.stop();
                 if (result.Success) {
                     $("#stock-list .empty-list").remove();
+                    self.processingLoadStockData(result.Data)
+
+                    if (!Number.isNaN(stockIdToRemove) && stockIdToRemove > 0) {
+                        self.replaceStockInList(result.Data, stockIdToRemove);
+                    } else {
+                        self.addStockToList(result.Data);
+                    }
 
                     self.stockList.push(result.Data);
-                    self.addStockToList(result.Data);
                     cancelDialog("#stockDialog");
                 } else {
                     showErrorMessage(result.ErrorMessage);
@@ -242,6 +351,11 @@ var StockManger = {
             }
         });
 
+    },
+    processingLoadStockData: function (data) {
+        data.StockFromDate = jsonToDate(data.StockFromDate)
+        data.StockToDate = jsonToDate(data.StockToDate)
+        data.ConditionCountProducts = JSON.parse(data.ConditionCountProductsJSON);
     },
     clearStockList: function () {
         $("#stock-list").empty();
@@ -279,7 +393,7 @@ var StockManger = {
 
         $(".promotion-stock-next").attr('disabled', true)
 
-        datePicker = $("#stock-type-calendar-period").data("datepicker");
+        let datePicker = $("#stock-type-calendar-period").data("datepicker");
         const fromDate = new Date()
         const toDate = new Date()
         toDate.setDate(toDate.getDate() + 7)
@@ -593,22 +707,7 @@ var StockManger = {
             })
 
             this.productsCountConditional = tmpProducts
-            const countItems = []
-            for (let productId in this.productsCountConditional) {
-                const data = this.productsCountConditional[productId]
-                const product = ProductsForPromotion[data.categoryId].filter(p => p.Id == productId)[0]
-
-                const span = `<span product-id="${productId}" title="${product.Name}">${product.Name}</span>`
-                const iNumber = `<input 
-                                    onfocusout="StockManger.onStockConditionProductsFocusOut(${productId}, this)"
-                                    onchange="StockManger.onStockConditionProductCountChange(${productId}, this)"
-                                    type="number"
-                                    min="1"
-                                    value="${data.count}">`
-                const row = `<div class="stock-product-count-item">${span}${iNumber}</div>`
-
-                countItems.push(row)
-            }
+            const countItems = this.getProductCountConditionalItems()
 
             $(`#${idProductsCount} .stock-setting-condition-count-products`).empty()
             $(`#${idProductsCount} .stock-setting-condition-count-products`).html(countItems)
@@ -620,6 +719,27 @@ var StockManger = {
         }
 
         this.btnNextToggle(this.slide.ConditionType)
+    },
+    getProductCountConditionalItems: function () {
+        const countItems = []
+
+        for (let productId in this.productsCountConditional) {
+            const data = this.productsCountConditional[productId]
+            const product = ProductsForPromotion[data.categoryId].filter(p => p.Id == productId)[0]
+
+            const span = `<span product-id="${productId}" title="${product.Name}">${product.Name}</span>`
+            const iNumber = `<input 
+                                    onfocusout="StockManger.onStockConditionProductsFocusOut(${productId}, this)"
+                                    onchange="StockManger.onStockConditionProductCountChange(${productId}, this)"
+                                    type="number"
+                                    min="1"
+                                    value="${data.count}">`
+            const row = `<div class="stock-product-count-item">${span}${iNumber}</div>`
+
+            countItems.push(row)
+        }
+
+        return countItems
     },
     onStockConditionProductsFocusOut: function (productId, e) {
         const $e = $(e)
