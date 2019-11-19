@@ -57,7 +57,8 @@ namespace EasyStart
                       "~/Scripts/chart.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/promotion").Include(
-                "~/Scripts/promotion/promotion.js"));
+                "~/Scripts/promotion/promotion.js",
+                "~/Scripts/promotion/stock.js"));
 
             bundles.Add(new StyleBundle("~/promotion/css").Include(
                      "~/Content/promotion.css"));

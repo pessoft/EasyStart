@@ -554,6 +554,7 @@
     <Content Include="Scripts\notify.js" />
     <Content Include="Scripts\odometer\odometer.js" />
     <Content Include="Scripts\promotion\promotion.js" />
+    <Content Include="Scripts\promotion\stock.js" />
     <Content Include="Scripts\singnal-logic.js" />
     <Content Include="Scripts\chart.js" />
     <Content Include="Web.config">
