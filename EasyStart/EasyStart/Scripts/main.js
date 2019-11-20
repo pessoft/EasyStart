@@ -78,28 +78,32 @@ class BitOperation {
 function bindCustomDialogToggleEvent(id) {
     const $items = id ? $(`#${id}`) : $('.custom-dialog')
 
-    bindCustomDialogShowEvent($items)
-    bindCustomDialogCloseEvent($items)
+    $items.each(function () {
+        const $item = $(this)
+
+        bindCustomDialogShowEvent($item)
+        bindCustomDialogCloseEvent($item)
+    })
 }
 
-function bindCustomDialogShowEvent($items) {
+function bindCustomDialogShowEvent($item) {
     const event = () => {
         const animationOption = { effect: "scale", direction: "horizontal" }
        
-        $items.addClass('custom-dialog-flex')
-        $items.find('.custom-dialog-body').show(animationOption,'', 150)
+        $item.addClass('custom-dialog-flex')
+        $item.find('.custom-dialog-body').show(animationOption,'', 150)
     }
 
-    $items.bind('showModal', event)
+    $item.bind('showModal', event)
 }
 
-function bindCustomDialogCloseEvent($items) {
+function bindCustomDialogCloseEvent($item) {
     const event = () => {
-        $items.removeClass('custom-dialog-flex')
-        $items.find('.custom-dialog-body').hide()
+        $item.removeClass('custom-dialog-flex')
+        $item.find('.custom-dialog-body').hide()
     }
 
-    $items.bind('close', event)
+    $item.bind('close', event)
 }
 
 function getCategoryIdByProductIdForPromotion(productId) {

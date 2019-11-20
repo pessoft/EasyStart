@@ -224,12 +224,17 @@
                         </div>
                         <div id="pormotion-coupons" class="promotion-content promotion-some-settings hide">
                             <div class="promotion-some-settings-header">
-                                <button id="btn-add-coupons" class="promotion-btn-settings-add">
+                                <button id="btn-add-coupons" class="promotion-btn-settings-add" onclick="CouponManager.addNewCoupon()">
                                     <i class="fal fa-plus"></i>
                                     Добавить купон
                                 </button>
                             </div>
-                            <div class="promotion-some-settings-content"></div>
+                            <div class="promotion-some-settings-content">
+                                <div class="empty-list">
+                                    <i class="fal fa-smile-plus"></i>
+                                    <span>Добавте купоны</span>
+                                </div>
+                            </div>
                         </div>
                         <div id="pormotion-cashback" class="promotion-content promotion-setting hide"></div>
                         <div id="pormotion-partners" class="promotion-content promotion-setting hide"></div>
@@ -822,7 +827,7 @@
                         </div>
                         <div id="stock-type-calendar-container" style="display:none" class="promotion-stock-index-block hide-block">
                             <h4>Период акции</h4>
-                            <div class="stock-castom-period">
+                            <div class="promotion-castom-period">
                                 <input readonly required="" id="stock-type-calendar-period" class="default-color">
                                 <i class="fal fa-calendar-alt"></i>
                             </div>
@@ -936,11 +941,11 @@
                     <div class="promotion-stock-dialog-slide-content">
                         <div  class="promotion-stock-index-block">
                             <h4>Название акции</h4>
-                            <input id="promotion-stock-name" type="text" oninput="StockManger.onGeniralDescriptionChange()" class="default-color general-description-input">
+                            <input id="promotion-stock-name" type="text" oninput="StockManger.onGeniralDescriptionChange()" class="default-color default-style-input">
                         </div>
                         <div class="promotion-stock-index-block">
                             <h4>Подробное описание акции</h4>
-                            <textarea id="promotion-stock-description" oninput="StockManger.onGeniralDescriptionChange()" class="general-description-input"></textarea>
+                            <textarea id="promotion-stock-description" oninput="StockManger.onGeniralDescriptionChange()" class="default-style-input"></textarea>
                         </div>
                     </div>
                     <div class="promotion-stock-dialog-slide-footer">
@@ -971,6 +976,89 @@
                             Назад
                         </button>
                         <button class="simple-text-btn promotion-margrin-row promotion-stock-next" onclick="StockManger.saveStockFromDialog()">
+                            Сохранить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="couponDialog" class="custom-dialog" coupon-id="-1">
+        <div class="custom-dialog-body">
+            <div class="promotion-coupon-dialog-wrapper">
+                <input type="hidden" value="" />
+                <button class="dialog-btn-close" onclick="Dialog.close('#stockDialog')">
+                    <i class="fal fa-times"></i>
+                </button>
+                <div class="promotion-coupon-dialog-slide" id="coupon-slide-1">
+                    <div class="promotion-coupon-dialog-slide-header">Настройка купона</div>
+                    <div class="promotion-coupon-dialog-slide-content">
+                        <div class="promotion-coupon-index-block">
+                            <h4>Название купона</h4>
+                            <input id="promotion-coupon-name" type="text" oninput="CouponManager.onCouponNameChange()" class="default-color default-style-input">
+                        </div>
+                        <div class="promotion-coupon-index-block">
+                            <h4>Длительность купона</h4>
+                            <div class="promotion-castom-period">
+                                <input readonly required="" id="coupon-calendar-period" class="default-color">
+                                <i class="fal fa-calendar-alt"></i>
+                            </div>
+                        </div>
+                        <div class="promotion-coupon-index-block">
+                            <h4>Промокод купона</h4>
+                            <input id="promotion-coupon-code" type="text" oninput="CouponManager.onCouponCodeChange()" class="default-color default-style-input">
+                        </div>
+                    </div>
+                    <div class="promotion-coupon-dialog-slide-footer">
+                        <button disabled class="simple-text-btn promotion-margrin-row promotion-coupon-next" onclick="CouponManager.nextStockSlide('coupon-slide-2', 'coupon-slide-1')">
+                            Далее
+                        </button>
+                    </div>
+                </div>
+                <div class="promotion-coupon-dialog-slide" id="coupon-slide-2">
+                    <div class="promotion-coupon-dialog-slide-header">Вознагрождение</div>
+                    <div class="promotion-coupon-dialog-slide-content">
+                        <div class="promotion-coupon-index-block">
+                            <h4>Тип вознаграждения</h4>
+                            <select id="coupon-type-reward" onchange="CouponManager.onRewardChangeType()">
+                                <option value="0" disabled selected>
+                                    Выберите тип вознагрождения
+                                </option>
+                                <option value="1">Скидка</option>
+                                <option value="2">Блюда</option>
+                            </select>
+                        </div>
+                        <div id="coupon-type-discount-container" style="display:none" class="promotion-coupon-index-block hide-block">
+                            <h4>Настройка скидки</h4>
+                            <div class="coupon-type-discount-setting">
+                                <div class="group">
+                                    <input id="coupon-discount-val" required type="number" min="0" oninput="" />
+                                    <span class="bar"></span>
+                                    <label>Размер скидки</label>
+                                </div>
+                                <select id="coupon-discount-type" onchange="">
+                                    <option value="1">%</option>
+                                    <option value="2">&#8381;</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="coupon-type-products-container" style="display:none" class="promotion-coupon-index-block hide-block">
+                            <h4>Настройки блюд</h4>
+                            <div class="coupon-type-bonus-setting" id="coupon-bonus-products-setting">
+                                <div class="group">
+                                    <input id="coupon-products-count" required value="1" type="number" min="0" oninput="" />
+                                    <span class="bar"></span>
+                                    <label>Количество бонусных блюд</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="promotion-coupon-dialog-slide-footer">
+                        <button class="simple-text-btn promotion-margrin-row promotion-coupon-prev" onclick="CouponManager.prevStockSlide('coupon-slide-1','coupon-slide-2')">
+                            Назад
+                        </button>
+                        <button disabled class="simple-text-btn promotion-margrin-row promotion-coupon-next" onclick="CouponManager.saveCoupone()">
                             Сохранить
                         </button>
                     </div>

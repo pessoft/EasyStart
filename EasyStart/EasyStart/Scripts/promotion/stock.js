@@ -11,18 +11,6 @@ const StockOneTypeSubtype = {
     OneOrder: 2
 }
 
-const RewardType = {
-    Unknown: 0,
-    Discout: 1,
-    Products: 2
-}
-
-const DiscountType = {
-    Unknown: 0,
-    Percent: 1,
-    Ruble: 2
-}
-
 const StockConditionTriggerType = {
     Unknown: 0,
     DeliveryOrder: 1,
@@ -38,7 +26,7 @@ const StockConditionDeliveryType = {
 
 var StockManger = {
     stockList: [],
-    initStockPeriodCalendar: function () {
+    initPeriodCalendar: function () {
         let options = {
             position: "bottom center",
             range: true,
@@ -98,7 +86,7 @@ var StockManger = {
         let template = `
         <div class="empty-list">
             <i class="fal fa-smile-plus"></i>
-            <span>Пока нет ни одной акции</span>
+            <span>Добавте акции</span>
         </div>`;
 
         $("#stock-list").append(template);
@@ -148,7 +136,7 @@ var StockManger = {
         }
 
         Dialog.showModal($stockDialog)
-        $stockDialog.find('select').not('.stock-custom-select').SumoSelect()
+        $stockDialog.find('select').not('.promotion-custom-select').SumoSelect()
     },
     setStockData: function (stockId) {
         const data = this.getStockById(stockId)
@@ -315,19 +303,23 @@ var StockManger = {
                     self.processingLoadStockData(result.Data)
 
                     if (!Number.isNaN(stockIdToRemove) && stockIdToRemove > 0) {
-                        self.replaceStockInList(result.Data, stockIdToRemove);
+                        const index = this.getIndexStockById(stockIdToRemove)
+                        self.stockList[index] = result.Data
+
+                        self.replaceStockInList(result.Data, stockIdToRemove)
+
                     } else {
+                        self.stockList.push(result.Data);
                         self.addStockToList(result.Data);
                     }
-
-                    self.stockList.push(result.Data);
+                    
                     cancelDialog("#stockDialog");
                 } else {
-                    showErrorMessage(result.ErrorMessage);
+                    showErrorMessage(result.ErrorMessage)
                 }
             }
 
-            $.post("/Admin/SaveStock", stock, successCallBack(successFunc, loader));
+            $.post("/Admin/SaveStock", stock, successCallBack(successFunc, loader))
         }
 
         if (files.length == 0) {
@@ -363,7 +355,7 @@ var StockManger = {
     cleanStockDialog: function () {
         this.productsCountConditional = {}
 
-        $('#stockDialog select').not('.stock-custom-select').each(function (i) {
+        $('#stockDialog select').not('.promotion-custom-select').each(function (i) {
             const sumo = $(this)[0].sumo
 
             if (sumo)
@@ -413,7 +405,7 @@ var StockManger = {
     },
     removeStock: function (id) {
         const self = this
-        $(`[stock-id=${id}]`).fadeOut(1000, function () {
+        $(`.stock-item[stock-id=${id}]`).fadeOut(1000, function () {
             $(this).remove();
 
             const stockIndex = self.getIndexStockById(id);
@@ -771,60 +763,4 @@ var StockManger = {
         else
             $("#stock-slide-5 .promotion-stock-next").attr('disabled', true)
     },
-    initListsProducts: function () {
-        const idSelect = 'bonus-product-items'
-        const $contentWrapper = $('#bonus-products-setting')
-        const $select = $contentWrapper.find(`#${idSelect}`)
-
-        if ($select.length > 0 && $select[0].sumo)
-            $select[0].sumo.unload()
-
-        $select.remove()
-
-        const idSelectCondition = 'condition-product-items'
-        const $contentConditionWrapper = $('#stock-condition-products-container')
-        const $selectCondition = $contentConditionWrapper.find(`#${idSelectCondition}`)
-
-        if ($selectCondition.length > 0 && $selectCondition[0].sumo)
-            $selectCondition[0].sumo.unload()
-
-        $selectCondition.remove()
-
-        if (ProductsForPromotion) {
-            const $newSelect = $(`<select id="${idSelect}" onchange="StockManger.onBonusProductsChange()" class="stock-custom-select" multiple placeholder="Выберите блюда"></select>`)
-            const $newSelectConditino = $(`<select id="${idSelectCondition}" onchange="StockManger.onStockConditionProductsChange()" class="stock-custom-select" multiple placeholder="Выберите блюда"></select>`)
-            const selectContent = []
-
-            for (let categoryId in ProductsForPromotion) {
-                const categoryName = CategoryDictionary[categoryId]
-                const products = ProductsForPromotion[categoryId]
-
-                let options = ''
-                for (let product of products) {
-                    options += `<option value='${product.Id}' category-id='${product.CategoryId}'>${product.Name}</option>`
-                }
-                const optgroup = `<optgroup label='${categoryName}'>${options}</optgroup>`
-
-                selectContent.push(optgroup)
-            }
-
-            $newSelect.append(selectContent)
-            $contentWrapper.append($newSelect)
-            $newSelectConditino.append(selectContent)
-            $contentConditionWrapper.append($newSelectConditino)
-
-            const $select = $(`#${idSelect}`)
-            const $selectCondition = $(`#${idSelectCondition}`)
-            const sumoOptions = {
-                search: true,
-                searchText: 'Поиск...',
-                noMatch: 'Нет совпадений для "{0}"',
-                captionFormat: 'Выбрано блюд: {0}',
-                captionFormatAllSelected: 'Выбраны все блюда: {0}'
-            }
-
-            $select.SumoSelect(sumoOptions)
-            $selectCondition.SumoSelect(sumoOptions)
-        }
-    }
 }

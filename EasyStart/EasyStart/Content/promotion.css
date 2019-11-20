@@ -81,7 +81,7 @@
     justify-items: center;
     grid-row-gap: 16px;
     padding: 16px 0px;
-    overflow:auto
+    overflow: auto
 }
 
 #promotion .empty-list {
@@ -106,7 +106,8 @@
         transform: rotate(90deg);
     }
 
-.promotion-stock-dialog-wrapper {
+.promotion-stock-dialog-wrapper,
+.promotion-coupon-dialog-wrapper {
     position: relative;
     width: 310px;
     height: 400px;
@@ -117,7 +118,8 @@
     cursor: default;
 }
 
-.promotion-stock-dialog-slide {
+.promotion-stock-dialog-slide,
+.promotion-coupon-dialog-slide {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 50px 1fr 50px;
@@ -127,7 +129,8 @@
     position: relative;
 }
 
-.promotion-stock-dialog-slide-header {
+.promotion-stock-dialog-slide-header,
+.promotion-coupon-dialog-slide-header {
     display: flex;
     align-items: center;
     font-weight: bold;
@@ -135,14 +138,16 @@
     color: #505050;
 }
 
-.promotion-stock-dialog-slide-content {
+.promotion-stock-dialog-slide-content,
+.promotion-coupon-dialog-slide-content {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
 
-.promotion-stock-dialog-slide-footer {
+.promotion-stock-dialog-slide-footer,
+.promotion-coupon-dialog-slide-footer {
     display: flex;
     justify-content: center;
     align-items: stretch;
@@ -152,7 +157,8 @@
     margin: 0 5px
 }
 
-#stockDialog .SumoSelect {
+#stockDialog .SumoSelect,
+#couponDialog .SumoSelect {
     min-width: 300px;
     min-height: 25px;
     border-color: #c6c6c6;
@@ -160,7 +166,7 @@
     border-radius: 3px;
 }
 
-.stock-castom-period {
+.promotion-castom-period {
     width: 300px;
     min-height: 25px;
     border-radius: 3px;
@@ -173,12 +179,12 @@
     border: 1px solid #A4A4A4;
 }
 
-    .stock-castom-period i {
+    .promotion-castom-period i {
         font-size: 1.1em;
         cursor: pointer;
     }
 
-    .stock-castom-period input {
+    .promotion-castom-period input {
         border: none;
         padding: 0 5px;
         width: auto;
@@ -188,7 +194,9 @@
     }
 
 .stock-type-discount-setting,
-.stock-type-bonus-setting {
+.stock-type-bonus-setting,
+.coupon-type-discount-setting,
+.coupon-type-bonus-setting {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -197,19 +205,25 @@
     margin: 5px
 }
 
-.stock-type-bonus-setting {
+.stock-type-bonus-setting,
+.coupon-type-bonus-setting {
     flex-direction: column;
 }
 
 .stock-type-discount-setting .group,
 #stockDialog .stock-type-discount-setting .group input,
 #stockDialog .stock-type-discount-setting .group .bar,
-#stockDialog .stock-type-discount-setting input:focus ~ .bar:before {
+#stockDialog .stock-type-discount-setting input:focus ~ .bar:before,
+.coupon-type-discount-setting .group,
+#couponDialog .coupon-type-discount-setting .group input,
+#couponDialog .coupon-type-discount-setting .group .bar,
+#couponDialog .coupon-type-discount-setting input:focus ~ .bar:before {
     width: 220px;
 }
 
 
-#stockDialog .stock-type-discount-setting .SumoSelect {
+#stockDialog .stock-type-discount-setting .SumoSelect,
+#couponDialog .coupon-type-discount-setting .SumoSelect {
     min-width: 65px;
     width: 65px;
     margin: 0;
@@ -222,7 +236,14 @@
 #stockDialog .stock-type-bonus-setting input:focus ~ .bar:before,
 #stockDialog #stock-condition-summ-container .group input,
 #stockDialog #stock-condition-summ-container .group .bar,
-#stockDialog #stock-condition-summ-container input:focus ~ .bar:before {
+#stockDialog #stock-condition-summ-container input:focus ~ .bar:before,
+.coupon-type-bonus-setting .group,
+#couponDialog .coupon-type-bonus-setting .group input,
+#couponDialog .coupon-type-bonus-setting .group .bar,
+#couponDialog .coupon-type-bonus-setting input:focus ~ .bar:before,
+#couponDialog #coupon-condition-summ-container .group input,
+#couponDialog #coupon-condition-summ-container .group .bar,
+#couponDialog #coupon-condition-summ-container input:focus ~ .bar:before {
     width: 300px;
 }
 
@@ -233,7 +254,8 @@
     margin: 0;
 }
 
-    #stockDialog .stock-type-bonus-setting .SumoSelect ul {
+    #stockDialog .stock-type-bonus-setting .SumoSelect ul,
+    #couponDialog .coupon-type-bonus-setting .SumoSelect ul {
         overflow-x: hidden;
     }
 
@@ -298,17 +320,17 @@
         background-color: #163f75c9;
     }
 
-.general-description-input {
+.default-style-input {
     border: 1px solid #A4A4A4;
     border-radius: 2px;
-    width: 300px;
+    width: 290px;
     height: 25px;
     padding: 0 5px;
     color: #0f1e328f;
     font-size: 0.8em;
 }
 
-textarea.general-description-input {
+textarea.default-style-input {
     height: 145px;
     padding: 5px;
     font-size: 1em;

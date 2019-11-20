@@ -1390,13 +1390,15 @@ div.take-info-item:nth-child(odd) {
 
 #order .SumoSelect > .CaptionCont > span,
 #history .SumoSelect > .CaptionCont > span,
-#stockDialog .SumoSelect > .CaptionCont > span {
+#stockDialog .SumoSelect > .CaptionCont > span
+#couponDialog .SumoSelect > .CaptionCont > span {
     font-size: 0.85em;
 }
 
 #order .SumoSelect,
 #history .SumoSelect,
-#stockDialog .SumoSelect {
+#stockDialog .SumoSelect
+#couponDialog .SumoSelect {
     width: 90%;
     margin: 5px;
 }
@@ -1404,7 +1406,8 @@ div.take-info-item:nth-child(odd) {
     #order .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
     #history .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
     #addProducDialog .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
-    #stockDialog .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i {
+    #stockDialog .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
+    #couponDialog .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i {
         background-color: #163f75b0;
     }
 
@@ -1462,7 +1465,8 @@ div.take-info-item:nth-child(odd) {
 
 #order .SumoSelect > .CaptionCont,
 #history .SumoSelect > .CaptionCont
-#stockDialog .SumoSelect > .CaptionCont {
+#stockDialog .SumoSelect > .CaptionCont
+#couponDialog .SumoSelect > .CaptionCont {
     min-height: 17px;
     display: flex;
     justify-content: flex-start;
@@ -2222,7 +2226,8 @@ button:disabled, button:disabled:hover {
 }
 
     #addProducDialog .SumoSelect .CaptionCont label,
-    #stockDialog .SumoSelect .CaptionCont label {
+    #stockDialog .SumoSelect .CaptionCont label,
+    #couponDialog .SumoSelect .CaptionCont label {
         color: initial;
         pointer-events: initial;
         left: initial;
@@ -2230,7 +2235,8 @@ button:disabled, button:disabled:hover {
     }
 
     #addProducDialog .SumoSelect .optWrapper label,
-    #stockDialog .SumoSelect .optWrapper label {
+    #stockDialog .SumoSelect .optWrapper label,
+    #couponDialog .SumoSelect .optWrapper label {
         color: initial;
         position: initial;
         pointer-events: initial;
