@@ -66,7 +66,7 @@ function initListsProducts () {
     if (ProductsForPromotion) {
         const $newSelect = $(`<select id="${idSelect}" onchange="StockManger.onBonusProductsChange()" class="promotion-custom-select" multiple placeholder="Выберите блюда"></select>`)
         const $newSelectConditino = $(`<select id="${idSelectCondition}" onchange="StockManger.onStockConditionProductsChange()" class="promotion-custom-select" multiple placeholder="Выберите блюда"></select>`)
-        const $newSelectCoupon = $(`<select id="${idSelectCoupon}" onchange="StockManger.onBonusProductsChange()" class="promotion-custom-select" multiple placeholder="Выберите блюда"></select>`)
+        const $newSelectCoupon = $(`<select id="${idSelectCoupon}" onchange="CouponManager.onBonusProductsChange()" class="promotion-custom-select" multiple placeholder="Выберите блюда"></select>`)
         const selectContent = []
 
         for (let categoryId in ProductsForPromotion) {

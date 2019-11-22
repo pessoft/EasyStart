@@ -84,6 +84,12 @@
     overflow: auto
 }
 
+.promotion-coupon-list-container {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 60px;
+    padding: 12px 10px;
+}
+
 #promotion .empty-list {
     font-size: 1.5em;
 }
@@ -118,16 +124,20 @@
     cursor: default;
 }
 
-.promotion-stock-dialog-slide,
-.promotion-coupon-dialog-slide {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 50px 1fr 50px;
-    grid-row-gap: 10px;
-    width: 300px;
-    height: 400px;
-    position: relative;
+.promotion-coupon-dialog-wrapper {
+    height: 410px;
 }
+
+    .promotion-stock-dialog-slide,
+    .promotion-coupon-dialog-slide {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 50px 1fr 50px;
+        grid-row-gap: 10px;
+        width: 300px;
+        height: 400px;
+        position: relative;
+    }
 
 .promotion-stock-dialog-slide-header,
 .promotion-coupon-dialog-slide-header {
@@ -340,3 +350,59 @@ textarea.default-style-input {
     width: 300px;
     height: 130px;
 }
+
+.flex-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.fwrapper-btn-center {
+    align-self: center;
+}
+
+.coupon-item {
+    display: grid;
+    grid-template-columns: 60px 1fr 210px 140px 150px 100px;
+    grid-template-rows: 60px;
+    align-items: center;
+    justify-items: center;
+    width: 100%;
+    background-color: #ffffff;
+    color: #163f75cf;
+    box-shadow: 0px 0px 5px 0px #0f1e322b;
+    border-radius: 3px;
+}
+
+.coupon-item-menu {
+  display:flex;
+  align-items:center;
+}
+
+.coupon-item-icon {
+    font-size: 1.35em;
+}
+
+.coupon-item div {
+    width: 90%;
+    height: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-right: 1px solid #bdbdbd35;
+    padding: 0 5%
+}
+
+.coupon-item div:last-child {
+    border-right: none;
+}
+
+.coupon-item-name {
+    overflow: hidden;
+}
+
+    .coupon-item-name span {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        width: 100%;
+        overflow: hidden;
+    }

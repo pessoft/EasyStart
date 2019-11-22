@@ -229,10 +229,21 @@
                                     Добавить купон
                                 </button>
                             </div>
-                            <div class="promotion-some-settings-content">
-                                <div class="empty-list">
-                                    <i class="fal fa-smile-plus"></i>
-                                    <span>Добавте купоны</span>
+                            <div id="coupon-list"  class="promotion-some-settings-content promotion-coupon-list-container">
+                                @*<div class="empty-list">
+            <i class="fal fa-smile-plus"></i>
+            <span>Добавте купоны</span>
+        </div>*@
+                                <div class="coupon-item">
+                                    <div class="coupon-item-icon"><i class="fal fa-gift-card"></i></div>
+                                    <div class="coupon-item-name"><span>Новогодний подарок sid8yf h098yu89wy fkdjhfk jsd</span></div>
+                                    <div>22.11.2019 - 29.11.2019</div>
+                                    <div>1k8z2c</div>
+                                    <div>100/1000</div>
+                                    <div class="coupon-item-menu">
+                                        <button class="area-delivery-settings-btn edit-btn"><i class="fal fa-edit"></i></button>
+                                        <button class="area-delivery-settings-btn remove-btn"><i class="fal fa-trash-alt"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -988,7 +999,7 @@
         <div class="custom-dialog-body">
             <div class="promotion-coupon-dialog-wrapper">
                 <input type="hidden" value="" />
-                <button class="dialog-btn-close" onclick="Dialog.close('#stockDialog')">
+                <button class="dialog-btn-close" onclick="Dialog.close('#couponDialog')">
                     <i class="fal fa-times"></i>
                 </button>
                 <div class="promotion-coupon-dialog-slide" id="coupon-slide-1">
@@ -1005,9 +1016,16 @@
                                 <i class="fal fa-calendar-alt"></i>
                             </div>
                         </div>
-                        <div class="promotion-coupon-index-block">
+                        <div class="promotion-coupon-index-block flex-wrapper">
                             <h4>Промокод купона</h4>
-                            <input id="promotion-coupon-code" type="text" oninput="CouponManager.onCouponCodeChange()" class="default-color default-style-input">
+                            <input id="promotion-coupon-promocode" type="text" oninput="CouponManager.onCouponCodeChange()" class="default-color default-style-input">
+                            <button class="simple-text-btn fwrapper-btn-center " onclick="CouponManager.generatePromocode()">
+                                cгенерировать промокод
+                            </button>
+                        </div>
+                        <div class="promotion-coupon-index-block">
+                            <h4>Количество купонов купона</h4>
+                            <input id="promotion-coupon-count" value="1" type="number" min="1" max="10000" oninput="CouponManager.onCouponCountChange()" class="default-color default-style-input">
                         </div>
                     </div>
                     <div class="promotion-coupon-dialog-slide-footer">
@@ -1033,7 +1051,7 @@
                             <h4>Настройка скидки</h4>
                             <div class="coupon-type-discount-setting">
                                 <div class="group">
-                                    <input id="coupon-discount-val" required type="number" min="0" oninput="" />
+                                    <input id="coupon-discount-val" required type="number" min="0" oninput="CouponManager.onDicountChange()" />
                                     <span class="bar"></span>
                                     <label>Размер скидки</label>
                                 </div>
@@ -1047,7 +1065,7 @@
                             <h4>Настройки блюд</h4>
                             <div class="coupon-type-bonus-setting" id="coupon-bonus-products-setting">
                                 <div class="group">
-                                    <input id="coupon-products-count" required value="1" type="number" min="0" oninput="" />
+                                    <input id="coupon-products-count" required value="1" type="number" min="0" oninput="CouponManager.onAllowedBonusCountChange()" />
                                     <span class="bar"></span>
                                     <label>Количество бонусных блюд</label>
                                 </div>
@@ -1058,7 +1076,7 @@
                         <button class="simple-text-btn promotion-margrin-row promotion-coupon-prev" onclick="CouponManager.prevStockSlide('coupon-slide-1','coupon-slide-2')">
                             Назад
                         </button>
-                        <button disabled class="simple-text-btn promotion-margrin-row promotion-coupon-next" onclick="CouponManager.saveCoupone()">
+                        <button disabled class="simple-text-btn promotion-margrin-row promotion-coupon-next" onclick="CouponManager.saveCoupon()">
                             Сохранить
                         </button>
                     </div>

@@ -20,5 +20,6 @@ namespace EasyStart.Models
         public DbSet<Client> Clients { get; set; }
         public DbSet<UseModel> Uses { get; set; }
         public DbSet<RatingProduct> RatingProducts { get; set; }
+        public DbSet<CouponModel> Coupons { get; set; }
     }
 }

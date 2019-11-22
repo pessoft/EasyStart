@@ -780,5 +780,76 @@ namespace EasyStart.Controllers
 
             return Json(result);
         }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult LoadCoupons()
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var coupons = DataWrapper.GetCoupons(branchId);
+
+                result.Data = coupons;
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult SaveCoupon(CouponModel newCoupon)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                newCoupon.BranchId = branchId;
+                newCoupon.IsDeleted = false;
+
+                var coupon = DataWrapper.SaveCoupon(newCoupon);
+
+                result.Data = coupon;
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult RemoveCoupon(int id)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                var success = DataWrapper.RemoveCoupon(id);
+
+                result.Data = success;
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
+        }
     }
 }

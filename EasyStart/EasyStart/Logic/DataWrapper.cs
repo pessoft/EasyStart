@@ -1436,5 +1436,76 @@ namespace EasyStart.Logic
                 Logger.Log.Error(ex);
             }
         }
+
+        public static List<CouponModel> GetCoupons(int branchId)
+        {
+            var coupons = new List<CouponModel>();
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    coupons = db.Coupons
+                        .Where(p => !p.IsDeleted && p.BranchId == branchId)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return coupons;
+        }
+
+        public static CouponModel SaveCoupon(CouponModel newCoupon)
+        {
+            CouponModel result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    if (newCoupon.Id > 0)
+                    {
+                        RemoveCoupon(newCoupon.Id);
+                    }
+
+                    result = db.Coupons.Add(newCoupon);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
+        public static bool RemoveCoupon(int id)
+        {
+            var success = false;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var oldCoupon = db.Coupons.FirstOrDefault(p => p.Id == id);
+
+                    if (oldCoupon != null)
+                    {
+                        oldCoupon.IsDeleted = true;
+                        db.SaveChanges();
+                    }
+
+                    success = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return success;
+        }
     }
 }
