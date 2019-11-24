@@ -23,7 +23,9 @@
     color: #163f75cf;
     box-shadow: 0px 0px 5px 0px #163f7569;
     margin: 5px;
-    position:relative;
+    position: relative;
+    background-color: #fff;
+    border-radius: 2px;
 }
 
 .chart-container {

@@ -83,7 +83,7 @@
                 self.processingLoadCouponData(result.Data)
 
                 if (!Number.isNaN(couponIdToRemove) && couponIdToRemove > 0) {
-                    const index = this.getIndexCouponById(couponIdToRemove)
+                    const index = self.getIndexCouponById(couponIdToRemove)
                     self.coupons[index] = result.Data
 
                     self.replaceModifiedCoupon(result.Data, couponIdToRemove)

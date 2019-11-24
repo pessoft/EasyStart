@@ -303,7 +303,7 @@ var StockManger = {
                     self.processingLoadStockData(result.Data)
 
                     if (!Number.isNaN(stockIdToRemove) && stockIdToRemove > 0) {
-                        const index = this.getIndexStockById(stockIdToRemove)
+                        const index = self.getIndexStockById(stockIdToRemove)
                         self.stockList[index] = result.Data
 
                         self.replaceStockInList(result.Data, stockIdToRemove)

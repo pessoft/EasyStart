@@ -270,10 +270,14 @@ dialog,
     flex-direction: column;
 }
 
-#setting,
-#delivery {
+#setting {
     padding-top: 3%;
     height: 93%;
+}
+
+#delivery {
+    padding-top: 15px;
+    height: 95%;
 }
 
     #setting .bar,
@@ -420,6 +424,7 @@ label[for=free-delivery] {
     margin: 0 auto;
     margin-bottom: 12px;
     position: relative;
+    background-color: #fff;
 }
 
 .branch-item-info {
@@ -480,6 +485,7 @@ label[for=free-delivery] {
     box-shadow: 0px 0px 5px 0px #0f1e322b;
     color: #163f75cf;
     cursor: default;
+    background-color: #fff;
 }
 
     .category-item.gu-mirror {
@@ -619,9 +625,10 @@ ul.options::-webkit-scrollbar-thumb,
     }
 
 .select-category {
-    background-color: #163f740d;
+    background-color: #0f1e32;
+    color: #f3f3f3;
+    transition: 300ms ease-in;
 }
-
 
 .product-list {
     position: relative;
@@ -649,6 +656,7 @@ ul.options::-webkit-scrollbar-thumb,
     box-shadow: 0px 0px 5px 0px #0f1e322b;
     color: #163f75cf;
     cursor: default;
+    background-color: #fff;
 }
 
 .product-item-header {
@@ -2259,7 +2267,7 @@ button:disabled, button:disabled:hover {
 .section-grid-wrapper {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 60px 1fr;
+    grid-template-rows: 1fr;
     width: 1024px;
     margin: 0 auto;
     padding: 40px 0 0 0;
