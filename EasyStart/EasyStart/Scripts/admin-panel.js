@@ -262,6 +262,7 @@ function postChangedPage(page) {
     switch (page) {
         case Pages.Promotion:
             StockManger.loadStockList();
+            CouponManager.loadCoupons();
             break
         case Pages.Analytics: {
             loadAnalyticsReport();

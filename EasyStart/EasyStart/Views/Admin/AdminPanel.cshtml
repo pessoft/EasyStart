@@ -225,21 +225,10 @@
                                     Добавить купон
                                 </button>
                             </div>
-                            <div id="coupon-list"  class="promotion-some-settings-content promotion-coupon-list-container">
-                                @*<div class="empty-list">
-            <i class="fal fa-smile-plus"></i>
-            <span>Добавте купоны</span>
-        </div>*@
-                                <div class="coupon-item">
-                                    <div class="coupon-item-icon"><i class="fal fa-gift-card"></i></div>
-                                    <div class="coupon-item-name"><span>Новогодний подарок sid8yf h098yu89wy fkdjhfk jsd</span></div>
-                                    <div>22.11.2019 - 29.11.2019</div>
-                                    <div>1k8z2c</div>
-                                    <div>100/1000</div>
-                                    <div class="coupon-item-menu">
-                                        <button class="area-delivery-settings-btn edit-btn"><i class="fal fa-edit"></i></button>
-                                        <button class="area-delivery-settings-btn remove-btn"><i class="fal fa-trash-alt"></i></button>
-                                    </div>
+                            <div id="coupon-list" class="promotion-some-settings-content promotion-coupon-list-container">
+                                <div class="empty-list">
+                                    <i class="fal fa-smile-plus"></i>
+                                    <span>Добавте купоны</span>
                                 </div>
                             </div>
                         </div>
@@ -489,7 +478,7 @@
             </div>
         </form>
     </dialog>
-    
+
     <dialog id="addProducDialog">
         <form onsubmit="operationProduct(); return false;" autocomplete="off">
             <div class="dialog-container">
@@ -946,7 +935,7 @@
                 <div class="promotion-stock-dialog-slide" id="stock-slide-4" style="display:none">
                     <div class="promotion-stock-dialog-slide-header">Описание акции</div>
                     <div class="promotion-stock-dialog-slide-content">
-                        <div  class="promotion-stock-index-block">
+                        <div class="promotion-stock-index-block">
                             <h4>Название акции</h4>
                             <input id="promotion-stock-name" type="text" oninput="StockManger.onGeniralDescriptionChange()" class="default-color default-style-input">
                         </div>
@@ -970,7 +959,7 @@
                         <div class="add-image-product">
                             <input type="file" id="add-stock-image" accept="image/*" class="hide">
                             <div class="preview-image promotion-stock-preview-image " onclick="openDialogFile('add-stock-image')">
-                                <img  alt="your image" class="hide" onload="StockManger.toggleSave(this)">
+                                <img alt="your image" class="hide" onload="StockManger.toggleSave(this)">
                                 <div class="dialog-image-upload">
                                     <i class="fal fa-upload"></i>
                                     Загрузите изображение
@@ -990,7 +979,7 @@
             </div>
         </div>
     </div>
-    
+
     <div id="couponDialog" class="custom-dialog" coupon-id="-1">
         <div class="custom-dialog-body">
             <div class="promotion-coupon-dialog-wrapper">
@@ -1183,6 +1172,19 @@
         </div>
     </template>
 
+    <template id="coupon-item-template">
+        <div class="coupon-item">
+            <div class="coupon-item-icon"><i class="fal fa-gift-card"></i></div>
+            <div class="coupon-item-name"><span></span></div>
+            <div class="coupon-item-period"></div>
+            <div class="coupon-item-promocode"></div>
+            <div class="coupon-item-count"></div>
+            <div class="coupon-item-menu">
+                <button class="area-delivery-settings-btn edit-btn"><i class="fal fa-edit"></i></button>
+                <button class="area-delivery-settings-btn remove-btn"><i class="fal fa-trash-alt"></i></button>
+            </div>
+        </div>
+    </template>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/signalr")

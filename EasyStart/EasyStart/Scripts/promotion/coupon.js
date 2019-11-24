@@ -3,7 +3,7 @@
     loadCoupons: function () {
         const self = this
 
-        this.cleanCouponDialog();
+        this.clearCouponList();
 
         if (this.coupons &&
             this.coupons.length > 0) {
@@ -32,27 +32,50 @@
         }
     },
     processingLoadCouponData: function (data) {
-        data.FromDate = jsonToDate(data.FromDate)
-        data.ToDate = jsonToDate(data.ToDate)
+        data.DateFrom = jsonToDate(data.DateFrom)
+        data.DateTo = jsonToDate(data.DateTo)
     },
     addAllItemCoupons: function (data) {
+        const coupons = []
         for (let coupon of data) {
-            this.addCouponToList(coupon);
+            const $coupon = this.getRowCouponTemplate(coupon)
+            coupons.push($coupon)
         }
+
+        this.addCouponToContainer(coupons)
+    },
+    addCouponToContainer: function (items) {
+        $("#coupon-list").append(items);
     },
     addCouponToList: function (data) {
         let $template = this.getRowCouponTemplate(data)
-
-        $("#coupon-list").append($template);
+        this.addCouponToContainer($template)
     },
     getRowCouponTemplate: function (data) {
+        const $template = $($("#coupon-item-template").html())
 
+        $template.attr('coupon-id', data.Id)
+
+        $template.find('.coupon-item-name span').html(data.Name)
+        $template.find('.coupon-item-period').html(`${data.DateFrom.toLocaleDateString()} - ${data.DateTo.toLocaleDateString()}`)
+        $template.find('.coupon-item-promocode').html(data.Promocode)
+        $template.find('.coupon-item-count').html(`${data.CountUsed}/${data.Count}`)
+
+        $template.find('.edit-btn').bind('click', () => CouponManager.editCoupon(data.Id))
+        $template.find('.remove-btn').bind('click', () => CouponManager.removeCoupon(data.Id))
+
+        return $template
     },
     addNewCoupon: function () {
         this.cleanCouponDialog()
         this.showCouponDialog()
     },
     saveCoupon: function () {
+        let loader = new Loader($("#couponDialog .custom-dialog-body"));
+        const self = this
+
+        loader.start();
+
         const getAllowedBounusProductsJSON = () => {
             const prodictIds = []
             $('#coupon-bonus-products-items option:selected').each(function () {
@@ -62,8 +85,18 @@
             return JSON.stringify(prodictIds)
         }
 
+        const getIntValue = str => {
+            let value = parseInt(str)
+
+            if (Number.isNaN(value))
+                value = 0
+
+            return value
+        }
+
         const couponIdToRemove = parseInt($('#couponDialog').attr('coupon-id'))
         let coupon = {
+            id: couponIdToRemove,
             name: $('#promotion-coupon-name').val(),
             dateFrom: $("#coupon-calendar-period").data("datepicker").selectedDates[0].toJSON(),
             dateTo: $("#coupon-calendar-period").data("datepicker").selectedDates[1].toJSON(),
@@ -71,7 +104,7 @@
             count: parseInt($('#promotion-coupon-count').val()),
             rewardType: parseInt($('#coupon-type-reward option:selected').val()),
             discountValue: getIntValue($('#coupon-discount-val').val()),
-            dicountType: parseInt($('#coupon-type option:selected').val()),
+            discountType: parseInt($('#coupon-discount-type option:selected').val()),
             countBounusProducts: parseInt($('#coupon-products-count').val()),
             allowedBounusProductsJSON: getAllowedBounusProductsJSON(),
         }
@@ -81,7 +114,7 @@
             if (result.Success) {
                 $("#coupon-list .empty-list").remove();
                 self.processingLoadCouponData(result.Data)
-
+                     
                 if (!Number.isNaN(couponIdToRemove) && couponIdToRemove > 0) {
                     const index = self.getIndexCouponById(couponIdToRemove)
                     self.coupons[index] = result.Data
@@ -89,6 +122,9 @@
                     self.replaceModifiedCoupon(result.Data, couponIdToRemove)
 
                 } else {
+                    if (self.coupons.length == 0)
+                        self.clearCouponList()
+
                     self.coupons.push(result.Data);
                     self.addCouponToList(result.Data);
                 }
@@ -118,6 +154,9 @@
 
             const couponIndex = self.getIndexCouponById(id);
             self.coupons.splice(couponIndex, 1);
+
+            if (self.coupons.length == 0)
+                self.setEmptyCouponInfo()
         });
 
         $.post("/Admin/RemoveCoupon", { id: id }, null);
@@ -174,21 +213,11 @@
         if (!data)
             return
 
-        this.setGeneralData(data)
-        this.setRewardData(data)
+        $('#couponDialog').attr('coupon-id', id)
+        $(".promotion-coupon-next").removeAttr('disabled')
 
-        let coupon = {
-            name: $('#promotion-coupon-name').val(),
-            dateFrom: $("#coupon-calendar-period").data("datepicker").selectedDates[0].toJSON(),
-            dateTo: $("#coupon-calendar-period").data("datepicker").selectedDates[1].toJSON(),
-            promocode: $('#promotion-coupon-promocode').val(),
-            count: parseInt($('#promotion-coupon-count').val()),
-            rewardType: parseInt($('#coupon-type-reward option:selected').val()),
-            discountValue: getIntValue($('#coupon-discount-val').val()),
-            dicountType: parseInt($('#coupon-type option:selected').val()),
-            countBounusProducts: parseInt($('#coupon-products-count').val()),
-            allowedBounusProductsJSON: getAllowedBounusProductsJSON(),
-        }
+        this.setGeneralSettingData(data)
+        this.setRewardSettingData(data)
     },
     setGeneralSettingData: function (data) {
         $('#promotion-coupon-name').val(data.Name)

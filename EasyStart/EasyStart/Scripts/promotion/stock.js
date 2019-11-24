@@ -309,6 +309,9 @@ var StockManger = {
                         self.replaceStockInList(result.Data, stockIdToRemove)
 
                     } else {
+                        if (self.stockList.length == 0)
+                            self.clearStockList()
+
                         self.stockList.push(result.Data);
                         self.addStockToList(result.Data);
                     }
@@ -410,6 +413,9 @@ var StockManger = {
 
             const stockIndex = self.getIndexStockById(id);
             self.stockList.splice(stockIndex, 1);
+
+            if (self.stockList.length == 0)
+                self.setEmptyStockInfo()
         });
 
         $.post("/Admin/RemoveStock", { id: id }, null);
