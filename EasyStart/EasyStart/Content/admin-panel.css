@@ -486,6 +486,7 @@ label[for=free-delivery] {
     color: #163f75cf;
     cursor: default;
     background-color: #fff;
+    transition: 120ms ease-in;
 }
 
     .category-item.gu-mirror {
@@ -627,7 +628,6 @@ ul.options::-webkit-scrollbar-thumb,
 .select-category {
     background-color: #0f1e32;
     color: #f3f3f3;
-    transition: 300ms ease-in;
 }
 
 .product-list {
@@ -657,6 +657,7 @@ ul.options::-webkit-scrollbar-thumb,
     color: #163f75cf;
     cursor: default;
     background-color: #fff;
+    transition: 120ms ease-in;
 }
 
 .product-item-header {
