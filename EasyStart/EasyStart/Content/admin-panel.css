@@ -897,13 +897,17 @@ div.product-item:hover {
     flex-direction: row;
 }
 
-.period-work {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+.checkbox-item-left {
+    justify-content:flex-start;
 }
+
+    .period-work {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
 
 .delivery-menu {
     margin-top: 2%;
@@ -2334,4 +2338,8 @@ h4 {
 input,
 button {
     outline-color: #d0d0d0;
+}
+
+.row {
+    display: flex;
 }

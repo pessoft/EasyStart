@@ -413,3 +413,61 @@ textarea.default-style-input {
         width: 100%;
         overflow: hidden;
     }
+
+.pormotion-cashback-partners {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 230px 230px;
+    padding: 1% 2%;
+}
+
+.cashback-partners-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+#pormotion-cashback-partners .checkbox-item {
+    margin-bottom: 15px;
+}
+
+#pormotion-cashback-partners .checkbox-item label {
+    position: relative;
+    pointer-events: all;
+    top: 0px;
+    font-size: 0.9em;
+}
+#pormotion-cashback-partners .checkbox-item input[type=checkbox] {
+    width: 16px;
+    height: 16px;
+    margin-left: 0;
+}
+
+#pormotion-cashback-partners .row .group:first-child{
+    margin-right: 30px;
+}
+
+.cashback-partners-item {
+    display: flex;
+    flex-direction: column;
+    padding: 5px 20px
+}
+
+#pormotion-cashback-partners .group input,
+#pormotion-cashback-partners .group .bar,
+#pormotion-cashback-partners .group input:focus ~ .bar:before {
+    width: 185px;
+}
+
+.cashback-partners-item-footer {
+    margin-top: 20px;
+    display:flex;
+    justify-content:center;
+}
+
+.cashback-partners-type {
+    width: 190px;
+    height: 30px;
+    margin: 10px 0;
+}

@@ -199,8 +199,7 @@
                         <ul>
                             <li target-id="pormotion-stock" class="promotion-menu-active"><i class="fal fa-badge-percent"></i> Акции</li>
                             <li target-id="pormotion-coupons"><i class="fal fa-gift-card"></i> Купоны</li>
-                            <li target-id="pormotion-cashback"><i class="fal fa-hands-usd"></i> Кешбек</li>
-                            <li target-id="pormotion-partners"><i class="fal fa-handshake"></i> Партнерская программа</li>
+                            <li target-id="pormotion-cashback-partners"><i class="fal fa-hands-usd"></i> Кешбек и Партнерская программа</li>
                         </ul>
                     </div>
                     <div class="promotion-content-wrapper">
@@ -232,8 +231,59 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="pormotion-cashback" class="promotion-content promotion-setting hide"></div>
-                        <div id="pormotion-partners" class="promotion-content promotion-setting hide"></div>
+                        <div id="pormotion-cashback-partners" class="pormotion-cashback-partners promotion-content promotion-setting hide">
+                            <div class="cashback-partners-content">
+                                <h2>Кешбек</h2>
+                                <div class="cashback-partners-item">
+                                    <div class="checkbox-item checkbox-item-left">
+                                        <input id="toggle-cashback-bonus" type="checkbox" />
+                                        <label for="toggle-cashback-bonus">Использовать кешбек</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="group">
+                                            <input required disabled type="number" min="0" max="100" autocomplete="off" id="cashback-bonus-return" value="10" />
+                                            <span class="bar"></span>
+                                            <label>Возвращаемый процент</label>
+                                        </div>
+                                        <div class="group">
+                                            <input required disabled type="number" min="0" max="100" autocomplete="off" id="cashback-bonus-return" value="40" />
+                                            <span class="bar"></span>
+                                            <label>Оплата кешбеком до (%)</label>
+                                        </div>
+                                    </div>
+                                    <div class="cashback-partners-item-footer">
+                                        <button class="btn btn-submit" onclick="">Сохранить</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="cashback-partners-content">
+                                <h2>Партнерская программа</h2>
+                                <div class="cashback-partners-item">
+                                    <div class="checkbox-item checkbox-item-left">
+                                        <input id="toggle-cashback-bonus" type="checkbox" />
+                                        <label for="toggle-partners-bonus">Использовать партнёрскую программу</label>
+                                    </div>
+                                    <div class="group">
+                                        <input required disabled type="number" min="0" max="100" autocomplete="off" id="partner-cashback-bonus" value="10" />
+                                        <span class="bar"></span>
+                                        <label>Кешбек с заказа реферала (%)</label>
+                                    </div>
+                                    <select class="cashback-partners-type" disabled>
+                                        <option value="1">Единоразовая скидка в %</option>
+                                        <option value="2">Единорозовый бунус в руб.</option>
+                                    </select>
+                                    <div class="group">
+                                        <input disabled required type="number" min="0" autocomplete="off" id="cashback-bonus-return" value="30" />
+                                        <span class="bar"></span>
+                                        <label>Размер бонуса</label>
+                                    </div>
+                                    <div class="cashback-partners-item-footer">
+                                        <button class="btn btn-submit" onclick="">Сохранить</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
