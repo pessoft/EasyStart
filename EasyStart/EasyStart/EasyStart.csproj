@@ -558,6 +558,7 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\notify.js" />
     <Content Include="Scripts\odometer\odometer.js" />
+    <Content Include="Scripts\promotion\cashback-partners.js" />
     <Content Include="Scripts\promotion\coupon.js" />
     <Content Include="Scripts\promotion\promotion.js" />
     <Content Include="Scripts\promotion\stock.js" />

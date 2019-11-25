@@ -232,54 +232,56 @@
                             </div>
                         </div>
                         <div id="pormotion-cashback-partners" class="pormotion-cashback-partners promotion-content promotion-setting hide">
-                            <div class="cashback-partners-content">
+                            <div class="cashback-partners-content" id="promotion-cashback-bonus">
                                 <h2>Кешбек</h2>
                                 <div class="cashback-partners-item">
                                     <div class="checkbox-item checkbox-item-left">
-                                        <input id="toggle-cashback-bonus" type="checkbox" />
+                                        <input id="toggle-cashback-bonus" type="checkbox" onchange="CashbackPartners.toggleCashbackBonus()" />
                                         <label for="toggle-cashback-bonus">Использовать кешбек</label>
                                     </div>
                                     <div class="row">
                                         <div class="group">
-                                            <input required disabled type="number" min="0" max="100" autocomplete="off" id="cashback-bonus-return" value="10" />
+                                            <input required disabled type="number" min="0" max="100" oninput="CashbackPartners.onChangeCashbackBonusPersentValue()" autocomplete="off" id="cashback-bonus-return" value="10" />
                                             <span class="bar"></span>
                                             <label>Возвращаемый процент</label>
                                         </div>
                                         <div class="group">
-                                            <input required disabled type="number" min="0" max="100" autocomplete="off" id="cashback-bonus-return" value="40" />
+                                            <input required disabled type="number" min="0" max="100" oninput="CashbackPartners.onChangeCashbackBonusPersentValue()" autocomplete="off" id="payment-cashback-bonus" value="40" />
                                             <span class="bar"></span>
                                             <label>Оплата кешбеком до (%)</label>
                                         </div>
                                     </div>
                                     <div class="cashback-partners-item-footer">
-                                        <button class="btn btn-submit" onclick="">Сохранить</button>
+                                        <button id="save-cashback-bonus-setting" class="btn btn-submit" onclick="">Сохранить</button>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="cashback-partners-content">
+                            <div class="cashback-partners-content" id="promotion-partners">
                                 <h2>Партнерская программа</h2>
                                 <div class="cashback-partners-item">
                                     <div class="checkbox-item checkbox-item-left">
-                                        <input id="toggle-cashback-bonus" type="checkbox" />
-                                        <label for="toggle-partners-bonus">Использовать партнёрскую программу</label>
+                                        <input id="toggle-partners" type="checkbox" onchange="CashbackPartners.togglePartners()" />
+                                        <label for="toggle-partners">Использовать партнёрскую программу</label>
                                     </div>
                                     <div class="group">
-                                        <input required disabled type="number" min="0" max="100" autocomplete="off" id="partner-cashback-bonus" value="10" />
+                                        <input required disabled type="number" min="0" max="100" autocomplete="off" oninput="CashbackPartners.onChangePaymentCashbackBonusValue()" id="partner-cashback-bonus" value="10" />
                                         <span class="bar"></span>
                                         <label>Кешбек с заказа реферала (%)</label>
                                     </div>
-                                    <select class="cashback-partners-type" disabled>
-                                        <option value="1">Единоразовая скидка в %</option>
-                                        <option value="2">Единорозовый бунус в руб.</option>
-                                    </select>
-                                    <div class="group">
-                                        <input disabled required type="number" min="0" autocomplete="off" id="cashback-bonus-return" value="30" />
-                                        <span class="bar"></span>
-                                        <label>Размер бонуса</label>
+                                    <div class="row">
+                                        <select id="partner-cashback-type" class="cashback-partners-type" disabled onchange="CashbackPartners.onChangePaymentCashbackBonusValue()">
+                                            <option value="1">Единоразовая скидка в %</option>
+                                            <option value="2">Единорозовый бунус в руб.</option>
+                                        </select>
+                                        <div class="group">
+                                            <input disabled required type="number" min="0" autocomplete="off" oninput="CashbackPartners.onChangePaymentCashbackBonusValue()" id="partner-cashback-bonus-return" value="30" />
+                                            <span class="bar"></span>
+                                            <label>Размер бонуса</label>
+                                        </div>
                                     </div>
                                     <div class="cashback-partners-item-footer">
-                                        <button class="btn btn-submit" onclick="">Сохранить</button>
+                                        <button id="save-partner-setting" class="btn btn-submit" onclick="">Сохранить</button>
                                     </div>
                                 </div>
                             </div>
@@ -640,6 +642,16 @@
         <div class="dialog-menu">
             <button class="btn btn-submit">Да</button>
             <button class="btn btn-cancel" onclick="cancelDialog($('#deleteConfirmationDialog'))">Нет</button>
+        </div>
+    </dialog>
+
+    <dialog id="infoConfirmationDialog">
+        <div class="confirmation-info">
+            <i class="fal fa-info-circle"></i>
+            <span class="info-message"></span>
+        </div>
+        <div class="dialog-menu">
+            <button class="btn btn-submit" onclick="cancelDialog($('#infoConfirmationDialog'))">OK</button>
         </div>
     </dialog>
 

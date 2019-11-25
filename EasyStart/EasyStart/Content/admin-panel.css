@@ -1084,12 +1084,14 @@ div.product-item:hover {
         margin-right: 10px
     }
 
-#deleteConfirmationDialog {
+#deleteConfirmationDialog,
+#infoConfirmationDialog {
     padding: 20px;
 }
 
     #deleteConfirmationDialog .dialog-menu,
-    #productUserCallbackDialog .dialog-menu {
+    #productUserCallbackDialog .dialog-menu,
+    #infoConfirmationDialog .dialog-menu {
         justify-content: flex-end;
     }
 
@@ -2064,6 +2066,7 @@ button.order-details-menu-item i {
 button:disabled, button:disabled:hover {
     color: #adadad;
     cursor: not-allowed;
+    background: gray !important;
 }
 
 .order-details-comment {

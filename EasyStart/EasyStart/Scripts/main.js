@@ -114,3 +114,12 @@ function getCategoryIdByProductIdForPromotion(productId) {
             return products[0].CategoryId
     }
 }
+
+function showInfoConfirm(message) {
+    const $dialog = $('#infoConfirmationDialog')
+
+    if (message) {
+        $dialog.find('.info-message').html(message)
+        Dialog.showModal($dialog);
+    }
+}

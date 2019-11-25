@@ -444,8 +444,8 @@ textarea.default-style-input {
     margin-left: 0;
 }
 
-#pormotion-cashback-partners .row .group:first-child{
-    margin-right: 30px;
+#pormotion-cashback-partners .row .group:last-child{
+    margin-left: 30px;
 }
 
 .cashback-partners-item {
