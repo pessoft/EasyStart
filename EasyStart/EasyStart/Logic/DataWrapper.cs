@@ -1507,5 +1507,117 @@ namespace EasyStart.Logic
 
             return success;
         }
+
+        public static PromotionCashbackSetting GetPromotionCashbackSetting(int branchId)
+        {
+            PromotionCashbackSetting result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.PromotionCashbackSettings.FirstOrDefault(p => p.BranchId == branchId);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
+
+        public static PromotionPartnerSetting GetPromotionPartnerSetting(int branchId)
+        {
+            PromotionPartnerSetting result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.PromotionPartnerSettings.FirstOrDefault(p => p.BranchId == branchId);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
+        public static PromotionCashbackSetting SavePromotionCashbackSetting(PromotionCashbackSetting setting)
+        {
+            PromotionCashbackSetting result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    if (setting.Id > 0)
+                    {
+                        var oldSetting = db.PromotionCashbackSettings.FirstOrDefault(p => p.Id == setting.Id);
+
+                        if (oldSetting != null)
+                        {
+                            oldSetting.IsUseCaschback = setting.IsUseCaschback;
+                            oldSetting.PaymentValue = setting.PaymentValue;
+                            oldSetting.ReturnedValue = setting.ReturnedValue;
+                            oldSetting.DateSave = setting.DateSave;
+
+                            result = oldSetting;
+                        }
+                    }
+                    else
+                    {
+                        result = db.PromotionCashbackSettings.Add(setting);
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
+        public static PromotionPartnerSetting SavePromotionPartnerSetting(PromotionPartnerSetting setting)
+        {
+            PromotionPartnerSetting result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    if (setting.Id > 0)
+                    {
+                        var oldSetting = db.PromotionPartnerSettings.FirstOrDefault(p => p.Id == setting.Id);
+
+                        if (oldSetting != null)
+                        {
+                            oldSetting.IsUsePartners = setting.IsUsePartners;
+                            oldSetting.CashBackReferalValue = setting.CashBackReferalValue;
+                            oldSetting.TypeBonusValue = setting.TypeBonusValue;
+                            oldSetting.BonusValue = setting.BonusValue;
+                            oldSetting.DateSave = setting.DateSave;
+
+                            result = oldSetting;
+                        }
+                    }
+                    else
+                    {
+                        result = db.PromotionPartnerSettings.Add(setting);
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
     }
 }

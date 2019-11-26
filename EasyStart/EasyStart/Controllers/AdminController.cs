@@ -851,5 +851,85 @@ namespace EasyStart.Controllers
 
             return Json(result);
         }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult LoadCashbackPartnerSettings()
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var cashbackSetting = DataWrapper.GetPromotionCashbackSetting(branchId);
+                var partnersSetting = DataWrapper.GetPromotionPartnerSetting(branchId);
+
+                result.Data = new { CashbackSetting = cashbackSetting, PartnersSetting = partnersSetting };
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult SavePromotionCashbackSetting (PromotionCashbackSetting setting)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                setting.BranchId = branchId;
+
+                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
+                setting.DateSave = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
+
+                var newSetting = DataWrapper.SavePromotionCashbackSetting(setting);
+
+                result.Data = newSetting;
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult SavePromotionPartnerSetting(PromotionPartnerSetting setting)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                setting.BranchId = branchId;
+
+                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
+                setting.DateSave = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
+
+                var newSetting = DataWrapper.SavePromotionPartnerSetting(setting);
+
+                result.Data = newSetting;
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
+        }
     }
 }
