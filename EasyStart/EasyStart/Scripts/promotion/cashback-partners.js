@@ -31,7 +31,7 @@
 
         const isUseCaschback = $('#toggle-cashback-bonus').is(':checked')
         const cashbackSetting = {
-            id: this.cashbackSetting ? this.cashbackSetting.Id : -1
+            id: this.cashbackSetting ? this.cashbackSetting.Id : -1,
             isUseCaschback: isUseCaschback,
             returnedValue: isUseCaschback ? $('#cashback-bonus-return').val(): 0,
             paymentValue: isUseCaschback ? $('#payment-cashback-bonus').val():0,
@@ -46,7 +46,7 @@
                     $('#toggle-partners').prop('checked', false)
                     self.togglePartners()
 
-                    if (self.partnersSetting && self.partnersSetting.isUsePartners) {
+                    if (self.partnersSetting && self.partnersSetting.IsUsePartners) {
                         self.savePartnerSetting()
                     }
                     
@@ -67,7 +67,7 @@
 
         const isUsePartners = $('#toggle-cashback-bonus').is(':checked')
         const partnerSetting = {
-            id: this.partnersSetting ? this.partnersSetting.Id : -1
+            id: this.partnersSetting ? this.partnersSetting.Id : -1,
             isUsePartners: isUsePartners,
             cashBackReferalValue: isUsePartners ? $('#partner-cashback-bonus').val(): 0,
             typeBonusValue: isUsePartners ? $('#partner-cashback-type option:selected').val(): 1,

@@ -261,8 +261,9 @@ function prevChangedPage(page) {
 function postChangedPage(page) {
     switch (page) {
         case Pages.Promotion:
-            StockManger.loadStockList();
-            CouponManager.loadCoupons();
+            StockManger.loadStockList()
+            CouponManager.loadCoupons()
+            CashbackPartners.loadCashbackPartnerSettings()
             break
         case Pages.Analytics: {
             loadAnalyticsReport();
