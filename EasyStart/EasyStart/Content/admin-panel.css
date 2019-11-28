@@ -141,7 +141,7 @@ dialog,
     border-radius: 3px;
     position: relative;
 }
-    
+
     dialog img {
         cursor: pointer;
     }
@@ -898,16 +898,16 @@ div.product-item:hover {
 }
 
 .checkbox-item-left {
-    justify-content:flex-start;
+    justify-content: flex-start;
 }
 
-    .period-work {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-    }
+.period-work {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
 
 .delivery-menu {
     margin-top: 2%;
@@ -1422,7 +1422,8 @@ div.take-info-item:nth-child(odd) {
     #history .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
     #addProducDialog .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
     #stockDialog .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
-    #couponDialog .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i {
+    #couponDialog .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
+    #promotion-items-priority .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i {
         background-color: #163f75b0;
     }
 
@@ -2244,7 +2245,7 @@ button:disabled, button:disabled:hover {
     #addProducDialog .SumoSelect .CaptionCont label,
     #stockDialog .SumoSelect .CaptionCont label,
     #couponDialog .SumoSelect .CaptionCont label,
-    #promotion-settings .SumoSelect .CaptionCont label {
+    .promotion-item-setting .SumoSelect .CaptionCont label {
         color: initial;
         pointer-events: initial;
         left: initial;
@@ -2254,7 +2255,7 @@ button:disabled, button:disabled:hover {
     #addProducDialog .SumoSelect .optWrapper label,
     #stockDialog .SumoSelect .optWrapper label,
     #couponDialog .SumoSelect .optWrapper label,
-    #promotion-settings .SumoSelect .optWrapper label {
+    .promotion-item-setting .SumoSelect .optWrapper label {
         color: initial;
         position: initial;
         pointer-events: initial;
@@ -2347,4 +2348,10 @@ button {
 
 .row {
     display: flex;
+}
+
+.gu-mirror {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
 }

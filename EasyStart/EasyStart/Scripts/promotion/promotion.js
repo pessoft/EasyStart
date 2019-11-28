@@ -1,15 +1,20 @@
 ﻿$(document).ready(function () {
     bindPromotinoMenuItemClick()
-    binSumoSelectForPromotionSettings()
 
     StockManger.initPeriodCalendar()
     CouponManager.initPeriodCalendar()
+
+    PromotionSetting.bindDragula()
+    PromotionSetting.binSumoSelectForPromotionSettings()
+    PromotionSetting.loadSettings()
+    
 })
 
 const PromotionSection = {
-    Stock: 0,
-    Coupon: 1,
-    Partners: 2
+    Unknown: 0,
+    Stock: 2,
+    Coupon: 4,
+    Partners: 8
 }
 
 const RewardType = {
@@ -111,13 +116,4 @@ function initListsProducts () {
         $selectCondition.SumoSelect(sumoOptions)
         $selectCoupon.SumoSelect(sumoOptions)
     }
-}
-
-function binSumoSelectForPromotionSettings() {
-    const sumoOptions = {
-        placeholder: 'Выберите пересечения',
-        captionFormat: 'Пересекающихся разделов: {0}',
-        captionFormatAllSelected: 'Учитывать все разделы: {0}'
-    }
-    $('#promotion-settings select').SumoSelect(sumoOptions)
 }

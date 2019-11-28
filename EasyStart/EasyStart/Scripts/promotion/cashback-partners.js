@@ -21,7 +21,7 @@
             }
         }
 
-            $.post("/Admin/LoadCashbackPartnerSettings", null, successCallBack(successFunc, loader));
+        $.post("/Admin/LoadCashbackPartnerSettings", null, successCallBack(successFunc, loader));
     },
     saveCaschbackSetting: function () {
         let loader = new Loader($("#promotion-cashback-bonus"));
@@ -33,8 +33,8 @@
         const cashbackSetting = {
             id: this.cashbackSetting ? this.cashbackSetting.Id : -1,
             isUseCaschback: isUseCaschback,
-            returnedValue: isUseCaschback ? $('#cashback-bonus-return').val(): 0,
-            paymentValue: isUseCaschback ? $('#payment-cashback-bonus').val():0,
+            returnedValue: isUseCaschback ? $('#cashback-bonus-return').val() : 0,
+            paymentValue: isUseCaschback ? $('#payment-cashback-bonus').val() : 0,
         }
 
         const successFunc = function (result, loader) {
@@ -49,9 +49,9 @@
                     if (self.partnersSetting && self.partnersSetting.IsUsePartners) {
                         self.savePartnerSetting()
                     }
-                    
+
                 }
-                
+
             } else {
                 showErrorMessage(result.ErrorMessage)
             }
@@ -69,9 +69,9 @@
         const partnerSetting = {
             id: this.partnersSetting ? this.partnersSetting.Id : -1,
             isUsePartners: isUsePartners,
-            cashBackReferalValue: isUsePartners ? $('#partner-cashback-bonus').val(): 0,
-            typeBonusValue: isUsePartners ? $('#partner-cashback-type option:selected').val(): 1,
-            bonusValue: isUsePartners ? $('#partner-cashback-bonus-return').val(): 0,
+            cashBackReferalValue: isUsePartners ? $('#partner-cashback-bonus').val() : 0,
+            typeBonusValue: isUsePartners ? $('#partner-cashback-type option:selected').val() : 1,
+            bonusValue: isUsePartners ? $('#partner-cashback-bonus-return').val() : 0,
         }
 
         const successFunc = function (result, loader) {
@@ -156,7 +156,7 @@
         const $btnSave = $('#save-partner-setting')
 
         if (Number.isNaN(returnedReferalValue) || returnedReferalValue < 0 || returnedReferalValue > 100
-            || Number.isNaN(bonusValue) || bonusValue < 0 || (typeBonusValue == DiscountType.Percent &&  bonusValue > 100))
+            || Number.isNaN(bonusValue) || bonusValue < 0 || (typeBonusValue == DiscountType.Percent && bonusValue > 100))
             $btnSave.attr('disabled', true)
         else
             $btnSave.removeAttr('disabled')

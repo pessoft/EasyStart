@@ -1619,5 +1619,104 @@ namespace EasyStart.Logic
 
             return result;
         }
+
+        public static PromotionSectionSetting SavePromotionSetting(PromotionSectionSetting setting)
+        {
+            PromotionSectionSetting result = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    if (setting.Id > 0)
+                    {
+                        var oldSetting = db.PromotionSectionSettings.FirstOrDefault(p => p.Id == setting.Id);
+
+                        if (oldSetting != null)
+                        {
+                            oldSetting.Intersections = setting.Intersections;
+                            oldSetting.Priorety = setting.Priorety;
+                        }
+                    }
+                    else
+                    {
+                        db.PromotionSectionSettings.Add(setting);
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
+        public static List<PromotionSectionSetting> SavePromotionSettings(List<PromotionSectionSetting> settings)
+        {
+            var result = new List<PromotionSectionSetting>();
+
+            if (settings == null || !settings.Any())
+                return result;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    foreach (var setting in settings)
+                    {
+                        if (setting.Id > 0)
+                        {
+                            var oldSetting = db.PromotionSectionSettings.FirstOrDefault(p => p.Id == setting.Id);
+
+                            if (oldSetting != null)
+                            {
+                                oldSetting.Intersections = setting.Intersections;
+                                oldSetting.Priorety = setting.Priorety;
+
+                                result.Add(oldSetting);
+                            }
+                        }
+                        else
+                        {
+                            var tmpResult = db.PromotionSectionSettings.Add(setting);
+                            result.Add(tmpResult);
+                        }
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
+        public static List<PromotionSectionSetting> LoadPromotionSettings(int branchId)
+        {
+            List<PromotionSectionSetting> result = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.PromotionSectionSettings
+                        .Where(p => p.BranchId == branchId)
+                        .OrderBy(p => p.Priorety)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
     }
 }

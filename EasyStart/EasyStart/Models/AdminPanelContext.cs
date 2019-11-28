@@ -23,5 +23,6 @@ namespace EasyStart.Models
         public DbSet<CouponModel> Coupons { get; set; }
         public DbSet<PromotionCashbackSetting> PromotionCashbackSettings { get; set; }
         public DbSet<PromotionPartnerSetting> PromotionPartnerSettings { get; set; }
+        public DbSet<PromotionSectionSetting> PromotionSectionSettings { get; set; }
     }
 }

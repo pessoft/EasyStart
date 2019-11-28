@@ -289,39 +289,39 @@
                         </div>
                         <div id="promotion-settings" class="promotion-content promotion-settings promotion-some-settings hide">
                             <h2>Приорит разделов</h2>
-                            <div class="promotion-items-priority">
-                                <div class="promotion-item-setting" promotion-section="2" priority="1">
+                            <div id="promotion-items-priority" class="promotion-items-priority">
+                                <div class="promotion-item-setting" promotion-section="8" promotion-setting-id="-1">
                                     <i class="fal fa-hands-usd"></i>
                                     <div class="promotion-item-setting-body">
                                         <span>Партнерская программа</span>
-                                        <select multiple>
-                                            <option value="0">Акции</option>
-                                            <option value="1">Купоны</option>
+                                        <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
+                                            <option value="2">Акции</option>
+                                            <option value="4">Купоны</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="promotion-item-setting" promotion-section="1" priority="2">
+                                <div class="promotion-item-setting" promotion-section="4" promotion-setting-id="-1">
                                     <i class="fal fa-gift-card"></i>
                                     <div class="promotion-item-setting-body">
                                         <span>Купоны</span>
-                                        <select multiple>
-                                            <option value="0">Акции</option>
-                                            <option value="2">Партнерская программа</option>
+                                        <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
+                                            <option value="2">Акции</option>
+                                            <option value="8">Партнерская программа</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="promotion-item-setting" promotion-section="0" priority="3">
+                                <div class="promotion-item-setting" promotion-section="2" promotion-setting-id="-1">
                                     <i class="fal fa-badge-percent"></i>
                                     <div class="promotion-item-setting-body">
                                         <span>Акции</span>
-                                        <select multiple>
-                                            <option value="1">Купоны</option>
-                                            <option value="2">Партнерская программа</option>
+                                        <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
+                                            <option value="4">Купоны</option>
+                                            <option value="8">Партнерская программа</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
-                            <button id="save-promotion-setting" class="btn btn-submit" onclick="">Сохранить</button>
+                            <button id="save-promotion-setting" class="btn btn-submit" onclick="PromotionSetting.saveSettings()">Сохранить</button>
                         </div>
                     </div>
                 </div>

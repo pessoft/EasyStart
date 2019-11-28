@@ -931,5 +931,56 @@ namespace EasyStart.Controllers
 
             return Json(result);
         }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult LoadPromotionSettings()
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var settings = DataWrapper.LoadPromotionSettings(branchId);
+
+                result.Data = settings;
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult SavePromotionSettings(List<PromotionSectionSetting> settings)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                if (settings == null || !settings.Any())
+                    throw new Exception("Пустая настрока");
+
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                settings.ForEach(p => p.BranchId = branchId);
+
+                var newSettings = DataWrapper.SavePromotionSettings(settings);
+
+                result.Data = newSettings;
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
+        }
     }
 }

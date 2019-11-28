@@ -198,6 +198,7 @@
     <Compile Include="Logic\OrderStatus.cs" />
     <Compile Include="Logic\ProductHelper.cs" />
     <Compile Include="Logic\ProductType.cs" />
+    <Compile Include="Logic\PromotionSection.cs" />
     <Compile Include="Logic\RedirectingActionAttribute.cs" />
     <Compile Include="Logic\ReportType.cs" />
     <Compile Include="Logic\Report\BaseReport.cs" />
@@ -395,6 +396,7 @@
     <Compile Include="Models\ProductReview.cs" />
     <Compile Include="Models\PromotionCashbackSetting.cs" />
     <Compile Include="Models\PromotionPartnerSetting.cs" />
+    <Compile Include="Models\PromotionSectionSetting.cs" />
     <Compile Include="Models\RatingProduct.cs" />
     <Compile Include="Models\RatingProductMiddleware.cs" />
     <Compile Include="Models\RatingProductUpdater.cs" />
@@ -562,6 +564,7 @@
     <Content Include="Scripts\odometer\odometer.js" />
     <Content Include="Scripts\promotion\cashback-partners.js" />
     <Content Include="Scripts\promotion\coupon.js" />
+    <Content Include="Scripts\promotion\promotion-setting.js" />
     <Content Include="Scripts\promotion\promotion.js" />
     <Content Include="Scripts\promotion\stock.js" />
     <Content Include="Scripts\singnal-logic.js" />

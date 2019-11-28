@@ -60,7 +60,8 @@ namespace EasyStart
                 "~/Scripts/promotion/promotion.js",
                 "~/Scripts/promotion/stock.js",
                 "~/Scripts/promotion/coupon.js",
-                "~/Scripts/promotion/cashback-partners.js"));
+                "~/Scripts/promotion/cashback-partners.js",
+                "~/Scripts/promotion/promotion-setting.js"));
 
             bundles.Add(new StyleBundle("~/promotion/css").Include(
                      "~/Content/promotion.css"));
