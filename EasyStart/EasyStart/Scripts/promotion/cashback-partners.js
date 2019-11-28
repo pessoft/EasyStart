@@ -165,7 +165,8 @@
         const idContainer = 'promotion-partners'
         const message = 'Для партнерской программы активируйте функцию кешбека'
 
-        if ($('#toggle-partners').is(':checked') && !$('#toggle-cashback-bonus').is(':checked')) {
+        if ($('#toggle-partners').is(':checked')
+            && ((this.cashbackSetting && !this.cashbackSetting.IsUseCaschback) || !this.cashbackSetting)) {
             $('#toggle-partners').prop('checked', false)
             showInfoConfirm(message)
         } else if ($('#toggle-partners').is(':checked')) {
