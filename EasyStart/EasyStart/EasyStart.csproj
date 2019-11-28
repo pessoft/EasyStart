@@ -198,6 +198,7 @@
     <Compile Include="Logic\OrderStatus.cs" />
     <Compile Include="Logic\ProductHelper.cs" />
     <Compile Include="Logic\ProductType.cs" />
+    <Compile Include="Logic\PromotionDefaultSetting.cs" />
     <Compile Include="Logic\PromotionSection.cs" />
     <Compile Include="Logic\RedirectingActionAttribute.cs" />
     <Compile Include="Logic\ReportType.cs" />

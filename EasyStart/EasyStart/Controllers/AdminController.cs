@@ -253,8 +253,8 @@ namespace EasyStart.Controllers
 
                 if (newBranchId == -1)
                 {
-                    var success = DataWrapper.SaveBranch(branch);
-                    if (!success)
+                    var savedBranch = DataWrapper.SaveBranch(branch);
+                    if (savedBranch == null)
                     {
                         result.ErrorMessage = "При сохранении что то пошло не так";
                     }

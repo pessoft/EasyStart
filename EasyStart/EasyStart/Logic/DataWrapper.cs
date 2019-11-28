@@ -233,16 +233,15 @@ namespace EasyStart.Logic
             return hasMainBranch;
         }
 
-        public static bool SaveBranch(BranchModel branch)
+        public static BranchModel SaveBranch(BranchModel branch)
         {
-            var success = false;
+            BranchModel result = null;
             try
             {
                 using (var db = new AdminPanelContext())
                 {
-                    db.Branches.Add(branch);
+                    result = db.Branches.Add(branch);
                     db.SaveChanges();
-                    success = true;
                 }
             }
             catch (Exception ex)
@@ -250,7 +249,7 @@ namespace EasyStart.Logic
                 Logger.Log.Error(ex);
             }
 
-            return success;
+            return result;
         }
 
         public static bool RemoveBranch(int id)
