@@ -64,7 +64,7 @@ namespace EasyStart.Controllers
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-            } 
+            }
 
             return View();
         }
@@ -701,31 +701,40 @@ namespace EasyStart.Controllers
         public JsonResult LoadOrderProducts(List<int> ids)
         {
             var result = new JsonResultModel();
-            var products = DataWrapper.GetOrderProducts(ids);
 
-            if (products != null)
+            if (ids == null || !ids.Any())
             {
-                var idsDict = products
-                .Select(p => p.CategoryId)
-                .Distinct()
-                .ToList();
-                var categoryDict = DataWrapper.GetCategories(idsDict);
-                var dataResult = products
-                    .GroupBy(p => p.CategoryId)
-                    .Select(p => new
-                    {
-                        CategoryId = p.Key,
-                        CategoryName = categoryDict[p.Key].Name,
-                        Products = p
-                    })
-                    .ToList();
-
-                result.Data = dataResult;
-                result.Success = true;
+                result.ErrorMessage = "Список идентификторов пуст";
             }
             else
             {
-                result.ErrorMessage = "При загрузки продуктов что то пошло не так";
+                ids = ids.Distinct().ToList();
+                var products = DataWrapper.GetOrderProducts(ids);
+
+                if (products != null)
+                {
+                    var idsDict = products
+                    .Select(p => p.CategoryId)
+                    .Distinct()
+                    .ToList();
+                    var categoryDict = DataWrapper.GetCategories(idsDict);
+                    var dataResult = products
+                        .GroupBy(p => p.CategoryId)
+                        .Select(p => new
+                        {
+                            CategoryId = p.Key,
+                            CategoryName = categoryDict[p.Key].Name,
+                            Products = p
+                        })
+                        .ToList();
+
+                    result.Data = dataResult;
+                    result.Success = true;
+                }
+                else
+                {
+                    result.ErrorMessage = "При загрузки продуктов что то пошло не так";
+                }
             }
 
             return Json(result);
@@ -878,7 +887,7 @@ namespace EasyStart.Controllers
 
         [HttpPost]
         [Authorize]
-        public JsonResult SavePromotionCashbackSetting (PromotionCashbackSetting setting)
+        public JsonResult SavePromotionCashbackSetting(PromotionCashbackSetting setting)
         {
             var result = new JsonResultModel();
 

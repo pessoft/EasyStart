@@ -1497,6 +1497,7 @@ function processingOrders(orders) {
 function processsingOrder(order) {
     order.Date = jsonToDate(order.Date);
     order.ProductCount = JSON.parse(order.ProductCountJSON);
+    order.ProductBonusCount = JSON.parse(order.ProductBonusCountJSON);
 
     return order;
 }
@@ -1538,6 +1539,12 @@ function getProductIdsForLoad(order) {
 
     for (let id in order.ProductCount) {
         ids.push(id);
+    }
+
+    if (order.ProductBonusCount && Object.keys(order.ProductBonusCount).length > 0) {
+        for (let id in order.ProductBonusCount) {
+            ids.push(id);
+        }
     }
 
     return ids;
@@ -2018,6 +2025,7 @@ class OrderDetailsData {
         const prefixPercent = "%";
 
         this.AmountPay = `${xFormatPrice(order.AmountPay)} ${prefixRub}`;
+        this.AmountPayCashBack = `${xFormatPrice(order.AmountPayCashBack)} ${prefixRub}`;
         this.DeliveryPrice = `${xFormatPrice(order.DeliveryPrice)} ${prefixRub}`;
         this.Discount = order.Discount == 0 ? `0${prefixPercent}` : `${order.Discount}${prefixPercent} (${xFormatPrice(order.AmountPay * order.Discount / 100)} ${prefixRub})`
         this.PayType = getBuyType(order.BuyType);
@@ -2050,15 +2058,30 @@ class OrderDetailsData {
             const view = this.convertOrderProducrToView(obj);
             this.OrderList.push(view);
         }
+
+        if (order.ProductBonusCount && Object.keys(order.ProductBonusCount).length > 0) {
+            for (let productId in order.ProductBonusCount) {
+                const product = OrderProducts[productId];
+                const obj = {
+                    Image: product.Image,
+                    Name: product.Name,
+                    Price: `${order.ProductBonusCount[productId]} x 0 ${prefixRub}`
+                }
+
+                const view = this.convertOrderProducrToView(obj, true);
+                this.OrderList.push(view);
+            }
+        }
     }
 
-    convertOrderProducrToView(product) {
+    convertOrderProducrToView(product, isBonusProduct = false) {
+        const cssClassBonusProduct = isBonusProduct ? 'order-details-product-bonus' : ''
         return `
             <div class="order-details-product-item ">
                 <div class="order-details-product-img">
                     <img src="${product.Image}">
                 </div>
-                <div class="order-details-product-name-price border-bottom">
+                <div class="order-details-product-name-price border-bottom ${cssClassBonusProduct}">
                     <span>${product.Name}</span>
                     <span class="font-weight-bold grid-justify-self-flex-end">${product.Price}</span>
                 </div>
@@ -2076,6 +2099,7 @@ var OrderDetailsQSelector = {
     PhoneNumber: ".order-details-short-phone .value",
     DeliveryType: ".order-details-short-delivery-type .value",
     PriceAmount: ".order-details-price-amount .value",
+    PriceAmountCashbackBonus: ".order-details-price-amount-casback-bonus .value",
     DeliveryPrice: ".order-details-price-delivery .value",
     Discount: ".order-details-price-discount .value",
     PayType: ".order-details-price-pay-type .value",
@@ -2180,6 +2204,7 @@ class OrderDetails {
 
     setAmountInfo() {
         this.setValue(OrderDetailsQSelector.PriceAmount, this.details.AmountPay);
+        this.setValue(OrderDetailsQSelector.PriceAmountCashbackBonus, this.details.AmountPayCashBack);
         this.setValue(OrderDetailsQSelector.DeliveryPrice, this.details.DeliveryPrice);
         this.setValue(OrderDetailsQSelector.Discount, this.details.Discount);
         this.setValue(OrderDetailsQSelector.PayType, this.details.PayType);
