@@ -29,13 +29,41 @@ namespace EasyStart.Models
         public string ProductCountJSON { get; set; }
         public double Discount { get; set; }
         public double DeliveryPrice { get; set; }
+        /// <summary>
+        /// Сдача с суммы
+        /// </summary>
         public double CashBack { get; set; }
+        /// <summary>
+        /// Сумма к оплате
+        /// </summary>
         public double AmountPay { get; set; }
+        /// <summary>
+        /// Сумма к оплате с учетом скидки, доставки и кешбека
+        /// </summary>
         public double AmountPayDiscountDelivery { get; set; }
         public bool NeedCashBack { get; set; }
         public DateTime Date { get; set; }
         public DateTime UpdateDate { get; set; }
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Processing;
+
+        public string ProductBonusCountJSON { get; set; }
+        /// <summary>
+        /// Оплачено кешбеком
+        /// </summary>
+        public double AmountPayCashBack { get; set; }
+
+        public int StockId { get; set; }
+        public int CouponId { get; set; }
+
+        /// <summary>
+        /// Вернуть кешбек после подтверждения заказа
+        /// </summary>
+        public bool IsGetCashback { get; set; }
+
+        /// <summary>
+        /// Зачислить владельцу реферала бонус
+        /// </summary>
+        public bool IsPartnerBonus { get; set; }
 
         [NotMapped]
         [ScriptIgnore]
@@ -44,6 +72,16 @@ namespace EasyStart.Models
             get
             {
                 return JsonConvert.DeserializeObject<Dictionary<int, int>>(ProductCountJSON);
+            }
+        }
+
+        [NotMapped]
+        [ScriptIgnore]
+        public Dictionary<int, int> ProductBonusCount
+        {
+            get
+            {
+                return JsonConvert.DeserializeObject<Dictionary<int, int>>(ProductBonusCountJSON);
             }
         }
     }

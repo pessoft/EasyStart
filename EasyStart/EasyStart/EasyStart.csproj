@@ -376,6 +376,10 @@
     <Compile Include="Migrations\201911190857026_UpperCaseStockToDateProperty.Designer.cs">
       <DependentUpon>201911190857026_UpperCaseStockToDateProperty.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912021347324_AddPromotionProperties.cs" />
+    <Compile Include="Migrations\201912021347324_AddPromotionProperties.Designer.cs">
+      <DependentUpon>201912021347324_AddPromotionProperties.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -711,6 +715,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911190857026_UpperCaseStockToDateProperty.resx">
       <DependentUpon>201911190857026_UpperCaseStockToDateProperty.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912021347324_AddPromotionProperties.resx">
+      <DependentUpon>201912021347324_AddPromotionProperties.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
