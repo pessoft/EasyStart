@@ -28,6 +28,12 @@ namespace EasyStart.Models
         public string Comment { get; set; }
         public string ProductCountJSON { get; set; }
         public double Discount { get; set; }
+
+        /// <summary>
+        /// Одноразовая скидка полученная от реферала
+        /// </summary>
+        public double RefferalDiscount { get; set; }
+
         public double DeliveryPrice { get; set; }
         /// <summary>
         /// Сдача с суммы
@@ -47,6 +53,7 @@ namespace EasyStart.Models
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Processing;
 
         public string ProductBonusCountJSON { get; set; }
+
         /// <summary>
         /// Оплачено кешбеком
         /// </summary>

@@ -745,19 +745,28 @@ namespace EasyStart.Controllers
         [Authorize]
         public void UpdateSatsusOrder(UpdaterOrderStatus data)
         {
-            if (data.Status == OrderStatus.Processing)
-            {
-                return;
-            }
-
             try
             {
+                if (data.Status == OrderStatus.Processing)
+                {
+                    return;
+                }
+
                 var branchId = DataWrapper.GetBranchId(User.Identity.Name);
                 var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
                 var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
                 data.DateUpdate = date;
 
                 DataWrapper.UpdateStatusOrder(data);
+
+                if (data.Status == OrderStatus.Processed)
+                {
+                    new PromotionLogic().ProcessingVirtualMoney(data.OrderId);
+                }
+                else if (data.Status == OrderStatus.Cancellation)
+                {
+                    new PromotionLogic().Refund(data.OrderId);
+                }
             }
             catch (Exception ex)
             {
@@ -869,9 +878,15 @@ namespace EasyStart.Controllers
 
             try
             {
-                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-                var cashbackSetting = DataWrapper.GetPromotionCashbackSetting(branchId);
-                var partnersSetting = DataWrapper.GetPromotionPartnerSetting(branchId);
+                var branch = DataWrapper.GetMainBranch();
+
+                if (branch == null)
+                {
+                    throw new Exception("Отсутсвует главное отделение");
+                }
+
+                var cashbackSetting = DataWrapper.GetPromotionCashbackSetting(branch.Id);
+                var partnersSetting = DataWrapper.GetPromotionPartnerSetting(branch.Id);
 
                 result.Data = new { CashbackSetting = cashbackSetting, PartnersSetting = partnersSetting };
                 result.Success = true;
@@ -894,6 +909,14 @@ namespace EasyStart.Controllers
             try
             {
                 var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var typeBranch = DataWrapper.GetBranchType(branchId);
+
+                if (typeBranch != TypeBranch.MainBranch)
+                {
+                    result.ErrorMessage = "У вас нет прав для редактирования настроек кешбека";
+                    return Json(result);
+                }
+
                 setting.BranchId = branchId;
 
                 var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
@@ -922,6 +945,14 @@ namespace EasyStart.Controllers
             try
             {
                 var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var typeBranch = DataWrapper.GetBranchType(branchId);
+
+                if (typeBranch != TypeBranch.MainBranch)
+                {
+                    result.ErrorMessage = "У вас нет прав для редактирования настроек партнерской программы";
+                    return Json(result);
+                }
+
                 setting.BranchId = branchId;
 
                 var deliverSetting = DataWrapper.GetDeliverySetting(branchId);

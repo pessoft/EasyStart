@@ -252,6 +252,23 @@ namespace EasyStart
                 order.Date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
                 order.UpdateDate = order.Date;
 
+                if (order.AmountPayCashBack > 0)
+                {
+                    var client = DataWrapper.GetClient(order.ClientId);
+                    client.VirtualMoney -= order.AmountPayCashBack;
+
+                    if (client.VirtualMoney < 0)
+                        throw new Exception("Не достаточно виртуальных средств");
+
+                    new TransactionVirtualMoneyLogic(order.ClientId).AddTransaction(VirtualMoneyTransactionType.OrderPayment, order.AmountPayCashBack);
+                    DataWrapper.ClientUpdateVirtualMoney(client.Id, client.VirtualMoney);
+                }
+
+                if (order.RefferalDiscount > 0)
+                {
+                    DataWrapper.ClientUpdateRefferalDiscount(order.ClientId, 0);
+                }
+
                 var numberOrder = DataWrapper.SaveOrder(order);
 
                 if (numberOrder != -1)
@@ -280,14 +297,13 @@ namespace EasyStart
                         new NotifyNewOrderManager(optionsNotification).AllNotify();
                     });
                 }
-
-                return result;
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                return result;
             }
+
+            return result;
         }
 
         [HttpPost]
@@ -439,13 +455,49 @@ namespace EasyStart
                     string.IsNullOrEmpty(client.UserName))
                     return result;
 
+                var saveTransaction = false;
+                if (client.Id < 1)
+                {
+                    client.ReferralCode = KeyGenerator.GetUniqueKey(8);
+
+                    if (client.ParentRefferalClientId > 0)
+                    {
+                        var mainBranch = DataWrapper.GetMainBranch();
+                        var partnersSetting = DataWrapper.GetPromotionPartnerSetting(mainBranch.Id);
+
+                        if (partnersSetting.IsUsePartners)
+                        {
+                            switch (partnersSetting.TypeBonusValue)
+                            {
+                                case DiscountType.Ruble:
+                                    client.VirtualMoney = partnersSetting.BonusValue;
+                                    saveTransaction = true;
+                                    break;
+                                case DiscountType.Percent:
+                                    client.RefferalDiscount = partnersSetting.BonusValue;
+                                    break;
+                            }
+                        }
+                    }
+                }
+
                 var newClient = DataWrapper.AddOrUpdateClient(client);
+
+                if (saveTransaction)
+                {
+                    var transactionLogic = new TransactionVirtualMoneyLogic(newClient.Id);
+                    transactionLogic.AddTransaction(VirtualMoneyTransactionType.EnrollmentRefferalBonus, newClient.VirtualMoney);
+                }
 
                 result.Data = new
                 {
                     clientId = newClient.Id,
                     phoneNumber = newClient.PhoneNumber,
-                    userName = newClient.UserName
+                    userName = newClient.UserName,
+                    referralCode = newClient.ReferralCode,
+                    parentRefferalClientId = newClient.ParentRefferalClientId,
+                    virtualMoney = newClient.VirtualMoney,
+                    refferalDiscount = newClient.RefferalDiscount,
                 };
                 result.Success = true;
 

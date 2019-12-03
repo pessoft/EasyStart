@@ -69,7 +69,7 @@
         const partnerSetting = {
             id: this.partnersSetting ? this.partnersSetting.Id : -1,
             isUsePartners: isUsePartners,
-            cashBackReferalValue: isUsePartners ? $('#partner-cashback-bonus').val() : 0,
+            cashBackRefferalValue: isUsePartners ? $('#partner-cashback-bonus').val() : 0,
             typeBonusValue: isUsePartners ? $('#partner-cashback-type option:selected').val() : 1,
             bonusValue: isUsePartners ? $('#partner-cashback-bonus-return').val() : 0,
         }
@@ -111,7 +111,7 @@
                 $(`#${idContainer} .group input,#${idContainer} select`).removeAttr('disabled')
                 $select.find(`option[value="${this.partnersSetting.TypeBonusValue}"]`).attr('selected', true)
 
-                $('#partner-cashback-bonus').val(this.partnersSetting.CashBackReferalValue)
+                $('#partner-cashback-bonus').val(this.partnersSetting.CashBackRefferalValue)
                 $('#partner-cashback-bonus-return').val(this.partnersSetting.BonusValue)
             } else {
                 $select.attr('disabled', true)

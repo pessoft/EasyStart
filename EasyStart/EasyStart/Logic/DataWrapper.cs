@@ -177,6 +177,24 @@ namespace EasyStart.Logic
             return branch == null ? TypeBranch.SubBranch : branch.TypeBranch;
         }
 
+        public static BranchModel GetMainBranch()
+        {
+            BranchModel branch = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    branch = db.Branches.FirstOrDefault(p => p.TypeBranch == TypeBranch.MainBranch);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return branch;
+        }
+
         public static List<BranchModel> GetAllBranch()
         {
             List<BranchModel> branches = new List<BranchModel>();
@@ -929,6 +947,24 @@ namespace EasyStart.Logic
             return orders;
         }
 
+        public static OrderModel GetOrder(int orderId)
+        {
+            OrderModel order = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    order = db.Orders.FirstOrDefault(p => p.Id == orderId);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return order;
+        }
+
         public static List<OrderModel> GetHistoryOrders(List<int> brandchIds, DateTime startDate, DateTime endDate)
         {
             var orders = new List<OrderModel>();
@@ -1169,6 +1205,48 @@ namespace EasyStart.Logic
             }
 
             return clinet;
+        }
+
+        public static void ClientUpdateVirtualMoney(int clientId, double virtualMoney)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var client = db.Clients.FirstOrDefault(p => p.Id == clientId);
+
+                    if (client != null)
+                    {
+                        client.VirtualMoney = virtualMoney;
+                        db.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
+
+        public static void ClientUpdateRefferalDiscount(int clientId, double discount)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var client = db.Clients.FirstOrDefault(p => p.Id == clientId);
+
+                    if (client != null)
+                    {
+                        client.RefferalDiscount = discount;
+                        db.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
         }
 
         public static void UpdateOrderNumberCategory(List<UpdaterOrderNumber> upData)
@@ -1595,7 +1673,7 @@ namespace EasyStart.Logic
                         if (oldSetting != null)
                         {
                             oldSetting.IsUsePartners = setting.IsUsePartners;
-                            oldSetting.CashBackReferalValue = setting.CashBackReferalValue;
+                            oldSetting.CashBackRefferalValue = setting.CashBackRefferalValue;
                             oldSetting.TypeBonusValue = setting.TypeBonusValue;
                             oldSetting.BonusValue = setting.BonusValue;
                             oldSetting.DateSave = setting.DateSave;

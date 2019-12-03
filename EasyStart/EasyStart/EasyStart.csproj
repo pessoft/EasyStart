@@ -183,6 +183,10 @@
     <Compile Include="Logic\AnalyticsDataWrapper.cs" />
     <Compile Include="Logic\BrachClone.cs" />
     <Compile Include="Logic\BuyType.cs" />
+    <Compile Include="Logic\PromotionLogic.cs" />
+    <Compile Include="Logic\TransactionVirtualMoneyLogic.cs" />
+    <Compile Include="Logic\TransactionWrapper.cs" />
+    <Compile Include="Logic\VirtualMoneyTransactionType.cs" />
     <Compile Include="Logic\ConverterBranchSetting.cs" />
     <Compile Include="Logic\DataWrapper.cs" />
     <Compile Include="Logic\DayWeekly.cs" />
@@ -380,6 +384,18 @@
     <Compile Include="Migrations\201912021347324_AddPromotionProperties.Designer.cs">
       <DependentUpon>201912021347324_AddPromotionProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912030548232_AddRefferalPropertiesToClientModel.cs" />
+    <Compile Include="Migrations\201912030548232_AddRefferalPropertiesToClientModel.Designer.cs">
+      <DependentUpon>201912030548232_AddRefferalPropertiesToClientModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912030656137_AddRefferalDiscountToClientModel.cs" />
+    <Compile Include="Migrations\201912030656137_AddRefferalDiscountToClientModel.Designer.cs">
+      <DependentUpon>201912030656137_AddRefferalDiscountToClientModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912030929416_FixSyntax.cs" />
+    <Compile Include="Migrations\201912030929416_FixSyntax.Designer.cs">
+      <DependentUpon>201912030929416_FixSyntax.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -410,11 +426,13 @@
     <Compile Include="Models\SettingModel.cs" />
     <Compile Include="Models\StockModel.cs" />
     <Compile Include="Models\TodayDataOrdersModel.cs" />
+    <Compile Include="Models\TransactionContext.cs" />
     <Compile Include="Models\UpdaterOrderNumber.cs" />
     <Compile Include="Models\UpdaterOrderStatus.cs" />
     <Compile Include="Models\UpdaterVisible.cs" />
     <Compile Include="Models\UseModel.cs" />
     <Compile Include="Models\UserDataPhoneApp.cs" />
+    <Compile Include="Models\VitualMoneyTransactionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\CityHelper.cs" />
@@ -718,6 +736,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912021347324_AddPromotionProperties.resx">
       <DependentUpon>201912021347324_AddPromotionProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912030548232_AddRefferalPropertiesToClientModel.resx">
+      <DependentUpon>201912030548232_AddRefferalPropertiesToClientModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912030656137_AddRefferalDiscountToClientModel.resx">
+      <DependentUpon>201912030656137_AddRefferalDiscountToClientModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912030929416_FixSyntax.resx">
+      <DependentUpon>201912030929416_FixSyntax.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
