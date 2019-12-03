@@ -2070,6 +2070,13 @@ button:disabled, button:disabled:hover {
     background: gray !important;
 }
 
+button.simple-text-btn:disabled,
+button.simple-text-btn:disabled:hover {
+    color: gray;
+    cursor: not-allowed;
+    background: initial !important;
+}
+
 .order-details-comment {
     grid-column: span 2;
     display: grid;

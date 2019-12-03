@@ -114,7 +114,7 @@
             if (result.Success) {
                 $("#coupon-list .empty-list").remove();
                 self.processingLoadCouponData(result.Data)
-                     
+
                 if (!Number.isNaN(couponIdToRemove) && couponIdToRemove > 0) {
                     const index = self.getIndexCouponById(couponIdToRemove)
                     self.coupons[index] = result.Data
@@ -309,6 +309,14 @@
             $(`#${eIdShow}`).show("slide", { direction: "left" }, 100)
         });
     },
+    isValidPromocode: function (promocode) {
+        const couponId = parseInt($('#couponDialog').attr('coupon-id'))
+        const valid = promocode &&
+            this.coupons.filter(p => p.Promocode == promocode &&
+                (couponId == -1 || p.Id != couponId)).length == 0
+
+        return valid
+    },
     btnNextToggle: function (slide) {
         const self = this
 
@@ -318,7 +326,7 @@
             const count = parseInt($('#promotion-coupon-count').val())
             const maxCount = 10000
 
-            if (name && promocode && count > 0  && count <= maxCount)
+            if (name && self.isValidPromocode(promocode) && count > 0 && count <= maxCount)
                 $("#coupon-slide-1 .promotion-coupon-next").removeAttr('disabled')
             else
                 $("#coupon-slide-1 .promotion-coupon-next").attr('disabled', true)
