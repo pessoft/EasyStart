@@ -9,7 +9,7 @@ using System.Web.Script.Serialization;
 
 namespace EasyStart.Models
 {
-    public class StockModel
+    public class StockModel : IContainImage
     {
         public int Id { get; set; }
         public int BranchId { get; set; }

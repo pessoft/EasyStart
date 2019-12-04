@@ -981,7 +981,7 @@ namespace EasyStart.Controllers
             try
             {
                 var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-                var settings = DataWrapper.LoadPromotionSettings(branchId);
+                var settings = DataWrapper.GetPromotionSettings(branchId);
 
                 result.Data = settings;
                 result.Success = true;

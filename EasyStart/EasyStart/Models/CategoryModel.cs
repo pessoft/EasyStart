@@ -5,8 +5,8 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class CategoryModel
-    {
+    public class CategoryModel : IContainImage
+    { 
         public int Id { get; set; }
         public int BranchId { get; set; }
         public string Name { get; set; }

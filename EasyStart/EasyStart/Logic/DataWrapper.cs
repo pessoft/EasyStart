@@ -926,6 +926,28 @@ namespace EasyStart.Logic
             return numberOrder;
         }
 
+        public static List<int> GetUsedOneOffStockIds(int clinetId, List<int> stockIds)
+        {
+            List<int> result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.Orders
+                        .Where(p => p.ClientId == clinetId
+                        && stockIds.Contains(p.StockId))
+                        .Select(p => p.StockId)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
         public static List<OrderModel> GetOrders(List<int> brandchIds)
         {
             var orders = new List<OrderModel>();
@@ -1089,6 +1111,16 @@ namespace EasyStart.Logic
                         .Where(p => productIds.Contains(p.ProductId) && p.Visible)
                         .GroupBy(p => p.ProductId)
                         .ToDictionary(p => p.Key, p => p.Count());
+
+                    foreach (var id in productIds)
+                    {
+                        var outCount = 0;
+
+                        if (!result.TryGetValue(id, out outCount))
+                        {
+                            result.Add(id, 0);
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -1120,6 +1152,30 @@ namespace EasyStart.Logic
 
                     result = db.Stocks.Add(stock);
                     db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
+        public static List<StockModel> GetActiveStocks(int branchId)
+        {
+            List<StockModel> result = new List<StockModel>();
+            var date = DateTime.Now.Date;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.Stocks
+                        .Where(p => p.BranchId == branchId && !p.IsDeleted
+                        && (p.StockTypePeriod != StockTypePeriod.ToDate
+                        || (DbFunctions.TruncateTime(p.StockFromDate) >= date
+                        && DbFunctions.TruncateTime(p.StockToDate) <= date)))
+                        .ToList();
                 }
             }
             catch (Exception ex)
@@ -1514,6 +1570,31 @@ namespace EasyStart.Logic
             }
         }
 
+        public static List<CouponModel> GetActiveCoupons(int branchId)
+        {
+            var coupons = new List<CouponModel>();
+            var date = DateTime.Now.Date;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    coupons = db.Coupons
+                        .Where(p => !p.IsDeleted && p.BranchId == branchId
+                        && DbFunctions.TruncateTime(p.DateFrom) >= date
+                        && DbFunctions.TruncateTime(p.DateFrom) <= date
+                        && p.CountUsed < p.Count)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return coupons;
+        }
+
         public static List<CouponModel> GetCoupons(int branchId)
         {
             var coupons = new List<CouponModel>();
@@ -1774,7 +1855,7 @@ namespace EasyStart.Logic
             return result;
         }
 
-        public static List<PromotionSectionSetting> LoadPromotionSettings(int branchId)
+        public static List<PromotionSectionSetting> GetPromotionSettings(int branchId)
         {
             List<PromotionSectionSetting> result = null;
 

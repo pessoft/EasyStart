@@ -36,6 +36,59 @@ namespace EasyStart.Logic
             }
         }
 
+        public List<StockModel> GetStockForAPI(int branchId, int clientId)
+        {
+            var stocks = GetStock(branchId, clientId);
+            stocks.ForEach(p => PreprocessorDataAPI.ChangeImagePath(p));
+
+            return stocks;
+        }
+
+        public List<StockModel> GetStock(int branchId, int clientId)
+        {
+            List<StockModel> stocks = DataWrapper.GetActiveStocks(branchId); ;
+            var oneOffStockIds = stocks
+                .Where(p => p.StockTypePeriod == StockTypePeriod.OneOff)
+                .Select(p => p.Id)
+                .ToList();
+
+            if (oneOffStockIds != null && oneOffStockIds.Any())
+            {
+                var usedOneOffStockIds = DataWrapper.GetUsedOneOffStockIds(clientId, oneOffStockIds);
+
+                if (usedOneOffStockIds != null && usedOneOffStockIds.Any())
+                {
+                    stocks = stocks
+                        .Where(p => !usedOneOffStockIds.Contains(p.Id))
+                        .ToList();
+                }
+            }
+
+            return stocks;
+        }
+
+        public List<CouponModel> GetCoupons(int branchId)
+        {
+            List<CouponModel> coupons = DataWrapper.GetActiveCoupons(branchId);
+
+            return coupons;
+        }
+
+        public PromotionCashbackSetting GetSettingCashBack(int branchId)
+        {
+            return DataWrapper.GetPromotionCashbackSetting(branchId);
+        }
+
+        public List<PromotionSectionSetting> GetSettingSections(int branchId)
+        {
+            return DataWrapper.GetPromotionSettings(branchId);
+        }
+
+        public PromotionPartnerSetting GetSettingPartners(int branchId)
+        {
+            return DataWrapper.GetPromotionPartnerSetting(branchId);
+        }
+
         private void ProcessingCashback(int branchId, OrderModel order, Client client)
         {
             var cashbackSetting = DataWrapper.GetPromotionCashbackSetting(branchId);

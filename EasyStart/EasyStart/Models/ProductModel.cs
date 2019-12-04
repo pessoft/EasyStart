@@ -7,7 +7,7 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class ProductModel
+    public class ProductModel : IContainImage
     {
         public int Id { get; set; }
         public int BranchId { get; set; }

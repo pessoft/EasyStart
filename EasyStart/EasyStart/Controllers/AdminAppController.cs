@@ -86,12 +86,13 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public JsonResultModel GetMainData([FromBody] int branchId)
+        public JsonResultModel GetMainData([FromBody] MainDataSignatureModel data)
         {
             var result = new JsonResultModel();
+            var branchId = data.BranchId;
             result.Success = false;
 
-            if (branchId < 1)
+            if (branchId < 1 || data.ClientId < 1)
                 return result;
 
             try
@@ -100,48 +101,17 @@ namespace EasyStart
                 var products = GetAllProducts(branchId);
                 var deliverySettings = DataWrapper.GetDeliverySetting(branchId);
                 var organizationSettings = DataWrapper.GetSetting(branchId);
-                var stocks = DataWrapper.GetStocks(branchId);
+
+                var promotionLogic = new PromotionLogic();
+                var stocks = promotionLogic.GetStockForAPI(branchId, data.ClientId);
+                var coupons = promotionLogic.GetCoupons(branchId);
+                var mainBranch = DataWrapper.GetMainBranch();
+                var promotionCashBackSetting = promotionLogic.GetSettingCashBack(mainBranch.Id);
+                var promotionPartnersSetting = promotionLogic.GetSettingPartners(mainBranch.Id);
+                var promotionSectionSettings = promotionLogic.GetSettingSections(mainBranch.Id);
 
                 var productIds = products.Values.SelectMany(p => p.Select(s => s.Id)).ToList();
                 var reviewsCount = DataWrapper.GetProductReviewsVisibleCount(productIds);
-
-                foreach (var id in productIds)
-                {
-                    var outCount = 0;
-
-                    if (!reviewsCount.TryGetValue(id, out outCount))
-                    {
-                        reviewsCount.Add(id, 0);
-                    }
-                }
-
-                //TO DO: вынести в метод
-                categories.ForEach(p =>
-                {
-                    if (!string.IsNullOrEmpty(p.Image))
-                    {
-                        p.Image = p.Image.Substring(2);
-                    }
-                });
-
-                stocks.ForEach(p =>
-                {
-                    if (!string.IsNullOrEmpty(p.Image))
-                    {
-                        p.Image = p.Image.Substring(2);
-                    }
-                });
-
-                foreach (var kv in products)
-                {
-                    kv.Value.ForEach(p =>
-                    {
-                        if (!string.IsNullOrEmpty(p.Image))
-                        {
-                            p.Image = p.Image.Substring(2);
-                        }
-                    });
-                }
 
                 result.Data = new
                 {
@@ -150,6 +120,10 @@ namespace EasyStart
                     deliverySettings,
                     organizationSettings,
                     stocks,
+                    coupons,
+                    promotionCashBackSetting,
+                    promotionPartnersSetting,
+                    promotionSectionSettings,
                     reviewsCount
                 };
                 result.Success = true;
@@ -168,6 +142,7 @@ namespace EasyStart
             try
             {
                 var categories = DataWrapper.GetCategoriesVisible(branchId);
+                categories.ForEach(p => PreprocessorDataAPI.ChangeImagePath(p));
 
                 return categories;
             }
@@ -200,6 +175,11 @@ namespace EasyStart
                 var products = DataWrapper.GetAllProductsVisible(branchId)
                 .GroupBy(p => p.CategoryId)
                 .ToDictionary(p => p.Key, p => p.ToList());
+
+                foreach (var kv in products)
+                {
+                    kv.Value.ForEach(p => PreprocessorDataAPI.ChangeImagePath(p));
+                }
 
                 return products;
             }
@@ -418,7 +398,7 @@ namespace EasyStart
                 {
                     result.Data = new List<ProductReview>();
                 }
-                
+
                 result.Success = true;
             }
             catch (Exception ex)
