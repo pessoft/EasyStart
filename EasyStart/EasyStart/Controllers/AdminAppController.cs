@@ -506,7 +506,11 @@ namespace EasyStart
                     client != null &&
                     isPhoneEquals)
                 {
-                    result.Data = true;
+                    result.Data = new
+                    {
+                        isActual = true,
+                        client
+                    };
                 }
 
                 return result;
