@@ -120,11 +120,9 @@ namespace EasyStart
                     deliverySettings,
                     organizationSettings,
                     stocks,
-                    coupons,
                     promotionCashBackSetting,
                     promotionPartnersSetting,
                     promotionSectionSettings,
-                    reviewsCount
                 };
                 result.Success = true;
             }
@@ -509,7 +507,13 @@ namespace EasyStart
                     result.Data = new
                     {
                         isLogin = true,
-                        client
+                        clientId = client.Id,
+                        phoneNumber = client.PhoneNumber,
+                        userName = client.UserName,
+                        referralCode = client.ReferralCode,
+                        parentReferralClientId = client.ParentReferralClientId,
+                        virtualMoney = client.VirtualMoney,
+                        referralDiscount = client.ReferralDiscount,
                     };
                 }
 
