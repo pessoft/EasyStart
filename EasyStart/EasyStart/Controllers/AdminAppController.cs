@@ -525,5 +525,26 @@ namespace EasyStart
                 return result;
             }
         }
+
+
+        [HttpPost]
+        public JsonResultModel GetCoupun([FromBody]CouponParamsModel data)
+        {
+            var result = new JsonResultModel { Success = true};
+            CouponModel coupon = null;
+
+            try
+            {
+                coupon = DataWrapper.GetCouponByPromocode(data.BranchId, data.Promocode);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            result.Data = new { coupon };
+
+            return result;
+        }
     }
 }

@@ -1595,6 +1595,36 @@ namespace EasyStart.Logic
             return coupons;
         }
 
+        public static CouponModel GetCouponByPromocode(int branchId, string promocode)
+        {
+            CouponModel coupon = null;
+
+            if (string.IsNullOrEmpty(promocode))
+                return coupon;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var date = DateTime.Now.Date;
+                    coupon = db.Coupons
+                        .Where(p => !p.IsDeleted
+                        && p.BranchId == branchId
+                        && p.Promocode == promocode
+                        && DbFunctions.TruncateTime(p.DateFrom) >= date
+                        && DbFunctions.TruncateTime(p.DateFrom) <= date
+                        && p.CountUsed < p.Count)
+                        .FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return coupon;
+        }
+
         public static List<CouponModel> GetCoupons(int branchId)
         {
             var coupons = new List<CouponModel>();
