@@ -247,6 +247,11 @@ namespace EasyStart
                     DataWrapper.ClientUpdateReferralDiscount(order.ClientId, 0);
                 }
 
+                if (order.CouponId > 0)
+                {
+                    new PromotionLogic().UseCopun(order.CouponId);
+                }
+
                 var numberOrder = DataWrapper.SaveOrder(order);
 
                 if (numberOrder != -1)

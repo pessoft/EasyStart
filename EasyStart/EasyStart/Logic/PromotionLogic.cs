@@ -34,6 +34,38 @@ namespace EasyStart.Logic
             {
                 DataWrapper.ClientUpdateReferralDiscount(order.ClientId, order.ReferralDiscount);
             }
+
+            if (order.CouponId > 0)
+            {
+                RefunCopunCountUser(order.CouponId);
+            }
+        }
+
+        public void UseCopun(int couponId)
+        {
+            var errMessage = "Купон не действителен";
+            if (couponId > 0)
+            {
+                var coupon = DataWrapper.GetCoupon(couponId);
+                ++coupon.CountUsed;
+
+                if (coupon.CountUsed >= coupon.Count)
+                    throw new Exception(errMessage);
+
+                DataWrapper.UpdateCouponCountUser(couponId, coupon.CountUsed);
+            }
+        }
+
+        private void RefunCopunCountUser(int couponId)
+        {
+            if (couponId > 0)
+            {
+                var coupon = DataWrapper.GetCoupon(couponId);
+                --coupon.CountUsed;
+
+                if (coupon.CountUsed >= 0)
+                    DataWrapper.UpdateCouponCountUser(couponId, coupon.CountUsed);
+            }
         }
 
         public List<StockModel> GetStockForAPI(int branchId, int clientId)

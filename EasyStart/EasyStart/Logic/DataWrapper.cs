@@ -1625,6 +1625,30 @@ namespace EasyStart.Logic
             return coupon;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id">Идентификатор купона</param>
+        /// <returns></returns>
+        public static CouponModel GetCoupon(int id)
+        {
+            CouponModel coupon = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    coupon = db.Coupons.FirstOrDefault(p => p.Id == id);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return coupon;
+        }
+
         public static List<CouponModel> GetCoupons(int branchId)
         {
             var coupons = new List<CouponModel>();
@@ -1694,6 +1718,26 @@ namespace EasyStart.Logic
             }
 
             return success;
+        }
+
+        public static void UpdateCouponCountUser(int id, int countUsed)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var coupon = db.Coupons.FirstOrDefault(p => p.Id == id);
+
+                    if (coupon != null)
+                    {
+                        coupon.CountUsed = countUsed;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
         }
 
         public static PromotionCashbackSetting GetPromotionCashbackSetting(int branchId)
