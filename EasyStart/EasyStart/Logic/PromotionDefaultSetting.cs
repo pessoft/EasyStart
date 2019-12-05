@@ -71,7 +71,7 @@ namespace EasyStart.Logic
                 BranchId = branchId,
                 IsUsePartners = false,
                 BonusValue = 20,
-                CashBackRefferalValue = 20,
+                CashBackReferralValue = 20,
                 TypeBonusValue = DiscountType.Percent,
                 DateSave = DateTime.Now.GetDateTimeNow(zoneId)
             };

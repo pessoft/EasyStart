@@ -1284,7 +1284,7 @@ namespace EasyStart.Logic
             }
         }
 
-        public static void ClientUpdateRefferalDiscount(int clientId, double discount)
+        public static void ClientUpdateReferralDiscount(int clientId, double discount)
         {
             try
             {
@@ -1294,7 +1294,7 @@ namespace EasyStart.Logic
 
                     if (client != null)
                     {
-                        client.RefferalDiscount = discount;
+                        client.ReferralDiscount = discount;
                         db.SaveChanges();
                     }
                 }
@@ -1754,7 +1754,7 @@ namespace EasyStart.Logic
                         if (oldSetting != null)
                         {
                             oldSetting.IsUsePartners = setting.IsUsePartners;
-                            oldSetting.CashBackRefferalValue = setting.CashBackRefferalValue;
+                            oldSetting.CashBackReferralValue = setting.CashBackReferralValue;
                             oldSetting.TypeBonusValue = setting.TypeBonusValue;
                             oldSetting.BonusValue = setting.BonusValue;
                             oldSetting.DateSave = setting.DateSave;

@@ -244,9 +244,9 @@ namespace EasyStart
                     DataWrapper.ClientUpdateVirtualMoney(client.Id, client.VirtualMoney);
                 }
 
-                if (order.RefferalDiscount > 0)
+                if (order.ReferralDiscount > 0)
                 {
-                    DataWrapper.ClientUpdateRefferalDiscount(order.ClientId, 0);
+                    DataWrapper.ClientUpdateReferralDiscount(order.ClientId, 0);
                 }
 
                 var numberOrder = DataWrapper.SaveOrder(order);
@@ -440,7 +440,7 @@ namespace EasyStart
                 {
                     client.ReferralCode = KeyGenerator.GetUniqueKey(8);
 
-                    if (client.ParentRefferalClientId > 0)
+                    if (client.ParentReferralClientId > 0)
                     {
                         var mainBranch = DataWrapper.GetMainBranch();
                         var partnersSetting = DataWrapper.GetPromotionPartnerSetting(mainBranch.Id);
@@ -454,7 +454,7 @@ namespace EasyStart
                                     saveTransaction = true;
                                     break;
                                 case DiscountType.Percent:
-                                    client.RefferalDiscount = partnersSetting.BonusValue;
+                                    client.ReferralDiscount = partnersSetting.BonusValue;
                                     break;
                             }
                         }
@@ -466,7 +466,7 @@ namespace EasyStart
                 if (saveTransaction)
                 {
                     var transactionLogic = new TransactionVirtualMoneyLogic(newClient.Id);
-                    transactionLogic.AddTransaction(VirtualMoneyTransactionType.EnrollmentRefferalBonus, newClient.VirtualMoney);
+                    transactionLogic.AddTransaction(VirtualMoneyTransactionType.EnrollmentReferralBonus, newClient.VirtualMoney);
                 }
 
                 result.Data = new
@@ -475,9 +475,9 @@ namespace EasyStart
                     phoneNumber = newClient.PhoneNumber,
                     userName = newClient.UserName,
                     referralCode = newClient.ReferralCode,
-                    parentRefferalClientId = newClient.ParentRefferalClientId,
+                    parentReferralClientId = newClient.ParentReferralClientId,
                     virtualMoney = newClient.VirtualMoney,
-                    refferalDiscount = newClient.RefferalDiscount,
+                    referralDiscount = newClient.ReferralDiscount,
                 };
                 result.Success = true;
 
@@ -508,7 +508,7 @@ namespace EasyStart
                 {
                     result.Data = new
                     {
-                        isActual = true,
+                        isLogin = true,
                         client
                     };
                 }

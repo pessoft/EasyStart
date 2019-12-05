@@ -32,7 +32,7 @@ namespace EasyStart.Models
         /// <summary>
         /// Одноразовая скидка полученная от реферала
         /// </summary>
-        public double RefferalDiscount { get; set; }
+        public double ReferralDiscount { get; set; }
 
         public double DeliveryPrice { get; set; }
         /// <summary>

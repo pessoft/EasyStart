@@ -397,6 +397,10 @@
     <Compile Include="Migrations\201912030929416_FixSyntax.Designer.cs">
       <DependentUpon>201912030929416_FixSyntax.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912050720058_FixWorldReferrel.cs" />
+    <Compile Include="Migrations\201912050720058_FixWorldReferrel.Designer.cs">
+      <DependentUpon>201912050720058_FixWorldReferrel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -748,6 +752,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912030929416_FixSyntax.resx">
       <DependentUpon>201912030929416_FixSyntax.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912050720058_FixWorldReferrel.resx">
+      <DependentUpon>201912050720058_FixWorldReferrel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

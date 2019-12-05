@@ -15,12 +15,12 @@ namespace EasyStart.Logic
         /// <summary>
         /// Выплата за нового клиента
         /// </summary>
-        EnrollmentRefferal = 1,
+        EnrollmentReferral = 1,
 
         /// <summary>
         /// Реферальная выплата новому клиенту
         /// </summary>
-        EnrollmentRefferalBonus =2,
+        EnrollmentReferralBonus =2,
 
         /// <summary>
         /// Оплата заказа

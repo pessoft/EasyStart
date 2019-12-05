@@ -30,9 +30,9 @@ namespace EasyStart.Logic
                 DataWrapper.ClientUpdateVirtualMoney(client.Id, client.VirtualMoney);
             }
 
-            if (order.RefferalDiscount > 0)
+            if (order.ReferralDiscount > 0)
             {
-                DataWrapper.ClientUpdateRefferalDiscount(order.ClientId, order.RefferalDiscount);
+                DataWrapper.ClientUpdateReferralDiscount(order.ClientId, order.ReferralDiscount);
             }
         }
 
@@ -108,13 +108,13 @@ namespace EasyStart.Logic
             if (!partnersSetting.IsUsePartners)
                 return;
 
-            var cashbackValue = order.AmountPayDiscountDelivery * partnersSetting.CashBackRefferalValue / 100;
-            var parentRefClient = DataWrapper.GetClient(client.ParentRefferalClientId);
+            var cashbackValue = order.AmountPayDiscountDelivery * partnersSetting.CashBackReferralValue / 100;
+            var parentRefClient = DataWrapper.GetClient(client.ParentReferralClientId);
 
             parentRefClient.VirtualMoney += cashbackValue;
             DataWrapper.ClientUpdateVirtualMoney(parentRefClient.Id, parentRefClient.VirtualMoney);
 
-            new TransactionVirtualMoneyLogic(parentRefClient.Id).AddTransaction(VirtualMoneyTransactionType.EnrollmentRefferal, cashbackValue);
+            new TransactionVirtualMoneyLogic(parentRefClient.Id).AddTransaction(VirtualMoneyTransactionType.EnrollmentReferral, cashbackValue);
         }
     }
 }
