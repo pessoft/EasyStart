@@ -1790,7 +1790,7 @@ namespace EasyStart.Logic
 
                         if (oldSetting != null)
                         {
-                            oldSetting.IsUseCaschback = setting.IsUseCaschback;
+                            oldSetting.IsUseCashback = setting.IsUseCashback;
                             oldSetting.PaymentValue = setting.PaymentValue;
                             oldSetting.ReturnedValue = setting.ReturnedValue;
                             oldSetting.DateSave = setting.DateSave;

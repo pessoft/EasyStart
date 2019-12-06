@@ -401,6 +401,10 @@
     <Compile Include="Migrations\201912050720058_FixWorldReferrel.Designer.cs">
       <DependentUpon>201912050720058_FixWorldReferrel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912060640231_FixIsUseCashback.cs" />
+    <Compile Include="Migrations\201912060640231_FixIsUseCashback.Designer.cs">
+      <DependentUpon>201912060640231_FixIsUseCashback.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -756,6 +760,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912050720058_FixWorldReferrel.resx">
       <DependentUpon>201912050720058_FixWorldReferrel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912060640231_FixIsUseCashback.resx">
+      <DependentUpon>201912060640231_FixIsUseCashback.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -9,7 +9,7 @@ namespace EasyStart.Models
     {
         public int Id { get; set; }
         public int BranchId { get; set; }
-        public bool IsUseCaschback { get; set; }
+        public bool IsUseCashback { get; set; }
         public int ReturnedValue { get; set; }
         public int PaymentValue { get; set; }
         public DateTime DateSave { get; set; }

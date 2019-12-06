@@ -312,7 +312,7 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public JsonResultModel UpdateProducRating([FromBody]RatingProductUpdater ratingUp)
+        public JsonResultModel UpdateProductRating([FromBody]RatingProductUpdater ratingUp)
         {
             var result = new JsonResultModel();
 

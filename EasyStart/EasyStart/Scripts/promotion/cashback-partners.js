@@ -23,18 +23,18 @@
 
         $.post("/Admin/LoadCashbackPartnerSettings", null, successCallBack(successFunc, loader));
     },
-    saveCaschbackSetting: function () {
+    saveCashbackSetting: function () {
         let loader = new Loader($("#promotion-cashback-bonus"));
         const self = this
 
         loader.start();
 
-        const isUseCaschback = $('#toggle-cashback-bonus').is(':checked')
+        const isUseCashback = $('#toggle-cashback-bonus').is(':checked')
         const cashbackSetting = {
             id: this.cashbackSetting ? this.cashbackSetting.Id : -1,
-            isUseCaschback: isUseCaschback,
-            returnedValue: isUseCaschback ? $('#cashback-bonus-return').val() : 0,
-            paymentValue: isUseCaschback ? $('#payment-cashback-bonus').val() : 0,
+            isUseCashback: isUseCashback,
+            returnedValue: isUseCashback ? $('#cashback-bonus-return').val() : 0,
+            paymentValue: isUseCashback ? $('#payment-cashback-bonus').val() : 0,
         }
 
         const successFunc = function (result, loader) {
@@ -42,7 +42,7 @@
             if (result.Success) {
                 self.cashbackSetting = result.Data
 
-                if (!self.cashbackSetting.IsUseCaschback) {
+                if (!self.cashbackSetting.IsUseCashback) {
                     $('#toggle-partners').prop('checked', false)
                     self.togglePartners()
 
@@ -87,9 +87,9 @@
     },
     setCasbackSetting: function () {
         if (this.cashbackSetting && Object.keys(this.cashbackSetting).length > 0) {
-            $('#toggle-cashback-bonus').prop('checked', this.cashbackSetting.IsUseCaschback)
+            $('#toggle-cashback-bonus').prop('checked', this.cashbackSetting.IsUseCashback)
 
-            if (this.cashbackSetting.IsUseCaschback) {
+            if (this.cashbackSetting.IsUseCashback) {
                 $('#promotion-cashback-bonus .group input').removeAttr('disabled')
                 $('#cashback-bonus-return').val(this.cashbackSetting.ReturnedValue)
                 $('#payment-cashback-bonus').val(this.cashbackSetting.PaymentValue)
@@ -166,7 +166,7 @@
         const message = 'Для партнерской программы активируйте функцию кешбека'
 
         if ($('#toggle-partners').is(':checked')
-            && ((this.cashbackSetting && !this.cashbackSetting.IsUseCaschback) || !this.cashbackSetting)) {
+            && ((this.cashbackSetting && !this.cashbackSetting.IsUseCashback) || !this.cashbackSetting)) {
             $('#toggle-partners').prop('checked', false)
             showInfoConfirm(message)
         } else if ($('#toggle-partners').is(':checked')) {

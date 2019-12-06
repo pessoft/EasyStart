@@ -55,7 +55,7 @@ namespace EasyStart.Logic
             var setting = new PromotionCashbackSetting()
             {
                 BranchId = branchId,
-                IsUseCaschback = false,
+                IsUseCashback = false,
                 ReturnedValue = 10,
                 PaymentValue = 40,
                 DateSave = DateTime.Now.GetDateTimeNow(zoneId)

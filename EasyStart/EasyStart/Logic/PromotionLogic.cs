@@ -124,7 +124,7 @@ namespace EasyStart.Logic
         private void ProcessingCashback(int branchId, OrderModel order, Client client)
         {
             var cashbackSetting = DataWrapper.GetPromotionCashbackSetting(branchId);
-            if (!cashbackSetting.IsUseCaschback)
+            if (!cashbackSetting.IsUseCashback)
                 return;
 
             var cashbackValue = order.AmountPayDiscountDelivery * cashbackSetting.ReturnedValue / 100;
