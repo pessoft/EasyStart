@@ -106,7 +106,7 @@ namespace EasyStart
                 var stocks = promotionLogic.GetStockForAPI(branchId, data.ClientId);
                 var coupons = promotionLogic.GetCoupons(branchId);
                 var mainBranch = DataWrapper.GetMainBranch();
-                var promotionCashBackSetting = promotionLogic.GetSettingCashBack(mainBranch.Id);
+                var promotionCashbackSetting = promotionLogic.GetSettingCashBack(mainBranch.Id);
                 var promotionPartnersSetting = promotionLogic.GetSettingPartners(mainBranch.Id);
                 var promotionSectionSettings = promotionLogic.GetSettingSections(mainBranch.Id);
 
@@ -120,7 +120,7 @@ namespace EasyStart
                     deliverySettings,
                     organizationSettings,
                     stocks,
-                    promotionCashBackSetting,
+                    promotionCashbackSetting,
                     promotionPartnersSetting,
                     promotionSectionSettings,
                 };
