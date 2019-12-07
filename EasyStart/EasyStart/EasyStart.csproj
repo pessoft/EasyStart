@@ -405,6 +405,10 @@
     <Compile Include="Migrations\201912060640231_FixIsUseCashback.Designer.cs">
       <DependentUpon>201912060640231_FixIsUseCashback.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912071728033_CouponAllowedProductBonus.cs" />
+    <Compile Include="Migrations\201912071728033_CouponAllowedProductBonus.Designer.cs">
+      <DependentUpon>201912071728033_CouponAllowedProductBonus.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -763,6 +767,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912060640231_FixIsUseCashback.resx">
       <DependentUpon>201912060640231_FixIsUseCashback.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912071728033_CouponAllowedProductBonus.resx">
+      <DependentUpon>201912071728033_CouponAllowedProductBonus.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
