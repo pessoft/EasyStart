@@ -76,7 +76,7 @@
 
         loader.start();
 
-        const getAllowedBounusProductsJSON = () => {
+        const getAllowedBonusProductsJSON = () => {
             const prodictIds = []
             $('#coupon-bonus-products-items option:selected').each(function () {
                 prodictIds.push(parseInt($(this).val()))
@@ -105,8 +105,8 @@
             rewardType: parseInt($('#coupon-type-reward option:selected').val()),
             discountValue: getIntValue($('#coupon-discount-val').val()),
             discountType: parseInt($('#coupon-discount-type option:selected').val()),
-            countBounusProducts: parseInt($('#coupon-products-count').val()),
-            allowedBounusProductsJSON: getAllowedBounusProductsJSON(),
+            countBonusProducts: parseInt($('#coupon-products-count').val()),
+            allowedBonusProductsJSON: getAllowedBonusProductsJSON(),
         }
 
         const successFunc = function (result, loader) {
@@ -240,8 +240,8 @@
             case RewardType.Products:
                 $('#coupon-type-products-container').show()
 
-                $('#coupon-products-count').val(data.CountBounusProducts)
-                data.AllowedBounusProducts.forEach(p => {
+                $('#coupon-products-count').val(data.CountBonusProducts)
+                data.AllowedBonusProducts.forEach(p => {
                     $(`#coupon-bonus-products-items`)[0].sumo.selectItem(p.toString())
                 })
                 break;

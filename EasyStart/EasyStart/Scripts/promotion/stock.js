@@ -179,8 +179,8 @@ var StockManger = {
             case RewardType.Products:
                 $('#stock-type-products-container').show()
 
-                $('#stock-products-count').val(data.CountBounusProducts)
-                data.AllowedBounusProducts.forEach(p => {
+                $('#stock-products-count').val(data.CountBonusProducts)
+                data.AllowedBonusProducts.forEach(p => {
                     $(`#bonus-product-items`)[0].sumo.selectItem(p.toString())
                 })
                 break;
@@ -241,7 +241,7 @@ var StockManger = {
             dataImage.append("file" + x, files[x]);
         }
 
-        const getAllowedBounusProductsJSON = () => {
+        const getAllowedBonusProductsJSON = () => {
             const prodictIds = []
             $('#bonus-product-items option:selected').each(function () {
                 prodictIds.push(parseInt($(this).val()))
@@ -282,8 +282,8 @@ var StockManger = {
             rewardType: parseInt($('#stock-type-reward option:selected').val()),
             discountValue: getIntValue($('#stock-discount-val').val()),
             discountType: parseInt($('#discount-type option:selected').val()),
-            countBounusProducts: parseInt($('#stock-products-count').val()),
-            allowedBounusProductsJSON: getAllowedBounusProductsJSON(),
+            countBonusProducts: parseInt($('#stock-products-count').val()),
+            allowedBonusProductsJSON: getAllowedBonusProductsJSON(),
             conditionType: parseInt($('#stock-condition-type option:selected').val()),
             conditionDeliveryType: parseInt($('#stock-condition-delivery-type option:selected').val()),
             conditionOrderSum: getIntValue($('#stock-condition-sum-count').val()),

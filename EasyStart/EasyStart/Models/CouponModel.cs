@@ -20,19 +20,19 @@ namespace EasyStart.Models
         public RewardType RewardType { get; set; }
         public int DiscountValue { get; set; }
         public DiscountType DiscountType { get; set; }
-        public int CountBounusProducts { get; set; }
-        public string AllowedBounusProductsJSON { get; set; }
+        public int CountBonusProducts { get; set; }
+        public string AllowedBonusProductsJSON { get; set; }
         public int CountUsed { get; set; }
         public bool IsDeleted { get; set; }
 
         [NotMapped]
-        public List<int> AllowedBounusProducts
+        public List<int> AllowedBonusProducts
         {
             get
             {
-                if (!string.IsNullOrEmpty(AllowedBounusProductsJSON))
+                if (!string.IsNullOrEmpty(AllowedBonusProductsJSON))
                 {
-                    return JsonConvert.DeserializeObject<List<int>>(AllowedBounusProductsJSON);
+                    return JsonConvert.DeserializeObject<List<int>>(AllowedBonusProductsJSON);
                 }
 
                 return null;
