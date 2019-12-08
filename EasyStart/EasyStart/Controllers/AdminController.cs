@@ -21,8 +21,6 @@ namespace EasyStart.Controllers
         {
             try
             {
-
-
                 var branchId = DataWrapper.GetBranchId(User.Identity.Name);
                 var typeBranch = DataWrapper.GetBranchType(branchId);
                 var converter = new ConverterBranchSetting();
@@ -743,7 +741,7 @@ namespace EasyStart.Controllers
 
         [HttpPost]
         [Authorize]
-        public void UpdateSatsusOrder(UpdaterOrderStatus data)
+        public void UpdateStatusOrder(UpdaterOrderStatus data)
         {
             try
             {

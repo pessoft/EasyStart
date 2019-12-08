@@ -1,4 +1,5 @@
-﻿using EasyStart.Models;
+﻿using EasyStart.Logic.Transaction;
+using EasyStart.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +9,10 @@ namespace EasyStart.Logic
 {
     public class PromotionLogic
     {
+        private TransactionLogic transactionLogic;
         public void ProcessingVirtualMoney(int orderId)
         {
+            transactionLogic = new TransactionLogic();
             var mainBranch = DataWrapper.GetMainBranch();
             var order = DataWrapper.GetOrder(orderId);
             var client = DataWrapper.GetClient(order.ClientId);
@@ -23,11 +26,13 @@ namespace EasyStart.Logic
             var order = DataWrapper.GetOrder(orderId);
             if (order.AmountPayCashBack > 0)
             {
-                new TransactionVirtualMoneyLogic(order.Id).AddTransaction(VirtualMoneyTransactionType.Refund, order.AmountPayCashBack);
 
                 var client = DataWrapper.GetClient(order.ClientId);
                 client.VirtualMoney += order.AmountPayCashBack;
                 DataWrapper.ClientUpdateVirtualMoney(client.Id, client.VirtualMoney);
+
+                var cashbackTransaction = TransactionWrapper.GetCashbackTransaction(orderId);
+                transactionLogic.AddRefundCashbackTransaction(cashbackTransaction.Id);
             }
 
             if (order.ReferralDiscount > 0)
@@ -37,7 +42,7 @@ namespace EasyStart.Logic
 
             if (order.CouponId > 0)
             {
-                RefunCopunCountUser(order.CouponId);
+                RefundCopunCountUser(order.CouponId);
             }
         }
 
@@ -56,7 +61,7 @@ namespace EasyStart.Logic
             }
         }
 
-        private void RefunCopunCountUser(int couponId)
+        private void RefundCopunCountUser(int couponId)
         {
             if (couponId > 0)
             {
@@ -124,20 +129,20 @@ namespace EasyStart.Logic
         private void ProcessingCashback(int branchId, OrderModel order, Client client)
         {
             var cashbackSetting = DataWrapper.GetPromotionCashbackSetting(branchId);
-            if (!cashbackSetting.IsUseCashback)
+            if (!cashbackSetting.IsUseCashback || !order.IsGetCashback)
                 return;
 
             var cashbackValue = order.AmountPayDiscountDelivery * cashbackSetting.ReturnedValue / 100;
             client.VirtualMoney += cashbackValue;
             DataWrapper.ClientUpdateVirtualMoney(client.Id, client.VirtualMoney);
 
-            new TransactionVirtualMoneyLogic(client.Id).AddTransaction(VirtualMoneyTransactionType.EnrollmentPurchase, cashbackValue);
+            transactionLogic.AddCashbackTransaction(CashbackTransactionType.EnrollmentPurchase, client.Id, order.Id, cashbackValue);
         }
 
         private void ProcessingPartners(int branchId, OrderModel order, Client client)
         {
             var partnersSetting = DataWrapper.GetPromotionPartnerSetting(branchId);
-            if (!partnersSetting.IsUsePartners)
+            if (!partnersSetting.IsUsePartners || !order.IsPartnerBonus)
                 return;
 
             var cashbackValue = order.AmountPayDiscountDelivery * partnersSetting.CashBackReferralValue / 100;
@@ -146,7 +151,7 @@ namespace EasyStart.Logic
             parentRefClient.VirtualMoney += cashbackValue;
             DataWrapper.ClientUpdateVirtualMoney(parentRefClient.Id, parentRefClient.VirtualMoney);
 
-            new TransactionVirtualMoneyLogic(parentRefClient.Id).AddTransaction(VirtualMoneyTransactionType.EnrollmentReferral, cashbackValue);
+            transactionLogic.AddPartnersTransaction(PartnersTransactionType.EnrollmentReferral, parentRefClient.Id, client.Id, cashbackValue);
         }
     }
 }

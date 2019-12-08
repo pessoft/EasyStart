@@ -1665,7 +1665,7 @@ function changeOrderStatus(orderId, orderStatus) {
         }
     });
 
-    $.post("/Admin/UpdateSatsusOrder", { OrderId: orderId, Status: orderStatus }, successCallBack(() => getTodayDataOrders(Pages.Order)));
+    $.post("/Admin/UpdateStatusOrder", { OrderId: orderId, Status: orderStatus }, successCallBack(() => getTodayDataOrders(Pages.Order)));
 }
 
 function searchByOrderNumber(containerId, isAnimation = true) {

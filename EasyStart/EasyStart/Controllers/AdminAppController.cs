@@ -2,6 +2,7 @@
 using EasyStart.Logic;
 using EasyStart.Logic.Notification;
 using EasyStart.Logic.Notification.EmailNotification;
+using EasyStart.Logic.Transaction;
 using EasyStart.Models;
 using EasyStart.Models.Notification;
 using EasyStart.Utils;
@@ -25,7 +26,6 @@ namespace EasyStart
         public JsonResultModel GetLocation()
         {
             var result = new JsonResultModel();
-            result.Success = false;
 
             try
             {
@@ -226,36 +226,42 @@ namespace EasyStart
             try
             {
                 var deliverSetting = DataWrapper.GetDeliverySetting(order.BranchId);
+                var client = DataWrapper.GetClient(order.ClientId);
 
                 order.Date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
                 order.UpdateDate = order.Date;
 
-                if (order.AmountPayCashBack > 0)
+                if (order.AmountPayCashBack > 0
+                    && (client.VirtualMoney - order.AmountPayCashBack) < 0)
                 {
-                    var client = DataWrapper.GetClient(order.ClientId);
-                    client.VirtualMoney -= order.AmountPayCashBack;
-
-                    if (client.VirtualMoney < 0)
-                        throw new Exception("Не достаточно виртуальных средств");
-
-                    new TransactionVirtualMoneyLogic(order.ClientId).AddTransaction(VirtualMoneyTransactionType.OrderPayment, order.AmountPayCashBack);
-                    DataWrapper.ClientUpdateVirtualMoney(client.Id, client.VirtualMoney);
-                }
-
-                if (order.ReferralDiscount > 0)
-                {
-                    DataWrapper.ClientUpdateReferralDiscount(order.ClientId, 0);
-                }
-
-                if (order.CouponId > 0)
-                {
-                    new PromotionLogic().UseCopun(order.CouponId);
+                    throw new Exception("Не достаточно виртуальных средств");
                 }
 
                 var numberOrder = DataWrapper.SaveOrder(order);
 
                 if (numberOrder != -1)
                 {
+                    if (order.AmountPayCashBack > 0)
+                    {
+                        client.VirtualMoney -= order.AmountPayCashBack;
+
+                        DataWrapper.ClientUpdateVirtualMoney(client.Id, client.VirtualMoney);
+
+                        var transactionLogic = new TransactionLogic();
+                        transactionLogic.AddCashbackTransaction(CashbackTransactionType.OrderPayment, client.Id, numberOrder, order.AmountPayCashBack);
+
+                    }
+
+                    if (order.ReferralDiscount > 0)
+                    {
+                        DataWrapper.ClientUpdateReferralDiscount(order.ClientId, 0);
+                    }
+
+                    if (order.CouponId > 0)
+                    {
+                        new PromotionLogic().UseCopun(order.CouponId);
+                    }
+
                     order.Id = numberOrder;
                     result.Data = numberOrder;
                     result.Success = true;
@@ -468,8 +474,8 @@ namespace EasyStart
 
                 if (saveTransaction)
                 {
-                    var transactionLogic = new TransactionVirtualMoneyLogic(newClient.Id);
-                    transactionLogic.AddTransaction(VirtualMoneyTransactionType.EnrollmentReferralBonus, newClient.VirtualMoney);
+                    var transactionLogic = new TransactionLogic();
+                    transactionLogic.AddPartnersTransaction(PartnersTransactionType.EnrollmentReferralBonus, newClient.Id, newClient.VirtualMoney);
                 }
 
                 result.Data = new
@@ -496,9 +502,11 @@ namespace EasyStart
         [HttpPost]
         public JsonResultModel CheckActualUserData([FromBody]UserDataPhoneApp userData)
         {
-            var result = new JsonResultModel();
-            result.Success = true;
-            result.Data = false;
+            var result = new JsonResultModel
+            {
+                Success = true,
+                Data = false
+            };
 
             try
             {
@@ -535,7 +543,7 @@ namespace EasyStart
         [HttpPost]
         public JsonResultModel GetCoupun([FromBody]CouponParamsModel data)
         {
-            var result = new JsonResultModel { Success = true};
+            var result = new JsonResultModel { Success = true };
             CouponModel coupon = null;
 
             try
