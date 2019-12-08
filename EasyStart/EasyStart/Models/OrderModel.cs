@@ -59,7 +59,9 @@ namespace EasyStart.Models
         /// </summary>
         public double AmountPayCashBack { get; set; }
 
-        public int StockId { get; set; }
+        [NotMapped]
+        public List<int> StockIds { get; set; }
+
         public int CouponId { get; set; }
 
         /// <summary>

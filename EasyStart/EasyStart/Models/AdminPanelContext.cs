@@ -24,5 +24,6 @@ namespace EasyStart.Models
         public DbSet<PromotionCashbackSetting> PromotionCashbackSettings { get; set; }
         public DbSet<PromotionPartnerSetting> PromotionPartnerSettings { get; set; }
         public DbSet<PromotionSectionSetting> PromotionSectionSettings { get; set; }
+        public DbSet<OrderStockApply> OrderStockApplies { get; set; }
     }
 }

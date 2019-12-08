@@ -906,6 +906,32 @@ namespace EasyStart.Logic
             return alloweCity;
         }
 
+        private static void SetStockIdsInOrder(OrderModel order)
+        {
+            if (order == null)
+                return;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var stockIds = db.OrderStockApplies
+                        .Where(p => p.OrderId == order.Id)
+                        .Select(p => p.StockId)
+                        .ToList();
+
+                    if (stockIds != null && stockIds.Any())
+                    {
+                        order.StockIds = stockIds;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
+
         public static int SaveOrder(OrderModel order)
         {
             var numberOrder = -1;
@@ -916,6 +942,20 @@ namespace EasyStart.Logic
                     var saveOrder = db.Orders.Add(order);
                     db.SaveChanges();
                     numberOrder = saveOrder.Id;
+
+                    if (order.StockIds != null && order.StockIds.Any())
+                    {
+                        order.StockIds.ForEach(p =>
+                        {
+                            db.OrderStockApplies.Add(new OrderStockApply
+                            {
+                                OrderId = numberOrder,
+                                StockId = p
+                            });
+                        });
+
+                        db.SaveChanges();
+                    }
                 }
             }
             catch (Exception ex)
@@ -933,9 +973,13 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    result = db.Orders
-                        .Where(p => p.ClientId == clinetId
-                        && stockIds.Contains(p.StockId))
+                    var orderIds = db.Orders
+                        .Where(p => p.ClientId == clinetId)
+                        .Select(p => p.Id)
+                        .ToList();
+
+                    result = db.OrderStockApplies
+                        .Where(p => orderIds.Contains(p.OrderId) && stockIds.Contains(p.StockId))
                         .Select(p => p.StockId)
                         .ToList();
                 }
@@ -959,6 +1003,11 @@ namespace EasyStart.Logic
                         .Where(p => brandchIds.Contains(p.BranchId) &&
                                     p.OrderStatus == OrderStatus.Processing)
                         .ToList();
+
+                    if (orders != null && orders.Any())
+                    {
+                        orders.ForEach(p => SetStockIdsInOrder(p));
+                    }
                 }
             }
             catch (Exception ex)
@@ -977,6 +1026,7 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     order = db.Orders.FirstOrDefault(p => p.Id == orderId);
+                    SetStockIdsInOrder(order);
                 }
             }
             catch (Exception ex)
@@ -1000,6 +1050,11 @@ namespace EasyStart.Logic
                                     DbFunctions.TruncateTime(p.UpdateDate) >= startDate.Date &&
                                     DbFunctions.TruncateTime(p.UpdateDate) <= endDate.Date)
                         .ToList();
+
+                    if (orders != null && orders.Any())
+                    {
+                        orders.ForEach(p => SetStockIdsInOrder(p));
+                    }
                 }
             }
             catch (Exception ex)
@@ -1025,6 +1080,11 @@ namespace EasyStart.Logic
                     histroyOrders = db.Orders
                         .Where(p => p.ClientId == clientId && p.BranchId == branchId)
                         .ToList();
+
+                    if (histroyOrders != null && histroyOrders.Any())
+                    {
+                        histroyOrders.ForEach(p => SetStockIdsInOrder(p));
+                    }
                 }
             }
             catch (Exception ex)
@@ -1114,9 +1174,7 @@ namespace EasyStart.Logic
 
                     foreach (var id in productIds)
                     {
-                        var outCount = 0;
-
-                        if (!result.TryGetValue(id, out outCount))
+                        if (!result.ContainsKey(id))
                         {
                             result.Add(id, 0);
                         }
