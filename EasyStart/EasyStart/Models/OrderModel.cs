@@ -65,11 +65,6 @@ namespace EasyStart.Models
         public int CouponId { get; set; }
 
         /// <summary>
-        /// Вернуть кешбек после подтверждения заказа
-        /// </summary>
-        public bool IsGetCashback { get; set; }
-
-        /// <summary>
         /// Зачислить владельцу реферала бонус
         /// </summary>
         public bool IsPartnerBonus { get; set; }
