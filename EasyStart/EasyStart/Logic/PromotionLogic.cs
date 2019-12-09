@@ -142,11 +142,15 @@ namespace EasyStart.Logic
         private void ProcessingPartners(int branchId, OrderModel order, Client client)
         {
             var partnersSetting = DataWrapper.GetPromotionPartnerSetting(branchId);
-            if (!partnersSetting.IsUsePartners || !order.IsPartnerBonus)
+            if (!partnersSetting.IsUsePartners)
+                return;
+
+            var parentRefClient = DataWrapper.GetClient(client.ParentReferralClientId);
+            if (partnersSetting.IsCashBackReferralOnce
+                && transactionLogic.ContainsTransaction(PartnersTransactionType.EnrollmentReferral, parentRefClient.Id, client.Id))
                 return;
 
             var cashbackValue = order.AmountPayDiscountDelivery * partnersSetting.CashBackReferralValue / 100;
-            var parentRefClient = DataWrapper.GetClient(client.ParentReferralClientId);
 
             parentRefClient.VirtualMoney += cashbackValue;
             DataWrapper.ClientUpdateVirtualMoney(parentRefClient.Id, parentRefClient.VirtualMoney);

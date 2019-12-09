@@ -51,5 +51,10 @@ namespace EasyStart.Logic.Transaction
         {
             AddPartnersTransaction(transactionType, clientId, 0, money);
         }
+
+        public bool ContainsTransaction(PartnersTransactionType transactionType, int parentClientId, int referralId)
+        {
+            return TransactionWrapper.ContainsTransaction(transactionType, parentClientId, referralId);
+        }
     }
 }

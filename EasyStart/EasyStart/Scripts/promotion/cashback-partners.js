@@ -70,6 +70,7 @@
             id: this.partnersSetting ? this.partnersSetting.Id : -1,
             isUsePartners: isUsePartners,
             cashBackReferralValue: isUsePartners ? $('#partner-cashback-bonus').val() : 0,
+            isCashBackReferralOnce: $('#partner-cashback-once').is(':checked'),
             typeBonusValue: isUsePartners ? $('#partner-cashback-type option:selected').val() : 1,
             bonusValue: isUsePartners ? $('#partner-cashback-bonus-return').val() : 0,
         }
@@ -108,16 +109,18 @@
             $('#toggle-partners').prop('checked', this.partnersSetting.IsUsePartners)
 
             if (this.partnersSetting.IsUsePartners) {
-                $(`#${idContainer} .group input,#${idContainer} select`).removeAttr('disabled')
+                $(`#${idContainer} .row input,#${idContainer} select`).removeAttr('disabled')
                 $select.find(`option[value="${this.partnersSetting.TypeBonusValue}"]`).attr('selected', true)
 
+                $('#partner-cashback-once').prop('checked', this.partnersSetting.IsCashBackReferralOnce)
                 $('#partner-cashback-bonus').val(this.partnersSetting.CashBackReferralValue)
                 $('#partner-cashback-bonus-return').val(this.partnersSetting.BonusValue)
             } else {
                 $select.attr('disabled', true)
                 $select.find('option[value="1"]').attr('selected', true)
 
-                $(`#${idContainer} .group input,#${idContainer} select`).attr('disabled', true)
+                $(`#${idContainer} .row input,#${idContainer} select`).attr('disabled', true)
+                $('#partner-cashback-once').prop('checked', true)
                 $('#partner-cashback-bonus').val(20)
                 $('#partner-cashback-bonus-return').val(20)
             }
@@ -170,13 +173,14 @@
             $('#toggle-partners').prop('checked', false)
             showInfoConfirm(message)
         } else if ($('#toggle-partners').is(':checked')) {
-            $(`#${idContainer} .group input,#${idContainer} select`).removeAttr('disabled')
+            $(`#${idContainer} .row input,#${idContainer} select`).removeAttr('disabled')
         } else {
             const $select = $('#partner-cashback-type')
             $select.attr('disabled', true)
             $select.find('option[value="1"]').attr('selected', true)
 
-            $(`#${idContainer} .group input,#${idContainer} select`).attr('disabled', true)
+            $(`#${idContainer} .row input,#${idContainer} select`).attr('disabled', true)
+            $('#partner-cashback-once').prop('checked', true)
             $('#partner-cashback-bonus').val(20)
             $('#partner-cashback-bonus-return').val(20)
         }

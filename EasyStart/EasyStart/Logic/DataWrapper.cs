@@ -1890,6 +1890,7 @@ namespace EasyStart.Logic
                             oldSetting.TypeBonusValue = setting.TypeBonusValue;
                             oldSetting.BonusValue = setting.BonusValue;
                             oldSetting.DateSave = setting.DateSave;
+                            oldSetting.IsCashBackReferralOnce = setting.IsCashBackReferralOnce;
 
                             result = oldSetting;
                         }

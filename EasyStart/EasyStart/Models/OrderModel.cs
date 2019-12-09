@@ -64,11 +64,6 @@ namespace EasyStart.Models
 
         public int CouponId { get; set; }
 
-        /// <summary>
-        /// Зачислить владельцу реферала бонус
-        /// </summary>
-        public bool IsPartnerBonus { get; set; }
-
         [NotMapped]
         [ScriptIgnore]
         public Dictionary<int, int> ProductCount

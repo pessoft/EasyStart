@@ -12,6 +12,7 @@ namespace EasyStart.Models
         public int BranchId { get; set; }
         public bool IsUsePartners { get; set; }
         public int CashBackReferralValue { get; set; }
+        public bool IsCashBackReferralOnce { get; set; }
         public DiscountType TypeBonusValue { get; set; }
         public int BonusValue { get; set; }
         public DateTime DateSave { get; set; }

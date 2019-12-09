@@ -265,10 +265,16 @@
                                         <input id="toggle-partners" type="checkbox" onchange="CashbackPartners.togglePartners()" />
                                         <label for="toggle-partners">Использовать партнёрскую программу</label>
                                     </div>
-                                    <div class="group">
-                                        <input required disabled type="number" min="0" max="100" autocomplete="off" oninput="CashbackPartners.onChangePaymentCashbackBonusValue()" id="partner-cashback-bonus" value="20" />
-                                        <span class="bar"></span>
-                                        <label>Кешбек с заказа реферала (%)</label>
+                                    <div class="row">
+                                        <div class="group">
+                                            <input required disabled type="number" min="0" max="100" autocomplete="off" oninput="CashbackPartners.onChangePaymentCashbackBonusValue()" id="partner-cashback-bonus" value="20" />
+                                            <span class="bar"></span>
+                                            <label>Кешбек с заказа реферала (%)</label>
+                                        </div>
+                                        <div class="checkbox-item checkbox-item-left">
+                                            <input id="partner-cashback-once" type="checkbox" onchange="CashbackPartners.togglePartners()" checked/>
+                                            <label for="partner-cashback-once">Единоразовый кешбек за реферала</label>
+                                        </div>
                                     </div>
                                     <div class="row">
                                         <select id="partner-cashback-type" class="cashback-partners-type" disabled onchange="CashbackPartners.onChangePaymentCashbackBonusValue()">

@@ -183,7 +183,6 @@
     <Compile Include="Logic\AnalyticsDataWrapper.cs" />
     <Compile Include="Logic\BrachClone.cs" />
     <Compile Include="Logic\BuyType.cs" />
-    <Compile Include="Logic\PartnersBonusType.cs" />
     <Compile Include="Logic\PreprocessorDataAPI.cs" />
     <Compile Include="Logic\PromotionLogic.cs" />
     <Compile Include="Logic\Transaction\TransactionLogic.cs" />
@@ -430,6 +429,14 @@
     <Compile Include="Migrations\201912090516000_RemovePropertyIsCashbackInOrder.cs" />
     <Compile Include="Migrations\201912090516000_RemovePropertyIsCashbackInOrder.Designer.cs">
       <DependentUpon>201912090516000_RemovePropertyIsCashbackInOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912090536576_AddDurationCashbeckParentReferral.cs" />
+    <Compile Include="Migrations\201912090536576_AddDurationCashbeckParentReferral.Designer.cs">
+      <DependentUpon>201912090536576_AddDurationCashbeckParentReferral.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912090604471_RemovePropertyIsPartnerBonusInOrder.cs" />
+    <Compile Include="Migrations\201912090604471_RemovePropertyIsPartnerBonusInOrder.Designer.cs">
+      <DependentUpon>201912090604471_RemovePropertyIsPartnerBonusInOrder.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
@@ -810,6 +817,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912090516000_RemovePropertyIsCashbackInOrder.resx">
       <DependentUpon>201912090516000_RemovePropertyIsCashbackInOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912090536576_AddDurationCashbeckParentReferral.resx">
+      <DependentUpon>201912090536576_AddDurationCashbeckParentReferral.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912090604471_RemovePropertyIsPartnerBonusInOrder.resx">
+      <DependentUpon>201912090604471_RemovePropertyIsPartnerBonusInOrder.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

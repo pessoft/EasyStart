@@ -85,5 +85,31 @@ namespace EasyStart.Logic.Transaction
 
             return result; 
         }
+
+        public static bool ContainsTransaction(PartnersTransactionType transactionType, int parentClientId, int referralId)
+        {
+            bool result = false;
+
+            try
+            {
+                using (var db = new TransactionContext())
+                {
+                    var search = db.PartnersTransactions.Where(p => p.TransactionType == transactionType
+                    && p.ClientId == parentClientId
+                    && p.ReferralId == referralId)
+                    .Take(1)
+                    .ToList();
+
+                    if (search != null && search.Any())
+                        result = search.Count > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
     }
 }
