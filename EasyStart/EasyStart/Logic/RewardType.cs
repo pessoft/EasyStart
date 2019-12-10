@@ -8,7 +8,7 @@ namespace EasyStart.Logic
     public enum RewardType
     {
         Unknown = 0,
-        Discout = 1,
+        Discount = 1,
         Products = 2
     }
 }

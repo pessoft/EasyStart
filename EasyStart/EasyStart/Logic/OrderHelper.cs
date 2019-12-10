@@ -71,7 +71,7 @@ namespace EasyStart.Logic
         {
             orderInfo.AmountPrice = $"{order.AmountPay} руб.";
             orderInfo.DeliveryPrice = $"{order.DeliveryPrice} руб.";
-            orderInfo.Discount = order.Discount == 0 ? $"{order.Discount}%" : $"{order.Discount}% ({Math.Round(order.AmountPay * order.Discount / 100, 2)} руб.)";
+            orderInfo.Discount = order.DiscountPercent == 0 ? $"{order.DiscountPercent}%" : $"{order.DiscountPercent}% ({Math.Round(order.AmountPay * order.DiscountPercent / 100, 2)} руб.)";
             orderInfo.ButType = order.BuyType.GetDescription();
             orderInfo.CashBack = order.CashBack == 0 ? $"{order.CashBack} руб." : $"{order.CashBack} руб. ({Math.Round(order.CashBack - order.AmountPayDiscountDelivery, 2)} руб.)";
             orderInfo.AmountPayDiscountDelivery = $"{order.AmountPayDiscountDelivery} руб."; ;

@@ -231,7 +231,7 @@
         $(`#coupon-type-reward option[value="${data.RewardType}"]`).attr('selected', true)
 
         switch (data.RewardType) {
-            case RewardType.Discout:
+            case RewardType.Discount:
                 $('#coupon-type-discount-container').show()
 
                 $('#coupon-discount-val').val(data.DiscountValue)
@@ -336,7 +336,7 @@
             const rewardType = parseInt($('#coupon-type-reward option:selected').val())
 
             switch (rewardType) {
-                case RewardType.Discout:
+                case RewardType.Discount:
                     const val = parseInt($('#coupon-discount-val').val())
 
                     if (Number.isNaN(val) || val == 0)
@@ -382,7 +382,7 @@
         const rewardType = parseInt($('#coupon-type-reward option:selected').val())
         const callback = () => {
             switch (rewardType) {
-                case RewardType.Discout:
+                case RewardType.Discount:
                     $('#coupon-type-discount-container').show(animationOption, '', 150)
                     break
                 case RewardType.Products:

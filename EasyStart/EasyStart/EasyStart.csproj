@@ -438,6 +438,14 @@
     <Compile Include="Migrations\201912090604471_RemovePropertyIsPartnerBonusInOrder.Designer.cs">
       <DependentUpon>201912090604471_RemovePropertyIsPartnerBonusInOrder.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912101342036_SplitDiscount.cs" />
+    <Compile Include="Migrations\201912101342036_SplitDiscount.Designer.cs">
+      <DependentUpon>201912101342036_SplitDiscount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912101358575_RemoveOldProperityDiscount.cs" />
+    <Compile Include="Migrations\201912101358575_RemoveOldProperityDiscount.Designer.cs">
+      <DependentUpon>201912101358575_RemoveOldProperityDiscount.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -823,6 +831,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912090604471_RemovePropertyIsPartnerBonusInOrder.resx">
       <DependentUpon>201912090604471_RemovePropertyIsPartnerBonusInOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912101342036_SplitDiscount.resx">
+      <DependentUpon>201912101342036_SplitDiscount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912101358575_RemoveOldProperityDiscount.resx">
+      <DependentUpon>201912101358575_RemoveOldProperityDiscount.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

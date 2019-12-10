@@ -2366,3 +2366,7 @@ button {
 .order-details-product-bonus {
     color: #FF5722;
 }
+
+.order-details-price-discount {
+    grid-template-columns: 0.3fr 1fr;
+}

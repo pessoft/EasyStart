@@ -170,7 +170,7 @@ var StockManger = {
         $(`#stock-type-reward option[value="${data.RewardType}"]`).attr('selected', true)
 
         switch (data.RewardType) {
-            case RewardType.Discout:
+            case RewardType.Discount:
                 $('#stock-type-discount-container').show()
 
                 $('#stock-discount-val').val(data.DiscountValue)
@@ -497,7 +497,7 @@ var StockManger = {
             const rewardType = parseInt($('#stock-type-reward option:selected').val())
 
             switch (rewardType) {
-                case RewardType.Discout:
+                case RewardType.Discount:
                     const val = parseInt($('#stock-discount-val').val())
 
                     if (Number.isNaN(val) || val == 0)
@@ -591,7 +591,7 @@ var StockManger = {
         const rewardType = parseInt($('#stock-type-reward option:selected').val())
         const callback = () => {
             switch (rewardType) {
-                case RewardType.Discout:
+                case RewardType.Discount:
                     $('#stock-type-discount-container').show(animationOption, '', 150)
                     break
                 case RewardType.Products:

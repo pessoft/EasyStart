@@ -27,7 +27,9 @@ namespace EasyStart.Models
         public BuyType BuyType { get; set; }
         public string Comment { get; set; }
         public string ProductCountJSON { get; set; }
-        public double Discount { get; set; }
+        
+        public double DiscountPercent { get; set; }
+        public double DiscountRuble { get; set; }
 
         /// <summary>
         /// Одноразовая скидка полученная от реферала

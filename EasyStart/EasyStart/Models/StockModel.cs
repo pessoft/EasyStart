@@ -44,7 +44,6 @@ namespace EasyStart.Models
         public string ConditionCountProductsJSON { get; set; }
 
         [NotMapped]
-        [ScriptIgnore]
         public Dictionary<int, int> ConditionCountProducts
         {
             get

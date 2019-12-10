@@ -2020,6 +2020,17 @@ class OrderDetailsData {
         this.DeliveryType = getDeliveryType(order.DeliveryType);
     }
 
+    getDiscounText(order) {
+        const prefixRub = "руб.";
+        const prefixPercent = "%"
+        const percent = order.DiscountPercent == 0 ? `0${prefixPercent}` : `${order.DiscountPercent}${prefixPercent} (${xFormatPrice(order.AmountPay * order.DiscountPercent / 100)} ${prefixRub})`
+        
+        const ruble = order.DiscountRuble > 0 ? `${order.DiscountRuble} руб.` : ''
+        let text = percent && ruble ? `${percent} и ${ruble}` : percent || ruble
+
+        return text
+    }
+
     convertAmountInfo(order) {
         const prefixRub = "руб.";
         const prefixPercent = "%";
@@ -2027,7 +2038,7 @@ class OrderDetailsData {
         this.AmountPay = `${xFormatPrice(order.AmountPay)} ${prefixRub}`;
         this.AmountPayCashBack = `${xFormatPrice(order.AmountPayCashBack)} ${prefixRub}`;
         this.DeliveryPrice = `${xFormatPrice(order.DeliveryPrice)} ${prefixRub}`;
-        this.Discount = order.Discount == 0 ? `0${prefixPercent}` : `${order.Discount}${prefixPercent} (${xFormatPrice(order.AmountPay * order.Discount / 100)} ${prefixRub})`
+        this.Discount = this.getDiscounText(order);
         this.PayType = getBuyType(order.BuyType);
         this.CashBack = order.CashBack > 0 ? `${xFormatPrice(order.CashBack - order.AmountPayDiscountDelivery)} ${prefixRub}` : `${xFormatPrice(order.CashBack)} ${prefixRub}`;
         this.AmountPayDiscountDelivery = `${xFormatPrice(order.AmountPayDiscountDelivery)} ${prefixRub}`;
