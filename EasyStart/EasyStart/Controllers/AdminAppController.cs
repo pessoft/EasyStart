@@ -555,7 +555,7 @@ namespace EasyStart
                 Logger.Log.Error(ex);
             }
 
-            result.Data = new { coupon };
+            result.Data = coupon;
 
             return result;
         }

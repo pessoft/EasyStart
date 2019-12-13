@@ -1669,8 +1669,8 @@ namespace EasyStart.Logic
                         .Where(p => !p.IsDeleted
                         && p.BranchId == branchId
                         && p.Promocode == promocode
-                        && DbFunctions.TruncateTime(p.DateFrom) >= date
                         && DbFunctions.TruncateTime(p.DateFrom) <= date
+                        && DbFunctions.TruncateTime(p.DateTo) >= date
                         && p.CountUsed < p.Count)
                         .FirstOrDefault();
                 }
