@@ -1295,14 +1295,20 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    if (clinet.Id != 0)
+                    if (clinet.Id > 0)
                     {
                         newClient = db.Clients.FirstOrDefault(p => p.Id == clinet.Id);
+                    } else
+                    {
+                        newClient = db.Clients.FirstOrDefault(p => p.PhoneNumber == clinet.PhoneNumber);
                     }
 
                     if (newClient != null)
                     {
+                        newClient.UserName = clinet.UserName;
                         newClient.PhoneNumber = clinet.PhoneNumber;
+                        newClient.ParentReferralClientId = clinet.ParentReferralClientId;
+                        newClient.ParentReferralCode = clinet.ParentReferralCode;
                     }
                     else
                     {
@@ -1318,7 +1324,7 @@ namespace EasyStart.Logic
                 Logger.Log.Error(ex);
             }
 
-            return clinet;
+            return newClient;
         }
 
         public static void ClientUpdateVirtualMoney(int clientId, double virtualMoney)
@@ -1529,6 +1535,44 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     client = db.Clients.FirstOrDefault(p => p.Id == clinetId);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return client;
+        }
+
+        public static Client GetClientByPhoneNumber(string phoneNumber)
+        {
+            Client client = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    client = db.Clients.FirstOrDefault(p => p.PhoneNumber == phoneNumber);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return client;
+        }
+
+        public static Client GetClientByByReferralCode(string referralCode)
+        {
+            Client client = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    client = db.Clients.FirstOrDefault(p => p.ReferralCode == referralCode);
                 }
             }
             catch (Exception ex)

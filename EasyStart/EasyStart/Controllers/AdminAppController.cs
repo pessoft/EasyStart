@@ -172,7 +172,9 @@ namespace EasyStart
             {
                 var products = DataWrapper.GetAllProductsVisible(branchId)
                 .GroupBy(p => p.CategoryId)
-                .ToDictionary(p => p.Key, p => p.ToList());
+                .ToDictionary(
+                    p => p.Key,
+                    p => p.OrderBy(x => x.OrderNumber).ToList());
 
                 foreach (var kv in products)
                 {
@@ -444,13 +446,32 @@ namespace EasyStart
                     string.IsNullOrEmpty(client.UserName))
                     return result;
 
+                var oldClient = DataWrapper.GetClientByPhoneNumber(client.PhoneNumber);
+
                 var saveTransaction = false;
-                if (client.Id < 1)
+
+                if (oldClient == null)
                 {
                     client.ReferralCode = KeyGenerator.GetUniqueKey(8);
+                }
 
-                    if (client.ParentReferralClientId > 0)
+
+                Action setDefaultReferralData = () =>
+                {
+                    client.ParentReferralClientId = 0;
+                    client.ParentReferralCode = null;
+                };
+
+                if (oldClient != null && oldClient.ParentReferralClientId < 1 && !string.IsNullOrEmpty(client.ParentReferralCode)
+                    || oldClient == null && !string.IsNullOrEmpty(client.ParentReferralCode))
+                {
+                    var parentClient = DataWrapper.GetClientByByReferralCode(client.ParentReferralCode);
+
+                    if (parentClient != null)
                     {
+                        client.ParentReferralClientId = parentClient.Id;
+                        client.ParentReferralCode = parentClient.ReferralCode;
+
                         var mainBranch = DataWrapper.GetMainBranch();
                         var partnersSetting = DataWrapper.GetPromotionPartnerSetting(mainBranch.Id);
 
@@ -468,9 +489,21 @@ namespace EasyStart
                             }
                         }
                     }
+                    else
+                    {
+                        setDefaultReferralData();
+                    }
+                } 
+                else if (oldClient != null)
+                {
+                    client.ParentReferralClientId = oldClient.ParentReferralClientId;
+                    client.ParentReferralCode = oldClient.ParentReferralCode;
+                } else
+                {
+                    setDefaultReferralData();
                 }
 
-                var newClient = DataWrapper.AddOrUpdateClient(client);
+                    var newClient = DataWrapper.AddOrUpdateClient(client);
 
                 if (saveTransaction)
                 {
@@ -485,6 +518,7 @@ namespace EasyStart
                     userName = newClient.UserName,
                     referralCode = newClient.ReferralCode,
                     parentReferralClientId = newClient.ParentReferralClientId,
+                    parentReferralCode = newClient.ParentReferralCode,
                     virtualMoney = newClient.VirtualMoney,
                     referralDiscount = newClient.ReferralDiscount,
                 };
@@ -525,6 +559,7 @@ namespace EasyStart
                         userName = client.UserName,
                         referralCode = client.ReferralCode,
                         parentReferralClientId = client.ParentReferralClientId,
+                        parentReferralCode = client.ParentReferralCode,
                         virtualMoney = client.VirtualMoney,
                         referralDiscount = client.ReferralDiscount,
                     };

@@ -446,6 +446,10 @@
     <Compile Include="Migrations\201912101358575_RemoveOldProperityDiscount.Designer.cs">
       <DependentUpon>201912101358575_RemoveOldProperityDiscount.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912161840545_AddParentReferralCodeClient.cs" />
+    <Compile Include="Migrations\201912161840545_AddParentReferralCodeClient.Designer.cs">
+      <DependentUpon>201912161840545_AddParentReferralCodeClient.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -837,6 +841,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912101358575_RemoveOldProperityDiscount.resx">
       <DependentUpon>201912101358575_RemoveOldProperityDiscount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912161840545_AddParentReferralCodeClient.resx">
+      <DependentUpon>201912161840545_AddParentReferralCodeClient.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

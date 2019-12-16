@@ -13,6 +13,7 @@ namespace EasyStart.Models
         public DateTime Date { get; set; }
         public string ReferralCode { get; set; }
         public int ParentReferralClientId { get; set; }
+        public string ParentReferralCode { get; set; }
         public double VirtualMoney { get; set; }
         public double ReferralDiscount { get; set; }
     }
