@@ -65,7 +65,7 @@
 
         loader.start();
 
-        const isUsePartners = $('#toggle-cashback-bonus').is(':checked')
+        const isUsePartners = $('#toggle-partners').is(':checked')
         const partnerSetting = {
             id: this.partnersSetting ? this.partnersSetting.Id : -1,
             isUsePartners: isUsePartners,
