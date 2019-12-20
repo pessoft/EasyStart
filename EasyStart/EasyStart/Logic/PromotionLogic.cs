@@ -10,9 +10,13 @@ namespace EasyStart.Logic
     public class PromotionLogic
     {
         private TransactionLogic transactionLogic;
-        public void ProcessingVirtualMoney(int orderId)
+
+        public PromotionLogic()
         {
             transactionLogic = new TransactionLogic();
+        }
+        public void ProcessingVirtualMoney(int orderId)
+        {
             var mainBranch = DataWrapper.GetMainBranch();
             var order = DataWrapper.GetOrder(orderId);
             var client = DataWrapper.GetClient(order.ClientId);

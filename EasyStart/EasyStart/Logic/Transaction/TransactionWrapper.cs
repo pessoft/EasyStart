@@ -15,7 +15,7 @@ namespace EasyStart.Logic.Transaction
 
             try
             {
-                using (var db = new TransactionContext())
+                using (var db = new AdminPanelContext())
                 {
                     db.CashbackTransactions.Add(transaction);
                     db.SaveChanges();
@@ -34,7 +34,7 @@ namespace EasyStart.Logic.Transaction
 
             try
             {
-                using (var db = new TransactionContext())
+                using (var db = new AdminPanelContext())
                 {
                     db.RefundCashbackTransactions.Add(transaction);
                     db.SaveChanges();
@@ -53,7 +53,7 @@ namespace EasyStart.Logic.Transaction
 
             try
             {
-                using (var db = new TransactionContext())
+                using (var db = new AdminPanelContext())
                 {
                     db.PartnersTransactions.Add(transaction);
                     db.SaveChanges();
@@ -74,7 +74,7 @@ namespace EasyStart.Logic.Transaction
 
             try
             {
-                using (var db = new TransactionContext())
+                using (var db = new AdminPanelContext())
                 {
                     result =  db.CashbackTransactions.FirstOrDefault(p => p.OrderId == orderId);
                 }
@@ -93,7 +93,7 @@ namespace EasyStart.Logic.Transaction
 
             try
             {
-                using (var db = new TransactionContext())
+                using (var db = new AdminPanelContext())
                 {
                     var search = db.PartnersTransactions.Where(p => p.TransactionType == transactionType
                     && p.ClientId == parentClientId
@@ -119,7 +119,7 @@ namespace EasyStart.Logic.Transaction
 
             try
             {
-                using (var db = new TransactionContext())
+                using (var db = new AdminPanelContext())
                 {
                     result = db.PartnersTransactions.Where(p => p.ClientId == clientId).ToList();
                 }
@@ -138,7 +138,7 @@ namespace EasyStart.Logic.Transaction
 
             try
             {
-                using (var db = new TransactionContext())
+                using (var db = new AdminPanelContext())
                 {
                     result = db.CashbackTransactions.Where(p => p.ClientId == clientId).ToList();
                     if (result != null && result.Any())

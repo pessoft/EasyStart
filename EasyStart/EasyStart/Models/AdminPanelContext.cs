@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasyStart.Models.Transaction;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -25,5 +26,9 @@ namespace EasyStart.Models
         public DbSet<PromotionPartnerSetting> PromotionPartnerSettings { get; set; }
         public DbSet<PromotionSectionSetting> PromotionSectionSettings { get; set; }
         public DbSet<OrderStockApply> OrderStockApplies { get; set; }
+
+        public DbSet<CashbackTransaction> CashbackTransactions { get; set; }
+        public DbSet<RefundCashbackTransactionModel> RefundCashbackTransactions { get; set; }
+        public DbSet<PartnersTransaction> PartnersTransactions { get; set; }
     }
 }
