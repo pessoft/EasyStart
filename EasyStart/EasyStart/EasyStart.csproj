@@ -484,9 +484,9 @@
     <Compile Include="Models\SettingModel.cs" />
     <Compile Include="Models\StockModel.cs" />
     <Compile Include="Models\TodayDataOrdersModel.cs" />
-    <Compile Include="Models\Transaction\TransactionContext.cs" />
     <Compile Include="Models\Transaction\CashbackTransaction.cs" />
     <Compile Include="Models\Transaction\PartnersTransaction.cs" />
+    <Compile Include="Models\Transaction\PartnersTransactionView.cs" />
     <Compile Include="Models\Transaction\RefundCashbackTransactionModel.cs" />
     <Compile Include="Models\UpdaterOrderNumber.cs" />
     <Compile Include="Models\UpdaterOrderStatus.cs" />

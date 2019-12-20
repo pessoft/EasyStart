@@ -113,15 +113,31 @@ namespace EasyStart.Logic.Transaction
             return result;
         }
 
-        public static List<PartnersTransaction> GetPartnersTransactions(int clientId)
+        public static List<PartnersTransactionView> GetPartnersTransactions(int clientId)
         {
-            List<PartnersTransaction> result = null;
+            List<PartnersTransactionView> result = null;
 
             try
             {
                 using (var db = new AdminPanelContext())
                 {
-                    result = db.PartnersTransactions.Where(p => p.ClientId == clientId).ToList();
+                    var transactions = db.PartnersTransactions.Where(p => p.ClientId == clientId
+                     && p.TransactionType == PartnersTransactionType.EnrollmentReferral)                    
+                     .ToList();
+
+                    var referralIds = transactions.Select(p => p.ReferralId).ToList();
+                    var referallDict = db.Clients.Where(p => referralIds.Contains(p.Id)).ToDictionary(p => p.Id);
+
+                    result = transactions.Select(p => new PartnersTransactionView
+                    {
+                        Id = p.Id,
+                        ClientId = p.ClientId,
+                        Date = p.Date,
+                        Money = p.Money,
+                        ReferralId = p.ReferralId,
+                        ReferralPhone = referallDict[p.ReferralId].PhoneNumber,
+                        TransactionType = p.TransactionType
+                    }).ToList();
                 }
             }
             catch (Exception ex)

@@ -600,7 +600,7 @@ namespace EasyStart
         public JsonResultModel GetPartnersTransaction([FromBody]int clientId)
         {
             var result = new JsonResultModel();
-            List<PartnersTransaction> transactions = null;
+            List<PartnersTransactionView> transactions = null;
 
             try
             {
