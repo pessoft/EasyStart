@@ -5,6 +5,7 @@ using EasyStart.Logic.Notification.EmailNotification;
 using EasyStart.Logic.Transaction;
 using EasyStart.Models;
 using EasyStart.Models.Notification;
+using EasyStart.Models.Transaction;
 using EasyStart.Utils;
 using Newtonsoft.Json;
 using System;
@@ -591,6 +592,58 @@ namespace EasyStart
             }
 
             result.Data = coupon;
+
+            return result;
+        }
+
+        [HttpPost]
+        public JsonResultModel GetPartnersTransaction([FromBody]int clientId)
+        {
+            var result = new JsonResultModel();
+            List<PartnersTransaction> transactions = null;
+
+            try
+            {
+                transactions = TransactionWrapper.GetPartnersTransactions(clientId);
+
+                if (transactions != null)
+                {
+                    result.Success = true;
+                    result.Data = transactions;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+
+                result.ErrorMessage = "При загрузке партнерских транзакций пошло что то не так";
+            }
+
+            return result;
+        }
+
+        [HttpPost]
+        public JsonResultModel GetCashbackTransaction([FromBody]int clientId)
+        {
+            var result = new JsonResultModel();
+            List<CashbackTransaction> transactions = null;
+
+            try
+            {
+                transactions = TransactionWrapper.GetCashbackTransactions(clientId);
+
+                if (transactions != null)
+                {
+                    result.Success = true;
+                    result.Data = transactions;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+
+                result.ErrorMessage = "При загрузке транзакций кешбека пошло что то не так";
+            }
 
             return result;
         }

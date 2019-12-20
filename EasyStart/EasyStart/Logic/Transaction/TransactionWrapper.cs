@@ -1,6 +1,7 @@
 ﻿using EasyStart.Models;
 using EasyStart.Models.Transaction;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace EasyStart.Logic.Transaction
@@ -102,6 +103,60 @@ namespace EasyStart.Logic.Transaction
 
                     if (search != null && search.Any())
                         result = search.Count > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
+        public static List<PartnersTransaction> GetPartnersTransactions(int clientId)
+        {
+            List<PartnersTransaction> result = null;
+
+            try
+            {
+                using (var db = new TransactionContext())
+                {
+                    result = db.PartnersTransactions.Where(p => p.ClientId == clientId).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
+        public static List<CashbackTransaction> GetCashbackTransactions(int clientId)
+        {
+            List<CashbackTransaction> result = null;
+
+            try
+            {
+                using (var db = new TransactionContext())
+                {
+                    result = db.CashbackTransactions.Where(p => p.ClientId == clientId).ToList();
+                    if (result != null && result.Any())
+                    {
+                        var ids = result.Select(p => p.Id).ToList();
+
+                        var refundTransactaionIds = db.RefundCashbackTransactions
+                            .Where(p => ids.Contains(p.CashbackTransactionId))
+                            .Select(p => p.CashbackTransactionId)
+                            .ToList();
+
+                        if (refundTransactaionIds != null && refundTransactaionIds.Any())
+                        {
+                            result = result
+                                .Where(p => !refundTransactaionIds.Contains(p.Id))
+                                .ToList();
+                        }
+                    }
                 }
             }
             catch (Exception ex)
