@@ -122,7 +122,7 @@ namespace EasyStart.Logic
 
         public List<PromotionSectionSetting> GetSettingSections(int branchId)
         {
-            return DataWrapper.GetPromotionSettings(branchId);
+            return DataWrapper.GetPromotionSectionSettings(branchId);
         }
 
         public PromotionPartnerSetting GetSettingPartners(int branchId)

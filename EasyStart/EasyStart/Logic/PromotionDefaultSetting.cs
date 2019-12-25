@@ -47,7 +47,7 @@ namespace EasyStart.Logic
         private void SavePromotionSectionSettings()
         {
             var settings = GetPromotionSectionSettings();
-            DataWrapper.SavePromotionSettings(settings);
+            DataWrapper.SavePromotionSectionSettings(settings);
         }
 
         private PromotionCashbackSetting GetPromotionCashbackSetting()

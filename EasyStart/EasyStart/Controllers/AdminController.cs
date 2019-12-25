@@ -979,9 +979,15 @@ namespace EasyStart.Controllers
             try
             {
                 var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-                var settings = DataWrapper.GetPromotionSettings(branchId);
+                var sections = DataWrapper.GetPromotionSectionSettings(branchId);
+                var setting = DataWrapper.GetPromotionSetting(branchId);
 
-                result.Data = settings;
+                result.Data = new PromotionSettingWrapper
+                {
+                    Sections = sections,
+                    Setting = setting
+                };
+
                 result.Success = true;
             }
             catch (Exception ex)
@@ -995,21 +1001,27 @@ namespace EasyStart.Controllers
 
         [HttpPost]
         [Authorize]
-        public JsonResult SavePromotionSettings(List<PromotionSectionSetting> settings)
+        public JsonResult SavePromotionSettings(PromotionSettingWrapper setting)
         {
             var result = new JsonResultModel();
 
             try
             {
-                if (settings == null || !settings.Any())
+                if (setting == null || !setting.Sections.Any() || setting.Setting == null)
                     throw new Exception("Пустая настрока");
 
                 var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-                settings.ForEach(p => p.BranchId = branchId);
+                setting.Sections.ForEach(p => p.BranchId = branchId);
+                setting.Setting.BranchId = branchId;
 
-                var newSettings = DataWrapper.SavePromotionSettings(settings);
+                var newSectionSettings = DataWrapper.SavePromotionSectionSettings(setting.Sections);
+                var newSettings = DataWrapper.SavePromotionSetting(setting.Setting);
 
-                result.Data = newSettings;
+                result.Data = new PromotionSettingWrapper
+                {
+                    Sections = newSectionSettings,
+                    Setting = newSettings
+                };
                 result.Success = true;
             }
             catch (Exception ex)

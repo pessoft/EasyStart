@@ -476,6 +476,8 @@
     <Compile Include="Models\PromotionCashbackSetting.cs" />
     <Compile Include="Models\PromotionPartnerSetting.cs" />
     <Compile Include="Models\PromotionSectionSetting.cs" />
+    <Compile Include="Models\PromotionSetting.cs" />
+    <Compile Include="Models\PromotionSettingWrapper.cs" />
     <Compile Include="Models\RatingProduct.cs" />
     <Compile Include="Models\RatingProductMiddleware.cs" />
     <Compile Include="Models\RatingProductUpdater.cs" />

@@ -109,7 +109,8 @@ namespace EasyStart
                 var mainBranch = DataWrapper.GetMainBranch();
                 var promotionCashbackSetting = promotionLogic.GetSettingCashBack(mainBranch.Id);
                 var promotionPartnersSetting = promotionLogic.GetSettingPartners(mainBranch.Id);
-                var promotionSectionSettings = promotionLogic.GetSettingSections(mainBranch.Id);
+                var promotionSectionSettings = promotionLogic.GetSettingSections(branchId);
+                var promotionSetting = DataWrapper.GetPromotionSetting(branchId);
 
                 var productIds = products.Values.SelectMany(p => p.Select(s => s.Id)).ToList();
                 var reviewsCount = DataWrapper.GetProductReviewsVisibleCount(productIds);
@@ -124,6 +125,7 @@ namespace EasyStart
                     promotionCashbackSetting,
                     promotionPartnersSetting,
                     promotionSectionSettings,
+                    promotionSetting
                 };
                 result.Success = true;
             }

@@ -30,5 +30,6 @@ namespace EasyStart.Models
         public DbSet<CashbackTransaction> CashbackTransactions { get; set; }
         public DbSet<RefundCashbackTransactionModel> RefundCashbackTransactions { get; set; }
         public DbSet<PartnersTransaction> PartnersTransactions { get; set; }
+        public DbSet<PromotionSetting> PromotionSettings { get; set; }
     }
 }

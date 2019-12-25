@@ -1,6 +1,7 @@
 ﻿var PromotionSetting = {
+    setting: {},
     loadSettings: function () {
-        let loader = new Loader($("#promotion-settings"));
+        let loader = new Loader($("#promotion-section-setting"));
         const self = this
 
         loader.start();
@@ -9,6 +10,7 @@
             loader.stop();
 
             if (result.Success) {
+                self.setting = result.Data
                 self.setSettings(result.Data)
             } else {
                 showErrorMessage(result.ErrorMessage);
@@ -25,6 +27,7 @@
 
         const successFunc = function (result, loader) {
             if (result.Success) {
+                self.setting = result.Data
                 self.setSettings(result.Data)
             } else {
                 showErrorMessage(result.ErrorMessage);
@@ -33,26 +36,28 @@
             loader.stop();
         }
 
-        const settings = this.getSettings()
+        const setting = this.getSettings()
 
-        if (!settings || settings.length == 0) {
+        if (!setting || setting.Sections.length == 0) {
             loader.stop();
             showErrorMessage("Попытка сохранения пустой настройки");
             return
         }
 
-        $.post("/Admin/SavePromotionSettings", { settings }, successCallBack(successFunc, loader));
+        $.post("/Admin/SavePromotionSettings", { setting }, successCallBack(successFunc, loader));
     },
     bindDragula: function () {
         dragula([document.getElementById("promotion-items-priority")], {
             revertOnSpill: true
         })
     },
-    setSettings: function (settings) {
+    setSettings: function (data) {
+        this.setSectionsSetting(data.Sections)
+        this.setSetting(data.Setting)
+    },
+    setSectionsSetting: function (settings) {
         if (!settings || settings.length == 0)
             return
-
-        
 
         const uiItems = []
         for (let setting of settings) {
@@ -60,7 +65,7 @@
             const sumo = $item.find('select')[0].sumo
 
             $item.attr('promotion-setting-id', setting.Id)
-            
+
             for (var key in PromotionSection) {
                 const section = PromotionSection[key]
                 if (BitOperation.isHas(setting.Intersections, section)) {
@@ -77,7 +82,22 @@
         this.unbinSumoSelectForPromotionSettings()
         this.binSumoSelectForPromotionSettings()
     },
+    setSetting: function (setting) {
+        $('#toggle-stock-banner').prop('checked', setting.IsShowStockBanner)
+    },
     getSettings: function () {
+        return {
+            Sections: this.getSectionSettings(),
+            Setting: this.getMainSetting()
+        }
+    },
+    getMainSetting: function () {
+        return {
+            Id: this.setting && this.setting.Setting ? this.setting.Setting.Id: -1,
+            IsShowStockBanner: $('#toggle-stock-banner').is(':checked')
+        }
+    },
+    getSectionSettings: function () {
         const settings = []
 
         $('#promotion-items-priority .promotion-item-setting').each(function (i) {
@@ -120,7 +140,7 @@
         })
     },
     unbinSumoSelectForPromotionSettings: function () {
-        $('#promotion-settings select').each(function () {
+        $('#promotion-section-setting select').each(function () {
             const sumo = $(this)[0].sumo
 
             if (sumo)
@@ -133,6 +153,6 @@
             captionFormat: 'Пересекающихся разделов: {0}',
             captionFormatAllSelected: 'Учитывать все разделы: {0}'
         }
-        $('#promotion-settings select').SumoSelect(sumoOptions)
+        $('#promotion-section-setting select').SumoSelect(sumoOptions)
     }
 }

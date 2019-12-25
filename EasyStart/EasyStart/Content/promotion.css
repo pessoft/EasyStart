@@ -66,9 +66,6 @@
     background-color: #f9f9f9;
 }
 
-.promotion-setting {
-}
-
 .promotion-some-settings-header {
     display: grid;
     justify-content: center;
@@ -447,14 +444,16 @@ textarea.default-style-input {
     margin-bottom: 15px;
 }
 
-    #pormotion-cashback-partners .checkbox-item label {
+    #pormotion-cashback-partners .checkbox-item label,
+    #promotion-settings .checkbox-item label {
         position: relative;
         pointer-events: all;
         top: 0px;
         font-size: 0.9em;
     }
 
-    #pormotion-cashback-partners .checkbox-item input[type=checkbox] {
+    #pormotion-cashback-partners .checkbox-item input[type=checkbox],
+    #promotion-settings .checkbox-item input[type=checkbox] {
         width: 16px;
         height: 16px;
         margin-left: 0;
@@ -491,10 +490,20 @@ textarea.default-style-input {
 .promotion-settings {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 50px 0.9fr 35px;
+    grid-template-rows: 130px 425px 35px;
     padding: 1% 2%;
     position: relative;
     justify-items: center;
+}
+
+.promotion-setting {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 50px 1fr;
+    padding-right: 1%;
+    position: relative;
+    justify-items: center;
+    min-width: 325px;
 }
 
 .promotion-items-priority {

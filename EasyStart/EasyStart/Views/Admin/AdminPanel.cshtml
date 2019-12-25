@@ -232,7 +232,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="pormotion-cashback-partners" class="pormotion-cashback-partners promotion-content promotion-setting hide">
+                        <div id="pormotion-cashback-partners" class="pormotion-cashback-partners promotion-content hide">
                             <div class="cashback-partners-content" id="promotion-cashback-bonus">
                                 <h2>Кешбек</h2>
                                 <div class="cashback-partners-item">
@@ -272,7 +272,7 @@
                                             <label>Кешбек с заказа реферала (%)</label>
                                         </div>
                                         <div class="checkbox-item checkbox-item-left">
-                                            <input id="partner-cashback-once" type="checkbox" onchange="CashbackPartners.togglePartners()" checked/>
+                                            <input id="partner-cashback-once" type="checkbox" onchange="CashbackPartners.togglePartners()" checked />
                                             <label for="partner-cashback-once">Единоразовый кешбек за реферала</label>
                                         </div>
                                     </div>
@@ -293,37 +293,85 @@
                                 </div>
                             </div>
                         </div>
+                        @*<div id="promotion-settings" class="promotion-content promotion-settings promotion-some-settings hide">
+            <h2>Приорит разделов</h2>
+            <div id="promotion-items-priority" class="promotion-items-priority">
+                <div class="promotion-item-setting" promotion-section="8" promotion-setting-id="-1">
+                    <i class="fal fa-hands-usd"></i>
+                    <div class="promotion-item-setting-body">
+                        <span>Партнерская программа</span>
+                        <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
+                            <option value="2">Акции</option>
+                            <option value="4">Купоны</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="promotion-item-setting" promotion-section="4" promotion-setting-id="-1">
+                    <i class="fal fa-gift-card"></i>
+                    <div class="promotion-item-setting-body">
+                        <span>Купоны</span>
+                        <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
+                            <option value="2">Акции</option>
+                            <option value="8">Партнерская программа</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="promotion-item-setting" promotion-section="2" promotion-setting-id="-1">
+                    <i class="fal fa-badge-percent"></i>
+                    <div class="promotion-item-setting-body">
+                        <span>Акции</span>
+                        <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
+                            <option value="4">Купоны</option>
+                            <option value="8">Партнерская программа</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button id="save-promotion-setting" class="btn btn-submit" onclick="PromotionSetting.saveSettings()">Сохранить</button>
+        </div>*@
+
                         <div id="promotion-settings" class="promotion-content promotion-settings promotion-some-settings hide">
-                            <h2>Приорит разделов</h2>
-                            <div id="promotion-items-priority" class="promotion-items-priority">
-                                <div class="promotion-item-setting" promotion-section="8" promotion-setting-id="-1">
-                                    <i class="fal fa-hands-usd"></i>
-                                    <div class="promotion-item-setting-body">
-                                        <span>Партнерская программа</span>
-                                        <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
-                                            <option value="2">Акции</option>
-                                            <option value="4">Купоны</option>
-                                        </select>
-                                    </div>
+                            <div class="promotion-setting">
+                                <h2>Баннер из акций</h2>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="toggle-stock-banner">
+                                    <label for="toggle-stock-banner">
+                                        Показывать баннер
+                                    </label>
                                 </div>
-                                <div class="promotion-item-setting" promotion-section="4" promotion-setting-id="-1">
-                                    <i class="fal fa-gift-card"></i>
-                                    <div class="promotion-item-setting-body">
-                                        <span>Купоны</span>
-                                        <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
-                                            <option value="2">Акции</option>
-                                            <option value="8">Партнерская программа</option>
-                                        </select>
+                            </div>
+                            <div id="promotion-section-setting" class="promotion-setting">
+                                <h2>Приорит разделов</h2>
+                                <div id="promotion-items-priority" class="promotion-items-priority">
+                                    <div class="promotion-item-setting" promotion-section="8" promotion-setting-id="-1">
+                                        <i class="fal fa-hands-usd"></i>
+                                        <div class="promotion-item-setting-body">
+                                            <span>Партнерская программа</span>
+                                            <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
+                                                <option value="2">Акции</option>
+                                                <option value="4">Купоны</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="promotion-item-setting" promotion-section="2" promotion-setting-id="-1">
-                                    <i class="fal fa-badge-percent"></i>
-                                    <div class="promotion-item-setting-body">
-                                        <span>Акции</span>
-                                        <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
-                                            <option value="4">Купоны</option>
-                                            <option value="8">Партнерская программа</option>
-                                        </select>
+                                    <div class="promotion-item-setting" promotion-section="4" promotion-setting-id="-1">
+                                        <i class="fal fa-gift-card"></i>
+                                        <div class="promotion-item-setting-body">
+                                            <span>Купоны</span>
+                                            <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
+                                                <option value="2">Акции</option>
+                                                <option value="8">Партнерская программа</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="promotion-item-setting" promotion-section="2" promotion-setting-id="-1">
+                                        <i class="fal fa-badge-percent"></i>
+                                        <div class="promotion-item-setting-body">
+                                            <span>Акции</span>
+                                            <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
+                                                <option value="4">Купоны</option>
+                                                <option value="8">Партнерская программа</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
