@@ -445,7 +445,8 @@ textarea.default-style-input {
 }
 
     #pormotion-cashback-partners .checkbox-item label,
-    #promotion-settings .checkbox-item label {
+    #promotion-settings .checkbox-item label,
+    #split-block-coupon-count .checkbox-item label {
         position: relative;
         pointer-events: all;
         top: 0px;
@@ -453,7 +454,8 @@ textarea.default-style-input {
     }
 
     #pormotion-cashback-partners .checkbox-item input[type=checkbox],
-    #promotion-settings .checkbox-item input[type=checkbox] {
+    #promotion-settings .checkbox-item input[type=checkbox],
+    #split-block-coupon-count .checkbox-item input[type=checkbox] {
         width: 16px;
         height: 16px;
         margin-left: 0;
@@ -528,9 +530,9 @@ textarea.default-style-input {
     justify-items: center;
 }
 
-.promotion-item-setting i {
-    font-size: 1.5em;
-}
+    .promotion-item-setting i {
+        font-size: 1.5em;
+    }
 
 .promotion-item-setting-body {
     width: 100%;
@@ -543,3 +545,16 @@ textarea.default-style-input {
     .promotion-item-setting-body span {
         margin-bottom: 5px;
     }
+
+.coupon-count {
+    display: grid;
+    grid-template-columns: 0.6fr 1fr;
+}
+
+    .coupon-count input[type=number] {
+        width: 100%
+    }
+
+.checkbox-item-padding {
+    padding: 0 10px;
+}

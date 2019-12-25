@@ -1697,11 +1697,11 @@ namespace EasyStart.Logic
             return coupons;
         }
 
-        public static CouponModel GetCouponByPromocode(int branchId, string promocode)
+        public static CouponModel GetCouponByPromocode(CouponParamsModel data)
         {
             CouponModel coupon = null;
 
-            if (string.IsNullOrEmpty(promocode))
+            if (string.IsNullOrEmpty(data.Promocode) || data.ClientId <= 0)
                 return coupon;
 
             try
@@ -1711,12 +1711,20 @@ namespace EasyStart.Logic
                     var date = DateTime.Now.Date;
                     coupon = db.Coupons
                         .Where(p => !p.IsDeleted
-                        && p.BranchId == branchId
-                        && p.Promocode == promocode
+                        && p.BranchId == data.BranchId
+                        && p.Promocode == data.Promocode
                         && DbFunctions.TruncateTime(p.DateFrom) <= date
                         && DbFunctions.TruncateTime(p.DateTo) >= date
                         && p.CountUsed < p.Count)
                         .FirstOrDefault();
+
+                    if (coupon != null && coupon.IsOneCouponOneClient)
+                    {
+                        var isFirstUseCoupon = db.Orders.FirstOrDefault(p => p.ClientId == data.ClientId && p.CouponId == coupon.Id) == null;
+
+                        if (!isFirstUseCoupon)
+                            coupon = null;
+                    }
                 }
             }
             catch (Exception ex)
@@ -1834,6 +1842,8 @@ namespace EasyStart.Logic
                     {
                         coupon.CountUsed = countUsed;
                     }
+
+                    db.SaveChanges();
                 }
             }
             catch (Exception ex)

@@ -1167,7 +1167,14 @@
                         </div>
                         <div class="promotion-coupon-index-block">
                             <h4>Количество купонов</h4>
-                            <input id="promotion-coupon-count" value="1" type="number" min="1" max="10000" oninput="CouponManager.onCouponCountChange()" class="default-color default-style-input">
+                            <div id="split-block-coupon-count" class="coupon-count">
+                                <input id="promotion-coupon-count" value="1" type="number" min="1" max="10000" oninput="CouponManager.onCouponCountChange()" class="default-color default-style-input">
+                                <div class="checkbox-item checkbox-item-padding">
+                                    <input id="toggle-one-coupon-one-client" type="checkbox" />
+                                    <label for="toggle-one-coupon-one-client">Один купон на клиента</label>
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
                     <div class="promotion-coupon-dialog-slide-footer">

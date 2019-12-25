@@ -107,6 +107,7 @@
             discountType: parseInt($('#coupon-discount-type option:selected').val()),
             countBonusProducts: parseInt($('#coupon-products-count').val()),
             allowedBonusProductsJSON: getAllowedBonusProductsJSON(),
+            isOneCouponOneClient: $('#toggle-one-coupon-one-client').is(':checked')
         }
 
         const successFunc = function (result, loader) {
@@ -200,6 +201,8 @@
         $('#coupon-bonus-products-items')[0].sumo.unSelectAll()
         $('#coupon-discount-type').removeAttr('selected').find('option[value=1]').attr('selected', true)
 
+        $('#toggle-one-coupon-one-client').prop('checked', false)
+
         let datePicker = $("#coupon-calendar-period").data("datepicker");
         const fromDate = new Date()
         const toDate = new Date()
@@ -223,6 +226,7 @@
         $('#promotion-coupon-name').val(data.Name)
         $('#promotion-coupon-promocode').val(data.Promocode)
         $('#promotion-coupon-count').val(data.Count)
+        $('#toggle-one-coupon-one-client').prop('checked', data.IsOneCouponOneClient)
 
         const datePicker = $("#coupon-calendar-period").data("datepicker");
         datePicker.selectDate([data.DateFrom, data.DateTo]);

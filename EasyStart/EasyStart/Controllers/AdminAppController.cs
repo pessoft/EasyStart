@@ -230,6 +230,9 @@ namespace EasyStart
 
             try
             {
+                if (order == null)
+                    throw new Exception("Попытка оформления пустого заказа");
+
                 var deliverSetting = DataWrapper.GetDeliverySetting(order.BranchId);
                 var client = DataWrapper.GetClient(order.ClientId);
 
@@ -586,7 +589,7 @@ namespace EasyStart
 
             try
             {
-                coupon = DataWrapper.GetCouponByPromocode(data.BranchId, data.Promocode);
+                coupon = DataWrapper.GetCouponByPromocode(data);
             }
             catch (Exception ex)
             {

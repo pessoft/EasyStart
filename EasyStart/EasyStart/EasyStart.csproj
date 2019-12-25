@@ -450,6 +450,10 @@
     <Compile Include="Migrations\201912161840545_AddParentReferralCodeClient.Designer.cs">
       <DependentUpon>201912161840545_AddParentReferralCodeClient.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912251319518_AddPropertyOneCoupon.cs" />
+    <Compile Include="Migrations\201912251319518_AddPropertyOneCoupon.Designer.cs">
+      <DependentUpon>201912251319518_AddPropertyOneCoupon.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -846,6 +850,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912161840545_AddParentReferralCodeClient.resx">
       <DependentUpon>201912161840545_AddParentReferralCodeClient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912251319518_AddPropertyOneCoupon.resx">
+      <DependentUpon>201912251319518_AddPropertyOneCoupon.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
