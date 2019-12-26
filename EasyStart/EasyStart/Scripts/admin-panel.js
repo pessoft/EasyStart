@@ -5,10 +5,10 @@
 
     let bindShowModal = function (id, dialogId, additionalFunc, predicate) {
         $(`#${id}`).bind("click", function () {
-            let addCategoryDialog = $(`#${dialogId}`);
+            let addDialog = $(`#${dialogId}`);
 
             if (!predicate || predicate()) {
-                Dialog.showModal(addCategoryDialog);
+                Dialog.showModal(addDialog);
             }
 
             if (additionalFunc) {
@@ -68,7 +68,7 @@ function bindDialogCloseClickBackdor() {
     $("dialog").bind('click', function (event) {
         var rect = this.getBoundingClientRect();
         var isInDialog = false;
-
+        
         if (typeof (event.clientY) === typeof (undefined)) {
             isInDialog = true;
         }
@@ -78,13 +78,21 @@ function bindDialogCloseClickBackdor() {
         }
 
         if (!isInDialog) {
-            Dialog.close($(this));
+            let $dialog = $(this)
+
+            Dialog.clear($dialog);
+            Dialog.close($dialog);
         }
     })
 
     $('.custom-dialog').bind('click', function (event) {
-        if ($(event.target).hasClass('custom-dialog'))
-            Dialog.close($(this))
+        if ($(event.target).hasClass('custom-dialog')) {
+            let $dialog = $(this)
+
+            Dialog.clear($dialog);
+            Dialog.close($dialog);
+        }
+            
     })
 
     //$('.custom-dialog .custom-dialog-body').bind('click', (event) => event.stopPropagation())
@@ -315,12 +323,7 @@ function selectMenuItem(e) {
 function cancelDialog(e) {
     let dialog = $(e);
 
-    dialog.find("input").val("");
-    dialog.find("textarea").val("");
-    dialog.find(".dialog-image-upload").removeClass("hide");
-    dialog.find("img").addClass("hide");
-    dialog.find("option").removeAttr("selected");
-    dialog.find("select").val("0")
+    Dialog.clear(dialog);
     Dialog.close(dialog);
 }
 
@@ -1847,6 +1850,16 @@ var Dialog = {
         $dialog.trigger("close");
         $dialog.removeClass('dialog-scale');
         clearTimeout(this.transition);
+    },
+    clear: ($dialog) => {
+        $dialog = $($dialog);
+
+        $dialog.find("input").val("");
+        $dialog.find("textarea").val("");
+        $dialog.find(".dialog-image-upload").removeClass("hide");
+        $dialog.find("img").addClass("hide");
+        $dialog.find("option").removeAttr("selected");
+        $dialog.find("select").val("0")
     }
 }
 

@@ -1196,17 +1196,24 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    if (stock.Id != -1)
+                    var isNewStock = true;
+
+                    if (stock.Id > 0)
                     {
                         var oldStock = db.Stocks.FirstOrDefault(p => p.Id == stock.Id);
 
                         if (oldStock != null)
                         {
+                            isNewStock = false;
                             oldStock.IsDeleted = true;
+                            stock.UniqId = oldStock.UniqId;
                         }
 
                         db.SaveChanges();
                     }
+
+                    if (isNewStock)
+                        stock.UniqId = Guid.NewGuid();
 
                     result = db.Stocks.Add(stock);
                     db.SaveChanges();
@@ -1233,6 +1240,27 @@ namespace EasyStart.Logic
                         && (p.StockTypePeriod != StockTypePeriod.ToDate
                         || (DbFunctions.TruncateTime(p.StockFromDate) >= date
                         && DbFunctions.TruncateTime(p.StockToDate) >= date)))
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
+        public static List<int> GetStockIdsByGuid(List<Guid> items)
+        {
+            List<int> result = new List<int>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.Stocks
+                        .Where(p => items.Contains(p.UniqId))
+                        .Select(p => p.Id)
                         .ToList();
                 }
             }
@@ -1298,7 +1326,8 @@ namespace EasyStart.Logic
                     if (clinet.Id > 0)
                     {
                         newClient = db.Clients.FirstOrDefault(p => p.Id == clinet.Id);
-                    } else
+                    }
+                    else
                     {
                         newClient = db.Clients.FirstOrDefault(p => p.PhoneNumber == clinet.PhoneNumber);
                     }
@@ -1309,6 +1338,7 @@ namespace EasyStart.Logic
                         newClient.PhoneNumber = clinet.PhoneNumber;
                         newClient.ParentReferralClientId = clinet.ParentReferralClientId;
                         newClient.ParentReferralCode = clinet.ParentReferralCode;
+                        newClient.ReferralDiscount = clinet.ReferralDiscount;
                     }
                     else
                     {
@@ -1720,7 +1750,8 @@ namespace EasyStart.Logic
 
                     if (coupon != null && coupon.IsOneCouponOneClient)
                     {
-                        var isFirstUseCoupon = db.Orders.FirstOrDefault(p => p.ClientId == data.ClientId && p.CouponId == coupon.Id && p.OrderStatus != OrderStatus.Cancellation) == null;
+                        var coupons = db.Coupons.Where(p => p.UniqId == coupon.UniqId).Select(p => p.Id).ToList();
+                        var isFirstUseCoupon = db.Orders.FirstOrDefault(p => p.ClientId == data.ClientId && coupons.Contains(p.CouponId) && p.OrderStatus != OrderStatus.Cancellation) == null;
 
                         if (!isFirstUseCoupon)
                             coupon = null;
@@ -1787,10 +1818,24 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
+                    var isNewCoupon = true;
+
                     if (newCoupon.Id > 0)
                     {
-                        RemoveCoupon(newCoupon.Id);
+                        var oldCoupon = db.Coupons.FirstOrDefault(p => p.Id == newCoupon.Id);
+
+                        if (oldCoupon != null)
+                        {
+                            isNewCoupon = false;
+                            newCoupon.CountUsed = oldCoupon.CountUsed;
+                            newCoupon.UniqId = oldCoupon.UniqId;
+                            RemoveCoupon(newCoupon.Id);
+                        }
+
                     }
+
+                    if (isNewCoupon)
+                        newCoupon.UniqId = Guid.NewGuid();
 
                     result = db.Coupons.Add(newCoupon);
                     db.SaveChanges();
@@ -2010,9 +2055,9 @@ namespace EasyStart.Logic
 
         public static PromotionSetting SavePromotionSetting(PromotionSetting setting)
         {
-            var  result = new PromotionSetting();
+            var result = new PromotionSetting();
 
-            if (setting == null )
+            if (setting == null)
                 return result;
 
             try

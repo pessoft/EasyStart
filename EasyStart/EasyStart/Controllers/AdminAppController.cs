@@ -105,7 +105,6 @@ namespace EasyStart
 
                 var promotionLogic = new PromotionLogic();
                 var stocks = promotionLogic.GetStockForAPI(branchId, data.ClientId);
-                var coupons = promotionLogic.GetCoupons(branchId);
                 var mainBranch = DataWrapper.GetMainBranch();
                 var promotionCashbackSetting = promotionLogic.GetSettingCashBack(mainBranch.Id);
                 var promotionPartnersSetting = promotionLogic.GetSettingPartners(mainBranch.Id);
@@ -468,7 +467,9 @@ namespace EasyStart
                     client.ParentReferralCode = null;
                 };
 
-                if (oldClient != null && oldClient.ParentReferralClientId < 1 && !string.IsNullOrEmpty(client.ParentReferralCode)
+                if (oldClient != null && oldClient.ParentReferralClientId < 1
+                    && !string.IsNullOrEmpty(client.ParentReferralCode)
+                    && oldClient.ReferralCode != client.ParentReferralCode
                     || oldClient == null && !string.IsNullOrEmpty(client.ParentReferralCode))
                 {
                     var parentClient = DataWrapper.GetClientByByReferralCode(client.ParentReferralCode);
@@ -499,17 +500,19 @@ namespace EasyStart
                     {
                         setDefaultReferralData();
                     }
-                } 
+                }
                 else if (oldClient != null)
                 {
                     client.ParentReferralClientId = oldClient.ParentReferralClientId;
                     client.ParentReferralCode = oldClient.ParentReferralCode;
-                } else
+                    client.ReferralDiscount = oldClient.ReferralDiscount;
+                }
+                else
                 {
                     setDefaultReferralData();
                 }
 
-                    var newClient = DataWrapper.AddOrUpdateClient(client);
+                var newClient = DataWrapper.AddOrUpdateClient(client);
 
                 if (saveTransaction)
                 {

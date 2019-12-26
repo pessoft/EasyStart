@@ -21,7 +21,7 @@ namespace EasyStart.Models
         public int DiscountValue { get; set; }
         public DiscountType DiscountType { get; set; }
         public int CountBonusProducts { get; set; }
-
+        public Guid UniqId { get; set; }
         public string AllowedBonusProductsJSON { get; set; }
 
         [NotMapped]

@@ -454,6 +454,10 @@
     <Compile Include="Migrations\201912251319518_AddPropertyOneCoupon.Designer.cs">
       <DependentUpon>201912251319518_AddPropertyOneCoupon.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912260714049_AddedUniqId.cs" />
+    <Compile Include="Migrations\201912260714049_AddedUniqId.Designer.cs">
+      <DependentUpon>201912260714049_AddedUniqId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -853,6 +857,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912251319518_AddPropertyOneCoupon.resx">
       <DependentUpon>201912251319518_AddPropertyOneCoupon.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912260714049_AddedUniqId.resx">
+      <DependentUpon>201912260714049_AddedUniqId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

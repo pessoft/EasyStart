@@ -88,10 +88,11 @@ namespace EasyStart.Logic
         public List<StockModel> GetStock(int branchId, int clientId)
         {
             List<StockModel> stocks = DataWrapper.GetActiveStocks(branchId); ;
-            var oneOffStockIds = stocks
+            var oneOffStockGuids = stocks
                 .Where(p => p.StockTypePeriod == StockTypePeriod.OneOff)
-                .Select(p => p.Id)
+                .Select(p => p.UniqId)
                 .ToList();
+            var oneOffStockIds = oneOffStockGuids == null || oneOffStockGuids.Any() ? null : DataWrapper.GetStockIdsByGuid(oneOffStockGuids);
 
             if (oneOffStockIds != null && oneOffStockIds.Any())
             {

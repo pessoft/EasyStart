@@ -2064,10 +2064,16 @@ button.order-details-menu-item i {
     margin-top: 5px;
 }
 
-button:disabled, button:disabled:hover {
+button:disabled,
+button:disabled:hover {
     color: #adadad;
     cursor: not-allowed;
     background: gray !important;
+}
+
+button.no-background:disabled,
+button.no-background:disabled:hover {
+    background: none !important;
 }
 
 button.simple-text-btn:disabled,

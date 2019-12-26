@@ -25,6 +25,7 @@ namespace EasyStart.Models
         public int CountUsed { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsOneCouponOneClient { get; set; }
+        public Guid UniqId { get; set; }
 
         [NotMapped]
         public List<int> AllowedBonusProducts
