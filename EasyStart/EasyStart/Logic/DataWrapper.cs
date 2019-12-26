@@ -1720,7 +1720,7 @@ namespace EasyStart.Logic
 
                     if (coupon != null && coupon.IsOneCouponOneClient)
                     {
-                        var isFirstUseCoupon = db.Orders.FirstOrDefault(p => p.ClientId == data.ClientId && p.CouponId == coupon.Id) == null;
+                        var isFirstUseCoupon = db.Orders.FirstOrDefault(p => p.ClientId == data.ClientId && p.CouponId == coupon.Id && p.OrderStatus != OrderStatus.Cancellation) == null;
 
                         if (!isFirstUseCoupon)
                             coupon = null;
