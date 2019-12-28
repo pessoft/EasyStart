@@ -182,6 +182,11 @@
                         <i class="fal fa-plus"></i>
                         Добавить продукт
                     </div>
+
+                    <div class="header-product-add hide" id="add-product-constructor">
+                        <i class="fal fa-plus"></i>
+                        Добавить категорию ингредиентов
+                    </div>
                 </div>
                 <div class="product-list" id="product-list">
                     <div class="empty-list">
@@ -294,41 +299,41 @@
                             </div>
                         </div>
                         @*<div id="promotion-settings" class="promotion-content promotion-settings promotion-some-settings hide">
-            <h2>Приорит разделов</h2>
-            <div id="promotion-items-priority" class="promotion-items-priority">
-                <div class="promotion-item-setting" promotion-section="8" promotion-setting-id="-1">
-                    <i class="fal fa-hands-usd"></i>
-                    <div class="promotion-item-setting-body">
-                        <span>Партнерская программа</span>
-                        <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
-                            <option value="2">Акции</option>
-                            <option value="4">Купоны</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="promotion-item-setting" promotion-section="4" promotion-setting-id="-1">
-                    <i class="fal fa-gift-card"></i>
-                    <div class="promotion-item-setting-body">
-                        <span>Купоны</span>
-                        <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
-                            <option value="2">Акции</option>
-                            <option value="8">Партнерская программа</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="promotion-item-setting" promotion-section="2" promotion-setting-id="-1">
-                    <i class="fal fa-badge-percent"></i>
-                    <div class="promotion-item-setting-body">
-                        <span>Акции</span>
-                        <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
-                            <option value="4">Купоны</option>
-                            <option value="8">Партнерская программа</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <button id="save-promotion-setting" class="btn btn-submit" onclick="PromotionSetting.saveSettings()">Сохранить</button>
-        </div>*@
+                                <h2>Приорит разделов</h2>
+                                <div id="promotion-items-priority" class="promotion-items-priority">
+                                    <div class="promotion-item-setting" promotion-section="8" promotion-setting-id="-1">
+                                        <i class="fal fa-hands-usd"></i>
+                                        <div class="promotion-item-setting-body">
+                                            <span>Партнерская программа</span>
+                                            <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
+                                                <option value="2">Акции</option>
+                                                <option value="4">Купоны</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="promotion-item-setting" promotion-section="4" promotion-setting-id="-1">
+                                        <i class="fal fa-gift-card"></i>
+                                        <div class="promotion-item-setting-body">
+                                            <span>Купоны</span>
+                                            <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
+                                                <option value="2">Акции</option>
+                                                <option value="8">Партнерская программа</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="promotion-item-setting" promotion-section="2" promotion-setting-id="-1">
+                                        <i class="fal fa-badge-percent"></i>
+                                        <div class="promotion-item-setting-body">
+                                            <span>Акции</span>
+                                            <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
+                                                <option value="4">Купоны</option>
+                                                <option value="8">Партнерская программа</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button id="save-promotion-setting" class="btn btn-submit" onclick="PromotionSetting.saveSettings()">Сохранить</button>
+                            </div>*@
 
                         <div id="promotion-settings" class="promotion-content promotion-settings promotion-some-settings hide">
                             <div class="promotion-setting">
@@ -690,6 +695,22 @@
                             Загрузите изображение продукта
                         </div>
                     </div>
+                </div>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog id="addSubCategoryConstructorDialog">
+        <form onsubmit=" return false;" autocomplete="off">
+            <div class="sub-category-cosntructor-wrapper">
+                <div class="category-cosntructor-left-wrapper">
+                    <div class="category-constructor-block content-center">
+                    </div>
+                    <div class="category-constructor-block"></div>
+                </div>
+                <div class="category-cosntructor-right-wrapper">
+                    <div class="category-constructor-block"></div>
+                    <div class="category-constructor-block"></div>
                 </div>
             </div>
         </form>
@@ -1183,7 +1204,7 @@
                                     <label for="toggle-one-coupon-one-client">Один купон на клиента</label>
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
                     <div class="promotion-coupon-dialog-slide-footer">

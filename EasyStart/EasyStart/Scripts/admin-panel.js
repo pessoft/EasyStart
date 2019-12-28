@@ -1,57 +1,93 @@
 ﻿$(document).ready(function () {
-    bindSelectSumo();
-    initHistoryOrderDatePicker();
-    bindDialogCloseClickBackdor();
+    bindSelectSumo()
+    initHistoryOrderDatePicker()
+    bindDialogCloseClickBackdor()
 
     let bindShowModal = function (id, dialogId, additionalFunc, predicate) {
         $(`#${id}`).bind("click", function () {
-            let addDialog = $(`#${dialogId}`);
+            let addDialog = $(`#${dialogId}`)
 
             if (!predicate || predicate()) {
-                Dialog.showModal(addDialog);
+                Dialog.showModal(addDialog)
             }
 
             if (additionalFunc) {
-                additionalFunc();
+                additionalFunc()
             }
         });
     }
 
-    $("#setting-phone-number,#setting-phone-number-additional").mask("+7(999)999-99-99");
+    $("#setting-phone-number,#setting-phone-number-additional").mask("+7(999)999-99-99")
 
     $(".menu-item").not(".logout").bind("click", function () {
-        selectMenuItem(this);
+        selectMenuItem(this)
     });
 
-    let setOperationAdd = () => CurrentOperation = TypeOperation.Add;
-    let productPredicate = () => {
-        if (!SelectIdCategoryId) {
-            showInfoMessage("Выберите категорию");
-            return false;
-        }
+    let setOperationAdd = () => CurrentOperation = TypeOperation.Add
 
-        return true;
-    };
-
-    bindShowModal("add-category", "addCategoryDialog", setOperationAdd);
-    bindShowModal("add-product", "addProducDialog", setOperationAdd, productPredicate);
-    bindShowModal("add-branch", "addBranchDialog", addNewBranchLoginData);
+    bindShowModal("add-category", "addCategoryDialog", setOperationAdd)
+    bindShowModal("add-product", "addProducDialog", setOperationAdd, productCondition)
+    bindShowModal("add-product-constructor", "addSubCategoryConstructorDialog", setOperationAdd, productConstructorCondition)
+    bindShowModal("add-branch", "addBranchDialog", addNewBranchLoginData)
 
     $("input[type=file]").change(function () {
-        addPreviewImage(this);
+        addPreviewImage(this)
     });
 
-    bindDragula();
+    bindDragula()
 
     if ($(".header-menu .menu-item-active").attr("target-id") == Pages.Order) {
-        loadOrders();
+        loadOrders()
     }
 
-    selectToSumoSelectProductType();
-    selectToSumoSelectCategoryType();
-    bindChangePeriodWork();
-    bindCustomDialogToggleEvent();
+    selectToSumoSelectProductType()
+    selectToSumoSelectCategoryType()
+    bindChangePeriodWork()
+    bindCustomDialogToggleEvent()
 });
+
+function getCategoryBySelectCategryId() {
+    let selectCategory = null
+
+    if (SelectIdCategoryId > 0 && DataProduct.Categories.length > 0) {
+        let selectCategoryes = DataProduct.Categories.filter(p => p.Id == SelectIdCategoryId)
+        selectCategory = selectCategoryes.length > 0 ? selectCategoryes[0] : null
+    }
+
+    return selectCategory
+}
+
+function productCondition() {
+    let selectCategory = getCategoryBySelectCategryId()
+
+    if (!selectCategory) {
+        showInfoMessage("Выберите категорию")
+        return false
+    }
+
+    if (selectCategory.CategoryType == CategoryType.Constructor) {
+        showInfoMessage("В категорию конструтор нельзя добавить продукт")
+        return false
+    }
+
+    return true
+}
+
+function productConstructorCondition() {
+    let selectCategory = getCategoryBySelectCategryId()
+
+    if (!selectCategory) {
+        showInfoMessage("Выберите категорию")
+        return false
+    }
+
+    if (selectCategory.CategoryType == CategoryType.Default) {
+        showInfoMessage("В категорию по умолчанию нельзя добавить категорию ингредиентов")
+        return false
+    }
+
+    return true
+}
 
 function bindChangePeriodWork() {
     $(".period-work-input").hunterTimePicker();
@@ -360,7 +396,7 @@ function operationCategory() {
 }
 
 function operationProduct() {
-    if (!SelectIdCategoryId) {
+    if (SelectIdCategoryId <= 0) {
         showInfoMessage("Выберите категорию")
     }
 
@@ -374,7 +410,7 @@ function operationProduct() {
     }
 }
 
-var SelectIdCategoryId;
+var SelectIdCategoryId = -1
 
 function updateCategory() {
     let loader = new Loader($("#addCategoryDialog form"));
@@ -559,7 +595,7 @@ function removeCategory(e, event) {
             loader.stop();
             if (result.Success) {
                 if (SelectIdCategoryId == id) {
-                    SelectIdCategoryId = null;
+                    SelectIdCategoryId = -1;
 
                     clearProductList();
                     setEmptyProductInfo();
@@ -587,16 +623,54 @@ function removeCategory(e, event) {
 }
 
 function selectCategory(e) {
-    $(".category-list .select-category").removeClass("select-category");
-    $(e).addClass("select-category");
-    categoryId = $(e).attr("category-id");
+    $(".category-list .select-category").removeClass("select-category")
+    $(e).addClass("select-category")
+    categoryId = $(e).attr("category-id")
 
     if (categoryId == SelectIdCategoryId) {
-        return;
+        return
     }
 
-    SelectIdCategoryId = categoryId;
-    loadProductList(SelectIdCategoryId);
+    SelectIdCategoryId = categoryId
+    changeButtonAddProduct()
+    loadProductList(SelectIdCategoryId)
+}
+
+
+var CustomToggleElement = {
+    show: function (queryItem) {
+        $(queryItem).removeClass('hide')
+    },
+    hide: function (queryItem) {
+        $(queryItem).addClass('hide')
+    },
+    toggle: function (queryItem) {
+        let $item = $(queryItem)
+
+        if ($item.hasClass('hide'))
+            this.show(queryItem)
+        else
+            this.hide(queryItem)
+    }
+}
+
+function changeButtonAddProduct() {
+    let selectCategory = getCategoryBySelectCategryId()
+
+    if (selectCategory) {
+
+        switch (selectCategory.CategoryType) {
+            case CategoryType.Default:
+                CustomToggleElement.show('#add-product')
+                CustomToggleElement.hide('#add-product-constructor')
+                break
+            case CategoryType.Constructor:
+                CustomToggleElement.show('#add-product-constructor')
+                CustomToggleElement.hide('#add-product')
+                break
+        }
+
+    }
 }
 
 function sortByOrderNumber(data) {
@@ -610,7 +684,7 @@ function sortByOrderNumber(data) {
 }
 
 function loadCategoryList() {
-    SelectIdCategoryId = null;
+    SelectIdCategoryId = -1;
     clearCategoryList();
 
     DataProduct.Products = [];

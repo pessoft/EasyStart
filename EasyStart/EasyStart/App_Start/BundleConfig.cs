@@ -45,6 +45,7 @@ namespace EasyStart
 
             bundles.Add(new ScriptBundle("~/bundles/admin-panel").Include(
                         "~/Scripts/admin-panel.js",
+                        "~/Scripts/product-constructor.js",
                         "~/Scripts/analytics.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/timepicker").Include(
@@ -74,6 +75,7 @@ namespace EasyStart
 
             bundles.Add(new StyleBundle("~/admin-panel/css").Include(
                       "~/Content/admin-panel.css",
+                      "~/Content/product-constructor.css",
                       "~/Content/analytics.css"));
 
             bundles.Add(new StyleBundle("~/timepicker/css").Include(
