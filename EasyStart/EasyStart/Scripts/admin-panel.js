@@ -48,6 +48,7 @@
     }
 
     selectToSumoSelectProductType();
+    selectToSumoSelectCategoryType();
     bindChangePeriodWork();
     bindCustomDialogToggleEvent();
 });
@@ -64,11 +65,15 @@ function selectToSumoSelectProductType() {
     });
 }
 
+function selectToSumoSelectCategoryType() {
+    $("#addCategoryDialog #category-type").SumoSelect();
+}
+
 function bindDialogCloseClickBackdor() {
     $("dialog").bind('click', function (event) {
         var rect = this.getBoundingClientRect();
         var isInDialog = false;
-        
+
         if (typeof (event.clientY) === typeof (undefined)) {
             isInDialog = true;
         }
@@ -92,11 +97,27 @@ function bindDialogCloseClickBackdor() {
             Dialog.clear($dialog);
             Dialog.close($dialog);
         }
-            
-    })
 
-    //$('.custom-dialog .custom-dialog-body').bind('click', (event) => event.stopPropagation())
+    })
 }
+
+const CategoryType = {
+    Default: 0,
+    Constructor: 1
+}
+
+function initCategoryTypeName() {
+    let categoryTypeName = {}
+    categoryTypeName[CategoryType.Default] = 'Стандартная'
+    categoryTypeName[CategoryType.Constructor] = 'Конструктор'
+
+    return categoryTypeName
+
+}
+
+const CategoryTypeName = initCategoryTypeName()
+
+
 
 const Pages = {
     Order: 'order',
@@ -425,6 +446,7 @@ function addCategory() {
     let addFunc = function (data) {
         let category = {
             Name: $("#name-category").val(),
+            CategoryType: parseInt($("#addCategoryDialog #category-type").val()),
             Image: data.URL
         }
 
@@ -467,7 +489,7 @@ function addCategory() {
 
 function addCategoryToList(category) {
     let templateCategoryItem = `
-    <div class="category-item" onclick="selectCategory(this)" category-id="${category.Id}">
+    <div class="category-item" onclick="selectCategory(this)" category-id="${category.Id}" category-type="${category.CategoryType}">
         <div class="category-item-image">
             <img src="${category.Image}" />
         </div>
@@ -495,6 +517,7 @@ function editCategory(e, event) {
 
     let category = {
         Id: parent.attr("category-id"),
+        CategoryType: parseInt(parent.attr("category-type")),
         Name: parent.find(".category-item-name").html().trim(),
         Image: parent.find("img").attr("src")
     }
@@ -508,8 +531,21 @@ function editCategory(e, event) {
         dialog.find(".dialog-image-upload").addClass("hide");
     }
 
-    //dialog.trigger("showModal");
-    Dialog.showModal(dialog);
+    Dialog.showModal(dialog)
+
+    const $select = $("#addCategoryDialog #category-type")
+
+    if ($select[0] && $select[0].sumo) {
+        if (category.Id > 0) {
+            $select[0].sumo.unSelectAll()
+            $select[0].sumo.selectItem(category.CategoryType.toString())
+            $select[0].sumo.disable()
+        } else {
+            $select[0].sumo.enable()
+            $select[0].sumo.selectItem(CategoryType.Default.toString())
+
+        }
+    }
 }
 
 function removeCategory(e, event) {
@@ -978,7 +1014,7 @@ function addPreviewImage(input) {
             let dialog = $(input).parents("dialog");
             dialog = dialog.length > 0 ? dialog : $(input).parents(".custom-dialog");
 
-            if (dialog.le == 0 )
+            if (dialog.le == 0)
                 return;
 
             let img = dialog.find("img");
@@ -1860,6 +1896,13 @@ var Dialog = {
         $dialog.find("img").addClass("hide");
         $dialog.find("option").removeAttr("selected");
         $dialog.find("select").val("0")
+
+        const $select = $dialog.find("select")
+
+        if ($select[0] && $select[0].sumo) {
+            $select[0].sumo.enable()
+            $select[0].sumo.reload()
+        }
     }
 }
 
@@ -2037,7 +2080,7 @@ class OrderDetailsData {
         const prefixRub = "руб.";
         const prefixPercent = "%"
         const percent = order.DiscountPercent == 0 ? `0${prefixPercent}` : `${order.DiscountPercent}${prefixPercent} (${xFormatPrice(order.AmountPay * order.DiscountPercent / 100)} ${prefixRub})`
-        
+
         const ruble = order.DiscountRuble > 0 ? `${order.DiscountRuble} руб.` : ''
         let text = percent && ruble ? `${percent} и ${ruble}` : percent || ruble
 

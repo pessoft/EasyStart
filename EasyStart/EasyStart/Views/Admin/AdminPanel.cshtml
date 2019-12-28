@@ -595,11 +595,20 @@
                         Добавление категории
                     </div>
                     <div class="content-dialog-data">
-                        <input type="hidden" id="category-id">
+                        <input type="hidden" id="category-id" value="-1">
                         <div class="group">
                             <input required type="text" id="name-category" />
                             <span class="bar"></span>
                             <label>Название категории</label>
+                        </div>
+                        <div class="product-type">
+                            <div class="product-type-header">
+                                Тип категории
+                            </div>
+                            <select id="category-type">
+                                <option value="0">По умолчанию</option>
+                                <option value="1">Конструктор</option>
+                            </select>
                         </div>
                     </div>
                     <div class="dialog-menu">

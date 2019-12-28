@@ -183,6 +183,7 @@
     <Compile Include="Logic\AnalyticsDataWrapper.cs" />
     <Compile Include="Logic\BrachClone.cs" />
     <Compile Include="Logic\BuyType.cs" />
+    <Compile Include="Logic\CategoryType.cs" />
     <Compile Include="Logic\PreprocessorDataAPI.cs" />
     <Compile Include="Logic\PromotionLogic.cs" />
     <Compile Include="Logic\Transaction\TransactionLogic.cs" />
@@ -457,6 +458,10 @@
     <Compile Include="Migrations\201912260714049_AddedUniqId.cs" />
     <Compile Include="Migrations\201912260714049_AddedUniqId.Designer.cs">
       <DependentUpon>201912260714049_AddedUniqId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912281154420_AddCategoryType.cs" />
+    <Compile Include="Migrations\201912281154420_AddCategoryType.Designer.cs">
+      <DependentUpon>201912281154420_AddCategoryType.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
@@ -860,6 +865,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912260714049_AddedUniqId.resx">
       <DependentUpon>201912260714049_AddedUniqId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912281154420_AddCategoryType.resx">
+      <DependentUpon>201912281154420_AddCategoryType.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

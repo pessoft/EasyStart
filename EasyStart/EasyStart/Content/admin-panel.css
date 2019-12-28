@@ -938,6 +938,7 @@ div.product-item:hover {
 }
 
 #product-type,
+#category-type,
 #stock-type {
     min-width: 322px;
     min-height: 25px;
@@ -947,6 +948,7 @@ div.product-item:hover {
 }
 
     #product-type:focus,
+    #category-type:focus,
     #stock-type:focus {
         outline: -webkit-focus-ring-color auto 5px;
         outline-color: #496e98;
@@ -1421,6 +1423,7 @@ div.take-info-item:nth-child(odd) {
     #order .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
     #history .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
     #addProducDialog .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
+    #addCategoryDialog .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
     #stockDialog .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
     #couponDialog .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
     #promotion-items-priority .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i {
@@ -2247,7 +2250,8 @@ button.simple-text-btn:disabled:hover {
     color: #bbb;
 }
 
-#addProducDialog .SumoSelect {
+#addProducDialog .SumoSelect,
+#addCategoryDialog .SumoSelect {
     min-width: 320px;
     min-height: 25px;
     border-color: #c6c6c6;
@@ -2256,6 +2260,7 @@ button.simple-text-btn:disabled:hover {
 }
 
     #addProducDialog .SumoSelect .CaptionCont label,
+    #addCategoryDialog .SumoSelect .CaptionCont label,
     #stockDialog .SumoSelect .CaptionCont label,
     #couponDialog .SumoSelect .CaptionCont label,
     .promotion-item-setting .SumoSelect .CaptionCont label {
@@ -2266,6 +2271,7 @@ button.simple-text-btn:disabled:hover {
     }
 
     #addProducDialog .SumoSelect .optWrapper label,
+    #addCategoryDialog .SumoSelect .optWrapper label,
     #stockDialog .SumoSelect .optWrapper label,
     #couponDialog .SumoSelect .optWrapper label,
     .promotion-item-setting .SumoSelect .optWrapper label {

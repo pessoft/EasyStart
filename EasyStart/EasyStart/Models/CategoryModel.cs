@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasyStart.Logic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,5 +14,6 @@ namespace EasyStart.Models
         public string Image { get; set; }
         public int OrderNumber { get; set; }
         public bool Visible { get; set; } = true;
+        public CategoryType CategoryType { get; set; } = CategoryType.Default;
     }
 }
