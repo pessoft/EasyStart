@@ -492,7 +492,7 @@ textarea.default-style-input {
 .promotion-settings {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 130px 425px 35px;
+    grid-template-rows: 0.2fr 0.78fr 35px;
     padding: 1% 2%;
     position: relative;
     justify-items: center;
@@ -501,10 +501,11 @@ textarea.default-style-input {
 .promotion-setting {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 50px 1fr;
+    grid-template-rows: 40px 1fr;
     padding-right: 1%;
     position: relative;
     justify-items: center;
+    align-items: center;
     min-width: 325px;
 }
 
