@@ -704,13 +704,48 @@
         <form onsubmit=" return false;" autocomplete="off">
             <div class="sub-category-cosntructor-wrapper">
                 <div class="category-cosntructor-left-wrapper">
-                    <div class="category-constructor-block content-center">
+                    <div class="category-constructor-block block-with-header">
+                        <span class="block-header vertical-center">Основные параметры</span>
                     </div>
-                    <div class="category-constructor-block"></div>
+                    <div class="category-constructor-block block-with-header">
+                        <span class="block-header vertical-center">Стиль ингредиентов</span>
+                        <div class="ingredient-views">
+                            <div class="ingredient-view-short-wrapper">
+                                <input id="ingredient-view-type-short" checked type="radio" name="ingredient-view" value="0" />
+                                <div class="ingredient-view-short" onclick="changeIngredientType('ingredient-view-type-short')"></div>
+                                <div class="ingredient-view-short" onclick="changeIngredientType('ingredient-view-type-short')"></div>
+                            </div>
+                            <div class="ingredient-view-long-wrapper">
+                                <input id="ingredient-view-type-long" type="radio" name="ingredient-view" value="0" />
+                                <div class="ingredient-view-long" onclick="changeIngredientType('ingredient-view-type-long')"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="category-cosntructor-right-wrapper">
-                    <div class="category-constructor-block"></div>
-                    <div class="category-constructor-block"></div>
+                    <div class="category-constructor-block block-with-header">
+                        <span class="block-header vertical-center">Список ингредиентов</span>
+                        <div class="ingrediet-list">
+                            <div class="empty-list no-background">
+                                <i class="fal fa-smile-plus"></i>
+                                <span>Добавте ингредиенты</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="category-constructor-block block-menu-ico">
+                        <button class="block-menu-item border-right default-color disabled-no-background">
+                            <i class="far fa-layer-plus"></i>Ингредиент
+                        </button>
+                        <button class="block-menu-item border-right default-color disabled-no-background">
+                            <i class="fal fa-save"></i>Сохранить
+                        </button>
+                        <button class="block-menu-item border-right default-color disabled-no-background">
+                            <i class="fal fa-undo-alt"></i>Отменить
+                        </button>
+                        <button class="block-menu-item  default-color" onclick="Dialog.close($('#addSubCategoryConstructorDialog'))">
+                            <i class="far fa-share-square"></i>Закрыть
+                        </button>
+                    </div>
                 </div>
             </div>
         </form>
@@ -927,10 +962,10 @@
             </div>
 
             <div class="order-details-menu order-details-block">
-                <button class="order-details-menu-item border-right default-color btn-details-apply no-background">
+                <button class="order-details-menu-item border-right default-color btn-details-apply disabled-no-background">
                     <i class="far fa-layer-plus"></i>Подтвердить
                 </button>
-                <button class="order-details-menu-item border-right default-color btn-details-cancel no-background">
+                <button class="order-details-menu-item border-right default-color btn-details-cancel disabled-no-background">
                     <i class="far fa-layer-minus"></i>Отменить
                 </button>
                 <button class="order-details-menu-item  default-color btn-details-close" onclick="Dialog.close($('#orderDetailsDialog'))">

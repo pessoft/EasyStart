@@ -821,7 +821,7 @@ div.product-item:hover {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    font-size: 1.7em;
+    font-size: 1.5em;
     color: #0f1e322e;
     background-color: #f3f3f3;
     text-align: center;
@@ -839,7 +839,7 @@ div.product-item:hover {
     }
 
 .empty-list i {
-    font-size: 2.6em;
+    font-size: 2.3em;
 }
 
 .empty-list span {
@@ -2074,8 +2074,9 @@ button:disabled:hover {
     background: gray !important;
 }
 
-button.no-background:disabled,
-button.no-background:disabled:hover {
+button.disabled-no-background:disabled,
+button.disabled-no-background:disabled:hover,
+.no-background {
     background: none !important;
 }
 
