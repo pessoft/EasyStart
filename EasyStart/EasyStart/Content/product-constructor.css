@@ -255,3 +255,7 @@ button.block-menu-item {
     .ingredient-params input:focus ~ .bar:before {
         width: 200px;
     }
+
+#ingredient-description-product {
+    min-height: 90px;
+}

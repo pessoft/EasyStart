@@ -27,7 +27,7 @@
 
     bindShowModal("add-category", "addCategoryDialog", setOperationAdd)
     bindShowModal("add-product", "addProducDialog", setOperationAdd, productCondition)
-    bindShowModal("add-product-constructor", "addSubCategoryConstructorDialog", setOperationAdd, productConstructorCondition)
+    bindShowModal("add-product-constructor", "addSubCategoryConstructorDialog", initNewCategoryConstructor, productConstructorCondition)
     bindShowModal("add-branch", "addBranchDialog", addNewBranchLoginData)
 
     $("input[type=file]").change(function () {
@@ -451,7 +451,7 @@ function updateCategory() {
             URL: $("#addCategoryDialog img").attr("src")
         }
 
-        addFunc(data);
+        uppFunc(data);
 
         return;
     }

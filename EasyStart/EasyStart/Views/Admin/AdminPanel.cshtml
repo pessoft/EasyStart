@@ -701,19 +701,20 @@
     </dialog>
 
     <dialog id="addSubCategoryConstructorDialog">
-        <form onsubmit=" return false;" autocomplete="off">
+        <form onsubmit="saveCategoruConstructor(); return false;" autocomplete="off">
             <div class="sub-category-cosntructor-wrapper">
+                <input type="hidden" id="category-ingredient-id">
                 <div class="category-cosntructor-left-wrapper">
                     <div class="category-constructor-block block-with-header">
                         <span class="block-header vertical-center">Основные параметры</span>
                         <div class="ingredient-params">
                             <div class="group">
-                                <input required type="text" id="q" />
+                                <input required type="text" oninvalid="this.setCustomValidity('Пожалуйста укажите название категории')" oninput="setCustomValidity('')" />
                                 <span class="bar"></span>
                                 <label>Название категории</label>
                             </div>
                             <div class="group">
-                                <input required type="number" id="w"  min="1" step="1"/>
+                                <input required type="number" min="1" step="1" oninvalid="this.setCustomValidity('Пожалуйста укажите максимальное колиество ингредиентов')" oninput="setCustomValidity('')" />
                                 <span class="bar"></span>
                                 <label>(Max) количество ингредиентов</label>
                             </div>
@@ -730,7 +731,7 @@
                                     <span class="view-short-price">100 г. / 50<i class="far fa-ruble-sign"></i></span>
                                 </div>
                                 <div class="ingredient-view-short" onclick="changeIngredientType('ingredient-view-type-short')">
-                                    <img class="no-clean"  src="~/Images/blank-ingredients/glass-noodles.png" alt="blank-image" />
+                                    <img class="no-clean" src="~/Images/blank-ingredients/glass-noodles.png" alt="blank-image" />
                                     <span>Стеклянная лапша</span>
                                     <span class="view-short-price">100 г. / 50<i class="far fa-ruble-sign"></i></span>
                                     <div class="block-counter-ingredient-view">
@@ -769,18 +770,89 @@
                         </div>
                     </div>
                     <div class="category-constructor-block block-menu-ico">
-                        <button class="block-menu-item border-right default-color disabled-no-background">
+                        <button class="block-menu-item border-right default-color disabled-no-background" type="button" onclick="Dialog.showModal('#addProducIngredientDialog')">
                             <i class="far fa-layer-plus"></i>Ингредиент
                         </button>
-                        <button class="block-menu-item border-right default-color disabled-no-background">
+                        <button class="block-menu-item border-right default-color disabled-no-background" type="submit">
                             <i class="fal fa-save"></i>Сохранить
                         </button>
-                        <button class="block-menu-item border-right default-color disabled-no-background">
+                        <button class="block-menu-item border-right default-color disabled-no-background" type="reset">
                             <i class="fal fa-undo-alt"></i>Отменить
                         </button>
-                        <button class="block-menu-item  default-color" onclick="Dialog.close($('#addSubCategoryConstructorDialog'))">
+                        <button class="block-menu-item default-color" type="button" onclick="Dialog.close($('#addSubCategoryConstructorDialog'))">
                             <i class="far fa-share-square"></i>Закрыть
                         </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog id="addProducIngredientDialog">
+        <form onsubmit="addOrUpdateIngredient(); return false;" autocomplete="off">
+            <div class="dialog-container">
+                <div class="enter-dialog-data">
+                    <div class="header-dialog">
+                        <i class="fal fa-layer-plus"></i>
+                        Добавление ингредиента
+                    </div>
+                    <div class="content-dialog-data">
+                        <input type="hidden" id="product-ingredient-id">
+                        <div class="group">
+                            <input required type="text" id="name-product-ingredient"
+                            oninvalid="this.setCustomValidity('Пожалуйста укажите название ингредиента')" 
+                            oninput="setCustomValidity('')" />
+                            <span class="bar"></span>
+                            <label>Название ингредиента</label>
+                        </div>
+                        <div class="group">
+                            <input required type="text" maxlength="20" id="product-ingredient-additional-info" 
+                            oninvalid="this.setCustomValidity('Пожалуйста укажите информацию о количестве, массе или объеме')" 
+                            oninput="setCustomValidity('')" />
+                            <span class="bar"></span>
+                            <label>Информация о количестве, массе или объеме</label>
+                        </div>
+                        <div class="group">
+                            <input type="number" required id="product-ingredient-price" min="0" step="0.1"
+                            oninvalid="this.setCustomValidity('Пожалуйста укажите цену (в рублях)')" 
+                            oninput="setCustomValidity('')"/>
+                            <span class="bar"></span>
+                            <label>Цена (в рублях)</label>
+                        </div>
+                        <div class="group">
+                            <input required type="number" id="product-min-ingredient-count" 
+                            oninvalid="this.setCustomValidity('Пожалуйста укажите минимальное обязательное количество добавлений')" 
+                            oninput="setCustomValidity('')"/>
+                            <span class="bar"></span>
+                            <label>(Min) обязательное количество добавлений</label>
+                        </div>
+                        <div class="group">
+                            <input required type="number" id="product-ingredient-max-count" 
+                            oninvalid="this.setCustomValidity('Пожалуйста укажите максимальное количество добавлений')" 
+                            oninput="setCustomValidity('')"/>
+                            <span class="bar"></span>
+                            <label>(Max) количество добавлений</label>
+                        </div>
+                        <div class="group">
+                            <textarea id="ingredient-description-product"></textarea>
+                            <span class="bar"></span>
+                            <label>Описание продукта</label>
+                        </div>
+                    </div>
+                    <div class="dialog-menu">
+                        <button class="btn btn-submit" type="submit">Ок</button>
+                        <button class="btn btn-cancel" type="reset" onclick="cancelDialog($('#addProducIngredientDialog'))">Отмена</button>
+                    </div>
+                </div>
+
+                <div class="add-image-product">
+                    <input type="file" id="add-product-image" accept="image/*" class="hide">
+                    <div class="preview-image" onclick="openDialogFile('add-product-image')">
+                        <img src="#" alt="your image" class="hide" />
+                        <div class="dialog-image-upload">
+                            <i class="fal fa-upload"></i>
+                            Загрузите изображение продукта
+                        </div>
                     </div>
                 </div>
             </div>
