@@ -706,18 +706,54 @@
                 <div class="category-cosntructor-left-wrapper">
                     <div class="category-constructor-block block-with-header">
                         <span class="block-header vertical-center">Основные параметры</span>
+                        <div class="ingredient-params">
+                            <div class="group">
+                                <input required type="text" id="q" />
+                                <span class="bar"></span>
+                                <label>Название категории</label>
+                            </div>
+                            <div class="group">
+                                <input required type="number" id="w"  min="1" step="1"/>
+                                <span class="bar"></span>
+                                <label>(Max) количество ингредиентов</label>
+                            </div>
+                        </div>
                     </div>
                     <div class="category-constructor-block block-with-header">
                         <span class="block-header vertical-center">Стиль ингредиентов</span>
                         <div class="ingredient-views">
                             <div class="ingredient-view-short-wrapper">
                                 <input id="ingredient-view-type-short" checked type="radio" name="ingredient-view" value="0" />
-                                <div class="ingredient-view-short" onclick="changeIngredientType('ingredient-view-type-short')"></div>
-                                <div class="ingredient-view-short" onclick="changeIngredientType('ingredient-view-type-short')"></div>
+                                <div class="ingredient-view-short" onclick="changeIngredientType('ingredient-view-type-short')">
+                                    <img class="no-clean" src="~/Images/blank-ingredients/glass-noodles.png" alt="blank-image" />
+                                    <span>Стеклянная лапша</span>
+                                    <span class="view-short-price">100 г. / 50<i class="far fa-ruble-sign"></i></span>
+                                </div>
+                                <div class="ingredient-view-short" onclick="changeIngredientType('ingredient-view-type-short')">
+                                    <img class="no-clean"  src="~/Images/blank-ingredients/glass-noodles.png" alt="blank-image" />
+                                    <span>Стеклянная лапша</span>
+                                    <span class="view-short-price">100 г. / 50<i class="far fa-ruble-sign"></i></span>
+                                    <div class="block-counter-ingredient-view">
+                                        <div class="block-counter-ingredient-view-backdoor"></div>
+                                        <i class="fal fa-times"></i>
+                                        <div class="block-counter-ingredients">
+                                            x1
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="ingredient-view-long-wrapper">
                                 <input id="ingredient-view-type-long" type="radio" name="ingredient-view" value="0" />
-                                <div class="ingredient-view-long" onclick="changeIngredientType('ingredient-view-type-long')"></div>
+                                <div class="ingredient-view-long" onclick="changeIngredientType('ingredient-view-type-long')">
+                                    <img class="no-clean" src="~/Images/blank-ingredients/seafood.png" alt="blank-image" />
+                                    <div class="ingredient-view-long-description">
+                                        <span class="view-long-header">Морепродукты</span>
+                                        <span class="view-long-description">
+                                            Креветки, кальмары, осьминоги, китайские грибы, сельдерей, брокколи, болгарский перец, красный лук, морковь, лайм, чеснок, кунжут
+                                        </span>
+                                        <span class="view-long-price">300 г. / 260<i class="far fa-ruble-sign"></i></span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

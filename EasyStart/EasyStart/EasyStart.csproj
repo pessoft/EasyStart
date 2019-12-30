@@ -592,6 +592,8 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\main.css" />
+    <Content Include="Images\blank-ingredients\glass-noodles.png" />
+    <Content Include="Images\blank-ingredients\seafood.png" />
     <Content Include="Images\default-image.jpg" />
     <Content Include="Images\favico.ico" />
     <Content Include="Images\full-logo.png" />

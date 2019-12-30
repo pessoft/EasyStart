@@ -1389,7 +1389,7 @@ function renderReviewItem(data) {
 function cleanProductUserCallbackDialog() {
     let $dialog = $("#productUserCallbackDialog");
 
-    $dialog.find("img").attr("src", "");
+    $dialog.find("img").not('.no-clean').attr("src", "");
     $dialog.find(".product-name-user-callback").html("");
     $dialog.find(".product-user-callback-review-list").html("");
     $dialog.find(".product-raty-text-user-callback").html("");
@@ -1967,7 +1967,7 @@ var Dialog = {
         $dialog.find("input").val("");
         $dialog.find("textarea").val("");
         $dialog.find(".dialog-image-upload").removeClass("hide");
-        $dialog.find("img").addClass("hide");
+        $dialog.find("img").not('.no-clean').addClass("hide");
         $dialog.find("option").removeAttr("selected");
         $dialog.find("select").val("0")
 
