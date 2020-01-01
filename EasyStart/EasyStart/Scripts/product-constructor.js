@@ -44,7 +44,7 @@ function addOrUpdateIngredient() {
 
         loader.stop()
         Dialog.close('#addProducIngredientDialog')
-        Dialog.clear()
+        Dialog.clear('#addProducIngredientDialog')
     }
 
     if (files.length == 0) {
@@ -88,6 +88,36 @@ function initNewCategoryConstructor() {
     categoryIngredient = new CategoryIngredient()
 }
 
+function removeIngredientById(id, event) {
+    event.stopPropagation()
+
+    categoryIngredient.removeIngredientById(id)
+}
+
+function removeIngredientByUniqId(uniqId, event) {
+    event.stopPropagation()
+
+    categoryIngredient.removeIngredientByUniqId(uniqId)
+}
+
+function showIngredientDataById(id, event) {
+    event.stopPropagation()
+
+    categoryIngredient.setIngredientDialogDataById(id)
+    Dialog.showModal('#addProducIngredientDialog')
+}
+
+function showIngredientDataByUniqId(uniqId, event) {
+    event.stopPropagation()
+
+    categoryIngredient.setIngredientDialogDataByUniqId(uniqId)
+    Dialog.showModal('#addProducIngredientDialog')
+}
+
+function cancelChange() {
+    categoryIngredient.revert()
+}
+
 class CategoryIngredient {
     constructor(categoryIngredient) {
         let defaultCategoryIngredient = {
@@ -103,7 +133,7 @@ class CategoryIngredient {
             categoryIngredient :
             defaultCategoryIngredient
         this.tmpURL = []
-        this.categoryIngredientOrigin = { ...this.categoryIngredient }
+        this.categoryIngredientOrigin = cloneObject(this.categoryIngredient)
         const reducer = (acc, value, index) => acc[value.Id] = index
         this.indexIngredients = this.categoryIngredient.Ingredients.length > 0 ?
             this.categoryIngredient.Ingredients.reduce(reducer) :
@@ -117,7 +147,7 @@ class CategoryIngredient {
                 this.categoryIngredient.Ingredients[index] = ingredient
             }
         } else {
-            const index = this.categoryIngredient.Ingredients.indexOf(ingredient)
+            const index = this.categoryIngredient.Ingredients.findIndex(p => p.TMPUniqId == ingredient.TMPUniqId)
 
             if (index == -1) {
                 this.categoryIngredient.Ingredients.push(ingredient)
@@ -148,7 +178,7 @@ class CategoryIngredient {
                 loader.stop();
                 if (result.Success) {
                     this.categoryIngredient = result.Data
-                    this.categoryIngredientOrigin = { ...result.Data }
+                    this.categoryIngredientOrigin = cloneObject(result.Data)
                     this.tmpURL = []
 
                     this.clearIngredientRows()
@@ -176,6 +206,7 @@ class CategoryIngredient {
 
     setData() {
         this.removeEmptyList()
+        this.clearIngredientRows()
         this.setIngredientsParams()
         this.setIngredientList()
     }
@@ -208,20 +239,57 @@ class CategoryIngredient {
     }
 
     renderIngredientRow(ingredient) {
+        let attrId = ingredient.Id > 0 ? `ingredient-id=${ingredient.Id}` : `ingredient-uniqId=${ingredient.TMPUniqId}`
+        let removeAction = ingredient.Id > 0 ? `removeIngredientById(${ingredient.Id}, event)` : `removeIngredientByUniqId('${ingredient.TMPUniqId}', event)`
+        let editAction = ingredient.Id > 0 ? `showIngredientDataById(${ingredient.Id}, event)` : `showIngredientDataByUniqId('${ingredient.TMPUniqId}', event)`
+
         return `
-        <div class="ingredient-row">
+        <div class="ingredient-row" ${attrId}>
             <img src="${ingredient.Image}" alt="ingredient image" />
             <div class="product-ingredient-wrapper">
                 <span class="ingredient-row-name">${ingredient.Name}</span>
                 <span class="ingredient-row-small-text">${ingredient.AdditionaInfo}</span>
                 <span class="ingredient-row-small-text">${ingredient.Price} руб.</span>
                 <div class="ingredient-row-menu">
-                    <i onclick="" class="fal fa-edit"></i>
-                    <i onclick="" class="fal fa-trash-alt"></i>
+                    <i class="fal fa-edit" onclick="${editAction}"></i>
+                    <i class="fal fa-trash-alt" onclick="${removeAction}"></i>
                 </div>
             </div>
         </div>
         `
+    }
+
+    removeIngredientById(id) {
+        if (id > 0) {
+            const index = this.indexIngredients[id]
+            const self = this
+
+            $(`[ingredient-id=${id}]`).fadeOut(250, function () {
+                $(this.remove)
+                self.removeIngredient(index)
+            })
+
+        }
+    }
+
+    removeIngredientByUniqId(uniqId) {
+        const findIndex = this.categoryIngredient.Ingredients.findIndex(p => p.TMPUniqId == uniqId)
+        const self = this
+
+        if (findIndex >= 0) {
+            $(`[ingredient-uniqId='${uniqId}']`).fadeOut(250, function () {
+                $(this).remove()
+                self.removeIngredient(findIndex)
+            })
+        }
+    }
+
+    removeIngredient(index) {
+        this.categoryIngredient.Ingredients.splice(index, 1)
+
+        if (this.categoryIngredient.Ingredients.length == 0) {
+            this.setEmptyList()
+        }
     }
 
     clearIngredientRows() {
@@ -245,4 +313,39 @@ class CategoryIngredient {
     actionRemoveTMPImage() {
         //send url to remove
     }
+
+    setIngredientDialogDataById(id) {
+        if (id > 0) {
+            const index = this.indexIngredients[id]
+            const ingredient = this.categoryIngredient.Ingredients[index]
+
+            this.setIngredientDialogData(ingredient)
+        }
+    }
+
+    setIngredientDialogDataByUniqId(uniqId) {
+        const findIndex = this.categoryIngredient.Ingredients.findIndex(p => p.TMPUniqId == uniqId)
+        const ingredient = this.categoryIngredient.Ingredients[findIndex]
+
+        if (findIndex >= 0) {
+            this.setIngredientDialogData(ingredient)
+        }
+    }
+
+    setIngredientDialogData(ingredient) {
+        $('#product-ingredient-id').val(ingredient.Id)
+        $('#name-product-ingredient').val(ingredient.Name)
+        $('#product-ingredient-additional-info').val(ingredient.AdditionaInfo)
+        $('#product-ingredient-price').val(ingredient.Price)
+        $('#product-min-ingredient-count').val(ingredient.MinRequiredCount)
+        $('#product-ingredient-max-count').val(ingredient.MaxAddCount)
+        $('#ingredient-description-product').val(ingredient.Description)
+
+        $("#addProducIngredientDialog img").attr("src", ingredient.Image)
+        $("#addProducIngredientDialog img").removeClass('hide')
+        $("#addProducIngredientDialog .dialog-image-upload").addClass('hide')
+
+        $('#product-ingredient-tmp-uniqId').val(ingredient.TMPUniqId)
+    }
+
 }

@@ -123,3 +123,14 @@ function showInfoConfirm(message) {
         Dialog.showModal($dialog);
     }
 }
+
+/**
+ * Глубокое копирование.
+ * Не копирует методы исходного объекта
+ * @param {any} obj
+ */
+function cloneObject(obj) {
+    let json = JSON.stringify(obj)
+
+    return JSON.parse(json)
+}
