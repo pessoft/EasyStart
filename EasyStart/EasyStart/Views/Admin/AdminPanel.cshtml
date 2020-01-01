@@ -709,12 +709,12 @@
                         <span class="block-header vertical-center">Основные параметры</span>
                         <div class="ingredient-params">
                             <div class="group">
-                                <input required type="text" oninvalid="this.setCustomValidity('Пожалуйста укажите название категории')" oninput="setCustomValidity('')" />
+                                <input id="category-constructor-name" required type="text" oninvalid="this.setCustomValidity('Пожалуйста укажите название категории')" oninput="setCustomValidity('')" />
                                 <span class="bar"></span>
                                 <label>Название категории</label>
                             </div>
                             <div class="group">
-                                <input required type="number" min="1" step="1" oninvalid="this.setCustomValidity('Пожалуйста укажите максимальное колиество ингредиентов')" oninput="setCustomValidity('')" />
+                                <input id="category-constructor-max-count" required type="number" min="1" step="1" oninvalid="this.setCustomValidity('Пожалуйста укажите максимальное колиество ингредиентов')" oninput="setCustomValidity('')" />
                                 <span class="bar"></span>
                                 <label>(Max) количество ингредиентов</label>
                             </div>
@@ -762,15 +762,27 @@
                 <div class="category-cosntructor-right-wrapper">
                     <div class="category-constructor-block block-with-header">
                         <span class="block-header vertical-center">Список ингредиентов</span>
-                        <div class="ingrediet-list">
+                        <div class="ingrediet-list" id="ingrediet-list">
                             <div class="empty-list no-background">
-                                <i class="fal fa-smile-plus"></i>
-                                <span>Добавте ингредиенты</span>
-                            </div>
+            <i class="fal fa-smile-plus"></i>
+            <span>Добавте ингредиенты</span>
+        </div>
+                            @*<div class="ingredient-row">
+                                <img src="../Images/Products/e03e78d6-1ecb-4bfd-8679-e9a6f4165024.jpg" alt="ingredient image" />
+                                <div class="product-ingredient-wrapper">
+                                    <span class="ingredient-row-name">Рисовая лапша</span>
+                                    <span class="ingredient-row-small-text">100 г.</span>
+                                    <span class="ingredient-row-small-text">100 руб.</span>
+                                    <div class="ingredient-row-menu">
+                                        <i onclick="" class="fal fa-edit"></i>
+                                        <i onclick="" class="fal fa-trash-alt"></i>
+                                    </div>
+                                </div>
+                            </div>*@
                         </div>
                     </div>
                     <div class="category-constructor-block block-menu-ico">
-                        <button class="block-menu-item border-right default-color disabled-no-background" type="button" onclick="Dialog.showModal('#addProducIngredientDialog')">
+                        <button class="block-menu-item border-right default-color disabled-no-background" type="button" onclick="showDialogAddNewIngredient()">
                             <i class="far fa-layer-plus"></i>Ингредиент
                         </button>
                         <button class="block-menu-item border-right default-color disabled-no-background" type="submit">
@@ -798,38 +810,39 @@
                     </div>
                     <div class="content-dialog-data">
                         <input type="hidden" id="product-ingredient-id">
+                        <input type="hidden" id="product-ingredient-tmp-uniqId">
                         <div class="group">
                             <input required type="text" id="name-product-ingredient"
-                            oninvalid="this.setCustomValidity('Пожалуйста укажите название ингредиента')" 
-                            oninput="setCustomValidity('')" />
+                                   oninvalid="this.setCustomValidity('Пожалуйста укажите название ингредиента')"
+                                   oninput="setCustomValidity('')" />
                             <span class="bar"></span>
                             <label>Название ингредиента</label>
                         </div>
                         <div class="group">
-                            <input required type="text" maxlength="20" id="product-ingredient-additional-info" 
-                            oninvalid="this.setCustomValidity('Пожалуйста укажите информацию о количестве, массе или объеме')" 
-                            oninput="setCustomValidity('')" />
+                            <input required type="text" maxlength="20" id="product-ingredient-additional-info"
+                                   oninvalid="this.setCustomValidity('Пожалуйста укажите информацию о количестве, массе или объеме')"
+                                   oninput="setCustomValidity('')" />
                             <span class="bar"></span>
                             <label>Информация о количестве, массе или объеме</label>
                         </div>
                         <div class="group">
                             <input type="number" required id="product-ingredient-price" min="0" step="0.1"
-                            oninvalid="this.setCustomValidity('Пожалуйста укажите цену (в рублях)')" 
-                            oninput="setCustomValidity('')"/>
+                                   oninvalid="this.setCustomValidity('Пожалуйста укажите цену (в рублях)')"
+                                   oninput="setCustomValidity('')" />
                             <span class="bar"></span>
                             <label>Цена (в рублях)</label>
                         </div>
                         <div class="group">
-                            <input required type="number" id="product-min-ingredient-count" 
-                            oninvalid="this.setCustomValidity('Пожалуйста укажите минимальное обязательное количество добавлений')" 
-                            oninput="setCustomValidity('')"/>
+                            <input required type="number" id="product-min-ingredient-count"
+                                   oninvalid="this.setCustomValidity('Пожалуйста укажите минимальное обязательное количество добавлений')"
+                                   oninput="setCustomValidity('')" />
                             <span class="bar"></span>
                             <label>(Min) обязательное количество добавлений</label>
                         </div>
                         <div class="group">
-                            <input required type="number" id="product-ingredient-max-count" 
-                            oninvalid="this.setCustomValidity('Пожалуйста укажите максимальное количество добавлений')" 
-                            oninput="setCustomValidity('')"/>
+                            <input required type="number" id="product-ingredient-max-count"
+                                   oninvalid="this.setCustomValidity('Пожалуйста укажите максимальное количество добавлений')"
+                                   oninput="setCustomValidity('')" />
                             <span class="bar"></span>
                             <label>(Max) количество добавлений</label>
                         </div>
@@ -846,8 +859,8 @@
                 </div>
 
                 <div class="add-image-product">
-                    <input type="file" id="add-product-image" accept="image/*" class="hide">
-                    <div class="preview-image" onclick="openDialogFile('add-product-image')">
+                    <input type="file" id="add-ingredient-product-image" accept="image/*" class="hide">
+                    <div class="preview-image" onclick="openDialogFile('add-ingredient-product-image')">
                         <img src="#" alt="your image" class="hide" />
                         <div class="dialog-image-upload">
                             <i class="fal fa-upload"></i>

@@ -1088,7 +1088,7 @@ function addPreviewImage(input) {
             let dialog = $(input).parents("dialog");
             dialog = dialog.length > 0 ? dialog : $(input).parents(".custom-dialog");
 
-            if (dialog.le == 0)
+            if (dialog.length == 0)
                 return;
 
             let img = dialog.find("img");

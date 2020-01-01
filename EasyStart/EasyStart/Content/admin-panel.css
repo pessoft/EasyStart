@@ -542,7 +542,6 @@ div.category-item:hover {
         cursor: pointer;
         color: #ce6a6b;
         transition: 200ms ease-in;
-        transform: scale(1.1);
     }
 
 .branch-list::-webkit-scrollbar,
@@ -729,7 +728,6 @@ div.product-item:hover {
         cursor: pointer;
         color: #ce6a6b;
         transition: 200ms ease-in;
-        transform: scale(1.1);
     }
 
 .product-item-additional-info {
@@ -1232,7 +1230,6 @@ div.product-item:hover {
     cursor: pointer;
     color: #ce6a6b;
     transition: 200ms ease-in;
-    transform: scale(1.1);
 }
 
 #productUserCallbackDialog img {
