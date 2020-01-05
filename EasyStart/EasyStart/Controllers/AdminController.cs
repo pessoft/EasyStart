@@ -582,6 +582,7 @@ namespace EasyStart.Controllers
             return Json(result);
         }
 
+        #region To do унифицировать логику
         [HttpPost]
         [Authorize]
         public void UpdateOrderNumberCategory(List<UpdaterOrderNumber> data)
@@ -594,6 +595,16 @@ namespace EasyStart.Controllers
 
         [HttpPost]
         [Authorize]
+        public void UpdateOrderNumberConstructorProducts(List<UpdaterOrderNumber> data)
+        {
+            if (data != null && data.Any())
+            {
+                DataWrapper.UpdateOrderNumberConstructorProducts(data);
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
         public void UpdateOrderNumberProducts(List<UpdaterOrderNumber> data)
         {
             if (data != null && data.Any())
@@ -601,6 +612,8 @@ namespace EasyStart.Controllers
                 DataWrapper.UpdateOrderNumberProducts(data);
             }
         }
+
+        #endregion
 
         [HttpPost]
         [Authorize]
@@ -1028,6 +1041,122 @@ namespace EasyStart.Controllers
             {
                 Logger.Log.Error(ex);
                 result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public void RemoveCategoryConstructor(int categoryConstructorId)
+        {
+            try
+            {
+                DataWrapper.RemoveConstructorCategory(categoryConstructorId);
+                DataWrapper.RemoveIngredientsByCategoryConstructorId(categoryConstructorId);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult AddOrUpdateCategoryConstructor(ProductConstructorIngredientModel category)
+        {
+            var result = new JsonResultModel();
+
+            if(category.Ingredients == null || !category.Ingredients.Any())
+            {
+                result.ErrorMessage = "Отсутсвтуют ингредиенты";
+
+                return Json(result);
+            }
+
+            try
+            {
+                category.Ingredients.ForEach(p => {
+                    if (!System.IO.File.Exists(Server.MapPath(p.Image)))
+                    {
+                        p.Image = "/images/default-image.jpg";
+                    }
+                });
+
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+
+                var constructorCategory = category.ConvertToConstructorCategory();
+                constructorCategory.BranchId = branchId;
+                constructorCategory = DataWrapper.AddOrUpdateConstructorCategory(constructorCategory);
+
+                if (constructorCategory != null)
+                {
+                    category.Ingredients.UpdateIngredientSubCategoryId(constructorCategory.Id);
+                    var ingredients = DataWrapper.AddOrUpdateIngredients(category.Ingredients);
+
+                    if (ingredients == null)
+                    {
+                        result.ErrorMessage = "При добавлении ингредиентов что то пошло не так...";
+                    }
+                    else
+                    {
+                        result.Data = ConstructorProductHelper.GetProductConstructorIngredient(constructorCategory, ingredients);
+                        result.Success = true;
+                    }
+                }
+                else
+                {
+                    result.ErrorMessage = "При добавлении категории конструктора что то пошло не так...";
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult LoadProductConstructorList(int idCategory)
+        {
+            var result = new JsonResultModel();
+            var constructorCategories = DataWrapper.GetConstructorCategories(idCategory);
+
+            if (constructorCategories != null)
+            {
+                result.Data = new List<int>();
+                if (constructorCategories.Any())
+                {
+
+                    var ids = constructorCategories.Select(p => p.Id).ToList();
+                    var dictIngredients = DataWrapper.GetIngredients(ids);
+                    var ProductConstructorIngredients = new List<ProductConstructorIngredientModel>();
+
+                    constructorCategories.ForEach(p => {
+                        List<IngredientModel> ingredients = null;
+
+                        if (dictIngredients.TryGetValue(p.Id, out ingredients) && ingredients != null && ingredients.Any())
+                        {
+                            var ProductConstructorIngredient = ConstructorProductHelper.GetProductConstructorIngredient(p, ingredients);
+                            ProductConstructorIngredients.Add(ProductConstructorIngredient);
+                        }
+
+                    });
+
+                    if (ProductConstructorIngredients != null && ProductConstructorIngredients.Any())
+                    {
+                        result.Data = ProductConstructorIngredients.OrderBy(p => p.OrderNumber).ToList();
+                    }
+                }
+                
+                result.Success = true;
+            }
+            else
+            {
+                result.ErrorMessage = "При загрузки конструктора что то пошло не так";
             }
 
             return Json(result);

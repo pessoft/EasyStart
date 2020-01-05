@@ -683,6 +683,10 @@ div.product-item:hover {
     margin-right: 5px;
 }
 
+    .product-item-image i {
+        font-size: 1.5em;
+    }
+
     .product-item-image img {
         width: 100%;
         border-radius: 2px;
@@ -809,6 +813,10 @@ div.product-item:hover {
         font-size: 0.75em;
         width: 50%;
     }
+}
+
+.product-constructor-item {
+    width: 60%;
 }
 
 .empty-list {

@@ -19,7 +19,8 @@ function getIngredientData(image) {
         MaxAddCount: $('#product-ingredient-max-count').val(),
         Description: $('#ingredient-description-product').val(),
         Image: image,
-        TMPUniqId: $('#product-ingredient-tmp-uniqId').val()
+        TMPUniqId: $('#product-ingredient-tmp-uniqId').val(),
+        IsDeleted: false
 
     }
 }
@@ -38,9 +39,8 @@ function addOrUpdateIngredient() {
     let addFunc = (data) => {
         let ingredient = getIngredientData(data.URL)
 
-        categoryIngredient.addTMPImageURL(data.URL)
         categoryIngredient.addOrUpdateIngredient(ingredient)
-        categoryIngredient.setData()
+        categoryIngredient.setIngredients()
 
         loader.stop()
         Dialog.close('#addProducIngredientDialog')
@@ -69,9 +69,20 @@ function addOrUpdateIngredient() {
     });
 }
 
+function updateGloabalDataProduct(productConstructor) {
+    const index = DataProduct.Products.findIndex(p => p.Id == productConstructor.Id)
+
+    if (index >= 0)
+        DataProduct.Products[index] = productConstructor
+    else {
+        DataProduct.Products.push(productConstructor)
+        addProductConstructorToList(productConstructor);
+    }
+        
+}
 
 function saveCategoruConstructor() {
-    categoryIngredient.save()
+    categoryIngredient.save(updateGloabalDataProduct)
 }
 
 function showDialogAddNewIngredient() {
@@ -86,12 +97,58 @@ function initDialogDefaultId() {
 
 function initNewCategoryConstructor() {
     categoryIngredient = new CategoryIngredient()
+    categoryIngredient.setData()
+}
+
+function getCategoryConstructorById(id) {
+    const constructors = DataProduct.Products.filter(p => p.Id == id)
+
+    return constructors && constructors.length > 0 ? constructors[0] : null
+}
+
+function editCategoryConstructor(id, event) {
+    event.stopPropagation()
+
+    var categoryConstructor = getCategoryConstructorById(id)
+
+    if (categoryConstructor) {
+        categoryIngredient = new CategoryIngredient(cloneObject(categoryConstructor))
+
+        Dialog.clear('#addSubCategoryConstructorDialog')
+        categoryIngredient.setData()
+        Dialog.showModal('#addSubCategoryConstructorDialog')
+    }
+    else {
+        showErrorMessage('Категория конструктора не найдена')
+    }
+}
+
+function removeCategoryConstructor(id) {
+    event.stopPropagation();
+
+    let callback = function () {
+        $(`[product-id=${id}]`).fadeOut(500, function () {
+            $(this).remove();
+
+            if ($(".product-list").children().length == 0) {
+                setEmptyProductInfo();
+            }
+        });
+
+        $.post("/Admin/RemoveCategoryConstructor", { categoryConstructorId: id });
+    }
+
+    deleteConfirmation(callback);
 }
 
 function removeIngredientById(id, event) {
     event.stopPropagation()
 
-    categoryIngredient.removeIngredientById(id)
+    let callback = function () {
+        categoryIngredient.removeIngredientById(id)
+    }
+
+    deleteConfirmation(callback);
 }
 
 function removeIngredientByUniqId(uniqId, event) {
@@ -121,28 +178,27 @@ function cancelChange() {
 class CategoryIngredient {
     constructor(categoryIngredient) {
         let defaultCategoryIngredient = {
-            Category: {
-                Id: -1,
-                Name: '',
-                MaxCountIngredient: 0,
-                StyleTypeIngredient: StyleTypeIngredient.Short,
-            },
+            Id: -1,
+            CategoryId: SelectIdCategoryId,
+            Name: '',
+            MaxCountIngredient: 0,
+            StyleTypeIngredient: StyleTypeIngredient.Short,
+            OrderNumber: DataProduct.Products ? DataProduct.Products.length + 1 : 1,
             Ingredients: []
         }
         this.categoryIngredient = categoryIngredient && Object.keys(categoryIngredient).length > 0 ?
             categoryIngredient :
             defaultCategoryIngredient
-        this.tmpURL = []
         this.categoryIngredientOrigin = cloneObject(this.categoryIngredient)
-        const reducer = (acc, value, index) => acc[value.Id] = index
+        const reducer = function (acc, value, index) { acc[value.Id] = index; return  acc}
         this.indexIngredients = this.categoryIngredient.Ingredients.length > 0 ?
-            this.categoryIngredient.Ingredients.reduce(reducer) :
+            this.categoryIngredient.Ingredients.reduce(reducer, {}) :
             {}
     }
 
     addOrUpdateIngredient(ingredient) {
         if (ingredient.Id > 0) {
-            if (this.indexIngredients[ingredient.Id]) {
+            if (this.indexIngredients[ingredient.Id] >= 0) {
                 const index = this.indexIngredients[ingredient.Id]
                 this.categoryIngredient.Ingredients[index] = ingredient
             }
@@ -158,37 +214,54 @@ class CategoryIngredient {
 
     }
 
-    save() {
+    isNotEmptyIngredients() {
+        let result = false
+
         if (this.categoryIngredient.Ingredients
-            && this.categoryIngredient.Ingredients.length > 0) {
+            && this.categoryIngredient.Ingredients.length > 0
+            && this.categoryIngredient.Ingredients.filter(p => p.IsDeleted == false).length > 0) {
+            result = true;
+        }
+
+        return result
+    }
+
+    save(updateGloabalDataProductFunc) {
+        if (this.isNotEmptyIngredients()) {
 
             let loader = new Loader($("#addSubCategoryConstructorDialog form"));
             loader.start();
+            const self = this
 
-            let category = {
-                id: this.categoryIngredient.Category.Id,
-                name: this.categoryIngredient.Category.Name,
-                maxCountIngredient: this.categoryIngredient.Category.MaxCountIngredient,
-                styleTypeIngredient: this.categoryIngredient.Category.StyleTypeIngredient,
-                ingredients: this.categoryIngredient.Ingredients
+            let constructor = {
+                Id: this.categoryIngredient.Id,
+                CategoryId: this.categoryIngredient.CategoryId,
+                Name: $('#category-constructor-name').val(),
+                MaxCountIngredient: $('#category-constructor-max-count').val(),
+                StyleTypeIngredient: $('#ingredient-view-type-short').is(':checked') ? StyleTypeIngredient.Short : StyleTypeIngredient.Long,
+                Ingredients: this.categoryIngredient.Ingredients
             }
-
 
             let successFunc = function (result, loader) {
                 loader.stop();
                 if (result.Success) {
-                    this.categoryIngredient = result.Data
-                    this.categoryIngredientOrigin = cloneObject(result.Data)
-                    this.tmpURL = []
+                    if (updateGloabalDataProductFunc) {
+                        updateGloabalDataProductFunc(cloneObject(result.Data))
+                    }
 
-                    this.clearIngredientRows()
-                    this.setData()
+                    self.categoryIngredient = result.Data
+                    self.categoryIngredientOrigin = cloneObject(result.Data)
+
+                    self.clearIngredientRows()
+                    self.setData()
                 } else {
                     showErrorMessage(result.ErrorMessage);
                 }
             }
 
-            $.post("/Admin/AddCategoryConstructor", category, successCallBack(successFunc, loader));
+            $.post("/Admin/AddOrUpdateCategoryConstructor", constructor, successCallBack(successFunc, loader));
+        } else {
+            showInfoMessage('Добавте ингредиенты')
         }
     }
 
@@ -205,17 +278,22 @@ class CategoryIngredient {
     }
 
     setData() {
+        this.setConstructorCategoryParams()
+        this.setIngredients()
+        
+    }
+
+    setIngredients() {
         this.removeEmptyList()
         this.clearIngredientRows()
-        this.setIngredientsParams()
         this.setIngredientList()
     }
 
-    setIngredientsParams() {
-        $('category-constructor-name').val(this.categoryIngredient.Category.Name)
-        $('category-constructor-max-count').val(this.categoryIngredient.Category.MaxCountIngredient)
+    setConstructorCategoryParams() {
+        $('#category-constructor-name').val(this.categoryIngredient.Name)
+        $('#category-constructor-max-count').val(this.categoryIngredient.MaxCountIngredient)
 
-        switch (this.categoryIngredient.Category.StyleTypeIngredient) {
+        switch (this.categoryIngredient.StyleTypeIngredient) {
             case StyleTypeIngredient.Short:
                 changeIngredientType('ingredient-view-type-short')
                 break
@@ -229,7 +307,9 @@ class CategoryIngredient {
         const ingredientRows = []
 
         for (const ingredient of this.categoryIngredient.Ingredients) {
-            ingredientRows.push(this.renderIngredientRow(ingredient))
+            if (ingredient.IsDeleted == false) {
+                ingredientRows.push(this.renderIngredientRow(ingredient))
+            }
         }
 
         if (ingredientRows.length > 0)
@@ -265,7 +345,7 @@ class CategoryIngredient {
             const self = this
 
             $(`[ingredient-id=${id}]`).fadeOut(250, function () {
-                $(this.remove)
+                $(this).remove()
                 self.removeIngredient(index)
             })
 
@@ -284,10 +364,15 @@ class CategoryIngredient {
         }
     }
 
-    removeIngredient(index) {
-        this.categoryIngredient.Ingredients.splice(index, 1)
+    removeIngredient(index, isRemove = false) {
+        if (isRemove) {
+            this.categoryIngredient.Ingredients.splice(index, 1)
+        } else {
+            this.categoryIngredient.Ingredients[index].IsDeleted = true
+        }
+        
 
-        if (this.categoryIngredient.Ingredients.length == 0) {
+        if (this.categoryIngredient.Ingredients.filter(p => p.IsDeleted == false).length == 0) {
             this.setEmptyList()
         }
     }
@@ -301,17 +386,8 @@ class CategoryIngredient {
     }
 
     revert() {
-        this.categoryIngredient = { ...this.categoryIngredientOrigin }
-        this.actionRemoveTMPImage()
+        this.categoryIngredient = cloneObject(this.categoryIngredientOrigin)
         this.setData()
-    }
-
-    addTMPImageURL(url) {
-        this.tmpURL.push(url)
-    }
-
-    actionRemoveTMPImage() {
-        //send url to remove
     }
 
     setIngredientDialogDataById(id) {
@@ -347,5 +423,4 @@ class CategoryIngredient {
 
         $('#product-ingredient-tmp-uniqId').val(ingredient.TMPUniqId)
     }
-
 }

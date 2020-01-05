@@ -265,9 +265,14 @@ function calcOrderNumbers(typeItem) {
             url = "/Admin/UpdateOrderNumberCategory";
             break;
         case TypeItem.Products:
-            $items = $("#product-list .product-item");
+            $items = $("#product-list .product-constructor-item");
             attrName = "product-id";
-            url = "/Admin/UpdateOrderNumberProducts";
+            if ($items.length > 0) {
+                url = "/Admin/UpdateOrderNumberConstructorProducts";
+            } else {
+                $items = $("#product-list .product-item");
+                url = "/Admin/UpdateOrderNumberProducts";
+            }
             break;
     }
 
@@ -625,7 +630,8 @@ function removeCategory(e, event) {
 function selectCategory(e) {
     $(".category-list .select-category").removeClass("select-category")
     $(e).addClass("select-category")
-    categoryId = $(e).attr("category-id")
+    let categoryId = $(e).attr("category-id")
+    let categoryType = $(e).attr("category-type")
 
     if (categoryId == SelectIdCategoryId) {
         return
@@ -633,7 +639,11 @@ function selectCategory(e) {
 
     SelectIdCategoryId = categoryId
     changeButtonAddProduct()
-    loadProductList(SelectIdCategoryId)
+
+    if (categoryType == CategoryType.Default)
+        loadProductList(SelectIdCategoryId)
+    else 
+        loadProductConstructorList(SelectIdCategoryId)
 }
 
 
@@ -899,6 +909,30 @@ function toggleShowItem(e, typeItem, event) {
 
 }
 
+function addProductConstructorToList(product) {
+    let templateCategoryItem = `
+    <div class="product-item product-constructor-item" category-id="${product.CategoryId}" product-id="${product.Id}">
+        <div class="product-item-header">
+            <div class="product-item-image">
+                <i class="fal fa-pizza"></i>
+            </div>
+            <div class="product-item-name">
+                ${product.Name}
+            </div>
+            <div class="product-item-additional-info">
+                ${product.Ingredients.length} ${num2str(product.Ingredients.length, ['ингредиент', 'ингредиента', 'ингредиентов'])}
+            </div>
+            <div class="product-item-action">
+                <i onclick="editCategoryConstructor(${product.Id}, event);" class="fal fa-edit"></i>
+                <i onclick="removeCategoryConstructor(${product.Id}, event);" class="fal fa-trash-alt"></i>
+            </div>
+        </div>
+    </div >`;
+
+    let $template = $(templateCategoryItem);
+    $(".product-list").append($template);
+}
+
 function addProductToList(product) {
     let templateCategoryItem = `
     <div class="product-item" category-id="${product.CategoryId}" product-id="${product.Id}">
@@ -1053,9 +1087,32 @@ function getProductById(id) {
     return serchProduct;
 }
 
+function loadProductConstructorList(idCategory) {
+    clearProductList();
+    let loader = new Loader($(".product"));
+    let successFunc = function (result, loader) {
+        loader.stop();
+        if (result.Success) {
+            if (!result.Data || result.Data.length == 0) {
+                setEmptyProductInfo();
+            } else {
+                DataProduct.Products = result.Data;
+                for (let product of DataProduct.Products) {
+                    addProductConstructorToList(product);
+                }
+            }
+        } else {
+            showErrorMessage(result.ErrorMessage);
+            setEmptyProductInfo();
+        }
+    }
+    loader.start();
+
+    $.post("/Admin/LoadProductConstructorList", { idCategory: idCategory }, successCallBack(successFunc, loader));
+}
+
 function loadProductList(idCategory) {
     clearProductList();
-    let container = $(".product-list");
     let loader = new Loader($(".product"));
     let successFunc = function (result, loader) {
         loader.stop();

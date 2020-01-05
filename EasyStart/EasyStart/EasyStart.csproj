@@ -186,6 +186,7 @@
     <Compile Include="Logic\CategoryType.cs" />
     <Compile Include="Logic\PreprocessorDataAPI.cs" />
     <Compile Include="Logic\PromotionLogic.cs" />
+    <Compile Include="Logic\StyleTypeIngredient.cs" />
     <Compile Include="Logic\Transaction\TransactionLogic.cs" />
     <Compile Include="Logic\Transaction\TransactionWrapper.cs" />
     <Compile Include="Logic\Transaction\CashbackTransactionType.cs" />
@@ -463,6 +464,10 @@
     <Compile Include="Migrations\201912281154420_AddCategoryType.Designer.cs">
       <DependentUpon>201912281154420_AddCategoryType.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001051727296_ConstructorProductModels.cs" />
+    <Compile Include="Migrations\202001051727296_ConstructorProductModels.Designer.cs">
+      <DependentUpon>202001051727296_ConstructorProductModels.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -470,12 +475,14 @@
     <Compile Include="Models\BranchSettingViewModel.cs" />
     <Compile Include="Models\BranchSignal.cs" />
     <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\ConstructorCategory.cs" />
     <Compile Include="Models\CouponModel.cs" />
     <Compile Include="Models\CouponParamsModel.cs" />
     <Compile Include="Models\DataHistoryForViewModel.cs" />
     <Compile Include="Models\DeliverySettingModel.cs" />
     <Compile Include="Models\HistoryOrderFilter.cs" />
     <Compile Include="Models\IContainImage.cs" />
+    <Compile Include="Models\IngredientModel.cs" />
     <Compile Include="Models\MainDataSignatureModel.cs" />
     <Compile Include="Models\NewBranchModel.cs" />
     <Compile Include="Models\CategoryModel.cs" />
@@ -484,6 +491,7 @@
     <Compile Include="Models\Notification\OptionsNotificationNewOrderModel.cs" />
     <Compile Include="Models\OrderModel.cs" />
     <Compile Include="Models\OrderStockApply.cs" />
+    <Compile Include="Models\ProductConstructorIngredientModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\ProductReview.cs" />
     <Compile Include="Models\PromotionCashbackSetting.cs" />
@@ -511,6 +519,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\CityHelper.cs" />
+    <Compile Include="Utils\ConstructorProductHelper.cs" />
     <Compile Include="Utils\DateTimeHepler.cs" />
     <Compile Include="Utils\EnumHelper.cs" />
     <Compile Include="Utils\WeeklyDayHelper.cs" />
@@ -872,6 +881,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912281154420_AddCategoryType.resx">
       <DependentUpon>201912281154420_AddCategoryType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001051727296_ConstructorProductModels.resx">
+      <DependentUpon>202001051727296_ConstructorProductModels.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

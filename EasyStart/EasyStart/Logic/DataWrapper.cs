@@ -461,6 +461,152 @@ namespace EasyStart.Logic
             return result;
         }
 
+        public static ConstructorCategory AddOrUpdateConstructorCategory(ConstructorCategory category)
+        {
+            ConstructorCategory result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+
+                    if (category.Id > 0)
+                    {
+                        var oldCategory = db.ConstructorCategories.FirstOrDefault(p => p.Id == category.Id);
+
+                        if (oldCategory != null)
+                        {
+                            oldCategory.MaxCountIngredient = category.MaxCountIngredient;
+                            oldCategory.Name = category.Name;
+                            oldCategory.StyleTypeIngredient = category.StyleTypeIngredient;
+
+                            result = oldCategory;
+                        }
+                    }
+                    else
+                    {
+                        var orderNumber = db.ConstructorCategories.Where(p => p.BranchId == category.BranchId).Count() + 1;
+
+                        category.OrderNumber = orderNumber;
+                        result = db.ConstructorCategories.Add(category);
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
+        public static void RemoveConstructorCategory(int id)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+
+                    var oldCategory = db.ConstructorCategories.FirstOrDefault(p => p.Id == id);
+
+                    if (oldCategory != null)
+                    {
+                        oldCategory.IsDeleted = true;
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
+
+        public static List<IngredientModel> AddOrUpdateIngredients(List<IngredientModel> ingredients)
+        {
+            List<IngredientModel> result = null;
+
+            if (ingredients == null || !ingredients.Any())
+                return result;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+
+                    var updateIngredients = ingredients.Where(p => p.Id > 0).ToDictionary(p => p.Id);
+                    var newIngredients = ingredients.Where(p => p.Id < 0).ToList();
+                    var subCategoryId = ingredients.First().SubCategoryId;
+
+                    if (updateIngredients.Any())
+                    {
+                        var ids = updateIngredients.Keys.ToList();
+                        var dataForUpdate = db.Ingredients.Where(p => ids.Contains(p.Id)).ToList();
+
+                        if (dataForUpdate != null && dataForUpdate.Any())
+                        {
+                            dataForUpdate.ForEach(p =>
+                            {
+                                var ingredient = updateIngredients[p.Id];
+
+                                p.Image = ingredient.Image;
+                                p.IsDeleted = ingredient.IsDeleted;
+                                p.MaxAddCount = ingredient.MaxAddCount;
+                                p.MinRequiredCount = ingredient.MinRequiredCount;
+                                p.Name = ingredient.Name;
+                                p.Price = ingredient.Price;
+                                p.Description = ingredient.Description;
+                            });
+                        }
+
+                        db.SaveChanges();
+                    }
+
+                    if (newIngredients != null && newIngredients.Any())
+                    {
+                        db.Ingredients.AddRange(newIngredients);
+                    }
+
+                    db.SaveChanges();
+
+                    result = db.Ingredients.Where(p => p.SubCategoryId == subCategoryId && p.IsDeleted == false).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
+        public static void RemoveIngredientsByCategoryConstructorId(int categoryConstructorId)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var dataForRemove = db.Ingredients.Where(p => p.SubCategoryId == categoryConstructorId && p.IsDeleted == false).ToList();
+
+                    if (dataForRemove != null && dataForRemove.Any())
+                    {
+                        dataForRemove.ForEach(p => p.IsDeleted = true);
+                        db.SaveChanges();
+                    }
+
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+        }
+
         public static CategoryModel SaveCategoryWihoutChangeOrderNumber(CategoryModel category)
         {
             CategoryModel result = null;
@@ -1448,6 +1594,30 @@ namespace EasyStart.Logic
             }
         }
 
+        public static void UpdateOrderNumberConstructorProducts(List<UpdaterOrderNumber> upData)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var dict = upData.ToDictionary(p => p.Id, p => p.OrderNumber);
+                    var ids = dict.Keys.ToList();
+                    var data = db.ConstructorCategories.Where(p => ids.Contains(p.Id));
+
+                    foreach (var up in data)
+                    {
+                        up.OrderNumber = dict[up.Id];
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
+
         public static void UpdateVisibleCategory(UpdaterVisible upData)
         {
             try
@@ -2126,6 +2296,75 @@ namespace EasyStart.Logic
 
                     if (setting != null)
                         result = setting;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
+        public static List<ConstructorCategory> GetConstructorCategories(int idCategory)
+        {
+            List<ConstructorCategory> result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db
+                        .ConstructorCategories
+                        .Where(p => p.CategoryId == idCategory && p.IsDeleted == false)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
+        public static List<IngredientModel> GetIngredients(int idConstructorCategory)
+        {
+            List<IngredientModel> result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db
+                        .Ingredients
+                        .Where(p => p.SubCategoryId == idConstructorCategory && p.IsDeleted == false)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="idsConstructorCategory"></param>
+        /// <returns>key - IdConstructorCategory, value - List<IngredientModel></returns>
+        public static Dictionary<int,List<IngredientModel>> GetIngredients(List<int> idsConstructorCategory)
+        {
+            Dictionary<int, List<IngredientModel>> result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db
+                        .Ingredients
+                        .Where(p => idsConstructorCategory.Contains(p.SubCategoryId) && p.IsDeleted == false)
+                        .GroupBy(p => p.SubCategoryId)
+                        .ToDictionary(p => p.Key, p => p.ToList());
                 }
             }
             catch (Exception ex)
