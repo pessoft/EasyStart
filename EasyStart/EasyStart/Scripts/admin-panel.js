@@ -1668,6 +1668,7 @@ function processsingOrder(order) {
     order.Date = jsonToDate(order.Date);
     order.ProductCount = JSON.parse(order.ProductCountJSON);
     order.ProductBonusCount = JSON.parse(order.ProductBonusCountJSON);
+    order.ProductConstructorCount = JSON.parse(order.ProductConstructorCountJSON);
 
     return order;
 }
@@ -1704,20 +1705,27 @@ function getOrderIdFromItemOrdersDOM(e) {
     return $parent.attr("order-id");
 }
 
-function getProductIdsForLoad(order) {
-    let ids = [];
+function getItemsIdsForLoad(order) {
+    let productIds = [];
+    let constructorCategoryIds = [];
 
     for (let id in order.ProductCount) {
-        ids.push(id);
+        productIds.push(id);
     }
 
     if (order.ProductBonusCount && Object.keys(order.ProductBonusCount).length > 0) {
         for (let id in order.ProductBonusCount) {
-            ids.push(id);
+            productIds.push(id);
         }
     }
 
-    return ids;
+    if (order.ProductConstructorCount && order.ProductConstructorCount.length > 0) {
+        for (let productConstructorOrder of order.ProductConstructorCount) {
+            constructorCategoryIds.push(productConstructorOrder.CategoryId);
+        }
+    }
+
+    return { productIds, constructorCategoryIds};
 }
 
 function isInteger(num) {
@@ -1733,9 +1741,9 @@ function getPriceValid(num) {
 }
 
 var OrderProducts = {};
-var OrderCategoryes = {};
-function loadProductById(ids, callback) {
-    $.post("/Admin/LoadOrderProducts", { ids: ids }, successCallBack(callback, null));
+var OrderConstructorProducts = {};
+function loadItemForOrder(idsCollection, callback) {
+    $.post("/Admin/LoadOrderItems", { productIds: idsCollection.productIds, constructorCategoryIds: idsCollection.constructorCategoryIds }, successCallBack(callback, null));
 }
 
 function getOrderById(orderId) {
@@ -1957,6 +1965,16 @@ class OrderStatusBar {
     }
 }
 
+function convertIngredientsToDictionary(ingredients) {
+    let dict = {}
+
+    for (ingredient of ingredients) {
+        dict[ingredient.Id] = ingredient
+    }
+
+    return dict
+}
+
 function showOrderDetails(orderId) {
     const currentSectionId = getCurrentSectionId();
     const order = currentSectionId == Pages.HistoryOrder ? getHistoryOrderById(orderId) : getOrderById(orderId);
@@ -1970,19 +1988,16 @@ function showOrderDetails(orderId) {
     let loader = new Loader($(`#${currentSectionId}`));
     loader.start()
 
-    let productIdsforLoad = getProductIdsForLoad(order);
-
     let callbackLoadProducts = function (data) {
         if (data.Success) {
-            OrderCategoryes = {};
-            for (let categoryObj of data.Data) {
-                OrderCategoryes[categoryObj.CategoryId] = {
-                    Id: categoryObj.CategoryId,
-                    Name: categoryObj.CategoryName,
-                    ProductIds: categoryObj.Products.map(product => product.Id)
-                };
+            for (let categoryObj of data.Data.products) {
 
                 categoryObj.Products.forEach(product => OrderProducts[product.Id] = product);
+            }
+
+            for (let categoryObj of data.Data.constructor) {
+                categoryObj.Ingredients = convertIngredientsToDictionary(categoryObj.Ingredients)
+                OrderConstructorProducts[categoryObj.CategoryId] = categoryObj
             }
 
             loader.stop()
@@ -1993,11 +2008,13 @@ function showOrderDetails(orderId) {
         }
     }
 
-    if (productIdsforLoad.length == 0) {
+    let itemsIdsforLoad = getItemsIdsForLoad(order);
+
+    if (itemsIdsforLoad.productIds.length == 0 && itemsIdsforLoad.constructorCategoryIds.length == 0) {
         loader.stop()
         getOrderDetails().show();
     } else {
-        loadProductById(productIdsforLoad, callbackLoadProducts);
+        loadItemForOrder(itemsIdsforLoad, callbackLoadProducts);
     }
 }
 
@@ -2244,17 +2261,20 @@ class OrderDetailsData {
     converеOrderListInfo(order) {
         const prefixRub = "руб.";
         this.OrderList = [];
+        this.OrderProductConstructorList = []
 
-        for (let productId in order.ProductCount) {
-            const product = OrderProducts[productId];
-            const obj = {
-                Image: product.Image,
-                Name: product.Name,
-                Price: `${order.ProductCount[productId]} x ${product.Price} ${prefixRub}`
+        if (order.ProductCount && Object.keys(order.ProductCount).length > 0) {
+            for (let productId in order.ProductCount) {
+                const product = OrderProducts[productId];
+                const obj = {
+                    Image: product.Image,
+                    Name: product.Name,
+                    Price: `${order.ProductCount[productId]} x ${product.Price} ${prefixRub}`
+                }
+
+                const view = this.convertOrderProducrToView(obj);
+                this.OrderList.push(view);
             }
-
-            const view = this.convertOrderProducrToView(obj);
-            this.OrderList.push(view);
         }
 
         if (order.ProductBonusCount && Object.keys(order.ProductBonusCount).length > 0) {
@@ -2269,6 +2289,42 @@ class OrderDetailsData {
                 const view = this.convertOrderProducrToView(obj, true);
                 this.OrderList.push(view);
             }
+        }
+
+        if (order.ProductConstructorCount && order.ProductConstructorCount.length > 0) {
+            for (let constructorItem of order.ProductConstructorCount) {
+                let contructor = OrderConstructorProducts[constructorItem.CategoryId]
+                let productConstructorData = this.getProductConstructorData(constructorItem.IngrdientCount, contructor.Ingredients)
+                let constructorToView = {
+                    Image: contructor.CategoryImage,
+                    Name: contructor.CategoryName,
+                    Price: `${constructorItem.Count} x ${productConstructorData.price} ${prefixRub}`,
+                    Ingredients: productConstructorData.ingredients
+                }
+                const view = this.convertOrderConstructorProducrToView(constructorToView);
+                this.OrderProductConstructorList.push(view);
+            }
+        }
+    }
+
+    getProductConstructorData(constructorItem, ingredients) {
+        const prefixRub = "руб."
+        let price = 0
+        let ingredientList = []
+        for (let id in constructorItem) {
+            const count = constructorItem[id]
+            const ingredient = ingredients[id]
+            ingredientList.push({
+                Image: ingredient.Image,
+                Name: ingredient.Name,
+                Price: `${count} x ${ingredient.Price} ${prefixRub}`
+            })
+            price += (ingredient.Price * count)
+        }
+
+        return {
+            price,
+            ingredients: ingredientList
         }
     }
 
@@ -2287,6 +2343,48 @@ class OrderDetailsData {
         `;
     }
 
+    convertOrderConstructorProducrToView(constructor) {
+        return `
+            <div class="order-details-constructor-product-item">
+                <div class="order-details-constructor-product-header">
+                    <div class="order-details-constructor-product-img">
+                        <img src="${constructor.Image}">
+                    </div>
+                    <div class="order-details-constructor-product-name-price">
+                        <span>${constructor.Name}</span>
+                        <span class="font-weight-bold grid-justify-self-flex-end">${constructor.Price}</span>
+                    </div>
+                </div>
+                <div class="order-details-constructor-product-ingredients border-bottom">
+                    ${this.getIngredientViews(constructor.Ingredients)}
+                </div>
+             </div>
+        `;
+    }
+
+    getIngredientViews(ingredients) {
+        let views = ''
+
+        for (let ingredient of ingredients) {
+            views += this.getIngredientView(ingredient)
+        }
+
+        return views
+    }
+
+    getIngredientView(ingredient) {
+        return `
+            <div class="order-details-constructor-product-header">
+                <div class="order-details-constructor-ingredient-img">
+                    <img src="${ingredient.Image}">
+                </div>
+                <div class="order-details-constructor-product-name-price">
+                    <span>${ingredient.Name}</span>
+                    <span class="font-weight-bold grid-justify-self-flex-end">${ingredient.Price}</span>
+                </div>
+             </div>
+        `
+    }
 }
 
 var OrderDetailsQSelector = {
@@ -2356,6 +2454,10 @@ class OrderDetails {
         this.$dialog.find(qSelectror).html(value);
     }
 
+    appendValue(qSelectror, value) {
+        this.$dialog.find(qSelectror).append(value);
+    }
+
     setValues() {
         this.setBaseInfo();
         this.setShortInfo();
@@ -2422,6 +2524,7 @@ class OrderDetails {
 
     setOrderListInfo() {
         this.setValue(OrderDetailsQSelector.OrderList, this.details.OrderList);
+        this.appendValue(OrderDetailsQSelector.OrderList, this.details.OrderProductConstructorList);
     }
 
     setComment() {

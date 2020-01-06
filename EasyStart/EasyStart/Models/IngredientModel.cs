@@ -8,6 +8,7 @@ namespace EasyStart.Models
     public class IngredientModel
     {
         public int Id { get; set; }
+        public int CategoryId { get; set; }
         public int SubCategoryId { get; set; }
         public string Name { get; set; }
         public string AdditionaInfo { get; set; }

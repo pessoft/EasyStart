@@ -2306,7 +2306,7 @@ namespace EasyStart.Logic
             return result;
         }
 
-        public static List<ConstructorCategory> GetConstructorCategories(int idCategory)
+        public static List<ConstructorCategory> GetConstructorCategoriesVisible(int idCategory)
         {
             List<ConstructorCategory> result = null;
             try
@@ -2327,7 +2327,7 @@ namespace EasyStart.Logic
             return result;
         }
 
-        public static List<IngredientModel> GetIngredients(int idConstructorCategory)
+        public static List<IngredientModel> GetIngredientsVisible(int idConstructorCategory)
         {
             List<IngredientModel> result = null;
             try
@@ -2353,7 +2353,7 @@ namespace EasyStart.Logic
         /// </summary>
         /// <param name="idsConstructorCategory"></param>
         /// <returns>key - IdConstructorCategory, value - List<IngredientModel></returns>
-        public static Dictionary<int,List<IngredientModel>> GetIngredients(List<int> idsConstructorCategory)
+        public static Dictionary<int,List<IngredientModel>> GetIngredientsVisible(List<int> idsConstructorCategory)
         {
             Dictionary<int, List<IngredientModel>> result = null;
             try
@@ -2364,6 +2364,32 @@ namespace EasyStart.Logic
                         .Ingredients
                         .Where(p => idsConstructorCategory.Contains(p.SubCategoryId) && p.IsDeleted == false)
                         .GroupBy(p => p.SubCategoryId)
+                        .ToDictionary(p => p.Key, p => p.ToList());
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <returns>key - IdConstructorCategory, value - List<IngredientModel></returns>
+        public static Dictionary<int, List<IngredientModel>> GetIngredientsByCategoryIdVisible(List<int> categoryId)
+        {
+            Dictionary<int, List<IngredientModel>> result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db
+                        .Ingredients
+                        .Where(p => categoryId.Contains(p.CategoryId) && p.IsDeleted == false)
+                        .GroupBy(p => p.CategoryId)
                         .ToDictionary(p => p.Key, p => p.ToList());
                 }
             }

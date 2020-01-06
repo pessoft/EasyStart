@@ -709,43 +709,88 @@ namespace EasyStart.Controllers
 
         [HttpPost]
         [Authorize]
-        public JsonResult LoadOrderProducts(List<int> ids)
+        public JsonResult LoadOrderItems(List<int> productIds, List<int> constructorCategoryIds)
         {
             var result = new JsonResultModel();
 
-            if (ids == null || !ids.Any())
+            if ((productIds == null || !productIds.Any())
+                && (constructorCategoryIds == null || !constructorCategoryIds.Any()))
             {
                 result.ErrorMessage = "Список идентификторов пуст";
             }
             else
             {
-                ids = ids.Distinct().ToList();
-                var products = DataWrapper.GetOrderProducts(ids);
+                var products = new List<ProductModel>();
+                var ingredients = new Dictionary<int, List<IngredientModel>>();
 
-                if (products != null)
+                if (productIds != null)
                 {
-                    var idsDict = products
-                    .Select(p => p.CategoryId)
-                    .Distinct()
-                    .ToList();
-                    var categoryDict = DataWrapper.GetCategories(idsDict);
-                    var dataResult = products
-                        .GroupBy(p => p.CategoryId)
-                        .Select(p => new
-                        {
-                            CategoryId = p.Key,
-                            CategoryName = categoryDict[p.Key].Name,
-                            Products = p
-                        })
-                        .ToList();
-
-                    result.Data = dataResult;
-                    result.Success = true;
+                    productIds = productIds.Distinct().ToList();
+                    products = DataWrapper.GetOrderProducts(productIds);
                 }
-                else
+
+                if (constructorCategoryIds != null)
+                {
+                    ingredients = DataWrapper.GetIngredientsByCategoryIdVisible(constructorCategoryIds);
+                }
+
+                if (products == null && ingredients == null)
                 {
                     result.ErrorMessage = "При загрузки продуктов что то пошло не так";
                 }
+                else
+                {
+                    var detailConstructorProducts = new List<OrderDetailConstructorProduct>();
+                    var detailProducts = new List<OrderDetailProduct>();
+
+                    if (ingredients != null)
+                    {
+                        var categories = DataWrapper.GetCategories(ingredients.Keys);
+                        detailConstructorProducts = ingredients.Select(p =>
+                        {
+                            var category = categories[p.Key];
+
+                            return new OrderDetailConstructorProduct
+                            {
+                                CategoryId = category.Id,
+                                CategoryName = category.Name,
+                                CategoryImage = category.Image,
+                                Ingredients = p.Value,
+                            };
+
+                        })
+                        .ToList();
+                    }
+
+                    if (products != null)
+                    {
+                        var idsDict = products
+                        .Select(p => p.CategoryId)
+                        .Distinct()
+                        .ToList();
+                        var categoryDict = DataWrapper.GetCategories(idsDict);
+                        detailProducts = products
+                            .GroupBy(p => p.CategoryId)
+                            .Select(p => new OrderDetailProduct
+                            {
+                                CategoryId = p.Key,
+                                CategoryName = categoryDict[p.Key].Name,
+                                Products = p.ToList()
+                            })
+                            .ToList();
+                    }
+
+                    result.Success = true;
+                    result.Data = new
+                    {
+                        products = detailProducts,
+                        constructor = detailConstructorProducts
+                    };
+                }
+
+
+                
+
             }
 
             return Json(result);
@@ -1067,7 +1112,7 @@ namespace EasyStart.Controllers
         {
             var result = new JsonResultModel();
 
-            if(category.Ingredients == null || !category.Ingredients.Any())
+            if (category.Ingredients == null || !category.Ingredients.Any())
             {
                 result.ErrorMessage = "Отсутсвтуют ингредиенты";
 
@@ -1076,7 +1121,8 @@ namespace EasyStart.Controllers
 
             try
             {
-                category.Ingredients.ForEach(p => {
+                category.Ingredients.ForEach(p =>
+                {
                     if (!System.IO.File.Exists(Server.MapPath(p.Image)))
                     {
                         p.Image = "/images/default-image.jpg";
@@ -1091,7 +1137,7 @@ namespace EasyStart.Controllers
 
                 if (constructorCategory != null)
                 {
-                    category.Ingredients.UpdateIngredientSubCategoryId(constructorCategory.Id);
+                    category.Ingredients.UpdateIngredientSubAndCategoryId(constructorCategory.Id, constructorCategory.CategoryId);
                     var ingredients = DataWrapper.AddOrUpdateIngredients(category.Ingredients);
 
                     if (ingredients == null)
@@ -1123,7 +1169,7 @@ namespace EasyStart.Controllers
         public JsonResult LoadProductConstructorList(int idCategory)
         {
             var result = new JsonResultModel();
-            var constructorCategories = DataWrapper.GetConstructorCategories(idCategory);
+            var constructorCategories = DataWrapper.GetConstructorCategoriesVisible(idCategory);
 
             if (constructorCategories != null)
             {
@@ -1132,10 +1178,11 @@ namespace EasyStart.Controllers
                 {
 
                     var ids = constructorCategories.Select(p => p.Id).ToList();
-                    var dictIngredients = DataWrapper.GetIngredients(ids);
+                    var dictIngredients = DataWrapper.GetIngredientsVisible(ids);
                     var ProductConstructorIngredients = new List<ProductConstructorIngredientModel>();
 
-                    constructorCategories.ForEach(p => {
+                    constructorCategories.ForEach(p =>
+                    {
                         List<IngredientModel> ingredients = null;
 
                         if (dictIngredients.TryGetValue(p.Id, out ingredients) && ingredients != null && ingredients.Any())
@@ -1151,7 +1198,7 @@ namespace EasyStart.Controllers
                         result.Data = ProductConstructorIngredients.OrderBy(p => p.OrderNumber).ToList();
                     }
                 }
-                
+
                 result.Success = true;
             }
             else

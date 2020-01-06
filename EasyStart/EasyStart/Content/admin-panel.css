@@ -2027,17 +2027,21 @@ button.order-details-menu-item i {
     overflow-x: hidden;
     overflow-y: auto;
     grid-template-columns: 1fr;
-    grid-auto-rows: 55px;
     grid-row-gap: 15px;
 }
 
 .order-details-product-item {
     display: grid;
     grid-template-columns: 55px 1fr;
-    grid-template-rows: 1fr;
+    grid-template-rows: 55px;
     align-items: center;
     grid-column-gap: 8px;
     font-size: 0.9em;
+}
+
+.order-details-product-img {
+    display:flex;
+    justify-content:center;
 }
 
 .order-details-product-img img {

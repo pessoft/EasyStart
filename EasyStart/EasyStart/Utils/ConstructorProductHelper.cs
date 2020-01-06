@@ -21,11 +21,17 @@ namespace EasyStart.Utils
             };
         }
 
-        public static void UpdateIngredientSubCategoryId(this List<IngredientModel> data, int id)
+        /// <summary>
+        /// Update category id
+        /// Update subcategory id
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="id"></param>
+        public static void UpdateIngredientSubAndCategoryId(this List<IngredientModel> data, int subCategoryId, int categoryId)
         {
             if(data != null && data.Any())
             {
-                data.ForEach(p => p.SubCategoryId = id);
+                data.ForEach(p => { p.SubCategoryId = subCategoryId; p.CategoryId = categoryId; });
             }
         }
 

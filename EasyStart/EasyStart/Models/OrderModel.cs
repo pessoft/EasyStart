@@ -72,7 +72,11 @@ namespace EasyStart.Models
         {
             get
             {
-                return JsonConvert.DeserializeObject<Dictionary<int, int>>(ProductCountJSON);
+                if (!string.IsNullOrEmpty(ProductCountJSON))
+                    return JsonConvert.DeserializeObject<Dictionary<int, int>>(ProductCountJSON);
+                else
+                    return null;
+
             }
         }
 
@@ -82,7 +86,25 @@ namespace EasyStart.Models
         {
             get
             {
-                return JsonConvert.DeserializeObject<Dictionary<int, int>>(ProductBonusCountJSON);
+                if (!string.IsNullOrEmpty(ProductBonusCountJSON))
+                    return JsonConvert.DeserializeObject<Dictionary<int, int>>(ProductBonusCountJSON);
+                else
+                    return null;
+            }
+        }
+
+        public string ProductConstructorCountJSON { get; set; }
+
+        [NotMapped]
+        [ScriptIgnore]
+        public List<ProductConstructorOrderModel> ProductConstructorCount
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(ProductConstructorCountJSON))
+                    return JsonConvert.DeserializeObject<List<ProductConstructorOrderModel>>(ProductConstructorCountJSON);
+                else
+                    return null;
             }
         }
     }

@@ -468,6 +468,14 @@
     <Compile Include="Migrations\202001051727296_ConstructorProductModels.Designer.cs">
       <DependentUpon>202001051727296_ConstructorProductModels.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001061125235_AddCosntructorCategoryOrderModel.cs" />
+    <Compile Include="Migrations\202001061125235_AddCosntructorCategoryOrderModel.Designer.cs">
+      <DependentUpon>202001061125235_AddCosntructorCategoryOrderModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001062014037_AddCategoryIdInIngredientModel.cs" />
+    <Compile Include="Migrations\202001062014037_AddCategoryIdInIngredientModel.Designer.cs">
+      <DependentUpon>202001062014037_AddCategoryIdInIngredientModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -489,9 +497,12 @@
     <Compile Include="Models\JsonResultModel.cs" />
     <Compile Include="Models\LoginDataModel.cs" />
     <Compile Include="Models\Notification\OptionsNotificationNewOrderModel.cs" />
+    <Compile Include="Models\OrderDetailConstructorProduct.cs" />
+    <Compile Include="Models\OrderDetailProduct.cs" />
     <Compile Include="Models\OrderModel.cs" />
     <Compile Include="Models\OrderStockApply.cs" />
     <Compile Include="Models\ProductConstructorIngredientModel.cs" />
+    <Compile Include="Models\ProductConstructorOrderModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\ProductReview.cs" />
     <Compile Include="Models\PromotionCashbackSetting.cs" />
@@ -507,6 +518,7 @@
     <Compile Include="Models\SettingModel.cs" />
     <Compile Include="Models\StockModel.cs" />
     <Compile Include="Models\TodayDataOrdersModel.cs" />
+    <Compile Include="Models\TopCategoriesReportModel.cs" />
     <Compile Include="Models\Transaction\CashbackTransaction.cs" />
     <Compile Include="Models\Transaction\PartnersTransaction.cs" />
     <Compile Include="Models\Transaction\PartnersTransactionView.cs" />
@@ -884,6 +896,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001051727296_ConstructorProductModels.resx">
       <DependentUpon>202001051727296_ConstructorProductModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001061125235_AddCosntructorCategoryOrderModel.resx">
+      <DependentUpon>202001061125235_AddCosntructorCategoryOrderModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001062014037_AddCategoryIdInIngredientModel.resx">
+      <DependentUpon>202001062014037_AddCategoryIdInIngredientModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
