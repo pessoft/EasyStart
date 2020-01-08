@@ -24,5 +24,6 @@ namespace EasyStart.Models
         public ProductType ProductType { get; set; }
         public int OrderNumber { get; set; }
         public bool Visible { get; set; } = true;
+        public bool IsDeleted { get; set; }
     }
 }

@@ -476,6 +476,10 @@
     <Compile Include="Migrations\202001062014037_AddCategoryIdInIngredientModel.Designer.cs">
       <DependentUpon>202001062014037_AddCategoryIdInIngredientModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001081951429_AddIsDeletedPropeties.cs" />
+    <Compile Include="Migrations\202001081951429_AddIsDeletedPropeties.Designer.cs">
+      <DependentUpon>202001081951429_AddIsDeletedPropeties.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -902,6 +906,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001062014037_AddCategoryIdInIngredientModel.resx">
       <DependentUpon>202001062014037_AddCategoryIdInIngredientModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001081951429_AddIsDeletedPropeties.resx">
+      <DependentUpon>202001081951429_AddIsDeletedPropeties.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

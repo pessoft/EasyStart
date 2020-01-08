@@ -2027,6 +2027,7 @@ button.order-details-menu-item i {
     overflow-x: hidden;
     overflow-y: auto;
     grid-template-columns: 1fr;
+    grid-auto-rows: min-content;
     grid-row-gap: 15px;
 }
 

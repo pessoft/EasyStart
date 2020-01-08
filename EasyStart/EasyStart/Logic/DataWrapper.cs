@@ -501,6 +501,31 @@ namespace EasyStart.Logic
             return result;
         }
 
+        public static void RecalcConstructorCategoryOrderNumber(int categoryId)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var items = db.ConstructorCategories
+                        .Where(p => p.CategoryId == categoryId && !p.IsDeleted)
+                        .OrderBy(p => p.OrderNumber)
+                        .ToList();
+
+                    for (var i = 0; i < items.Count; ++i)
+                    {
+                        items[i].OrderNumber = i + 1;
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
+
         public static void RemoveConstructorCategory(int id)
         {
             try
@@ -516,6 +541,7 @@ namespace EasyStart.Logic
                     }
 
                     db.SaveChanges();
+                    RecalcConstructorCategoryOrderNumber(oldCategory.CategoryId);
                 }
             }
             catch (Exception ex)
@@ -653,7 +679,7 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    result = db.Categories.Where(p => p.BranchId == branchId).ToList();
+                    result = db.Categories.Where(p => p.BranchId == branchId && !p.IsDeleted).ToList();
                 }
             }
             catch (Exception ex)
@@ -672,7 +698,7 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     result = db.Categories
-                        .Where(p => p.BranchId == brancId && p.Visible)
+                        .Where(p => p.BranchId == brancId && p.Visible && !p.IsDeleted)
                         .ToList();
                 }
             }
@@ -706,6 +732,31 @@ namespace EasyStart.Logic
             return result;
         }
 
+        public static void RecalcCategoryOrderNumber(int branchId)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var categories = db.Categories
+                        .Where(p => p.BranchId == branchId && !p.IsDeleted)
+                        .OrderBy(p => p.OrderNumber)
+                        .ToList();
+
+                    for (var i = 0; i < categories.Count; ++i)
+                    {
+                        categories[i].OrderNumber = i + 1;
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch(Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
+
         public static bool RemoveCategory(int id)
         {
             var success = false;
@@ -714,9 +765,15 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     var removeCategory = db.Categories.FirstOrDefault(p => p.Id == id);
-                    db.Categories.Remove(removeCategory);
-                    db.SaveChanges();
-                    success = true;
+
+                    if (removeCategory != null)
+                    {
+                        removeCategory.IsDeleted = true;
+                        db.SaveChanges();
+
+                        RecalcCategoryOrderNumber(removeCategory.BranchId);
+                        success = true;
+                    }
                 }
             }
             catch (Exception ex)
@@ -777,7 +834,7 @@ namespace EasyStart.Logic
                 {
                     result = db
                         .Products
-                        .Where(p => p.CategoryId == idCategory)
+                        .Where(p => p.CategoryId == idCategory && !p.IsDeleted)
                         .ToList();
                 }
             }
@@ -913,7 +970,7 @@ namespace EasyStart.Logic
                 {
                     result = db
                         .Products
-                        .Where(p => p.BranchId == branchId)
+                        .Where(p => p.BranchId == branchId && !p.IsDeleted)
                         .ToList();
                 }
             }
@@ -934,7 +991,7 @@ namespace EasyStart.Logic
                 {
                     var products = db
                         .Products
-                        .Where(p => p.BranchId == branchId && p.Visible)
+                        .Where(p => p.BranchId == branchId && p.Visible && !p.IsDeleted)
                         .ToList();
 
                     if (products != null && products.Any())
@@ -962,7 +1019,7 @@ namespace EasyStart.Logic
                 {
                     result = db
                         .Products
-                        .Where(p => p.BranchId == branchId && p.Visible)
+                        .Where(p => p.BranchId == branchId && p.Visible && !p.IsDeleted)
                         .ToList();
                 }
             }
@@ -1001,6 +1058,31 @@ namespace EasyStart.Logic
             return result;
         }
 
+        public static void RecalcProductsOrderNumber(int categoryId)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var products = db.Products
+                        .Where(p => p.CategoryId == categoryId && !p.IsDeleted)
+                        .OrderBy(p => p.OrderNumber)
+                        .ToList();
+
+                    for (var i = 0; i < products.Count; ++i)
+                    {
+                        products[i].OrderNumber = i + 1;
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
+
         public static bool RemoveProduct(int id)
         {
             var success = false;
@@ -1010,10 +1092,14 @@ namespace EasyStart.Logic
                 {
                     var removeProduct = db.Products.FirstOrDefault(p => p.Id == id);
 
-                    db.Products.Remove(removeProduct);
-                    db.SaveChanges();
+                    if (removeProduct != null)
+                    {
+                        removeProduct.IsDeleted = true;
+                        db.SaveChanges();
 
-                    success = true;
+                        RecalcProductsOrderNumber(removeProduct.CategoryId);
+                        success = true;
+                    }
                 }
             }
             catch (Exception ex)
