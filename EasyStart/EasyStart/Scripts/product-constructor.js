@@ -219,7 +219,7 @@ class CategoryIngredient {
 
         if (this.categoryIngredient.Ingredients
             && this.categoryIngredient.Ingredients.length > 0
-            && this.categoryIngredient.Ingredients.filter(p => p.IsDeleted == false).length > 0) {
+            && this.categoryIngredient.Ingredients.filter(p => !p.IsDeleted).length > 0) {
             result = true;
         }
 
@@ -307,7 +307,7 @@ class CategoryIngredient {
         const ingredientRows = []
 
         for (const ingredient of this.categoryIngredient.Ingredients) {
-            if (ingredient.IsDeleted == false) {
+            if (!ingredient.IsDeleted) {
                 ingredientRows.push(this.renderIngredientRow(ingredient))
             }
         }
@@ -372,7 +372,7 @@ class CategoryIngredient {
         }
         
 
-        if (this.categoryIngredient.Ingredients.filter(p => p.IsDeleted == false).length == 0) {
+        if (this.categoryIngredient.Ingredients.filter(p => !p.IsDeleted).length == 0) {
             this.setEmptyList()
         }
     }

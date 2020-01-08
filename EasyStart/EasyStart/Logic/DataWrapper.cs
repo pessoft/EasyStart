@@ -597,7 +597,7 @@ namespace EasyStart.Logic
 
                     db.SaveChanges();
 
-                    result = db.Ingredients.Where(p => p.SubCategoryId == subCategoryId && p.IsDeleted == false).ToList();
+                    result = db.Ingredients.Where(p => p.SubCategoryId == subCategoryId && !p.IsDeleted).ToList();
                 }
             }
             catch (Exception ex)
@@ -614,7 +614,7 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    var dataForRemove = db.Ingredients.Where(p => p.SubCategoryId == categoryConstructorId && p.IsDeleted == false).ToList();
+                    var dataForRemove = db.Ingredients.Where(p => p.SubCategoryId == categoryConstructorId && !p.IsDeleted).ToList();
 
                     if (dataForRemove != null && dataForRemove.Any())
                     {
@@ -2401,7 +2401,7 @@ namespace EasyStart.Logic
                 {
                     result = db
                         .ConstructorCategories
-                        .Where(p => p.CategoryId == idCategory && p.IsDeleted == false)
+                        .Where(p => p.CategoryId == idCategory && !p.IsDeleted)
                         .ToList();
                 }
             }
@@ -2422,7 +2422,7 @@ namespace EasyStart.Logic
                 {
                     result = db
                         .Ingredients
-                        .Where(p => p.SubCategoryId == idConstructorCategory && p.IsDeleted == false)
+                        .Where(p => p.SubCategoryId == idConstructorCategory && !p.IsDeleted)
                         .ToList();
                 }
             }
@@ -2448,7 +2448,7 @@ namespace EasyStart.Logic
                 {
                     result = db
                         .Ingredients
-                        .Where(p => idsConstructorCategory.Contains(p.SubCategoryId) && p.IsDeleted == false)
+                        .Where(p => idsConstructorCategory.Contains(p.SubCategoryId) && !p.IsDeleted)
                         .GroupBy(p => p.SubCategoryId)
                         .ToDictionary(p => p.Key, p => p.ToList());
                 }
@@ -2474,7 +2474,7 @@ namespace EasyStart.Logic
                 {
                     result = db
                         .Ingredients
-                        .Where(p => categoryId.Contains(p.CategoryId) && p.IsDeleted == false)
+                        .Where(p => categoryId.Contains(p.CategoryId) && !p.IsDeleted)
                         .GroupBy(p => p.CategoryId)
                         .ToDictionary(p => p.Key, p => p.ToList());
                 }
