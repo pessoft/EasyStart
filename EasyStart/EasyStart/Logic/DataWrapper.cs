@@ -751,7 +751,7 @@ namespace EasyStart.Logic
                     db.SaveChanges();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Logger.Log.Error(ex);
             }
@@ -1164,6 +1164,41 @@ namespace EasyStart.Logic
             }
         }
 
+        private static void SetStockIdsInOrder(List<OrderModel> orders)
+        {
+            if (orders == null || !orders.Any())
+                return;
+
+            try
+            {
+                var orderIds = orders.Select(p => p.Id).ToList();
+                using (var db = new AdminPanelContext())
+                {
+                    var stockDictIds = db.OrderStockApplies
+                        .Where(p => orderIds.Contains(p.OrderId))
+                        .GroupBy(p => p.OrderId)
+                        .ToDictionary(p => p.Key, p => p.Select(s => s.StockId).ToList());
+
+                    if (stockDictIds != null && stockDictIds.Any())
+                    {
+                        orders.ForEach(p =>
+                        {
+                            List<int> stockIds = null;
+
+                            if (stockDictIds.TryGetValue(p.Id, out stockIds))
+                            {
+                                p.StockIds = stockIds;
+                            }
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
+
         public static int SaveOrder(OrderModel order)
         {
             var numberOrder = -1;
@@ -1238,7 +1273,7 @@ namespace EasyStart.Logic
 
                     if (orders != null && orders.Any())
                     {
-                        orders.ForEach(p => SetStockIdsInOrder(p));
+                        SetStockIdsInOrder(orders);
                     }
                 }
             }
@@ -1285,7 +1320,7 @@ namespace EasyStart.Logic
 
                     if (orders != null && orders.Any())
                     {
-                        orders.ForEach(p => SetStockIdsInOrder(p));
+                        SetStockIdsInOrder(orders);
                     }
                 }
             }
@@ -1315,7 +1350,7 @@ namespace EasyStart.Logic
 
                     if (histroyOrders != null && histroyOrders.Any())
                     {
-                        histroyOrders.ForEach(p => SetStockIdsInOrder(p));
+                        SetStockIdsInOrder(histroyOrders);
                     }
                 }
             }
@@ -2439,7 +2474,7 @@ namespace EasyStart.Logic
         /// </summary>
         /// <param name="idsConstructorCategory"></param>
         /// <returns>key - IdConstructorCategory, value - List<IngredientModel></returns>
-        public static Dictionary<int,List<IngredientModel>> GetIngredientsVisible(List<int> idsConstructorCategory)
+        public static Dictionary<int, List<IngredientModel>> GetIngredientsVisible(List<int> idsConstructorCategory)
         {
             Dictionary<int, List<IngredientModel>> result = null;
             try
