@@ -309,9 +309,9 @@ namespace EasyStart
 
             try
             {
-                var historyOrder = DataWrapper.GetHistoryOrder(dataHistoryForLoad.ClientId, dataHistoryForLoad.BranchId);
+                var historyOrders = DataWrapper.GetHistoryOrders(dataHistoryForLoad.ClientId, dataHistoryForLoad.BranchId);
 
-                result.Data = historyOrder;
+                result.Data = historyOrders;
                 result.Success = true;
 
                 return result;
@@ -321,7 +321,102 @@ namespace EasyStart
                 Logger.Log.Error(ex);
                 return result;
             }
+        }
 
+        [HttpPost]
+        public JsonResultModel GetProductsHistoryOrder([FromBody]int orderId)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                var history = DataWrapper.GetOrder(orderId);
+                var productsHistory = new List<ProductHistoryModel>();
+                var constructorProductsHistory = new List<ConstructorProductHistoryModel>();
+
+                if (history.ProductCount != null && history.ProductCount.Any())
+                {
+                    var products = DataWrapper.GetProducts(history.ProductCount.Keys.ToList());
+
+                    if (products != null)
+                    {
+                        products.ForEach(p => 
+                        {
+                            var productHistory = new ProductHistoryModel
+                            {
+                                Id = p.Id,
+                                CategoryId = p.CategoryId,
+                                AdditionInfo = p.AdditionInfo,
+                                CategoryType = CategoryType.Default,
+                                Count = history.ProductCount[p.Id],
+                                Image = p.Image,
+                                IsDeleted = p.IsDeleted,
+                                Name = p.Name,
+                                Price = p.Price
+                            };
+                            PreprocessorDataAPI.ChangeImagePath(productHistory);
+                            productsHistory.Add(productHistory);
+                        });
+                    }
+                }
+
+                if (history.ProductConstructorCount != null && history.ProductConstructorCount.Any())
+                {
+                    var categories = DataWrapper.GetCategories(history.ProductConstructorCount.Select(p => p.CategoryId));
+
+                    history.ProductConstructorCount.ForEach(p =>
+                    {
+                        CategoryModel category = null;
+
+                        if (categories.TryGetValue(p.CategoryId, out category))
+                        {
+                            var ingredients = DataWrapper.GetIngredients(p.IngrdientCount.Keys);
+                            var price = ingredients.Sum(x => x.Price * p.IngrdientCount[x.Id]);
+                            var ingredientsHistory = new List<IngredientHistoryModel>();
+                            var isDeleted = category.IsDeleted || ingredients.Exists(x => x.IsDeleted);
+
+                            ingredients.ForEach(x =>
+                            {
+                                ingredientsHistory.Add(new IngredientHistoryModel
+                                {
+                                    Id = x.Id,
+                                    CategoryId = x.CategoryId,
+                                    SubCategoryId = x.SubCategoryId,
+                                    Count = p.IngrdientCount[x.Id],
+                                    Name = x.Name,
+                                    Price = x.Price
+                                });
+                            });
+
+                            var constructorProductHistory = new ConstructorProductHistoryModel
+                            {
+                                Id = p.CategoryId,
+                                CategoryType = CategoryType.Constructor,
+                                Count = p.Count,
+                                Image = category.Image,
+                                Name = category.Name,
+                                Price = price,
+                                Ingredients = ingredientsHistory,
+                                IsDeleted = isDeleted
+
+                            };
+                            PreprocessorDataAPI.ChangeImagePath(constructorProductHistory);
+                            constructorProductsHistory.Add(constructorProductHistory);
+                        }
+                    });
+                }
+
+                
+                result.Data = new { productsHistory, constructorProductsHistory };
+                result.Success = true;
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                return result;
+            }
         }
 
         [HttpPost]

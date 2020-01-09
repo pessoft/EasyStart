@@ -488,12 +488,14 @@
     <Compile Include="Models\BranchSignal.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\ConstructorCategory.cs" />
+    <Compile Include="Models\ConstructorProductHistoryModel.cs" />
     <Compile Include="Models\CouponModel.cs" />
     <Compile Include="Models\CouponParamsModel.cs" />
     <Compile Include="Models\DataHistoryForViewModel.cs" />
     <Compile Include="Models\DeliverySettingModel.cs" />
     <Compile Include="Models\HistoryOrderFilter.cs" />
     <Compile Include="Models\IContainImage.cs" />
+    <Compile Include="Models\IngredientHistoryModel.cs" />
     <Compile Include="Models\IngredientModel.cs" />
     <Compile Include="Models\MainDataSignatureModel.cs" />
     <Compile Include="Models\NewBranchModel.cs" />
@@ -507,6 +509,7 @@
     <Compile Include="Models\OrderStockApply.cs" />
     <Compile Include="Models\ProductConstructorIngredientModel.cs" />
     <Compile Include="Models\ProductConstructorOrderModel.cs" />
+    <Compile Include="Models\ProductHistoryModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\ProductReview.cs" />
     <Compile Include="Models\PromotionCashbackSetting.cs" />

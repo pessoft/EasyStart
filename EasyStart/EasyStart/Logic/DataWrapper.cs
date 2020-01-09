@@ -1337,7 +1337,7 @@ namespace EasyStart.Logic
         /// </summary>
         /// <param name="clientId"></param>
         /// <returns></returns>
-        public static List<OrderModel> GetHistoryOrder(int clientId, int branchId)
+        public static List<OrderModel> GetHistoryOrders(int clientId, int branchId)
         {
             var histroyOrders = new List<OrderModel>();
             try
@@ -2448,6 +2448,27 @@ namespace EasyStart.Logic
             return result;
         }
 
+        public static List<ConstructorCategory> GetConstructorCategories(int idCategory)
+        {
+            List<ConstructorCategory> result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db
+                        .ConstructorCategories
+                        .Where(p => p.CategoryId == idCategory)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
         public static List<IngredientModel> GetIngredientsVisible(int idConstructorCategory)
         {
             List<IngredientModel> result = null;
@@ -2458,6 +2479,27 @@ namespace EasyStart.Logic
                     result = db
                         .Ingredients
                         .Where(p => p.SubCategoryId == idConstructorCategory && !p.IsDeleted)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
+        public static List<IngredientModel> GetIngredients(IEnumerable<int> ids)
+        {
+            List<IngredientModel> result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db
+                        .Ingredients
+                        .Where(p => ids.Contains(p.Id))
                         .ToList();
                 }
             }
