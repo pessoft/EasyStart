@@ -100,6 +100,8 @@ namespace EasyStart
             {
                 var categories = GetCategories(branchId);
                 var products = GetAllProducts(branchId);
+                var constructorCategories = GetConstructorCategories(branchId);
+                var ingredients = GetIngredients(constructorCategories.Select(p => p.CategoryId));
                 var deliverySettings = DataWrapper.GetDeliverySetting(branchId);
                 var organizationSettings = DataWrapper.GetSetting(branchId);
 
@@ -118,6 +120,8 @@ namespace EasyStart
                 {
                     categories,
                     products,
+                    constructorCategories,
+                    ingredients,
                     deliverySettings,
                     organizationSettings,
                     stocks,
@@ -184,6 +188,41 @@ namespace EasyStart
                 }
 
                 return products;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                return null;
+            }
+        }
+
+        public List<ConstructorCategory> GetConstructorCategories(int branckId)
+        {
+            try
+            {
+                var categories = DataWrapper.GetConstuctorCategoriesByBranchId(branckId);
+
+                return categories;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                return null;
+            }
+        }
+
+        public Dictionary<int, List<IngredientModel>> GetIngredients(IEnumerable<int> categoryIds)
+        {
+            try
+            {
+                var ingredients = DataWrapper.GetAllDictionaryIngredientsByCategoryIds(categoryIds);
+
+                foreach (var kv in ingredients)
+                {
+                    kv.Value.ForEach(p => PreprocessorDataAPI.ChangeImagePath(p));
+                }
+
+                return ingredients;
             }
             catch (Exception ex)
             {

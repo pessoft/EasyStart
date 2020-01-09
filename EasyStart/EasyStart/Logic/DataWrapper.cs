@@ -2469,6 +2469,27 @@ namespace EasyStart.Logic
             return result;
         }
 
+        public static List<ConstructorCategory> GetConstuctorCategoriesByBranchId(int branchId)
+        {
+            List<ConstructorCategory> result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db
+                        .ConstructorCategories
+                        .Where(p => p.BranchId == branchId && !p.IsDeleted)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
         public static List<IngredientModel> GetIngredientsVisible(int idConstructorCategory)
         {
             List<IngredientModel> result = null;
@@ -2501,6 +2522,28 @@ namespace EasyStart.Logic
                         .Ingredients
                         .Where(p => ids.Contains(p.Id))
                         .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
+        public static Dictionary<int,List<IngredientModel>> GetAllDictionaryIngredientsByCategoryIds(IEnumerable<int> ids)
+        {
+            Dictionary<int, List<IngredientModel>> result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db
+                        .Ingredients
+                        .Where(p => ids.Contains(p.Id))
+                        .GroupBy(p => p.SubCategoryId)
+                        .ToDictionary(p => p.Key, p => p.ToList());
                 }
             }
             catch (Exception ex)

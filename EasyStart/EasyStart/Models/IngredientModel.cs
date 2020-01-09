@@ -5,7 +5,7 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class IngredientModel
+    public class IngredientModel: IContainImage
     {
         public int Id { get; set; }
         public int CategoryId { get; set; }
