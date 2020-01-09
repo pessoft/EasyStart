@@ -12,6 +12,7 @@ namespace EasyStart.Models
         public int CategoryId { get; set; }
         public int BranchId { get; set; }
         public string Name { get; set; }
+        public int MinCountIngredient { get; set; }
         public int MaxCountIngredient { get; set; }
         public StyleTypeIngredient StyleTypeIngredient { get; set; }
         public int OrderNumber { get; set; }

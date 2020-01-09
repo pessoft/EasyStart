@@ -14,6 +14,7 @@ namespace EasyStart.Utils
             {
                 Id = data.Id,
                 CategoryId = data.CategoryId,
+                MinCountIngredient = data.MinCountIngredient,
                 MaxCountIngredient = data.MaxCountIngredient,
                 Name = data.Name,
                 OrderNumber = data.OrderNumber,
@@ -41,6 +42,7 @@ namespace EasyStart.Utils
             {
                 Id = category.Id,
                 CategoryId = category.CategoryId,
+                MinCountIngredient = category.MinCountIngredient,
                 MaxCountIngredient = category.MaxCountIngredient,
                 Name = category.Name,
                 OrderNumber = category.OrderNumber,

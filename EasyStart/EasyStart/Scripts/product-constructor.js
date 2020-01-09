@@ -15,7 +15,6 @@ function getIngredientData(image) {
         Name: $('#name-product-ingredient').val(),
         AdditionaInfo: $('#product-ingredient-additional-info').val(),
         Price: $('#product-ingredient-price').val(),
-        MinRequiredCount: $('#product-min-ingredient-count').val(),
         MaxAddCount: $('#product-ingredient-max-count').val(),
         Description: $('#ingredient-description-product').val(),
         Image: image,
@@ -76,9 +75,16 @@ function updateGloabalDataProduct(productConstructor) {
         DataProduct.Products[index] = productConstructor
     else {
         DataProduct.Products.push(productConstructor)
-        addProductConstructorToList(productConstructor);
+        maybeClearProductList()
+        addProductConstructorToList(productConstructor)
     }
         
+}
+
+function maybeClearProductList() {
+    if ($(".product-list").find('.empty-list').length > 0) {
+        clearProductList()
+    }
 }
 
 function saveCategoruConstructor() {
@@ -181,6 +187,7 @@ class CategoryIngredient {
             Id: -1,
             CategoryId: SelectIdCategoryId,
             Name: '',
+            MinCountIngredient: 0,
             MaxCountIngredient: 0,
             StyleTypeIngredient: StyleTypeIngredient.Short,
             OrderNumber: DataProduct.Products ? DataProduct.Products.length + 1 : 1,
@@ -237,6 +244,7 @@ class CategoryIngredient {
                 Id: this.categoryIngredient.Id,
                 CategoryId: this.categoryIngredient.CategoryId,
                 Name: $('#category-constructor-name').val(),
+                MinCountIngredient: $('#category-constructor-min-count').val(),
                 MaxCountIngredient: $('#category-constructor-max-count').val(),
                 StyleTypeIngredient: $('#ingredient-view-type-short').is(':checked') ? StyleTypeIngredient.Short : StyleTypeIngredient.Long,
                 Ingredients: this.categoryIngredient.Ingredients
@@ -290,8 +298,11 @@ class CategoryIngredient {
     }
 
     setConstructorCategoryParams() {
+        const maxCountIngredients = this.categoryIngredient.MaxCountIngredient > 0 ? this.categoryIngredient.MaxCountIngredient : ''
+        const minCountIngredients = this.categoryIngredient.MinCountIngredient > 0 ? this.categoryIngredient.MinCountIngredient : ''
         $('#category-constructor-name').val(this.categoryIngredient.Name)
-        $('#category-constructor-max-count').val(this.categoryIngredient.MaxCountIngredient)
+        $('#category-constructor-max-count').val(maxCountIngredients)
+        $('#category-constructor-min-count').val(minCountIngredients)
 
         switch (this.categoryIngredient.StyleTypeIngredient) {
             case StyleTypeIngredient.Short:
@@ -413,7 +424,6 @@ class CategoryIngredient {
         $('#name-product-ingredient').val(ingredient.Name)
         $('#product-ingredient-additional-info').val(ingredient.AdditionaInfo)
         $('#product-ingredient-price').val(ingredient.Price)
-        $('#product-min-ingredient-count').val(ingredient.MinRequiredCount)
         $('#product-ingredient-max-count').val(ingredient.MaxAddCount)
         $('#ingredient-description-product').val(ingredient.Description)
 

@@ -480,6 +480,10 @@
     <Compile Include="Migrations\202001081951429_AddIsDeletedPropeties.Designer.cs">
       <DependentUpon>202001081951429_AddIsDeletedPropeties.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001091815006_ChangedLogicMinRequiredIngredients.cs" />
+    <Compile Include="Migrations\202001091815006_ChangedLogicMinRequiredIngredients.Designer.cs">
+      <DependentUpon>202001091815006_ChangedLogicMinRequiredIngredients.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -912,6 +916,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001081951429_AddIsDeletedPropeties.resx">
       <DependentUpon>202001081951429_AddIsDeletedPropeties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001091815006_ChangedLogicMinRequiredIngredients.resx">
+      <DependentUpon>202001091815006_ChangedLogicMinRequiredIngredients.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

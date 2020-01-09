@@ -13,7 +13,6 @@ namespace EasyStart.Models
         public string Name { get; set; }
         public string AdditionaInfo { get; set; }
         public double Price { get; set; }
-        public int MinRequiredCount { get; set; }
         public int MaxAddCount { get; set; }
         public string Description { get; set; }
         public string Image { get; set; }

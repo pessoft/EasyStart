@@ -708,15 +708,36 @@
                     <div class="category-constructor-block block-with-header">
                         <span class="block-header vertical-center">Основные параметры</span>
                         <div class="ingredient-params">
-                            <div class="group">
-                                <input id="category-constructor-name" required type="text" oninvalid="this.setCustomValidity('Пожалуйста укажите название категории')" oninput="setCustomValidity('')" />
-                                <span class="bar"></span>
-                                <label>Название категории</label>
+                            <div class="ingredient-params-row">
+                                <div class="group">
+                                    <input id="category-constructor-name" required type="text" oninvalid="this.setCustomValidity('Пожалуйста укажите название категории')" oninput="setCustomValidity('')" />
+                                    <span class="bar"></span>
+                                    <label>Название категории</label>
+                                </div>
                             </div>
-                            <div class="group">
-                                <input id="category-constructor-max-count" required type="number" min="1" step="1" oninvalid="this.setCustomValidity('Пожалуйста укажите максимальное колиество ингредиентов')" oninput="setCustomValidity('')" />
-                                <span class="bar"></span>
-                                <label>(Max) количество ингредиентов</label>
+                            <div class="ingredient-params-row">
+                                <div class="group">
+                                    <input id="category-constructor-min-count"
+                                           required
+                                           type="number"
+                                           min="0"
+                                           step="1"
+                                           oninvalid="this.setCustomValidity('Пожалуйста укажите минимальное колиество ингредиентов')"
+                                           oninput="setCustomValidity('')" />
+                                    <span class="bar"></span>
+                                    <label>(Min) количество ингредиентов</label>
+                                </div>
+                                <div class="group">
+                                    <input id="category-constructor-max-count"
+                                           required
+                                           type="number"
+                                           min="0"
+                                           step="1"
+                                           oninvalid="this.setCustomValidity('Пожалуйста укажите максимальное колиество ингредиентов')"
+                                           oninput="setCustomValidity('')" />
+                                    <span class="bar"></span>
+                                    <label>(Max) количество ингредиентов</label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -764,21 +785,21 @@
                         <span class="block-header vertical-center">Список ингредиентов</span>
                         <div class="ingrediet-list" id="ingrediet-list">
                             <div class="empty-list no-background">
-            <i class="fal fa-smile-plus"></i>
-            <span>Добавте ингредиенты</span>
-        </div>
+                                <i class="fal fa-smile-plus"></i>
+                                <span>Добавте ингредиенты</span>
+                            </div>
                             @*<div class="ingredient-row">
-                                <img src="../Images/Products/e03e78d6-1ecb-4bfd-8679-e9a6f4165024.jpg" alt="ingredient image" />
-                                <div class="product-ingredient-wrapper">
-                                    <span class="ingredient-row-name">Рисовая лапша</span>
-                                    <span class="ingredient-row-small-text">100 г.</span>
-                                    <span class="ingredient-row-small-text">100 руб.</span>
-                                    <div class="ingredient-row-menu">
-                                        <i onclick="" class="fal fa-edit"></i>
-                                        <i onclick="" class="fal fa-trash-alt"></i>
+                                    <img src="../Images/Products/e03e78d6-1ecb-4bfd-8679-e9a6f4165024.jpg" alt="ingredient image" />
+                                    <div class="product-ingredient-wrapper">
+                                        <span class="ingredient-row-name">Рисовая лапша</span>
+                                        <span class="ingredient-row-small-text">100 г.</span>
+                                        <span class="ingredient-row-small-text">100 руб.</span>
+                                        <div class="ingredient-row-menu">
+                                            <i onclick="" class="fal fa-edit"></i>
+                                            <i onclick="" class="fal fa-trash-alt"></i>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>*@
+                                </div>*@
                         </div>
                     </div>
                     <div class="category-constructor-block block-menu-ico">
@@ -831,13 +852,6 @@
                                    oninput="setCustomValidity('')" />
                             <span class="bar"></span>
                             <label>Цена (в рублях)</label>
-                        </div>
-                        <div class="group">
-                            <input required type="number" id="product-min-ingredient-count"
-                                   oninvalid="this.setCustomValidity('Пожалуйста укажите минимальное обязательное количество добавлений')"
-                                   oninput="setCustomValidity('')" />
-                            <span class="bar"></span>
-                            <label>(Min) обязательное количество добавлений</label>
                         </div>
                         <div class="group">
                             <input required type="number" id="product-ingredient-max-count"

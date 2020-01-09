@@ -475,6 +475,7 @@ namespace EasyStart.Logic
 
                         if (oldCategory != null)
                         {
+                            oldCategory.MinCountIngredient = category.MinCountIngredient;
                             oldCategory.MaxCountIngredient = category.MaxCountIngredient;
                             oldCategory.Name = category.Name;
                             oldCategory.StyleTypeIngredient = category.StyleTypeIngredient;
@@ -580,7 +581,6 @@ namespace EasyStart.Logic
                                 p.Image = ingredient.Image;
                                 p.IsDeleted = ingredient.IsDeleted;
                                 p.MaxAddCount = ingredient.MaxAddCount;
-                                p.MinRequiredCount = ingredient.MinRequiredCount;
                                 p.Name = ingredient.Name;
                                 p.Price = ingredient.Price;
                                 p.Description = ingredient.Description;
