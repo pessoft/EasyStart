@@ -2532,6 +2532,11 @@ namespace EasyStart.Logic
             return result;
         }
 
+        /// <summary>
+        /// key - subcategory id
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
         public static Dictionary<int,List<IngredientModel>> GetAllDictionaryIngredientsByCategoryIds(IEnumerable<int> ids)
         {
             Dictionary<int, List<IngredientModel>> result = null;
@@ -2541,7 +2546,7 @@ namespace EasyStart.Logic
                 {
                     result = db
                         .Ingredients
-                        .Where(p => ids.Contains(p.Id))
+                        .Where(p => ids.Contains(p.CategoryId))
                         .GroupBy(p => p.SubCategoryId)
                         .ToDictionary(p => p.Key, p => p.ToList());
                 }

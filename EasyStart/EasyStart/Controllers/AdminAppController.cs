@@ -101,7 +101,7 @@ namespace EasyStart
                 var categories = GetCategories(branchId);
                 var products = GetAllProducts(branchId);
                 var constructorCategories = GetConstructorCategories(branchId);
-                var ingredients = GetIngredients(constructorCategories.Select(p => p.CategoryId));
+                var ingredients = GetIngredients(constructorCategories.Keys);
                 var deliverySettings = DataWrapper.GetDeliverySetting(branchId);
                 var organizationSettings = DataWrapper.GetSetting(branchId);
 
@@ -196,13 +196,24 @@ namespace EasyStart
             }
         }
 
-        public List<ConstructorCategory> GetConstructorCategories(int branckId)
+        /// <summary>
+        /// key - category id
+        /// </summary>
+        /// <param name="branckId"></param>
+        /// <returns></returns>
+        public Dictionary<int, List<ConstructorCategory>> GetConstructorCategories(int branckId)
         {
             try
             {
                 var categories = DataWrapper.GetConstuctorCategoriesByBranchId(branckId);
+                var result = new Dictionary<int, List<ConstructorCategory>>();
 
-                return categories;
+                if (categories != null)
+                {
+                    result = categories.GroupBy(p => p.CategoryId).ToDictionary(p => p.Key, p => p.ToList());
+                }
+
+                return result;
             }
             catch (Exception ex)
             {

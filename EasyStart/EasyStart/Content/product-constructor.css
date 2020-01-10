@@ -68,6 +68,7 @@ button.block-menu-item {
     font-size: 0.75em;
     background: none;
     cursor: pointer;
+    height: 100%;
 }
 
     button.block-menu-item i {

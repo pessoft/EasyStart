@@ -298,11 +298,9 @@ class CategoryIngredient {
     }
 
     setConstructorCategoryParams() {
-        const maxCountIngredients = this.categoryIngredient.MaxCountIngredient > 0 ? this.categoryIngredient.MaxCountIngredient : ''
-        const minCountIngredients = this.categoryIngredient.MinCountIngredient > 0 ? this.categoryIngredient.MinCountIngredient : ''
         $('#category-constructor-name').val(this.categoryIngredient.Name)
-        $('#category-constructor-max-count').val(maxCountIngredients)
-        $('#category-constructor-min-count').val(minCountIngredients)
+        $('#category-constructor-min-count').val(this.categoryIngredient.MinCountIngredient)
+        $('#category-constructor-max-count').val(this.categoryIngredient.MaxCountIngredient)
 
         switch (this.categoryIngredient.StyleTypeIngredient) {
             case StyleTypeIngredient.Short:

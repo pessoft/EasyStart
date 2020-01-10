@@ -914,7 +914,7 @@ function addProductConstructorToList(product) {
     <div class="product-item product-constructor-item" category-id="${product.CategoryId}" product-id="${product.Id}">
         <div class="product-item-header">
             <div class="product-item-image">
-                <i class="fal fa-pizza"></i>
+                <i class="fal fa-cogs"></i>
             </div>
             <div class="product-item-name">
                 ${product.Name}
