@@ -13,7 +13,7 @@ function getIngredientData(image) {
     return {
         Id: parseInt($('#product-ingredient-id').val()),
         Name: $('#name-product-ingredient').val(),
-        AdditionaInfo: $('#product-ingredient-additional-info').val(),
+        AdditionalInfo: $('#product-ingredient-additional-info').val(),
         Price: $('#product-ingredient-price').val(),
         MaxAddCount: $('#product-ingredient-max-count').val(),
         Description: $('#ingredient-description-product').val(),
@@ -337,7 +337,7 @@ class CategoryIngredient {
             <img src="${ingredient.Image}" alt="ingredient image" />
             <div class="product-ingredient-wrapper">
                 <span class="ingredient-row-name">${ingredient.Name}</span>
-                <span class="ingredient-row-small-text">${ingredient.AdditionaInfo}</span>
+                <span class="ingredient-row-small-text">${ingredient.AdditionalInfo}</span>
                 <span class="ingredient-row-small-text">${ingredient.Price} руб.</span>
                 <div class="ingredient-row-menu">
                     <i class="fal fa-edit" onclick="${editAction}"></i>
@@ -420,7 +420,7 @@ class CategoryIngredient {
     setIngredientDialogData(ingredient) {
         $('#product-ingredient-id').val(ingredient.Id)
         $('#name-product-ingredient').val(ingredient.Name)
-        $('#product-ingredient-additional-info').val(ingredient.AdditionaInfo)
+        $('#product-ingredient-additional-info').val(ingredient.AdditionalInfo)
         $('#product-ingredient-price').val(ingredient.Price)
         $('#product-ingredient-max-count').val(ingredient.MaxAddCount)
         $('#ingredient-description-product').val(ingredient.Description)

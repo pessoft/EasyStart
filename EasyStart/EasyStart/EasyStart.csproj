@@ -484,6 +484,10 @@
     <Compile Include="Migrations\202001091815006_ChangedLogicMinRequiredIngredients.Designer.cs">
       <DependentUpon>202001091815006_ChangedLogicMinRequiredIngredients.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001111917144_FixAdditionalInfoName.cs" />
+    <Compile Include="Migrations\202001111917144_FixAdditionalInfoName.Designer.cs">
+      <DependentUpon>202001111917144_FixAdditionalInfoName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -919,6 +923,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001091815006_ChangedLogicMinRequiredIngredients.resx">
       <DependentUpon>202001091815006_ChangedLogicMinRequiredIngredients.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001111917144_FixAdditionalInfoName.resx">
+      <DependentUpon>202001111917144_FixAdditionalInfoName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
