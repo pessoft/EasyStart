@@ -488,6 +488,10 @@
     <Compile Include="Migrations\202001111917144_FixAdditionalInfoName.Designer.cs">
       <DependentUpon>202001111917144_FixAdditionalInfoName.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001111945051_RemoveIssueNameAdditionaName.cs" />
+    <Compile Include="Migrations\202001111945051_RemoveIssueNameAdditionaName.Designer.cs">
+      <DependentUpon>202001111945051_RemoveIssueNameAdditionaName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -926,6 +930,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001111917144_FixAdditionalInfoName.resx">
       <DependentUpon>202001111917144_FixAdditionalInfoName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001111945051_RemoveIssueNameAdditionaName.resx">
+      <DependentUpon>202001111945051_RemoveIssueNameAdditionaName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

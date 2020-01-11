@@ -11,7 +11,6 @@ namespace EasyStart.Models
         public int CategoryId { get; set; }
         public int SubCategoryId { get; set; }
         public string Name { get; set; }
-        public string AdditionaInfo { get; set; }
         public string AdditionalInfo { get; set; }
         public double Price { get; set; }
         public int MaxAddCount { get; set; }
