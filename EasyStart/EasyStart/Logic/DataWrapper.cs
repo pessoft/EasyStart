@@ -581,7 +581,7 @@ namespace EasyStart.Logic
                                 p.Image = ingredient.Image;
                                 p.IsDeleted = ingredient.IsDeleted;
                                 p.MaxAddCount = ingredient.MaxAddCount;
-                                p.AdditionalInfo = ingredient.AdditionalInfo,
+                                p.AdditionalInfo = ingredient.AdditionalInfo;
                                 p.Name = ingredient.Name;
                                 p.Price = ingredient.Price;
                                 p.Description = ingredient.Description;
