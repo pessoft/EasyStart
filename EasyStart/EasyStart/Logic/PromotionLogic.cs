@@ -87,16 +87,19 @@ namespace EasyStart.Logic
 
         public List<StockModel> GetStock(int branchId, int clientId)
         {
-            List<StockModel> stocks = DataWrapper.GetActiveStocks(branchId); ;
-            var oneOffStockGuids = stocks
+            List<StockModel> stocks = DataWrapper.GetActiveStocks(branchId);
+            List<StockModel> stocksOneOff = stocks
                 .Where(p => p.StockTypePeriod == StockTypePeriod.OneOff)
+                .ToList();
+            var oneOrderStockGuids = stocksOneOff
+                .Where(p => p.StockOneTypeSubtype == StockOneTypeSubtype.OneOrder)
                 .Select(p => p.UniqId)
                 .ToList();
-            var oneOffStockIds = oneOffStockGuids == null || oneOffStockGuids.Any() ? null : DataWrapper.GetStockIdsByGuid(oneOffStockGuids);
+            var oneOrderStockIds = oneOrderStockGuids == null || !oneOrderStockGuids.Any() ? null : DataWrapper.GetStockIdsByGuid(oneOrderStockGuids);
 
-            if (oneOffStockIds != null && oneOffStockIds.Any())
+            if (oneOrderStockIds != null && oneOrderStockIds.Any())
             {
-                var usedOneOffStockIds = DataWrapper.GetUsedOneOffStockIds(clientId, oneOffStockIds);
+                var usedOneOffStockIds = DataWrapper.GetUsedOneOffStockIds(clientId, oneOrderStockIds);
 
                 if (usedOneOffStockIds != null && usedOneOffStockIds.Any())
                 {
@@ -106,7 +109,20 @@ namespace EasyStart.Logic
                 }
             }
 
-            return stocks;
+            var firstStockGuids = stocksOneOff
+                .Where(p => p.StockOneTypeSubtype == StockOneTypeSubtype.FirstOrder)
+                .Select(p => p.UniqId)
+                .ToList();
+            var ferstStockIds = firstStockGuids == null || !firstStockGuids.Any() ? null : DataWrapper.GetStockIdsByGuid(firstStockGuids);
+
+            if (ferstStockIds != null && ferstStockIds.Any() && !DataWrapper.IsEmptyOrders(clientId))
+            {
+                stocks = stocks
+                       .Where(p => !ferstStockIds.Contains(p.Id))
+                       .ToList();
+            }
+
+                return stocks;
         }
 
         public List<CouponModel> GetCoupons(int branchId)

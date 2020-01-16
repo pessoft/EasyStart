@@ -1260,6 +1260,25 @@ namespace EasyStart.Logic
             return result;
         }
 
+        public static bool IsEmptyOrders(int clinetId)
+        {
+            var isEmpty = true;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    isEmpty = db.Orders
+                        .Where(p => p.ClientId == clinetId).Count() == 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return isEmpty;
+        }
+
         public static List<OrderModel> GetOrders(List<int> brandchIds)
         {
             var orders = new List<OrderModel>();
