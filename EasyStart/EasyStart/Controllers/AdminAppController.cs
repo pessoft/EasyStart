@@ -353,7 +353,7 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public JsonResultModel GetHistoryOrder([FromBody]DataHistoryForViewModel dataHistoryForLoad)
+        public JsonResultModel GetHistoryOrders([FromBody]DataHistoryForViewModel dataHistoryForLoad)
         {
             var result = new JsonResultModel();
 
