@@ -59,7 +59,7 @@ namespace EasyStart.HtmlRenderer
                 $"<tr style='height: 25px;'><td style='min-width: 110px;'>Дом(офис)</td><td style='text-align: right;'>{orderInfo.HomeNumber}</td></tr>" +
                 $"<tr style='height: 25px;'><td style='min-width: 110px;'>Номер квартиры</td><td style='text-align: right;'>{orderInfo.ApartmentNumber}</td></tr>" +
                 $"<tr style='height: 25px;'><td style='min-width: 110px;'>Этаж</td><td style='text-align: right;'>{orderInfo.Level}</td></tr>" +
-                $"<tr style='height: 25px;'><td style='min-width: 110px;'>Номер подъезда</td><td style='text-align: right;'>{orderInfo.EntranceNumber}</td></tr>" + 
+                $"<tr style='height: 25px;'><td style='min-width: 110px;'>Номер подъезда</td><td style='text-align: right;'>{orderInfo.EntranceNumber}</td></tr>" +
                 $"<tr style='height: 25px;'><td style='min-width: 110px;'>Код домафона</td><td style='text-align: right;'>{orderInfo.IntercomCode}</td></tr>";
 
             body.Replace("{orderAddress}", deliveryType + baseAddress);
@@ -67,24 +67,65 @@ namespace EasyStart.HtmlRenderer
 
         private void OrderProductsRender(StringBuilder body)
         {
+            var defaultProducts = OrderDefaultProductsRender();
+            var defaultBonusProducts = OrderDefaultBonusProductsRender();
+            var constructorProducts = OrderConstructorProductsRender();
+
+            body.Replace("{productsInfo}", $"{defaultProducts} {constructorProducts} {defaultBonusProducts}");
+        }
+
+
+        private string OrderDefaultProductsRender()
+        {
             var prodcutsInfo = new StringBuilder();
 
             foreach (var product in orderInfo.Products)
             {
-                prodcutsInfo.Append($"<tr style='height: 25px;'><td style='min-width: 110px;'>{product.ProductName}</td><td style='text-align: right;'>{product.ProductCount} х {product.ProductPrice} руб.</td></tr>");
+                prodcutsInfo.Append($"<tr style='height: 25px;'><td style='min-width: 110px;'>{product.ProductName}</td><td style='text-align: right; min-width: 100px;'>{product.ProductCount} х {product.ProductPrice} руб.</td></tr>");
+
             }
 
-            body.Replace("{productsInfo}", prodcutsInfo.ToString());
+            return prodcutsInfo.ToString();
+        }
+
+        private string OrderDefaultBonusProductsRender()
+        {
+            var prodcutsInfo = new StringBuilder();
+
+            foreach (var product in orderInfo.BonusProducts)
+            {
+                prodcutsInfo.Append($"<tr style='height: 25px; color: #FF5722;'><td style='min-width: 110px;'>{product.ProductName}</td><td style='text-align: right; min-width: 100px;'>{product.ProductCount} х 0 руб.</td></tr>");
+            }
+
+            return prodcutsInfo.ToString();
+        }
+
+        private string OrderConstructorProductsRender()
+        {
+            var prodcutsInfo = new StringBuilder();
+
+            foreach (var product in orderInfo.ConstructorProducts)
+            {
+                prodcutsInfo.Append($"<tr style='height: 25px;'><td style='min-width: 110px;'>{product.ProductName}</td><td style='text-align: right; min-width: 100px;'>{product.ProductCount} х {product.ProductPrice} руб.</td></tr>");
+
+                foreach (var ingredient in product.Ingredients)
+                {
+                    prodcutsInfo.Append($"<tr style='height: 25px; font-size: 0.85em'><td style='min-width: 110px; padding-left: 12px; color: #6d758a;'>{ingredient.Name}</td><td style='text-align: right; color: #6d758a; min-width: 100px;'>{ingredient.Count} х {ingredient.Price} руб.</td></tr>");
+                }
+            }
+
+            return prodcutsInfo.ToString();
         }
 
         private void OrderPriceRender(StringBuilder body)
         {
-            var orderCheckoutPrice = $"<tr style='height: 25px;'><td style='min-width: 110px;'>Сумма заказа</td><td style='text-align: right;'>{orderInfo.AmountPrice}</td></tr>" +
-              $"<tr style='height: 25px;'><td style='min-width: 110px;'>Стоимость доставки</td><td style='text-align: right;'>{orderInfo.DeliveryPrice}</td></tr>" +
-              $"<tr style='height: 25px;'><td style='min-width: 110px;'>Скидка</td><td style='text-align: right;'>{orderInfo.Discount}</td></tr>" +
-              $"<tr style='height: 25px;'><td style='min-width: 110px;'>Способ оплаты</td><td style='text-align: right;'>{orderInfo.ButType}</td></tr>" +
-              $"<tr style='height: 25px;'><td style='min-width: 110px;'>Сдача c</td><td style='text-align: right;'>{orderInfo.CashBack}</td></tr>" +
-              $"<tr style='height: 25px;'><td style='min-width: 110px;'>К оплате</td><td style='text-align: right;'>{orderInfo.AmountPayDiscountDelivery}</td></tr>";
+            var orderCheckoutPrice = $"<tr style='height: 25px;'><td style='min-width: 110px;'>Сумма заказа</td><td style='text-align: right; min-width: 100px;'>{orderInfo.AmountPrice}</td></tr>" +
+              $"<tr style='height: 25px;'><td style='min-width: 110px;'>Оплачено бонусами</td><td style='text-align: right; min-width: 100px;'>{orderInfo.AmountPayCashBack}</td></tr>" +
+              $"<tr style='height: 25px;'><td style='min-width: 110px;'>Стоимость доставки</td><td style='text-align: right; min-width: 100px;'>{orderInfo.DeliveryPrice}</td></tr>" +
+              $"<tr style='height: 25px;'><td style='min-width: 110px;'>Скидка</td><td style='text-align: right; min-width: 100px;'>{orderInfo.Discount}</td></tr>" +
+              $"<tr style='height: 25px;'><td style='min-width: 110px;'>Способ оплаты</td><td style='text-align: right; min-width: 100px;'>{orderInfo.ButType}</td></tr>" +
+              $"<tr style='height: 25px;'><td style='min-width: 110px;'>Сдача c</td><td style='text-align: right; min-width: 100px;'>{orderInfo.CashBack}</td></tr>" +
+              $"<tr style='height: 25px;'><td style='min-width: 110px;'>К оплате</td><td style='text-align: right; min-width: 100px;'>{orderInfo.AmountPayDiscountDelivery}</td></tr>";
 
             body.Replace("{orderCheckoutPrice}", orderCheckoutPrice);
         }

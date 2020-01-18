@@ -324,24 +324,7 @@ namespace EasyStart
                     result.Success = true;
 
                     var currentContext = System.Web.HttpContext.Current;
-                    Task.Run(() =>
-                    {
-                        System.Web.HttpContext.Current = currentContext;
-                        var emailTemplate = File.ReadAllText(currentContext.Server.MapPath("~/Resource/EmailTemplate.html"));
-                        var setting = DataWrapper.GetSetting(order.BranchId);
-                        var products = DataWrapper.GetOrderProducts(order.ProductCount.Keys.ToList());
-                        var optionsNotification = new OptionsNotificationNewOrderModel
-                        {
-                            DomainUr = Request.RequestUri.GetBaseUrl(),
-                            Email = new Email(),
-                            EmailBodyHTMLTemplate = emailTemplate,
-                            Order = order,
-                            OrderInfo = order.GetOrderInfo(setting, products),
-                            ToEmail = string.IsNullOrEmpty(deliverSetting.NotificationEmail) ? null : new List<string> { deliverSetting.NotificationEmail }
-                        };
-
-                        new NotifyNewOrderManager(optionsNotification).AllNotify();
-                    });
+                    Task.Run(() => Notification(currentContext, order, deliverSetting));
                 }
             }
             catch (Exception ex)
@@ -350,6 +333,47 @@ namespace EasyStart
             }
 
             return result;
+        }
+
+        private void Notification(System.Web.HttpContext currentContext, OrderModel order, DeliverySettingModel deliverSetting)
+        {
+            try
+            {
+                System.Web.HttpContext.Current = currentContext;
+                var emailTemplate = File.ReadAllText(currentContext.Server.MapPath("~/Resource/EmailTemplate.html"));
+                var setting = DataWrapper.GetSetting(order.BranchId);
+                var categoryConstructor = DataWrapper.GetCategories(order.BranchId).Where(p => p.CategoryType == CategoryType.Constructor).ToList();
+                var constructorIngredients = order.ProductConstructorCount != null ?
+                DataWrapper.GetIngredients(order.ProductConstructorCount.SelectMany(p => p.IngrdientCount.Keys)) :
+                null;
+                var products = DataWrapper.GetOrderProducts(order.ProductCount.Keys.ToList());
+                var bonusProducts = order.ProductBonusCount != null ?
+                    DataWrapper.GetOrderProducts(order.ProductBonusCount.Keys.ToList()):
+                    new List<ProductModel>();
+                var orderInfoParams = new OrderInfoParams
+                {
+                    Setting = setting,
+                    Products = products,
+                    BonusProducts = bonusProducts,
+                    CategoryConstructor = categoryConstructor,
+                    ConstructorIngredients = constructorIngredients
+                };
+                var optionsNotification = new OptionsNotificationNewOrderModel
+                {
+                    DomainUr = Request.RequestUri.GetBaseUrl(),
+                    Email = new Email(),
+                    EmailBodyHTMLTemplate = emailTemplate,
+                    Order = order,
+                    OrderInfo = order.GetOrderInfo(orderInfoParams),
+                    ToEmail = string.IsNullOrEmpty(deliverSetting.NotificationEmail) ? null : new List<string> { deliverSetting.NotificationEmail }
+                };
+
+                new NotifyNewOrderManager(optionsNotification).AllNotify();
+            }
+            catch(Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
         }
 
         [HttpPost]

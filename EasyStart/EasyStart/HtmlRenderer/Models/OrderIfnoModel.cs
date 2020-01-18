@@ -25,6 +25,7 @@ namespace EasyStart.HtmlRenderer.Models
         public string EntranceNumber { get; set; }
 
         public string AmountPrice { get; set; }
+        public string AmountPayCashBack { get; set; }
         public string DeliveryPrice { get; set; }
         public string Discount { get; set; }
         public string ButType { get; set; }
@@ -34,5 +35,7 @@ namespace EasyStart.HtmlRenderer.Models
         public string Comment { get; set; }
 
         public List<ProductInfoModel> Products { get; set; }
+        public List<ProductInfoModel> BonusProducts { get; set; }
+        public List<ConstructorProductInfoModel> ConstructorProducts { get; set; }
     }
 }

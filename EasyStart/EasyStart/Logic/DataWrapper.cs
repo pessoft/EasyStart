@@ -2610,7 +2610,7 @@ namespace EasyStart.Logic
         /// </summary>
         /// <param name="categoryId"></param>
         /// <returns>key - IdConstructorCategory, value - List<IngredientModel></returns>
-        public static Dictionary<int, List<IngredientModel>> GetIngredientsByCategoryIdVisible(List<int> categoryId)
+        public static Dictionary<int, List<IngredientModel>> GetIngredientsByCategoryIdVisible(IEnumerable<int> categoryId)
         {
             Dictionary<int, List<IngredientModel>> result = null;
             try
