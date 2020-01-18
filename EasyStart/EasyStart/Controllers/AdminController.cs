@@ -53,6 +53,7 @@ namespace EasyStart.Controllers
                                         JsonConvert.SerializeObject(new List<AreaDeliveryModel>());
 
                 var categoryDictionary = DataWrapper.GetCategoriesVisible(branchId)
+                    .Where(p => p.CategoryType == CategoryType.Default)
                     .GroupBy(p => p.Id).
                     ToDictionary(p => p.Key, p => p.First().Name);
                 ViewBag.CategoryDictionary = categoryDictionary != null && categoryDictionary.Any() ?
