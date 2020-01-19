@@ -87,7 +87,17 @@ function maybeClearProductList() {
     }
 }
 
+function fixMinMaxCount() {
+    const min = $('#category-constructor-min-count').val()
+    const max = $('#category-constructor-max-count').val()
+
+    if (min > max) {
+        $('#category-constructor-min-count').val(max)
+    }
+}
+
 function saveCategoruConstructor() {
+    fixMinMaxCount()
     categoryIngredient.save(updateGloabalDataProduct)
 }
 
