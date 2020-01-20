@@ -15,6 +15,7 @@ namespace EasyStart.Logic
         {
             transactionLogic = new TransactionLogic();
         }
+
         public void ProcessingVirtualMoney(int orderId)
         {
             var mainBranch = DataWrapper.GetMainBranch();
@@ -163,7 +164,7 @@ namespace EasyStart.Logic
         private void ProcessingPartners(int branchId, OrderModel order, Client client)
         {
             var partnersSetting = DataWrapper.GetPromotionPartnerSetting(branchId);
-            if (!partnersSetting.IsUsePartners)
+            if (!partnersSetting.IsUsePartners || client.ParentReferralClientId < 1)
                 return;
 
             var parentRefClient = DataWrapper.GetClient(client.ParentReferralClientId);

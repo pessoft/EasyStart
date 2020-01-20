@@ -207,7 +207,12 @@ class CategoryIngredient {
             categoryIngredient :
             defaultCategoryIngredient
         this.categoryIngredientOrigin = cloneObject(this.categoryIngredient)
-        const reducer = function (acc, value, index) { acc[value.Id] = index; return  acc}
+
+        this.updateIndexIngredients()
+    }
+
+    updateIndexIngredients() {
+        const reducer = function (acc, value, index) { acc[value.Id] = index; return acc }
         this.indexIngredients = this.categoryIngredient.Ingredients.length > 0 ?
             this.categoryIngredient.Ingredients.reduce(reducer, {}) :
             {}
@@ -269,6 +274,8 @@ class CategoryIngredient {
 
                     self.categoryIngredient = result.Data
                     self.categoryIngredientOrigin = cloneObject(result.Data)
+
+                    self.updateIndexIngredients()
 
                     self.clearIngredientRows()
                     self.setData()
