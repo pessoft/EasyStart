@@ -44,7 +44,28 @@
     selectToSumoSelectCategoryType()
     bindChangePeriodWork()
     bindCustomDialogToggleEvent()
+
+    checkSettings()
 });
+
+function checkSettings() {
+    if (!IsValidSetting || !IsValidDeliverySetting) {
+        $('.header-menu .menu-item').not('.logout').addClass('disabled-menu-item')
+
+        if (!IsValidSetting && !IsValidDeliverySetting) {
+            $('[target-id=setting], [target-id=delivery]').removeClass('disabled-menu-item')
+            selectMenuItem($('[target-id=setting]'))
+        } else if (!IsValidSetting) {
+            $('[target-id=setting]').removeClass('disabled-menu-item')
+            selectMenuItem($('[target-id=setting]'))
+        } else {
+            $('[target-id=delivery]').removeClass('disabled-menu-item')
+            selectMenuItem($('[target-id=delivery]'))
+        }
+    } else {
+        $('.header-menu .menu-item').removeClass('disabled-menu-item')
+    }
+}
 
 function getCategoryBySelectCategryId() {
     let selectCategory = null
@@ -642,7 +663,7 @@ function selectCategory(e) {
 
     if (categoryType == CategoryType.Default)
         loadProductList(SelectIdCategoryId)
-    else 
+    else
         loadProductConstructorList(SelectIdCategoryId)
 }
 
@@ -1215,6 +1236,10 @@ function saveSetting() {
         loader.stop();
         if (!result.Success) {
             showErrorMessage(result.ErrorMessage);
+        } else {
+            IsValidSetting = true
+
+            checkSettings()
         }
     }
 
@@ -1251,6 +1276,7 @@ function saveDeliverySetting() {
     let warnMgs = {
         PriceDelivery: "Укажите стоимость доставки",
         FreePriceDelivery: "Укажите минимальные суммы закаов для бесплатной доставки в районы",
+        WorkTime: "Укажите режим работы",
     }
 
     let priceDelivery = $("#price-delivery").val();
@@ -1263,6 +1289,11 @@ function saveDeliverySetting() {
 
     if (!AreaDelivery || AreaDelivery.length == 0) {
         showWarningMessage(warnMgs.FreePriceDelivery);
+        return;
+    }
+
+    if (!$('#delivery .table-time input[type=checkbox]').is(':checked')) {
+        showWarningMessage(warnMgs.WorkTime);
         return;
     }
 
@@ -1282,6 +1313,10 @@ function saveDeliverySetting() {
         loader.stop();
         if (!result.Success) {
             showErrorMessage(result.ErrorMessage);
+        } else {
+            IsValidDeliverySetting = true
+
+            checkSettings()
         }
     }
 
@@ -1725,7 +1760,7 @@ function getItemsIdsForLoad(order) {
         }
     }
 
-    return { productIds, constructorCategoryIds};
+    return { productIds, constructorCategoryIds };
 }
 
 function isInteger(num) {

@@ -29,7 +29,7 @@ namespace EasyStart.Logic
         private void SetZoneId()
         {
             var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
-            zoneId = deliverSetting.ZoneId;
+            zoneId = deliverSetting?.ZoneId;
         }
 
         private void SavePromotionCashbackSetting()

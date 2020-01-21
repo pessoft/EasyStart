@@ -188,6 +188,7 @@
     <Compile Include="Logic\CategoryType.cs" />
     <Compile Include="Logic\PreprocessorDataAPI.cs" />
     <Compile Include="Logic\PromotionLogic.cs" />
+    <Compile Include="Logic\SettingsValidator.cs" />
     <Compile Include="Logic\StyleTypeIngredient.cs" />
     <Compile Include="Logic\Transaction\TransactionLogic.cs" />
     <Compile Include="Logic\Transaction\TransactionWrapper.cs" />

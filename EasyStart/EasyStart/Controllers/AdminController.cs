@@ -31,12 +31,16 @@ namespace EasyStart.Controllers
 
                 var deliverySetting = DataWrapper.GetDeliverySetting(branchId); ;
 
+                var settingsValidator = new SettingsValidator();
+
                 ViewBag.Zones = DateTimeHepler.GetDisplayDictionary();
                 ViewBag.CurrentBranch = branchId;
                 ViewBag.BranchViews = branchViewvs != null && branchViewvs.Any() ? branchViewvs : null;
                 ViewBag.City = CityHelper.City;
-                ViewBag.Setting = DataWrapper.GetSetting(branchId); ;
+                ViewBag.Setting = DataWrapper.GetSetting(branchId);
+                ViewBag.IsValidSetting = settingsValidator.IsValidSetting(ViewBag.Setting);
                 ViewBag.DeliverySetting = deliverySetting;
+                ViewBag.IsValidDeliverySetting = settingsValidator.IsValidDeliverySetting(deliverySetting);
                 ViewBag.DeliveryTimeTable = WeeklyDayHelper.ConvertTimeDeliveryToViev(deliverySetting?.TimeDelivery);
                 ViewBag.TypeBranch = typeBranch;
                 ViewBag.ZoneId = deliverySetting == null ? DateTimeHepler.DEFAULT_ZONE_ID : deliverySetting.ZoneId;

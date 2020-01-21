@@ -18,10 +18,16 @@ namespace EasyStart.Utils
 
         public static DateTime GetDateTimeNow(this DateTime dateTime, string zoneId)
         {
-            var zone = GetZone(zoneId);
-            var newDateTime = TimeZoneInfo.ConvertTime(dateTime, zone);
+            if(!string.IsNullOrEmpty(zoneId))
+            {
+                var zone = GetZone(zoneId);
+                var newDateTime = TimeZoneInfo.ConvertTime(dateTime, zone);
 
-            return newDateTime;
+                return newDateTime;
+            } else
+            {
+                return dateTime;
+            }
         }
 
         public static Dictionary<string, string> GetDisplayDictionary()

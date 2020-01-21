@@ -53,6 +53,11 @@
         transition: 200ms ease-in;
     }
 
+    .disabled-menu-item {
+        pointer-events: none;
+        color: gray;
+    }
+
 .hide {
     display: none !important;
 }

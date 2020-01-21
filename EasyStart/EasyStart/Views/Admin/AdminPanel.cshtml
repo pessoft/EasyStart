@@ -21,6 +21,8 @@
         var AreaDelivery = JSON.parse(@Html.Raw(Json.Encode(ViewBag.AreaDeliveris)))
         var ProductsForPromotion = JSON.parse(@Html.Raw(Json.Encode(ViewBag.ProductsForPromotion)))
         var CategoryDictionary = JSON.parse(@Html.Raw(Json.Encode(ViewBag.CategoryDictionary)))
+        var IsValidSetting = @ViewBag.IsValidSetting.ToString().ToLower()
+        var IsValidDeliverySetting = @ViewBag.IsValidDeliverySetting.ToString().ToLower()
     </script>
     <div class="header-menu">
         <div class="logo-img menu-item" target-id="about-us">
