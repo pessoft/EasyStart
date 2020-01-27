@@ -21,6 +21,7 @@ body {
 }
 
     .loader img {
+        max-width: 100px;
         width: 12%;
         filter: blur(1px);
     }

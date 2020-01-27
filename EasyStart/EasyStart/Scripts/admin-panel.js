@@ -1,62 +1,114 @@
 ﻿$(document).ready(function () {
-    bindSelectSumo();
-    initHistoryOrderDatePicker();
-    bindDialogCloseClickBackdor();
+    bindSelectSumo()
+    initHistoryOrderDatePicker()
+    bindDialogCloseClickBackdor()
 
     let bindShowModal = function (id, dialogId, additionalFunc, predicate) {
         $(`#${id}`).bind("click", function () {
-            let addCategoryDialog = $(`#${dialogId}`);
+            let addDialog = $(`#${dialogId}`)
 
             if (!predicate || predicate()) {
-                Dialog.showModal(addCategoryDialog);
+                Dialog.showModal(addDialog)
             }
 
             if (additionalFunc) {
-                additionalFunc();
+                additionalFunc()
             }
         });
     }
 
-    $("#setting-phone-number,#setting-phone-number-additional").mask("+7(999)999-99-99");
+    $("#setting-phone-number,#setting-phone-number-additional").mask("+7(999)999-99-99")
 
     $(".menu-item").not(".logout").bind("click", function () {
-        selectMenuItem(this);
+        selectMenuItem(this)
     });
 
-    let setOperationAdd = () => CurrentOperation = TypeOperation.Add;
-    let productPredicate = () => {
-        if (!SelectIdCategoryId) {
-            showInfoMessage("Выберите категорию");
-            return false;
-        }
+    let setOperationAdd = () => CurrentOperation = TypeOperation.Add
 
-        return true;
-    };
-
-    let stockOkFunc = () => {
-        stockTypeToggleDiscountn();
-        setOperationAdd();
-    };
-
-    bindShowModal("add-category", "addCategoryDialog", setOperationAdd);
-    bindShowModal("add-product", "addProducDialog", setOperationAdd, productPredicate);
-    bindShowModal("add-branch", "addBranchDialog", addNewBranchLoginData);
-    bindShowModal("add-stock", "addStockDialog", stockOkFunc);
+    bindShowModal("add-category", "addCategoryDialog", setOperationAdd)
+    bindShowModal("add-product", "addProducDialog", setOperationAdd, productCondition)
+    bindShowModal("add-product-constructor", "addSubCategoryConstructorDialog", initNewCategoryConstructor, productConstructorCondition)
+    bindShowModal("add-branch", "addBranchDialog", addNewBranchLoginData)
 
     $("input[type=file]").change(function () {
-        addPreviewImage(this);
+        addPreviewImage(this)
     });
 
-    $("#stock-type").bind("change", stockTypeToggleDiscountn);
-    bindDragula();
+    bindDragula()
 
     if ($(".header-menu .menu-item-active").attr("target-id") == Pages.Order) {
-        loadOrders();
+        loadOrders()
     }
 
-    selectToSumoSelectProductType();
-    bindChangePeriodWork();
+    selectToSumoSelectProductType()
+    selectToSumoSelectCategoryType()
+    bindChangePeriodWork()
+    bindCustomDialogToggleEvent()
+
+    checkSettings()
 });
+
+function checkSettings() {
+    if (!IsValidSetting || !IsValidDeliverySetting) {
+        $('.header-menu .menu-item').not('.logout').addClass('disabled-menu-item')
+
+        if (!IsValidSetting && !IsValidDeliverySetting) {
+            $('[target-id=setting], [target-id=delivery]').removeClass('disabled-menu-item')
+            selectMenuItem($('[target-id=setting]'))
+        } else if (!IsValidSetting) {
+            $('[target-id=setting]').removeClass('disabled-menu-item')
+            selectMenuItem($('[target-id=setting]'))
+        } else {
+            $('[target-id=delivery]').removeClass('disabled-menu-item')
+            selectMenuItem($('[target-id=delivery]'))
+        }
+    } else {
+        $('.header-menu .menu-item').removeClass('disabled-menu-item')
+    }
+}
+
+function getCategoryBySelectCategryId() {
+    let selectCategory = null
+
+    if (SelectIdCategoryId > 0 && DataProduct.Categories.length > 0) {
+        let selectCategoryes = DataProduct.Categories.filter(p => p.Id == SelectIdCategoryId)
+        selectCategory = selectCategoryes.length > 0 ? selectCategoryes[0] : null
+    }
+
+    return selectCategory
+}
+
+function productCondition() {
+    let selectCategory = getCategoryBySelectCategryId()
+
+    if (!selectCategory) {
+        showInfoMessage("Выберите категорию")
+        return false
+    }
+
+    if (selectCategory.CategoryType == CategoryType.Constructor) {
+        showInfoMessage("В категорию конструтор нельзя добавить продукт")
+        return false
+    }
+
+    return true
+}
+
+function productConstructorCondition() {
+    let selectCategory = getCategoryBySelectCategryId()
+
+    if (!selectCategory) {
+        showInfoMessage("Выберите категорию")
+        return false
+    }
+
+    if (selectCategory.CategoryType == CategoryType.Default) {
+        showInfoMessage("В категорию по умолчанию нельзя добавить категорию ингредиентов")
+        return false
+    }
+
+    return true
+}
 
 function bindChangePeriodWork() {
     $(".period-work-input").hunterTimePicker();
@@ -68,6 +120,10 @@ function selectToSumoSelectProductType() {
         okCancelInMulti: true,
         locale: ['ОК', 'Отмена', 'Выбрать все'],
     });
+}
+
+function selectToSumoSelectCategoryType() {
+    $("#addCategoryDialog #category-type").SumoSelect();
 }
 
 function bindDialogCloseClickBackdor() {
@@ -84,16 +140,47 @@ function bindDialogCloseClickBackdor() {
         }
 
         if (!isInDialog) {
-            Dialog.close($(this));
+            let $dialog = $(this)
+
+            Dialog.clear($dialog);
+            Dialog.close($dialog);
         }
-    });
+    })
+
+    $('.custom-dialog').bind('click', function (event) {
+        if ($(event.target).hasClass('custom-dialog')) {
+            let $dialog = $(this)
+
+            Dialog.clear($dialog);
+            Dialog.close($dialog);
+        }
+
+    })
 }
+
+const CategoryType = {
+    Default: 0,
+    Constructor: 1
+}
+
+function initCategoryTypeName() {
+    let categoryTypeName = {}
+    categoryTypeName[CategoryType.Default] = 'Стандартная'
+    categoryTypeName[CategoryType.Constructor] = 'Конструктор'
+
+    return categoryTypeName
+
+}
+
+const CategoryTypeName = initCategoryTypeName()
+
+
 
 const Pages = {
     Order: 'order',
     HistoryOrder: 'history',
     Products: 'products',
-    Stock: 'stock',
+    Promotion: 'promotion',
     Branch: 'branch',
     Settong: 'setting',
     Delivery: 'delivery',
@@ -199,9 +286,14 @@ function calcOrderNumbers(typeItem) {
             url = "/Admin/UpdateOrderNumberCategory";
             break;
         case TypeItem.Products:
-            $items = $("#product-list .product-item");
+            $items = $("#product-list .product-constructor-item");
             attrName = "product-id";
-            url = "/Admin/UpdateOrderNumberProducts";
+            if ($items.length > 0) {
+                url = "/Admin/UpdateOrderNumberConstructorProducts";
+            } else {
+                $items = $("#product-list .product-item");
+                url = "/Admin/UpdateOrderNumberProducts";
+            }
             break;
     }
 
@@ -222,31 +314,6 @@ function calcOrderNumbers(typeItem) {
 var DataProduct = {
     Categories: [],
     Products: []
-}
-
-var StockType = {
-    Custom: 0,
-    FirstOrder: 1,
-    OrderTakeYourself: 2
-}
-
-function stockTypeToggleDiscountn() {
-    let currentType = parseInt($("#stock-type").val());
-
-    if (currentType == StockType.Custom) {
-        $("#stock-discount").attr("disabled", true);
-    } else {
-        $("#stock-discount").removeAttr("disabled");
-    }
-}
-
-function initBlocks() {
-    $('#stock-list').BlocksIt({
-        numOfCol: 2,
-        boxClass: '.stock-item',
-        offsetX: 5,
-        offsetY: 5
-    });
 }
 
 var TypeOperation = {
@@ -284,8 +351,10 @@ function prevChangedPage(page) {
 
 function postChangedPage(page) {
     switch (page) {
-        case Pages.Stock:
-            loadStockList();
+        case Pages.Promotion:
+            StockManger.loadStockList()
+            CouponManager.loadCoupons()
+            CashbackPartners.loadCashbackPartnerSettings()
             break
         case Pages.Analytics: {
             loadAnalyticsReport();
@@ -337,12 +406,7 @@ function selectMenuItem(e) {
 function cancelDialog(e) {
     let dialog = $(e);
 
-    dialog.find("input").val("");
-    dialog.find("textarea").val("");
-    dialog.find(".dialog-image-upload").removeClass("hide");
-    dialog.find("img").addClass("hide");
-    dialog.find("option").removeAttr("selected");
-    dialog.find("select").val("0")
+    Dialog.clear(dialog);
     Dialog.close(dialog);
 }
 
@@ -358,7 +422,7 @@ function operationCategory() {
 }
 
 function operationProduct() {
-    if (!SelectIdCategoryId) {
+    if (SelectIdCategoryId <= 0) {
         showInfoMessage("Выберите категорию")
     }
 
@@ -372,211 +436,7 @@ function operationProduct() {
     }
 }
 
-function operationStock() {
-
-    switch (CurrentOperation) {
-        case TypeOperation.Add:
-            addStock();
-            break;
-        case TypeOperation.Update:
-            updateStock();
-            break;
-    }
-}
-
-function getStockById(searchId) {
-
-    for (let id in StockList) {
-        if (StockList[id].Id == searchId) {
-            return StockList[id];
-        }
-    }
-}
-
-function getIndexStockById(searchId) {
-    for (let id in StockList) {
-        if (StockList[id].Id == searchId) {
-            return id;
-        }
-    }
-}
-
-function removeStock(id) {
-    $(`[stock-id=${id}]`).fadeOut(1000, function () {
-        $(this).remove();
-        initBlocks();
-
-        var stockIndex = getIndexStockById(id);
-        StockList.splice(stockIndex, 1);
-    });
-
-    $.post("/Admin/RemoveStock", { id: id }, null);
-}
-
-function editStock(id) {
-    CurrentOperation = TypeOperation.Update;
-
-    let dialog = $("#addStockDialog");
-    let stock = getStockById(id);
-
-    dialog.find("#stock-id").val(stock.Id);
-    dialog.find("#name-stock").val(stock.Name);
-    dialog.find("#stock-discount").val(stock.Discount);
-    dialog.find("#description-stock").val(stock.Description);
-    dialog.find("img").attr("src", stock.Image);
-
-    let $selectStockype = dialog.find("#stock-type");
-    $selectStockype.find("option").removeAttr("selected");
-    $selectStockype.find(`[value=${stock.StockType}]`).attr("selected", true);
-
-
-    if (stock.Image.indexOf("default") == -1) {
-        dialog.find("img").removeClass("hide");
-        dialog.find(".dialog-image-upload").addClass("hide");
-    }
-
-    //dialog.trigger("showModal");
-    Dialog.showModal(dialog);
-}
-
-function isVisibleStock(id) {
-    let stock = getStockById(id);
-
-    return stock.Visible;
-}
-
-function updateRenderStock(container, stock) {
-    let $stock = $(container);
-
-    $stock.find("img").attr("src", stock.Image);
-    $stock.find(".stock-item-name").html(stock.Name);
-    toggleVisibleSotck(container, stock);
-}
-
-function updateStock() {
-    let files = $("#addStockDialog input[type=file]")[0].files;
-    var dataImage = new FormData();
-
-    for (var x = 0; x < files.length; x++) {
-        dataImage.append("file" + x, files[x]);
-    }
-
-    let functUpdate = function (data) {
-        let stockId = $("#stock-id").val();
-        let stock = {
-            Id: stockId,
-            Name: $("#name-stock").val(),
-            Discount: $("#stock-discount").val(),
-            Description: $("#description-stock").val(),
-            Image: data.URL,
-            Visible: isVisibleStock(stockId),
-            StockType: parseInt($("#stock-type option:selected").attr("value"))
-        }
-
-        let loader = new Loader($("#addStockDialog form"));
-        let successFunc = function (result, loader) {
-            loader.stop();
-            if (result.Success) {
-                let index = getIndexStockById(result.Data.Id);
-                StockList[index] = result.Data;
-
-                let $stock = $(`[stock-id=${result.Data.Id}]`);
-
-                updateRenderStock($stock, result.Data);
-                cancelDialog("#addStockDialog");
-            } else {
-                showErrorMessage(result.ErrorMessage);
-            }
-        }
-        loader.start();
-
-        $.post("/Admin/UpdateStock", stock, successCallBack(successFunc, loader));
-    }
-
-
-
-    if (files.length == 0) {
-        let data = {
-            URL: $("#addStockDialog img").attr("src")
-        }
-
-        functUpdate(data);
-        return;
-    }
-
-    $.ajax({
-        type: 'POST',
-        url: '/Admin/UploadImage',
-        contentType: false,
-        processData: false,
-        data: dataImage,
-        success: function (data) {
-            functUpdate(data);
-        }
-    });
-}
-
-function updateVisibleStock(stock) {
-    $.post("/Admin/UpdateStock", stock, null);
-}
-
-function addStock() {
-    let loader = new Loader($("#addStockDialog  form"));
-    loader.start();
-
-    let files = $("#addStockDialog input[type=file]")[0].files;
-    var dataImage = new FormData();
-
-    for (var x = 0; x < files.length; x++) {
-        dataImage.append("file" + x, files[x]);
-    }
-
-    let addFunc = function (data) {
-        let stock = {
-            Name: $("#name-stock").val(),
-            Discount: $("#stock-discount").val(),
-            Description: $("#description-stock").val(),
-            Image: data.URL,
-            Visible: true,
-            StockType: parseInt($("#stock-type option:selected").attr("value"))
-        }
-        let successFunc = function (result, loader) {
-            loader.stop();
-            if (result.Success) {
-                $("#stock .empty-list").remove();
-                StockList.push(result.Data);
-                addStockToList(result.Data);
-                cancelDialog("#addStockDialog");
-            } else {
-                showErrorMessage(result.ErrorMessage);
-            }
-        }
-
-        $.post("/Admin/AddStock", stock, successCallBack(successFunc, loader));
-    }
-
-    if (files.length == 0) {
-        let data = {
-            URL: $("#addStockDialog img").attr("src")
-        }
-
-        addFunc(data);
-        return;
-    }
-
-    $.ajax({
-        type: 'POST',
-        url: '/Admin/UploadImage',
-        contentType: false,
-        processData: false,
-        data: dataImage,
-        success: function (data) {
-            addFunc(data);
-        }
-    });
-}
-
-var SelectIdCategoryId;
+var SelectIdCategoryId = -1
 
 function updateCategory() {
     let loader = new Loader($("#addCategoryDialog form"));
@@ -617,7 +477,7 @@ function updateCategory() {
             URL: $("#addCategoryDialog img").attr("src")
         }
 
-        addFunc(data);
+        uppFunc(data);
 
         return;
     }
@@ -648,6 +508,7 @@ function addCategory() {
     let addFunc = function (data) {
         let category = {
             Name: $("#name-category").val(),
+            CategoryType: parseInt($("#addCategoryDialog #category-type").val()),
             Image: data.URL
         }
 
@@ -690,7 +551,7 @@ function addCategory() {
 
 function addCategoryToList(category) {
     let templateCategoryItem = `
-    <div class="category-item" onclick="selectCategory(this)" category-id="${category.Id}">
+    <div class="category-item" onclick="selectCategory(this)" category-id="${category.Id}" category-type="${category.CategoryType}">
         <div class="category-item-image">
             <img src="${category.Image}" />
         </div>
@@ -718,6 +579,7 @@ function editCategory(e, event) {
 
     let category = {
         Id: parent.attr("category-id"),
+        CategoryType: parseInt(parent.attr("category-type")),
         Name: parent.find(".category-item-name").html().trim(),
         Image: parent.find("img").attr("src")
     }
@@ -731,8 +593,21 @@ function editCategory(e, event) {
         dialog.find(".dialog-image-upload").addClass("hide");
     }
 
-    //dialog.trigger("showModal");
-    Dialog.showModal(dialog);
+    Dialog.showModal(dialog)
+
+    const $select = $("#addCategoryDialog #category-type")
+
+    if ($select[0] && $select[0].sumo) {
+        if (category.Id > 0) {
+            $select[0].sumo.unSelectAll()
+            $select[0].sumo.selectItem(category.CategoryType.toString())
+            $select[0].sumo.disable()
+        } else {
+            $select[0].sumo.enable()
+            $select[0].sumo.selectItem(CategoryType.Default.toString())
+
+        }
+    }
 }
 
 function removeCategory(e, event) {
@@ -746,7 +621,7 @@ function removeCategory(e, event) {
             loader.stop();
             if (result.Success) {
                 if (SelectIdCategoryId == id) {
-                    SelectIdCategoryId = null;
+                    SelectIdCategoryId = -1;
 
                     clearProductList();
                     setEmptyProductInfo();
@@ -774,16 +649,59 @@ function removeCategory(e, event) {
 }
 
 function selectCategory(e) {
-    $(".category-list .select-category").removeClass("select-category");
-    $(e).addClass("select-category");
-    categoryId = $(e).attr("category-id");
+    $(".category-list .select-category").removeClass("select-category")
+    $(e).addClass("select-category")
+    let categoryId = $(e).attr("category-id")
+    let categoryType = $(e).attr("category-type")
 
     if (categoryId == SelectIdCategoryId) {
-        return;
+        return
     }
 
-    SelectIdCategoryId = categoryId;
-    loadProductList(SelectIdCategoryId);
+    SelectIdCategoryId = categoryId
+    changeButtonAddProduct()
+
+    if (categoryType == CategoryType.Default)
+        loadProductList(SelectIdCategoryId)
+    else
+        loadProductConstructorList(SelectIdCategoryId)
+}
+
+
+var CustomToggleElement = {
+    show: function (queryItem) {
+        $(queryItem).removeClass('hide')
+    },
+    hide: function (queryItem) {
+        $(queryItem).addClass('hide')
+    },
+    toggle: function (queryItem) {
+        let $item = $(queryItem)
+
+        if ($item.hasClass('hide'))
+            this.show(queryItem)
+        else
+            this.hide(queryItem)
+    }
+}
+
+function changeButtonAddProduct() {
+    let selectCategory = getCategoryBySelectCategryId()
+
+    if (selectCategory) {
+
+        switch (selectCategory.CategoryType) {
+            case CategoryType.Default:
+                CustomToggleElement.show('#add-product')
+                CustomToggleElement.hide('#add-product-constructor')
+                break
+            case CategoryType.Constructor:
+                CustomToggleElement.show('#add-product-constructor')
+                CustomToggleElement.hide('#add-product')
+                break
+        }
+
+    }
 }
 
 function sortByOrderNumber(data) {
@@ -797,7 +715,7 @@ function sortByOrderNumber(data) {
 }
 
 function loadCategoryList() {
-    SelectIdCategoryId = null;
+    SelectIdCategoryId = -1;
     clearCategoryList();
 
     DataProduct.Products = [];
@@ -965,51 +883,6 @@ function updateProduct() {
     });
 }
 
-function addStockToList(stock) {
-    let $template = $($("#stock-item-template").html());
-
-    $template.find("#stock-id").val(stock.Id);
-    $template.attr("stock-id", stock.Id);
-    $template.find("img").attr("src", stock.Image);
-    $template.find(".stock-item-name").html(stock.Name);
-    $template.find(".stock-remove").bind("click", function () {
-        let callback = () => removeStock(stock.Id);
-
-        deleteConfirmation(callback);
-    });
-    $template.find(".stock-edit").bind("click", function () {
-        editStock(stock.Id);
-    });
-    $template.find(".stock-visible").bind("click", function () {
-        let changeStock = getStockById(stock.Id);
-
-        changeStock.Visible = !changeStock.Visible;
-        toggleVisibleSotck($template, changeStock);
-        updateVisibleStock(changeStock);
-    });
-    toggleVisibleSotck($template, stock);
-
-    $("#stock-list").append($template);
-    $template.find("img").one("load", function () {
-        initBlocks();
-    }).each(function () {
-        if (this.complete) {
-            $(this).trigger('load');
-        }
-    });
-}
-
-function toggleVisibleSotck(container, stock) {
-    let $container = $(container);
-
-    if (stock.Visible) {
-        $container.find(".stock-visible").html('<i class="fal fa-eye"></i>');
-    } else {
-        $container.find(".stock-visible").html('<i class="fal fa-eye-slash"></i>');
-    }
-
-}
-
 function toggleShowItem(e, typeItem, event) {
     if (event) {
         event.stopPropagation();
@@ -1055,6 +928,30 @@ function toggleShowItem(e, typeItem, event) {
     };
     $.post(url, { data: updaterVisible }, null);
 
+}
+
+function addProductConstructorToList(product) {
+    let templateCategoryItem = `
+    <div class="product-item product-constructor-item" category-id="${product.CategoryId}" product-id="${product.Id}">
+        <div class="product-item-header">
+            <div class="product-item-image">
+                <i class="fal fa-cogs"></i>
+            </div>
+            <div class="product-item-name">
+                ${product.Name}
+            </div>
+            <div class="product-item-additional-info">
+                ${product.Ingredients.length} ${num2str(product.Ingredients.length, ['ингредиент', 'ингредиента', 'ингредиентов'])}
+            </div>
+            <div class="product-item-action">
+                <i onclick="editCategoryConstructor(${product.Id}, event);" class="fal fa-edit"></i>
+                <i onclick="removeCategoryConstructor(${product.Id}, event);" class="fal fa-trash-alt"></i>
+            </div>
+        </div>
+    </div >`;
+
+    let $template = $(templateCategoryItem);
+    $(".product-list").append($template);
 }
 
 function addProductToList(product) {
@@ -1104,11 +1001,6 @@ function addProductToList(product) {
     });
 
     $(".product-list").append($template);
-}
-
-function clearStockList() {
-    $("#stock .empty-list").remove();
-    $("#stock-list").empty();
 }
 
 function clearProductList() {
@@ -1202,40 +1094,6 @@ function removeProduct(e, event) {
     deleteConfirmation(callback);
 }
 
-var StockList = [];
-
-function addAllItemStock(data) {
-    for (let stock of data) {
-        addStockToList(stock);
-    }
-}
-
-function loadStockList() {
-    clearStockList();
-    if (StockList &&
-        StockList.length > 0) {
-        addAllItemStock(StockList);
-    } else {
-        let loader = new Loader($("#stock .content-wrapper"));
-        let successFunc = function (result, loader) {
-            loader.stop();
-            if (result.Success) {
-                if (!result.Data || result.Data.length == 0) {
-                    setEmptyStockInfo();
-                } else {
-                    StockList = result.Data;
-                    addAllItemStock(StockList);
-                }
-            } else {
-                showErrorMessage(result.ErrorMessage);
-                setEmptyStockInfo();
-            }
-        }
-        loader.start();
-
-        $.post("/Admin/LoadStockList", null, successCallBack(successFunc, loader));
-    }
-}
 
 function getProductById(id) {
     let serchProduct = null;
@@ -1250,9 +1108,32 @@ function getProductById(id) {
     return serchProduct;
 }
 
+function loadProductConstructorList(idCategory) {
+    clearProductList();
+    let loader = new Loader($(".product"));
+    let successFunc = function (result, loader) {
+        loader.stop();
+        if (result.Success) {
+            if (!result.Data || result.Data.length == 0) {
+                setEmptyProductInfo();
+            } else {
+                DataProduct.Products = result.Data;
+                for (let product of DataProduct.Products) {
+                    addProductConstructorToList(product);
+                }
+            }
+        } else {
+            showErrorMessage(result.ErrorMessage);
+            setEmptyProductInfo();
+        }
+    }
+    loader.start();
+
+    $.post("/Admin/LoadProductConstructorList", { idCategory: idCategory }, successCallBack(successFunc, loader));
+}
+
 function loadProductList(idCategory) {
     clearProductList();
-    let container = $(".product-list");
     let loader = new Loader($(".product"));
     let successFunc = function (result, loader) {
         loader.stop();
@@ -1283,6 +1164,11 @@ function addPreviewImage(input) {
 
         reader.onload = function (e) {
             let dialog = $(input).parents("dialog");
+            dialog = dialog.length > 0 ? dialog : $(input).parents(".custom-dialog");
+
+            if (dialog.length == 0)
+                return;
+
             let img = dialog.find("img");
 
             dialog.find(".dialog-image-upload").addClass("hide");
@@ -1350,6 +1236,10 @@ function saveSetting() {
         loader.stop();
         if (!result.Success) {
             showErrorMessage(result.ErrorMessage);
+        } else {
+            IsValidSetting = true
+
+            checkSettings()
         }
     }
 
@@ -1386,6 +1276,7 @@ function saveDeliverySetting() {
     let warnMgs = {
         PriceDelivery: "Укажите стоимость доставки",
         FreePriceDelivery: "Укажите минимальные суммы закаов для бесплатной доставки в районы",
+        WorkTime: "Укажите режим работы",
     }
 
     let priceDelivery = $("#price-delivery").val();
@@ -1398,6 +1289,11 @@ function saveDeliverySetting() {
 
     if (!AreaDelivery || AreaDelivery.length == 0) {
         showWarningMessage(warnMgs.FreePriceDelivery);
+        return;
+    }
+
+    if (!$('#delivery .table-time input[type=checkbox]').is(':checked')) {
+        showWarningMessage(warnMgs.WorkTime);
         return;
     }
 
@@ -1417,6 +1313,10 @@ function saveDeliverySetting() {
         loader.stop();
         if (!result.Success) {
             showErrorMessage(result.ErrorMessage);
+        } else {
+            IsValidDeliverySetting = true
+
+            checkSettings()
         }
     }
 
@@ -1547,17 +1447,6 @@ function setEmptyCategoryInfo() {
     $(".category-list").html(template);
 }
 
-function setEmptyStockInfo() {
-    let template = `
-        <div class="empty-list">
-            <i class="fal fa-smile-plus"></i>
-            <span>Пока нет ни одной акции</span>
-        </div>
-    `;
-
-    $("#stock .content-wrapper").append(template);
-}
-
 function setEmptyReview() {
     let template = `
         <div class="empty-list">
@@ -1592,7 +1481,7 @@ function renderReviewItem(data) {
 function cleanProductUserCallbackDialog() {
     let $dialog = $("#productUserCallbackDialog");
 
-    $dialog.find("img").attr("src", "");
+    $dialog.find("img").not('.no-clean').attr("src", "");
     $dialog.find(".product-name-user-callback").html("");
     $dialog.find(".product-user-callback-review-list").html("");
     $dialog.find(".product-raty-text-user-callback").html("");
@@ -1813,6 +1702,8 @@ function processingOrders(orders) {
 function processsingOrder(order) {
     order.Date = jsonToDate(order.Date);
     order.ProductCount = JSON.parse(order.ProductCountJSON);
+    order.ProductBonusCount = JSON.parse(order.ProductBonusCountJSON);
+    order.ProductConstructorCount = JSON.parse(order.ProductConstructorCountJSON);
 
     return order;
 }
@@ -1849,14 +1740,27 @@ function getOrderIdFromItemOrdersDOM(e) {
     return $parent.attr("order-id");
 }
 
-function getProductIdsForLoad(order) {
-    let ids = [];
+function getItemsIdsForLoad(order) {
+    let productIds = [];
+    let constructorCategoryIds = [];
 
     for (let id in order.ProductCount) {
-        ids.push(id);
+        productIds.push(id);
     }
 
-    return ids;
+    if (order.ProductBonusCount && Object.keys(order.ProductBonusCount).length > 0) {
+        for (let id in order.ProductBonusCount) {
+            productIds.push(id);
+        }
+    }
+
+    if (order.ProductConstructorCount && order.ProductConstructorCount.length > 0) {
+        for (let productConstructorOrder of order.ProductConstructorCount) {
+            constructorCategoryIds.push(productConstructorOrder.CategoryId);
+        }
+    }
+
+    return { productIds, constructorCategoryIds };
 }
 
 function isInteger(num) {
@@ -1872,9 +1776,9 @@ function getPriceValid(num) {
 }
 
 var OrderProducts = {};
-var OrderCategoryes = {};
-function loadProductById(ids, callback) {
-    $.post("/Admin/LoadOrderProducts", { ids: ids }, successCallBack(callback, null));
+var OrderConstructorProducts = {};
+function loadItemForOrder(idsCollection, callback) {
+    $.post("/Admin/LoadOrderItems", { productIds: idsCollection.productIds, constructorCategoryIds: idsCollection.constructorCategoryIds }, successCallBack(callback, null));
 }
 
 function getOrderById(orderId) {
@@ -1974,7 +1878,7 @@ function changeOrderStatus(orderId, orderStatus) {
         }
     });
 
-    $.post("/Admin/UpdateSatsusOrder", { OrderId: orderId, Status: orderStatus }, successCallBack(() => getTodayDataOrders(Pages.Order)));
+    $.post("/Admin/UpdateStatusOrder", { OrderId: orderId, Status: orderStatus }, successCallBack(() => getTodayDataOrders(Pages.Order)));
 }
 
 function searchByOrderNumber(containerId, isAnimation = true) {
@@ -2096,6 +2000,16 @@ class OrderStatusBar {
     }
 }
 
+function convertIngredientsToDictionary(ingredients) {
+    let dict = {}
+
+    for (ingredient of ingredients) {
+        dict[ingredient.Id] = ingredient
+    }
+
+    return dict
+}
+
 function showOrderDetails(orderId) {
     const currentSectionId = getCurrentSectionId();
     const order = currentSectionId == Pages.HistoryOrder ? getHistoryOrderById(orderId) : getOrderById(orderId);
@@ -2109,19 +2023,16 @@ function showOrderDetails(orderId) {
     let loader = new Loader($(`#${currentSectionId}`));
     loader.start()
 
-    let productIdsforLoad = getProductIdsForLoad(order);
-
     let callbackLoadProducts = function (data) {
         if (data.Success) {
-            OrderCategoryes = {};
-            for (let categoryObj of data.Data) {
-                OrderCategoryes[categoryObj.CategoryId] = {
-                    Id: categoryObj.CategoryId,
-                    Name: categoryObj.CategoryName,
-                    ProductIds: categoryObj.Products.map(product => product.Id)
-                };
+            for (let categoryObj of data.Data.products) {
 
                 categoryObj.Products.forEach(product => OrderProducts[product.Id] = product);
+            }
+
+            for (let categoryObj of data.Data.constructor) {
+                categoryObj.Ingredients = convertIngredientsToDictionary(categoryObj.Ingredients)
+                OrderConstructorProducts[categoryObj.CategoryId] = categoryObj
             }
 
             loader.stop()
@@ -2132,11 +2043,13 @@ function showOrderDetails(orderId) {
         }
     }
 
-    if (productIdsforLoad.length == 0) {
+    let itemsIdsforLoad = getItemsIdsForLoad(order);
+
+    if (itemsIdsforLoad.productIds.length == 0 && itemsIdsforLoad.constructorCategoryIds.length == 0) {
         loader.stop()
         getOrderDetails().show();
     } else {
-        loadProductById(productIdsforLoad, callbackLoadProducts);
+        loadItemForOrder(itemsIdsforLoad, callbackLoadProducts);
     }
 }
 
@@ -2156,6 +2069,23 @@ var Dialog = {
         $dialog.trigger("close");
         $dialog.removeClass('dialog-scale');
         clearTimeout(this.transition);
+    },
+    clear: ($dialog) => {
+        $dialog = $($dialog);
+
+        $dialog.find("input").val("");
+        $dialog.find("textarea").val("");
+        $dialog.find(".dialog-image-upload").removeClass("hide");
+        $dialog.find("img").not('.no-clean').addClass("hide");
+        $dialog.find("option").removeAttr("selected");
+        $dialog.find("select").val("0")
+
+        const $select = $dialog.find("select")
+
+        if ($select[0] && $select[0].sumo) {
+            $select[0].sumo.enable()
+            $select[0].sumo.reload()
+        }
     }
 }
 
@@ -2329,13 +2259,25 @@ class OrderDetailsData {
         this.DeliveryType = getDeliveryType(order.DeliveryType);
     }
 
+    getDiscounText(order) {
+        const prefixRub = "руб.";
+        const prefixPercent = "%"
+        const percent = order.DiscountPercent == 0 ? `0${prefixPercent}` : `${order.DiscountPercent}${prefixPercent} (${xFormatPrice(order.AmountPay * order.DiscountPercent / 100)} ${prefixRub})`
+
+        const ruble = order.DiscountRuble > 0 ? `${order.DiscountRuble} руб.` : ''
+        let text = percent && ruble ? `${percent} и ${ruble}` : percent || ruble
+
+        return text
+    }
+
     convertAmountInfo(order) {
         const prefixRub = "руб.";
         const prefixPercent = "%";
 
         this.AmountPay = `${xFormatPrice(order.AmountPay)} ${prefixRub}`;
+        this.AmountPayCashBack = `${xFormatPrice(order.AmountPayCashBack)} ${prefixRub}`;
         this.DeliveryPrice = `${xFormatPrice(order.DeliveryPrice)} ${prefixRub}`;
-        this.Discount = order.Discount == 0 ? `0${prefixPercent}` : `${order.Discount}${prefixPercent} (${xFormatPrice(order.AmountPay * order.Discount / 100)} ${prefixRub})`
+        this.Discount = this.getDiscounText(order);
         this.PayType = getBuyType(order.BuyType);
         this.CashBack = order.CashBack > 0 ? `${xFormatPrice(order.CashBack - order.AmountPayDiscountDelivery)} ${prefixRub}` : `${xFormatPrice(order.CashBack)} ${prefixRub}`;
         this.AmountPayDiscountDelivery = `${xFormatPrice(order.AmountPayDiscountDelivery)} ${prefixRub}`;
@@ -2354,27 +2296,81 @@ class OrderDetailsData {
     converеOrderListInfo(order) {
         const prefixRub = "руб.";
         this.OrderList = [];
+        this.OrderProductConstructorList = []
 
-        for (let productId in order.ProductCount) {
-            const product = OrderProducts[productId];
-            const obj = {
-                Image: product.Image,
-                Name: product.Name,
-                Price: `${order.ProductCount[productId]} x ${product.Price} ${prefixRub}`
+        if (order.ProductCount && Object.keys(order.ProductCount).length > 0) {
+            for (let productId in order.ProductCount) {
+                const product = OrderProducts[productId];
+                const obj = {
+                    Image: product.Image,
+                    Name: product.Name,
+                    Price: `${order.ProductCount[productId]} x ${product.Price} ${prefixRub}`
+                }
+
+                const view = this.convertOrderProducrToView(obj);
+                this.OrderList.push(view);
             }
+        }
 
-            const view = this.convertOrderProducrToView(obj);
-            this.OrderList.push(view);
+        if (order.ProductBonusCount && Object.keys(order.ProductBonusCount).length > 0) {
+            for (let productId in order.ProductBonusCount) {
+                const product = OrderProducts[productId];
+                const obj = {
+                    Image: product.Image,
+                    Name: product.Name,
+                    Price: `${order.ProductBonusCount[productId]} x 0 ${prefixRub}`
+                }
+
+                const view = this.convertOrderProducrToView(obj, true);
+                this.OrderList.push(view);
+            }
+        }
+
+        if (order.ProductConstructorCount && order.ProductConstructorCount.length > 0) {
+            for (let constructorItem of order.ProductConstructorCount) {
+                let contructor = OrderConstructorProducts[constructorItem.CategoryId]
+                let productConstructorData = this.getProductConstructorData(constructorItem.IngrdientCount, contructor.Ingredients)
+                let constructorToView = {
+                    Image: contructor.CategoryImage,
+                    Name: contructor.CategoryName,
+                    Price: `${constructorItem.Count} x ${productConstructorData.price} ${prefixRub}`,
+                    Ingredients: productConstructorData.ingredients
+                }
+                const view = this.convertOrderConstructorProducrToView(constructorToView);
+                this.OrderProductConstructorList.push(view);
+            }
         }
     }
 
-    convertOrderProducrToView(product) {
+    getProductConstructorData(constructorItem, ingredients) {
+        const prefixRub = "руб."
+        let price = 0
+        let ingredientList = []
+        for (let id in constructorItem) {
+            const count = constructorItem[id]
+            const ingredient = ingredients[id]
+            ingredientList.push({
+                Image: ingredient.Image,
+                Name: ingredient.Name,
+                Price: `${count} x ${ingredient.Price} ${prefixRub}`
+            })
+            price += (ingredient.Price * count)
+        }
+
+        return {
+            price,
+            ingredients: ingredientList
+        }
+    }
+
+    convertOrderProducrToView(product, isBonusProduct = false) {
+        const cssClassBonusProduct = isBonusProduct ? 'order-details-product-bonus' : ''
         return `
             <div class="order-details-product-item ">
                 <div class="order-details-product-img">
                     <img src="${product.Image}">
                 </div>
-                <div class="order-details-product-name-price border-bottom">
+                <div class="order-details-product-name-price border-bottom ${cssClassBonusProduct}">
                     <span>${product.Name}</span>
                     <span class="font-weight-bold grid-justify-self-flex-end">${product.Price}</span>
                 </div>
@@ -2382,6 +2378,48 @@ class OrderDetailsData {
         `;
     }
 
+    convertOrderConstructorProducrToView(constructor) {
+        return `
+            <div class="order-details-constructor-product-item">
+                <div class="order-details-constructor-product-header">
+                    <div class="order-details-constructor-product-img">
+                        <img src="${constructor.Image}">
+                    </div>
+                    <div class="order-details-constructor-product-name-price">
+                        <span>${constructor.Name}</span>
+                        <span class="font-weight-bold grid-justify-self-flex-end">${constructor.Price}</span>
+                    </div>
+                </div>
+                <div class="order-details-constructor-product-ingredients border-bottom">
+                    ${this.getIngredientViews(constructor.Ingredients)}
+                </div>
+             </div>
+        `;
+    }
+
+    getIngredientViews(ingredients) {
+        let views = ''
+
+        for (let ingredient of ingredients) {
+            views += this.getIngredientView(ingredient)
+        }
+
+        return views
+    }
+
+    getIngredientView(ingredient) {
+        return `
+            <div class="order-details-constructor-product-header">
+                <div class="order-details-constructor-ingredient-img">
+                    <img src="${ingredient.Image}">
+                </div>
+                <div class="order-details-constructor-product-name-price">
+                    <span>${ingredient.Name}</span>
+                    <span class="font-weight-bold grid-justify-self-flex-end">${ingredient.Price}</span>
+                </div>
+             </div>
+        `
+    }
 }
 
 var OrderDetailsQSelector = {
@@ -2392,6 +2430,7 @@ var OrderDetailsQSelector = {
     PhoneNumber: ".order-details-short-phone .value",
     DeliveryType: ".order-details-short-delivery-type .value",
     PriceAmount: ".order-details-price-amount .value",
+    PriceAmountCashbackBonus: ".order-details-price-amount-casback-bonus .value",
     DeliveryPrice: ".order-details-price-delivery .value",
     Discount: ".order-details-price-discount .value",
     PayType: ".order-details-price-pay-type .value",
@@ -2450,6 +2489,10 @@ class OrderDetails {
         this.$dialog.find(qSelectror).html(value);
     }
 
+    appendValue(qSelectror, value) {
+        this.$dialog.find(qSelectror).append(value);
+    }
+
     setValues() {
         this.setBaseInfo();
         this.setShortInfo();
@@ -2496,6 +2539,7 @@ class OrderDetails {
 
     setAmountInfo() {
         this.setValue(OrderDetailsQSelector.PriceAmount, this.details.AmountPay);
+        this.setValue(OrderDetailsQSelector.PriceAmountCashbackBonus, this.details.AmountPayCashBack);
         this.setValue(OrderDetailsQSelector.DeliveryPrice, this.details.DeliveryPrice);
         this.setValue(OrderDetailsQSelector.Discount, this.details.Discount);
         this.setValue(OrderDetailsQSelector.PayType, this.details.PayType);
@@ -2515,6 +2559,7 @@ class OrderDetails {
 
     setOrderListInfo() {
         this.setValue(OrderDetailsQSelector.OrderList, this.details.OrderList);
+        this.appendValue(OrderDetailsQSelector.OrderList, this.details.OrderProductConstructorList);
     }
 
     setComment() {

@@ -15,10 +15,33 @@ namespace EasyStart.Logic.Report
         {
             ReportResult result = null;
             var data = GetData();
-            var topCategories = data
-                .Select(p => new { Product = p.Key, p.Key.CategoryId, Count = p.Value })
-                .GroupBy(p => p.CategoryId)
-                .Select(p => new { CategoryId = p.Key, Count = p.Sum(s => s.Count) })
+            var productConstructorData = GetProductConstructorData();
+            var intermediateCategories = data
+             .Select(p => new { Product = p.Key, p.Key.CategoryId, Count = p.Value })
+             .GroupBy(p => p.CategoryId)
+             .Select(p => new TopCategoriesReportModel(p.Key, p.Sum(s => s.Count)))
+             .ToList();
+
+            foreach(var item in intermediateCategories)
+            {
+                var productConstructorCount = 0;
+
+                if (productConstructorData.TryGetValue(item.CategoryId, out productConstructorCount))
+                {
+                    item.Count += productConstructorCount;
+                    productConstructorData.Remove(item.CategoryId);
+                }
+            }
+
+            if (productConstructorData != null && productConstructorData.Any())
+            {
+                foreach (var kv in productConstructorData)
+                {
+                    intermediateCategories.Add(new TopCategoriesReportModel(kv.Key, kv.Value));
+                }
+            }
+
+            var topCategories = intermediateCategories
                 .OrderByDescending(p => p.Count)
                 .Take(countTop);
 
@@ -38,6 +61,22 @@ namespace EasyStart.Logic.Report
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// key - Constructor Category Id
+        /// value - Count
+        /// </summary>
+        /// <returns></returns>
+        protected Dictionary<int, int> GetProductConstructorData()
+        {
+            var data = AnalyticsDataWrapper.GetOrders(filter.DateFrom, filter.DateTo, filter.BranchId);
+            var dict = data.Where(p => p.ProductConstructorCount != null && p.ProductConstructorCount.Any())
+                .SelectMany(p => p.ProductConstructorCount)
+                .GroupBy(p => p.CategoryId)
+                .ToDictionary(p => p.Key, p => p.Sum(s => s.Count));
+
+            return dict;
         }
     }
 }

@@ -19,31 +19,55 @@ namespace EasyStart.Controllers
         [Authorize]
         public ActionResult AdminPanel()
         {
-            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-            var typeBranch = DataWrapper.GetBranchType(branchId);
-            var converter = new ConverterBranchSetting();
-            var branchViewvs = DataWrapper.GetAllSettingDictionary()
-                .Where(p => p.Value.CityId > 0 && p.Key != branchId)
-                .ToDictionary(p => p.Key,
-                              p => CityHelper.GetCity(p.Value.CityId));
+            try
+            {
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var typeBranch = DataWrapper.GetBranchType(branchId);
+                var converter = new ConverterBranchSetting();
+                var branchViewvs = DataWrapper.GetAllSettingDictionary()
+                    .Where(p => p.Value.CityId > 0 && p.Key != branchId)
+                    .ToDictionary(p => p.Key,
+                                  p => CityHelper.GetCity(p.Value.CityId));
 
-            var deliverySetting = DataWrapper.GetDeliverySetting(branchId); ;
+                var deliverySetting = DataWrapper.GetDeliverySetting(branchId); ;
 
-            ViewBag.Zones = DateTimeHepler.GetDisplayDictionary();
-            ViewBag.CurrentBranch = branchId;
-            ViewBag.BranchViews = branchViewvs != null && branchViewvs.Any() ? branchViewvs : null;
-            ViewBag.City = CityHelper.City;
-            ViewBag.Setting = DataWrapper.GetSetting(branchId); ;
-            ViewBag.DeliverySetting = deliverySetting;
-            ViewBag.DeliveryTimeTable = WeeklyDayHelper.ConvertTimeDeliveryToViev(deliverySetting?.TimeDelivery);
-            ViewBag.TypeBranch = typeBranch;
-            ViewBag.ZoneId = deliverySetting == null ? DateTimeHepler.DEFAULT_ZONE_ID : deliverySetting.ZoneId;
-            ViewBag.YearsWork = DateTime.Now.Year == 2019 ? DateTime.Now.Year.ToString() : $"2019 - {DateTime.Now.Year}";
-            ViewBag.AreaDeliveris = deliverySetting != null &&
-                                    deliverySetting.AreaDeliveries != null &&
-                                    deliverySetting.AreaDeliveries.Any() ?
-                                    JsonConvert.SerializeObject(deliverySetting.AreaDeliveries) :
-                                    JsonConvert.SerializeObject(new List<AreaDeliveryModel>());
+                var settingsValidator = new SettingsValidator();
+
+                ViewBag.Zones = DateTimeHepler.GetDisplayDictionary();
+                ViewBag.CurrentBranch = branchId;
+                ViewBag.BranchViews = branchViewvs != null && branchViewvs.Any() ? branchViewvs : null;
+                ViewBag.City = CityHelper.City;
+                ViewBag.Setting = DataWrapper.GetSetting(branchId);
+                ViewBag.IsValidSetting = settingsValidator.IsValidSetting(ViewBag.Setting);
+                ViewBag.DeliverySetting = deliverySetting;
+                ViewBag.IsValidDeliverySetting = settingsValidator.IsValidDeliverySetting(deliverySetting);
+                ViewBag.DeliveryTimeTable = WeeklyDayHelper.ConvertTimeDeliveryToViev(deliverySetting?.TimeDelivery);
+                ViewBag.TypeBranch = typeBranch;
+                ViewBag.ZoneId = deliverySetting == null ? DateTimeHepler.DEFAULT_ZONE_ID : deliverySetting.ZoneId;
+                ViewBag.YearsWork = DateTime.Now.Year == 2019 ? DateTime.Now.Year.ToString() : $"2019 - {DateTime.Now.Year}";
+                ViewBag.AreaDeliveris = deliverySetting != null &&
+                                        deliverySetting.AreaDeliveries != null &&
+                                        deliverySetting.AreaDeliveries.Any() ?
+                                        JsonConvert.SerializeObject(deliverySetting.AreaDeliveries) :
+                                        JsonConvert.SerializeObject(new List<AreaDeliveryModel>());
+
+                var products = DataWrapper.GetAllProductsVisibleDictionary(branchId);
+                ViewBag.ProductsForPromotion = products != null && products.Any() ?
+                                        JsonConvert.SerializeObject(products) :
+                                        JsonConvert.SerializeObject(new List<AreaDeliveryModel>());
+
+                var categoryDictionary = DataWrapper.GetCategoriesVisible(branchId)
+                    .Where(p => p.CategoryType == CategoryType.Default)
+                    .GroupBy(p => p.Id).
+                    ToDictionary(p => p.Key, p => p.First().Name);
+                ViewBag.CategoryDictionary = categoryDictionary != null && categoryDictionary.Any() ?
+                                        JsonConvert.SerializeObject(categoryDictionary) :
+                                        JsonConvert.SerializeObject(new List<AreaDeliveryModel>());
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
 
             return View();
         }
@@ -232,8 +256,8 @@ namespace EasyStart.Controllers
 
                 if (newBranchId == -1)
                 {
-                    var success = DataWrapper.SaveBranch(branch);
-                    if (!success)
+                    var savedBranch = DataWrapper.SaveBranch(branch);
+                    if (savedBranch == null)
                     {
                         result.ErrorMessage = "При сохранении что то пошло не так";
                     }
@@ -496,7 +520,7 @@ namespace EasyStart.Controllers
 
         [HttpPost]
         [Authorize]
-        public JsonResult AddStock(StockModel stock)
+        public JsonResult SaveStock(StockModel stock)
         {
             var result = new JsonResultModel();
 
@@ -507,6 +531,7 @@ namespace EasyStart.Controllers
 
             var branchId = DataWrapper.GetBranchId(User.Identity.Name);
             stock.BranchId = branchId;
+            stock.IsDeleted = false;
             stock = DataWrapper.SaveStock(stock);
 
             if (stock != null)
@@ -543,26 +568,6 @@ namespace EasyStart.Controllers
 
         [HttpPost]
         [Authorize]
-        public JsonResult UpdateStock(StockModel sotck)
-        {
-            var result = new JsonResultModel();
-            var updateStock = DataWrapper.UpdateStock(sotck);
-
-            if (updateStock != null)
-            {
-                result.Data = updateStock;
-                result.Success = true;
-            }
-            else
-            {
-                result.ErrorMessage = "Акция не обновлена";
-            }
-
-            return Json(result);
-        }
-
-        [HttpPost]
-        [Authorize]
         public JsonResult LoadStockList()
         {
             var result = new JsonResultModel();
@@ -582,6 +587,7 @@ namespace EasyStart.Controllers
             return Json(result);
         }
 
+        #region To do унифицировать логику
         [HttpPost]
         [Authorize]
         public void UpdateOrderNumberCategory(List<UpdaterOrderNumber> data)
@@ -594,6 +600,16 @@ namespace EasyStart.Controllers
 
         [HttpPost]
         [Authorize]
+        public void UpdateOrderNumberConstructorProducts(List<UpdaterOrderNumber> data)
+        {
+            if (data != null && data.Any())
+            {
+                DataWrapper.UpdateOrderNumberConstructorProducts(data);
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
         public void UpdateOrderNumberProducts(List<UpdaterOrderNumber> data)
         {
             if (data != null && data.Any())
@@ -601,6 +617,8 @@ namespace EasyStart.Controllers
                 DataWrapper.UpdateOrderNumberProducts(data);
             }
         }
+
+        #endregion
 
         [HttpPost]
         [Authorize]
@@ -696,34 +714,88 @@ namespace EasyStart.Controllers
 
         [HttpPost]
         [Authorize]
-        public JsonResult LoadOrderProducts(List<int> ids)
+        public JsonResult LoadOrderItems(List<int> productIds, List<int> constructorCategoryIds)
         {
             var result = new JsonResultModel();
-            var products = DataWrapper.GetOrderProducts(ids);
 
-            if (products != null)
+            if ((productIds == null || !productIds.Any())
+                && (constructorCategoryIds == null || !constructorCategoryIds.Any()))
             {
-                var idsDict = products
-                .Select(p => p.CategoryId)
-                .Distinct()
-                .ToList();
-                var categoryDict = DataWrapper.GetCategories(idsDict);
-                var dataResult = products
-                    .GroupBy(p => p.CategoryId)
-                    .Select(p => new
-                    {
-                        CategoryId = p.Key,
-                        CategoryName = categoryDict[p.Key].Name,
-                        Products = p
-                    })
-                    .ToList();
-
-                result.Data = dataResult;
-                result.Success = true;
+                result.ErrorMessage = "Список идентификторов пуст";
             }
             else
             {
-                result.ErrorMessage = "При загрузки продуктов что то пошло не так";
+                var products = new List<ProductModel>();
+                var ingredients = new Dictionary<int, List<IngredientModel>>();
+
+                if (productIds != null)
+                {
+                    productIds = productIds.Distinct().ToList();
+                    products = DataWrapper.GetOrderProducts(productIds);
+                }
+
+                if (constructorCategoryIds != null)
+                {
+                    ingredients = DataWrapper.GetIngredientsByCategoryIdVisible(constructorCategoryIds);
+                }
+
+                if (products == null && ingredients == null)
+                {
+                    result.ErrorMessage = "При загрузки продуктов что то пошло не так";
+                }
+                else
+                {
+                    var detailConstructorProducts = new List<OrderDetailConstructorProduct>();
+                    var detailProducts = new List<OrderDetailProduct>();
+
+                    if (ingredients != null)
+                    {
+                        var categories = DataWrapper.GetCategories(ingredients.Keys);
+                        detailConstructorProducts = ingredients.Select(p =>
+                        {
+                            var category = categories[p.Key];
+
+                            return new OrderDetailConstructorProduct
+                            {
+                                CategoryId = category.Id,
+                                CategoryName = category.Name,
+                                CategoryImage = category.Image,
+                                Ingredients = p.Value,
+                            };
+
+                        })
+                        .ToList();
+                    }
+
+                    if (products != null)
+                    {
+                        var idsDict = products
+                        .Select(p => p.CategoryId)
+                        .Distinct()
+                        .ToList();
+                        var categoryDict = DataWrapper.GetCategories(idsDict);
+                        detailProducts = products
+                            .GroupBy(p => p.CategoryId)
+                            .Select(p => new OrderDetailProduct
+                            {
+                                CategoryId = p.Key,
+                                CategoryName = categoryDict[p.Key].Name,
+                                Products = p.ToList()
+                            })
+                            .ToList();
+                    }
+
+                    result.Success = true;
+                    result.Data = new
+                    {
+                        products = detailProducts,
+                        constructor = detailConstructorProducts
+                    };
+                }
+
+
+                
+
             }
 
             return Json(result);
@@ -732,21 +804,30 @@ namespace EasyStart.Controllers
 
         [HttpPost]
         [Authorize]
-        public void UpdateSatsusOrder(UpdaterOrderStatus data)
+        public void UpdateStatusOrder(UpdaterOrderStatus data)
         {
-            if (data.Status == OrderStatus.Processing)
-            {
-                return;
-            }
-
             try
             {
+                if (data.Status == OrderStatus.Processing)
+                {
+                    return;
+                }
+
                 var branchId = DataWrapper.GetBranchId(User.Identity.Name);
                 var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
                 var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
                 data.DateUpdate = date;
 
                 DataWrapper.UpdateStatusOrder(data);
+
+                if (data.Status == OrderStatus.Processed)
+                {
+                    new PromotionLogic().ProcessingVirtualMoney(data.OrderId);
+                }
+                else if (data.Status == OrderStatus.Cancellation)
+                {
+                    new PromotionLogic().Refund(data.OrderId);
+                }
             }
             catch (Exception ex)
             {
@@ -774,6 +855,360 @@ namespace EasyStart.Controllers
             {
                 Logger.Log.Error(ex);
                 result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult LoadCoupons()
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var coupons = DataWrapper.GetCoupons(branchId);
+
+                result.Data = coupons;
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult SaveCoupon(CouponModel newCoupon)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                newCoupon.BranchId = branchId;
+                newCoupon.IsDeleted = false;
+
+                var coupon = DataWrapper.SaveCoupon(newCoupon);
+
+                result.Data = coupon;
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult RemoveCoupon(int id)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                var success = DataWrapper.RemoveCoupon(id);
+
+                result.Data = success;
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult LoadCashbackPartnerSettings()
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                var branch = DataWrapper.GetMainBranch();
+
+                if (branch == null)
+                {
+                    throw new Exception("Отсутсвует главное отделение");
+                }
+
+                var cashbackSetting = DataWrapper.GetPromotionCashbackSetting(branch.Id);
+                var partnersSetting = DataWrapper.GetPromotionPartnerSetting(branch.Id);
+
+                result.Data = new { CashbackSetting = cashbackSetting, PartnersSetting = partnersSetting };
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult SavePromotionCashbackSetting(PromotionCashbackSetting setting)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var typeBranch = DataWrapper.GetBranchType(branchId);
+
+                if (typeBranch != TypeBranch.MainBranch)
+                {
+                    result.ErrorMessage = "У вас нет прав для редактирования настроек кешбека";
+                    return Json(result);
+                }
+
+                setting.BranchId = branchId;
+
+                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
+                setting.DateSave = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
+
+                var newSetting = DataWrapper.SavePromotionCashbackSetting(setting);
+
+                result.Data = newSetting;
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult SavePromotionPartnerSetting(PromotionPartnerSetting setting)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var typeBranch = DataWrapper.GetBranchType(branchId);
+
+                if (typeBranch != TypeBranch.MainBranch)
+                {
+                    result.ErrorMessage = "У вас нет прав для редактирования настроек партнерской программы";
+                    return Json(result);
+                }
+
+                setting.BranchId = branchId;
+
+                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
+                setting.DateSave = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
+
+                var newSetting = DataWrapper.SavePromotionPartnerSetting(setting);
+
+                result.Data = newSetting;
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult LoadPromotionSettings()
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var sections = DataWrapper.GetPromotionSectionSettings(branchId);
+                var setting = DataWrapper.GetPromotionSetting(branchId);
+
+                result.Data = new PromotionSettingWrapper
+                {
+                    Sections = sections,
+                    Setting = setting
+                };
+
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult SavePromotionSettings(PromotionSettingWrapper setting)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                if (setting == null || !setting.Sections.Any() || setting.Setting == null)
+                    throw new Exception("Пустая настрока");
+
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                setting.Sections.ForEach(p => p.BranchId = branchId);
+                setting.Setting.BranchId = branchId;
+
+                var newSectionSettings = DataWrapper.SavePromotionSectionSettings(setting.Sections);
+                var newSettings = DataWrapper.SavePromotionSetting(setting.Setting);
+
+                result.Data = new PromotionSettingWrapper
+                {
+                    Sections = newSectionSettings,
+                    Setting = newSettings
+                };
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public void RemoveCategoryConstructor(int categoryConstructorId)
+        {
+            try
+            {
+                DataWrapper.RemoveConstructorCategory(categoryConstructorId);
+                DataWrapper.RemoveIngredientsByCategoryConstructorId(categoryConstructorId);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult AddOrUpdateCategoryConstructor(ProductConstructorIngredientModel category)
+        {
+            var result = new JsonResultModel();
+
+            if (category.Ingredients == null || !category.Ingredients.Any())
+            {
+                result.ErrorMessage = "Отсутсвтуют ингредиенты";
+
+                return Json(result);
+            }
+
+            try
+            {
+                category.Ingredients.ForEach(p =>
+                {
+                    if (!System.IO.File.Exists(Server.MapPath(p.Image)))
+                    {
+                        p.Image = "/images/default-image.jpg";
+                    }
+                });
+
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+
+                var constructorCategory = category.ConvertToConstructorCategory();
+                constructorCategory.BranchId = branchId;
+                constructorCategory = DataWrapper.AddOrUpdateConstructorCategory(constructorCategory);
+
+                if (constructorCategory != null)
+                {
+                    category.Ingredients.UpdateIngredientSubAndCategoryId(constructorCategory.Id, constructorCategory.CategoryId);
+                    var ingredients = DataWrapper.AddOrUpdateIngredients(category.Ingredients);
+
+                    if (ingredients == null)
+                    {
+                        result.ErrorMessage = "При добавлении ингредиентов что то пошло не так...";
+                    }
+                    else
+                    {
+                        result.Data = ConstructorProductHelper.GetProductConstructorIngredient(constructorCategory, ingredients);
+                        result.Success = true;
+                    }
+                }
+                else
+                {
+                    result.ErrorMessage = "При добавлении категории конструктора что то пошло не так...";
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = ex.Message;
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult LoadProductConstructorList(int idCategory)
+        {
+            var result = new JsonResultModel();
+            var constructorCategories = DataWrapper.GetConstructorCategoriesVisible(idCategory);
+
+            if (constructorCategories != null)
+            {
+                result.Data = new List<int>();
+                if (constructorCategories.Any())
+                {
+
+                    var ids = constructorCategories.Select(p => p.Id).ToList();
+                    var dictIngredients = DataWrapper.GetIngredientsVisible(ids);
+                    var ProductConstructorIngredients = new List<ProductConstructorIngredientModel>();
+
+                    constructorCategories.ForEach(p =>
+                    {
+                        List<IngredientModel> ingredients = null;
+
+                        if (dictIngredients.TryGetValue(p.Id, out ingredients) && ingredients != null && ingredients.Any())
+                        {
+                            var ProductConstructorIngredient = ConstructorProductHelper.GetProductConstructorIngredient(p, ingredients);
+                            ProductConstructorIngredients.Add(ProductConstructorIngredient);
+                        }
+
+                    });
+
+                    if (ProductConstructorIngredients != null && ProductConstructorIngredients.Any())
+                    {
+                        result.Data = ProductConstructorIngredients.OrderBy(p => p.OrderNumber).ToList();
+                    }
+                }
+
+                result.Success = true;
+            }
+            else
+            {
+                result.ErrorMessage = "При загрузки конструктора что то пошло не так";
             }
 
             return Json(result);

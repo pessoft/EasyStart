@@ -12,15 +12,16 @@ namespace EasyStart.Logic
     {
         public static OrderIfnoModel GetOrderInfo(
             this OrderModel order,
-            SettingModel setting,
-            List<ProductModel> products)
+           OrderInfoParams orderParams)
         {
             var orderInfo = new OrderIfnoModel();
 
             SetMetaData(orderInfo, order);
             SetCustomer(orderInfo, order);
-            SetAddress(orderInfo, order, setting);
-            SetProducts(orderInfo, order, products);
+            SetAddress(orderInfo, order, orderParams.Setting);
+            SetProducts(orderInfo, order, orderParams.Products);
+            SetBonusProducts(orderInfo, order, orderParams.BonusProducts);
+            SetConstructorProducts(orderInfo, order, orderParams.CategoryConstructor, orderParams.ConstructorIngredients);
             SetComment(orderInfo, order);
             SetPrice(orderInfo, order);
 
@@ -62,19 +63,134 @@ namespace EasyStart.Logic
                 {
                     ProductCount = order.ProductCount[product.Id],
                     ProductName = product.Name,
-                    ProductPrice = product.Price
+                    ProductPrice = product.Price,
                 });
             }
+        }
+
+        private static void SetBonusProducts(OrderIfnoModel orderInfo, OrderModel order, List<ProductModel> bonusProducts)
+        {
+            orderInfo.BonusProducts = new List<ProductInfoModel>();
+
+            if (order.ProductBonusCount == null)
+                return;
+
+            foreach (var product in bonusProducts)
+            {
+                orderInfo.BonusProducts.Add(new ProductInfoModel
+                {
+                    ProductCount = order.ProductBonusCount[product.Id],
+                    ProductName = product.Name,
+                    ProductPrice = product.Price,
+                });
+            }
+        }
+
+        private static void SetConstructorProducts(
+            OrderIfnoModel orderInfo,
+            OrderModel order,
+            List<CategoryModel> categoriesConstructor,
+            List<IngredientModel> constructorIngredients)
+        {
+
+            orderInfo.ConstructorProducts = new List<ConstructorProductInfoModel>();
+
+            if (order.ProductConstructorCount == null
+               || !order.ProductConstructorCount.Any()
+               || categoriesConstructor == null
+               || !categoriesConstructor.Any()
+               || constructorIngredients == null
+               || !constructorIngredients.Any())
+            {
+                return;
+            }
+
+            foreach (var orderProductConstructon in order.ProductConstructorCount)
+            {
+                var category = categoriesConstructor.First(p => p.Id == orderProductConstructon.CategoryId);
+
+                orderInfo.ConstructorProducts.Add(new ConstructorProductInfoModel
+                {
+                    ProductCount = orderProductConstructon.Count,
+                    ProductName = category.Name,
+                    ProductPrice = GetConstructorProductPrice(orderProductConstructon.IngrdientCount, constructorIngredients),
+                    Ingredients = GetStrIngredientsCount(orderProductConstructon.IngrdientCount, constructorIngredients),
+                });
+            }
+        }
+
+        private static List<IngredientOrderModel> GetStrIngredientsCount(Dictionary<int, int> ingredientsCount, List<IngredientModel> constructorIngredients)
+        {
+            var ingredients = new List<IngredientOrderModel>();
+
+            foreach (var ingredint in constructorIngredients)
+            {
+                var count = 0;
+
+                if (ingredientsCount.TryGetValue(ingredint.Id, out count))
+                {
+                    ingredients.Add(new IngredientOrderModel
+                    {
+                        Id = ingredint.Id,
+                        Name = ingredint.Name,
+                        Count = count,
+                        Price = ingredint.Price
+                    });
+                }
+            }
+
+            return ingredients;
+        }
+
+        private static double GetConstructorProductPrice(Dictionary<int, int> ingredientsCount, List<IngredientModel> constructorIngredients)
+        {
+            var price = 0.0;
+
+            foreach (var ingredint in constructorIngredients)
+            {
+                var count = 0;
+
+                if (ingredientsCount.TryGetValue(ingredint.Id, out count))
+                {
+                    price += count * ingredint.Price;
+                }
+            }
+
+            return price;
         }
 
         private static void SetPrice(OrderIfnoModel orderInfo, OrderModel order)
         {
             orderInfo.AmountPrice = $"{order.AmountPay} руб.";
+            orderInfo.AmountPayCashBack = $"{order.AmountPayCashBack} руб.";
             orderInfo.DeliveryPrice = $"{order.DeliveryPrice} руб.";
-            orderInfo.Discount = order.Discount == 0 ? $"{order.Discount}%" : $"{order.Discount}% ({Math.Round(order.AmountPay * order.Discount / 100, 2)} руб.)";
+            orderInfo.Discount = GetDiscountStr(order);
             orderInfo.ButType = order.BuyType.GetDescription();
             orderInfo.CashBack = order.CashBack == 0 ? $"{order.CashBack} руб." : $"{order.CashBack} руб. ({Math.Round(order.CashBack - order.AmountPayDiscountDelivery, 2)} руб.)";
             orderInfo.AmountPayDiscountDelivery = $"{order.AmountPayDiscountDelivery} руб."; ;
+        }
+
+        private static string GetDiscountStr(OrderModel order)
+        {
+            var discountPercent = order.DiscountPercent == 0 ? $"{order.DiscountPercent}%" : $"{order.DiscountPercent}% ({Math.Round(order.AmountPay * order.DiscountPercent / 100, 2)} руб.)"; ;
+            var discountRuble = order.DiscountRuble > 0 ? $"{Math.Round(order.DiscountRuble, 2) } руб." : "";
+            var discount = "";
+
+            if (!string.IsNullOrEmpty(discountPercent)
+                && !string.IsNullOrEmpty(discountRuble))
+            {
+                discount = $"{discountPercent} и {discountRuble}";
+            }
+            else if (!string.IsNullOrEmpty(discountPercent))
+            {
+                discount = discountPercent;
+            }
+            else if (!string.IsNullOrEmpty(discountRuble))
+            {
+                discount = discountRuble;
+            }
+
+            return discount;
         }
 
         private static void SetComment(OrderIfnoModel orderInfo, OrderModel order)

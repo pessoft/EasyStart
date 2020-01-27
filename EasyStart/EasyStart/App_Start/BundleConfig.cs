@@ -45,10 +45,10 @@ namespace EasyStart
 
             bundles.Add(new ScriptBundle("~/bundles/admin-panel").Include(
                         "~/Scripts/admin-panel.js",
+                        "~/Scripts/product-constructor.js",
                         "~/Scripts/analytics.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/timepicker").Include(
-                        
                         "~/Scripts/jquery-timepicker.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jquery-raty").Include(
@@ -57,13 +57,25 @@ namespace EasyStart
             bundles.Add(new ScriptBundle("~/bundles/chart").Include(
                       "~/Scripts/chart.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/promotion").Include(
+                "~/Scripts/promotion/promotion.js",
+                "~/Scripts/promotion/stock.js",
+                "~/Scripts/promotion/coupon.js",
+                "~/Scripts/promotion/cashback-partners.js",
+                "~/Scripts/promotion/promotion-setting.js"));
+
+            bundles.Add(new StyleBundle("~/promotion/css").Include(
+                     "~/Content/promotion.css"));
+
             bundles.Add(new StyleBundle("~/admin-login/css").Include(
                       "~/Content/admin-login.css"));
+
             bundles.Add(new StyleBundle("~/datepicker/css").Include(
                       "~/Content/datepicker.min.css"));
 
             bundles.Add(new StyleBundle("~/admin-panel/css").Include(
                       "~/Content/admin-panel.css",
+                      "~/Content/product-constructor.css",
                       "~/Content/analytics.css"));
 
             bundles.Add(new StyleBundle("~/timepicker/css").Include(

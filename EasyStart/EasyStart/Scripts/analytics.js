@@ -39,7 +39,7 @@ class BaseReport {
                             Период:
                         </span>
                         <div class="group">
-                            <input required="" id="${this.perioId}">
+                            <input readonly required="" id="${this.perioId}">
                             <i class="fal fa-calendar-alt"></i>
                         </div>
                     </div>

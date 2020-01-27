@@ -176,6 +176,8 @@
     </Compile>
     <Compile Include="HtmlRenderer\EmailOrderBodyHtmlRenderer.cs" />
     <Compile Include="HtmlRenderer\IHtmlRenderer.cs" />
+    <Compile Include="HtmlRenderer\Models\ConstructorProductInfoModel.cs" />
+    <Compile Include="HtmlRenderer\Models\IngredientOrderModel.cs" />
     <Compile Include="HtmlRenderer\Models\OrderIfnoModel.cs" />
     <Compile Include="HtmlRenderer\Models\ProductInfoModel.cs" />
     <Compile Include="Hubs\NewOrderHub.cs" />
@@ -183,10 +185,20 @@
     <Compile Include="Logic\AnalyticsDataWrapper.cs" />
     <Compile Include="Logic\BrachClone.cs" />
     <Compile Include="Logic\BuyType.cs" />
+    <Compile Include="Logic\CategoryType.cs" />
+    <Compile Include="Logic\PreprocessorDataAPI.cs" />
+    <Compile Include="Logic\PromotionLogic.cs" />
+    <Compile Include="Logic\SettingsValidator.cs" />
+    <Compile Include="Logic\StyleTypeIngredient.cs" />
+    <Compile Include="Logic\Transaction\TransactionLogic.cs" />
+    <Compile Include="Logic\Transaction\TransactionWrapper.cs" />
+    <Compile Include="Logic\Transaction\CashbackTransactionType.cs" />
+    <Compile Include="Logic\Transaction\PartnersTransactionType.cs" />
     <Compile Include="Logic\ConverterBranchSetting.cs" />
     <Compile Include="Logic\DataWrapper.cs" />
     <Compile Include="Logic\DayWeekly.cs" />
     <Compile Include="Logic\DeliveryType.cs" />
+    <Compile Include="Logic\DiscountType.cs" />
     <Compile Include="Logic\Notification\EmailNotification\Email.cs" />
     <Compile Include="Logic\Notification\EmailNotification\IEmail.cs" />
     <Compile Include="Logic\Notification\EmailNotification\OrderEmailNotification.cs" />
@@ -197,6 +209,8 @@
     <Compile Include="Logic\OrderStatus.cs" />
     <Compile Include="Logic\ProductHelper.cs" />
     <Compile Include="Logic\ProductType.cs" />
+    <Compile Include="Logic\PromotionDefaultSetting.cs" />
+    <Compile Include="Logic\PromotionSection.cs" />
     <Compile Include="Logic\RedirectingActionAttribute.cs" />
     <Compile Include="Logic\ReportType.cs" />
     <Compile Include="Logic\Report\BaseReport.cs" />
@@ -209,7 +223,11 @@
     <Compile Include="Logic\Report\RevenueReport.cs" />
     <Compile Include="Logic\Report\TopCategoriesReport.cs" />
     <Compile Include="Logic\Report\TopProductsReport.cs" />
-    <Compile Include="Logic\StockType.cs" />
+    <Compile Include="Logic\RewardType.cs" />
+    <Compile Include="Logic\StockConditionDeliveryType.cs" />
+    <Compile Include="Logic\StockConditionTriggerType.cs" />
+    <Compile Include="Logic\StockOneTypeSubtype.cs" />
+    <Compile Include="Logic\StockTypePeriod.cs" />
     <Compile Include="Logic\TypeBranch.cs" />
     <Compile Include="Logic\UriHelper.cs" />
     <Compile Include="Logic\UseMethod.cs" />
@@ -349,6 +367,134 @@
     <Compile Include="Migrations\201910230557316_AddedNotificationEmailDeliverySetting.Designer.cs">
       <DependentUpon>201910230557316_AddedNotificationEmailDeliverySetting.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911180920323_NewStockModel.cs" />
+    <Compile Include="Migrations\201911180920323_NewStockModel.Designer.cs">
+      <DependentUpon>201911180920323_NewStockModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911181449024_NewConditionCountProductsStockModel.cs" />
+    <Compile Include="Migrations\201911181449024_NewConditionCountProductsStockModel.Designer.cs">
+      <DependentUpon>201911181449024_NewConditionCountProductsStockModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911181450188_RemoveConditionCountProductsStockModel.cs" />
+    <Compile Include="Migrations\201911181450188_RemoveConditionCountProductsStockModel.Designer.cs">
+      <DependentUpon>201911181450188_RemoveConditionCountProductsStockModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911181501273_AddProductsBounusJSONStockModel.cs" />
+    <Compile Include="Migrations\201911181501273_AddProductsBounusJSONStockModel.Designer.cs">
+      <DependentUpon>201911181501273_AddProductsBounusJSONStockModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911190857026_UpperCaseStockToDateProperty.cs" />
+    <Compile Include="Migrations\201911190857026_UpperCaseStockToDateProperty.Designer.cs">
+      <DependentUpon>201911190857026_UpperCaseStockToDateProperty.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912021347324_AddPromotionProperties.cs" />
+    <Compile Include="Migrations\201912021347324_AddPromotionProperties.Designer.cs">
+      <DependentUpon>201912021347324_AddPromotionProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912030548232_AddRefferalPropertiesToClientModel.cs" />
+    <Compile Include="Migrations\201912030548232_AddRefferalPropertiesToClientModel.Designer.cs">
+      <DependentUpon>201912030548232_AddRefferalPropertiesToClientModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912030656137_AddRefferalDiscountToClientModel.cs" />
+    <Compile Include="Migrations\201912030656137_AddRefferalDiscountToClientModel.Designer.cs">
+      <DependentUpon>201912030656137_AddRefferalDiscountToClientModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912030929416_FixSyntax.cs" />
+    <Compile Include="Migrations\201912030929416_FixSyntax.Designer.cs">
+      <DependentUpon>201912030929416_FixSyntax.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912050720058_FixWorldReferrel.cs" />
+    <Compile Include="Migrations\201912050720058_FixWorldReferrel.Designer.cs">
+      <DependentUpon>201912050720058_FixWorldReferrel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912060640231_FixIsUseCashback.cs" />
+    <Compile Include="Migrations\201912060640231_FixIsUseCashback.Designer.cs">
+      <DependentUpon>201912060640231_FixIsUseCashback.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912071728033_CouponAllowedProductBonus.cs" />
+    <Compile Include="Migrations\201912071728033_CouponAllowedProductBonus.Designer.cs">
+      <DependentUpon>201912071728033_CouponAllowedProductBonus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912071751066_RenameBounusToBonus.cs" />
+    <Compile Include="Migrations\201912071751066_RenameBounusToBonus.Designer.cs">
+      <DependentUpon>201912071751066_RenameBounusToBonus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912071941320_RemoveVirtualMoneyTransactionTable.cs" />
+    <Compile Include="Migrations\201912071941320_RemoveVirtualMoneyTransactionTable.Designer.cs">
+      <DependentUpon>201912071941320_RemoveVirtualMoneyTransactionTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912081255449_TransactionLogic.cs" />
+    <Compile Include="Migrations\201912081255449_TransactionLogic.Designer.cs">
+      <DependentUpon>201912081255449_TransactionLogic.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912081327252_ChangeStockIdToStockIdsInOrderModel.cs" />
+    <Compile Include="Migrations\201912081327252_ChangeStockIdToStockIdsInOrderModel.Designer.cs">
+      <DependentUpon>201912081327252_ChangeStockIdToStockIdsInOrderModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912090516000_RemovePropertyIsCashbackInOrder.cs" />
+    <Compile Include="Migrations\201912090516000_RemovePropertyIsCashbackInOrder.Designer.cs">
+      <DependentUpon>201912090516000_RemovePropertyIsCashbackInOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912090536576_AddDurationCashbeckParentReferral.cs" />
+    <Compile Include="Migrations\201912090536576_AddDurationCashbeckParentReferral.Designer.cs">
+      <DependentUpon>201912090536576_AddDurationCashbeckParentReferral.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912090604471_RemovePropertyIsPartnerBonusInOrder.cs" />
+    <Compile Include="Migrations\201912090604471_RemovePropertyIsPartnerBonusInOrder.Designer.cs">
+      <DependentUpon>201912090604471_RemovePropertyIsPartnerBonusInOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912101342036_SplitDiscount.cs" />
+    <Compile Include="Migrations\201912101342036_SplitDiscount.Designer.cs">
+      <DependentUpon>201912101342036_SplitDiscount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912101358575_RemoveOldProperityDiscount.cs" />
+    <Compile Include="Migrations\201912101358575_RemoveOldProperityDiscount.Designer.cs">
+      <DependentUpon>201912101358575_RemoveOldProperityDiscount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912161840545_AddParentReferralCodeClient.cs" />
+    <Compile Include="Migrations\201912161840545_AddParentReferralCodeClient.Designer.cs">
+      <DependentUpon>201912161840545_AddParentReferralCodeClient.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912251319518_AddPropertyOneCoupon.cs" />
+    <Compile Include="Migrations\201912251319518_AddPropertyOneCoupon.Designer.cs">
+      <DependentUpon>201912251319518_AddPropertyOneCoupon.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912260714049_AddedUniqId.cs" />
+    <Compile Include="Migrations\201912260714049_AddedUniqId.Designer.cs">
+      <DependentUpon>201912260714049_AddedUniqId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912281154420_AddCategoryType.cs" />
+    <Compile Include="Migrations\201912281154420_AddCategoryType.Designer.cs">
+      <DependentUpon>201912281154420_AddCategoryType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001051727296_ConstructorProductModels.cs" />
+    <Compile Include="Migrations\202001051727296_ConstructorProductModels.Designer.cs">
+      <DependentUpon>202001051727296_ConstructorProductModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001061125235_AddCosntructorCategoryOrderModel.cs" />
+    <Compile Include="Migrations\202001061125235_AddCosntructorCategoryOrderModel.Designer.cs">
+      <DependentUpon>202001061125235_AddCosntructorCategoryOrderModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001062014037_AddCategoryIdInIngredientModel.cs" />
+    <Compile Include="Migrations\202001062014037_AddCategoryIdInIngredientModel.Designer.cs">
+      <DependentUpon>202001062014037_AddCategoryIdInIngredientModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001081951429_AddIsDeletedPropeties.cs" />
+    <Compile Include="Migrations\202001081951429_AddIsDeletedPropeties.Designer.cs">
+      <DependentUpon>202001081951429_AddIsDeletedPropeties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001091815006_ChangedLogicMinRequiredIngredients.cs" />
+    <Compile Include="Migrations\202001091815006_ChangedLogicMinRequiredIngredients.Designer.cs">
+      <DependentUpon>202001091815006_ChangedLogicMinRequiredIngredients.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001111917144_FixAdditionalInfoName.cs" />
+    <Compile Include="Migrations\202001111917144_FixAdditionalInfoName.Designer.cs">
+      <DependentUpon>202001111917144_FixAdditionalInfoName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001111945051_RemoveIssueNameAdditionaName.cs" />
+    <Compile Include="Migrations\202001111945051_RemoveIssueNameAdditionaName.Designer.cs">
+      <DependentUpon>202001111945051_RemoveIssueNameAdditionaName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -356,17 +502,37 @@
     <Compile Include="Models\BranchSettingViewModel.cs" />
     <Compile Include="Models\BranchSignal.cs" />
     <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\ConstructorCategory.cs" />
+    <Compile Include="Models\ConstructorProductHistoryModel.cs" />
+    <Compile Include="Models\CouponModel.cs" />
+    <Compile Include="Models\CouponParamsModel.cs" />
     <Compile Include="Models\DataHistoryForViewModel.cs" />
     <Compile Include="Models\DeliverySettingModel.cs" />
     <Compile Include="Models\HistoryOrderFilter.cs" />
+    <Compile Include="Models\IContainImage.cs" />
+    <Compile Include="Models\IngredientHistoryModel.cs" />
+    <Compile Include="Models\IngredientModel.cs" />
+    <Compile Include="Models\MainDataSignatureModel.cs" />
     <Compile Include="Models\NewBranchModel.cs" />
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\JsonResultModel.cs" />
     <Compile Include="Models\LoginDataModel.cs" />
     <Compile Include="Models\Notification\OptionsNotificationNewOrderModel.cs" />
+    <Compile Include="Models\OrderDetailConstructorProduct.cs" />
+    <Compile Include="Models\OrderDetailProduct.cs" />
+    <Compile Include="Models\OrderInfoParams.cs" />
     <Compile Include="Models\OrderModel.cs" />
+    <Compile Include="Models\OrderStockApply.cs" />
+    <Compile Include="Models\ProductConstructorIngredientModel.cs" />
+    <Compile Include="Models\ProductConstructorOrderModel.cs" />
+    <Compile Include="Models\ProductHistoryModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\ProductReview.cs" />
+    <Compile Include="Models\PromotionCashbackSetting.cs" />
+    <Compile Include="Models\PromotionPartnerSetting.cs" />
+    <Compile Include="Models\PromotionSectionSetting.cs" />
+    <Compile Include="Models\PromotionSetting.cs" />
+    <Compile Include="Models\PromotionSettingWrapper.cs" />
     <Compile Include="Models\RatingProduct.cs" />
     <Compile Include="Models\RatingProductMiddleware.cs" />
     <Compile Include="Models\RatingProductUpdater.cs" />
@@ -375,6 +541,11 @@
     <Compile Include="Models\SettingModel.cs" />
     <Compile Include="Models\StockModel.cs" />
     <Compile Include="Models\TodayDataOrdersModel.cs" />
+    <Compile Include="Models\TopCategoriesReportModel.cs" />
+    <Compile Include="Models\Transaction\CashbackTransaction.cs" />
+    <Compile Include="Models\Transaction\PartnersTransaction.cs" />
+    <Compile Include="Models\Transaction\PartnersTransactionView.cs" />
+    <Compile Include="Models\Transaction\RefundCashbackTransactionModel.cs" />
     <Compile Include="Models\UpdaterOrderNumber.cs" />
     <Compile Include="Models\UpdaterOrderStatus.cs" />
     <Compile Include="Models\UpdaterVisible.cs" />
@@ -383,6 +554,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\CityHelper.cs" />
+    <Compile Include="Utils\ConstructorProductHelper.cs" />
     <Compile Include="Utils\DateTimeHepler.cs" />
     <Compile Include="Utils\EnumHelper.cs" />
     <Compile Include="Utils\WeeklyDayHelper.cs" />
@@ -415,6 +587,8 @@
     <Content Include="Content\fontawesome\webfonts\fa-solid-900.svg" />
     <Content Include="Content\material-input.css" />
     <Content Include="Content\odometer\odometer-theme-minimal.css" />
+    <Content Include="Content\product-constructor.css" />
+    <Content Include="Content\promotion.css" />
     <Content Include="Content\sounds\sound-new-order.mp3" />
     <Content Include="Content\sumoselect.min.css" />
     <Content Include="Content\themes\base\accordion.css" />
@@ -462,6 +636,8 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\main.css" />
+    <Content Include="Images\blank-ingredients\glass-noodles.png" />
+    <Content Include="Images\blank-ingredients\seafood.png" />
     <Content Include="Images\default-image.jpg" />
     <Content Include="Images\favico.ico" />
     <Content Include="Images\full-logo.png" />
@@ -531,6 +707,12 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\notify.js" />
     <Content Include="Scripts\odometer\odometer.js" />
+    <Content Include="Scripts\product-constructor.js" />
+    <Content Include="Scripts\promotion\cashback-partners.js" />
+    <Content Include="Scripts\promotion\coupon.js" />
+    <Content Include="Scripts\promotion\promotion-setting.js" />
+    <Content Include="Scripts\promotion\promotion.js" />
+    <Content Include="Scripts\promotion\stock.js" />
     <Content Include="Scripts\singnal-logic.js" />
     <Content Include="Scripts\chart.js" />
     <Content Include="Web.config">
@@ -659,6 +841,102 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201910230557316_AddedNotificationEmailDeliverySetting.resx">
       <DependentUpon>201910230557316_AddedNotificationEmailDeliverySetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911180920323_NewStockModel.resx">
+      <DependentUpon>201911180920323_NewStockModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911181449024_NewConditionCountProductsStockModel.resx">
+      <DependentUpon>201911181449024_NewConditionCountProductsStockModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911181450188_RemoveConditionCountProductsStockModel.resx">
+      <DependentUpon>201911181450188_RemoveConditionCountProductsStockModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911181501273_AddProductsBounusJSONStockModel.resx">
+      <DependentUpon>201911181501273_AddProductsBounusJSONStockModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911190857026_UpperCaseStockToDateProperty.resx">
+      <DependentUpon>201911190857026_UpperCaseStockToDateProperty.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912021347324_AddPromotionProperties.resx">
+      <DependentUpon>201912021347324_AddPromotionProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912030548232_AddRefferalPropertiesToClientModel.resx">
+      <DependentUpon>201912030548232_AddRefferalPropertiesToClientModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912030656137_AddRefferalDiscountToClientModel.resx">
+      <DependentUpon>201912030656137_AddRefferalDiscountToClientModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912030929416_FixSyntax.resx">
+      <DependentUpon>201912030929416_FixSyntax.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912050720058_FixWorldReferrel.resx">
+      <DependentUpon>201912050720058_FixWorldReferrel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912060640231_FixIsUseCashback.resx">
+      <DependentUpon>201912060640231_FixIsUseCashback.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912071728033_CouponAllowedProductBonus.resx">
+      <DependentUpon>201912071728033_CouponAllowedProductBonus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912071751066_RenameBounusToBonus.resx">
+      <DependentUpon>201912071751066_RenameBounusToBonus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912071941320_RemoveVirtualMoneyTransactionTable.resx">
+      <DependentUpon>201912071941320_RemoveVirtualMoneyTransactionTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912081255449_TransactionLogic.resx">
+      <DependentUpon>201912081255449_TransactionLogic.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912081327252_ChangeStockIdToStockIdsInOrderModel.resx">
+      <DependentUpon>201912081327252_ChangeStockIdToStockIdsInOrderModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912090516000_RemovePropertyIsCashbackInOrder.resx">
+      <DependentUpon>201912090516000_RemovePropertyIsCashbackInOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912090536576_AddDurationCashbeckParentReferral.resx">
+      <DependentUpon>201912090536576_AddDurationCashbeckParentReferral.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912090604471_RemovePropertyIsPartnerBonusInOrder.resx">
+      <DependentUpon>201912090604471_RemovePropertyIsPartnerBonusInOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912101342036_SplitDiscount.resx">
+      <DependentUpon>201912101342036_SplitDiscount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912101358575_RemoveOldProperityDiscount.resx">
+      <DependentUpon>201912101358575_RemoveOldProperityDiscount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912161840545_AddParentReferralCodeClient.resx">
+      <DependentUpon>201912161840545_AddParentReferralCodeClient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912251319518_AddPropertyOneCoupon.resx">
+      <DependentUpon>201912251319518_AddPropertyOneCoupon.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912260714049_AddedUniqId.resx">
+      <DependentUpon>201912260714049_AddedUniqId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912281154420_AddCategoryType.resx">
+      <DependentUpon>201912281154420_AddCategoryType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001051727296_ConstructorProductModels.resx">
+      <DependentUpon>202001051727296_ConstructorProductModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001061125235_AddCosntructorCategoryOrderModel.resx">
+      <DependentUpon>202001061125235_AddCosntructorCategoryOrderModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001062014037_AddCategoryIdInIngredientModel.resx">
+      <DependentUpon>202001062014037_AddCategoryIdInIngredientModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001081951429_AddIsDeletedPropeties.resx">
+      <DependentUpon>202001081951429_AddIsDeletedPropeties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001091815006_ChangedLogicMinRequiredIngredients.resx">
+      <DependentUpon>202001091815006_ChangedLogicMinRequiredIngredients.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001111917144_FixAdditionalInfoName.resx">
+      <DependentUpon>202001111917144_FixAdditionalInfoName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001111945051_RemoveIssueNameAdditionaName.resx">
+      <DependentUpon>202001111945051_RemoveIssueNameAdditionaName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

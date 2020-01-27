@@ -4,7 +4,7 @@
     padding: 0;
     font-size: 1em;
     height: 100vh;
-    background-color: #0f1e3205;
+    background-color: #f3f3f3;
     overflow: hidden;
 }
 
@@ -51,6 +51,11 @@
         cursor: pointer;
         color: #9ab0c7;
         transition: 200ms ease-in;
+    }
+
+    .disabled-menu-item {
+        pointer-events: none;
+        color: gray;
     }
 
 .hide {
@@ -134,15 +139,21 @@ dialog form {
     margin-bottom: 1%;
 }
 
-dialog {
+dialog,
+.custom-dialog .custom-dialog-body {
     border: none;
     box-shadow: 0px 0px 8px 1px #0d1b2d61;
     border-radius: 3px;
+    position: relative;
 }
 
     dialog img {
         cursor: pointer;
     }
+
+.custom-dialog .dialog-image-upload i {
+    font-size: 1.6em;
+}
 
 .header-dialog {
     width: 100%;
@@ -223,6 +234,7 @@ dialog {
     text-align: center;
     color: #163f75cf;
     border: 1px solid #163f75cf;
+    border-radius: 3px;
 }
 
     .dialog-image-upload i {
@@ -248,6 +260,7 @@ dialog {
 
 .preview-image img {
     width: 100%;
+    border-radius: 3px;
 }
 
 #setting,
@@ -262,10 +275,14 @@ dialog {
     flex-direction: column;
 }
 
-#setting,
-#delivery {
+#setting {
     padding-top: 3%;
     height: 93%;
+}
+
+#delivery {
+    padding-top: 15px;
+    height: 95%;
 }
 
     #setting .bar,
@@ -375,7 +392,7 @@ label[for=free-delivery] {
 }
 
 .branch-header {
-    font-size: 1.7em;
+    font-size: 2em;
     margin-bottom: 1%;
     padding-top: 2%;
 }
@@ -412,6 +429,7 @@ label[for=free-delivery] {
     margin: 0 auto;
     margin-bottom: 12px;
     position: relative;
+    background-color: #fff;
 }
 
 .branch-item-info {
@@ -472,6 +490,8 @@ label[for=free-delivery] {
     box-shadow: 0px 0px 5px 0px #0f1e322b;
     color: #163f75cf;
     cursor: default;
+    background-color: #fff;
+    transition: 120ms ease-in;
 }
 
     .category-item.gu-mirror {
@@ -527,7 +547,6 @@ div.category-item:hover {
         cursor: pointer;
         color: #ce6a6b;
         transition: 200ms ease-in;
-        transform: scale(1.1);
     }
 
 .branch-list::-webkit-scrollbar,
@@ -611,9 +630,9 @@ ul.options::-webkit-scrollbar-thumb,
     }
 
 .select-category {
-    background-color: #163f740d;
+    background-color: #0f1e32;
+    color: #f3f3f3;
 }
-
 
 .product-list {
     position: relative;
@@ -641,6 +660,8 @@ ul.options::-webkit-scrollbar-thumb,
     box-shadow: 0px 0px 5px 0px #0f1e322b;
     color: #163f75cf;
     cursor: default;
+    background-color: #fff;
+    transition: 120ms ease-in;
 }
 
 .product-item-header {
@@ -666,6 +687,10 @@ div.product-item:hover {
     align-items: center;
     margin-right: 5px;
 }
+
+    .product-item-image i {
+        font-size: 1.5em;
+    }
 
     .product-item-image img {
         width: 100%;
@@ -712,7 +737,6 @@ div.product-item:hover {
         cursor: pointer;
         color: #ce6a6b;
         transition: 200ms ease-in;
-        transform: scale(1.1);
     }
 
 .product-item-additional-info {
@@ -796,6 +820,10 @@ div.product-item:hover {
     }
 }
 
+.product-constructor-item {
+    width: 60%;
+}
+
 .empty-list {
     width: 100%;
     height: 100%;
@@ -804,9 +832,9 @@ div.product-item:hover {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    font-size: 1.7em;
+    font-size: 1.5em;
     color: #0f1e322e;
-    background-color: #fafafa;
+    background-color: #f3f3f3;
     text-align: center;
     position: absolute;
     top: 0;
@@ -822,7 +850,7 @@ div.product-item:hover {
     }
 
 .empty-list i {
-    font-size: 2.6em;
+    font-size: 2.3em;
 }
 
 .empty-list span {
@@ -880,6 +908,10 @@ div.product-item:hover {
     flex-direction: row;
 }
 
+.checkbox-item-left {
+    justify-content: flex-start;
+}
+
 .period-work {
     width: 100%;
     display: flex;
@@ -917,6 +949,7 @@ div.product-item:hover {
 }
 
 #product-type,
+#category-type,
 #stock-type {
     min-width: 322px;
     min-height: 25px;
@@ -926,6 +959,7 @@ div.product-item:hover {
 }
 
     #product-type:focus,
+    #category-type:focus,
     #stock-type:focus {
         outline: -webkit-focus-ring-color auto 5px;
         outline-color: #496e98;
@@ -961,16 +995,15 @@ div.product-item:hover {
 
 .stock-item {
     width: 460px;
-    max-height: 100%;
+    max-height: 200px;
     color: #163f75cf;
     box-shadow: 0px 0px 5px 0px #0f1e322b;
-    margin: 5px;
     border-radius: 3px;
 }
 
 .stock-item-image {
     width: 100%;
-    height: 80%;
+    height: 150px;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -979,6 +1012,8 @@ div.product-item:hover {
     .stock-item-image img {
         max-width: 100%;
         max-height: 100%;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
     }
 
 .stock-item-footer {
@@ -1062,12 +1097,14 @@ div.product-item:hover {
         margin-right: 10px
     }
 
-#deleteConfirmationDialog {
+#deleteConfirmationDialog,
+#infoConfirmationDialog {
     padding: 20px;
 }
 
     #deleteConfirmationDialog .dialog-menu,
-    #productUserCallbackDialog .dialog-menu {
+    #productUserCallbackDialog .dialog-menu,
+    #infoConfirmationDialog .dialog-menu {
         justify-content: flex-end;
     }
 
@@ -1206,7 +1243,6 @@ div.product-item:hover {
     cursor: pointer;
     color: #ce6a6b;
     transition: 200ms ease-in;
-    transform: scale(1.1);
 }
 
 #productUserCallbackDialog img {
@@ -1380,19 +1416,27 @@ div.take-info-item:nth-child(odd) {
 }
 
 #order .SumoSelect > .CaptionCont > span,
-#history .SumoSelect > .CaptionCont > span {
+#history .SumoSelect > .CaptionCont > span,
+#stockDialog .SumoSelect > .CaptionCont > span
+#couponDialog .SumoSelect > .CaptionCont > span {
     font-size: 0.85em;
 }
 
 #order .SumoSelect,
-#history .SumoSelect {
+#history .SumoSelect,
+#stockDialog .SumoSelect
+#couponDialog .SumoSelect {
     width: 90%;
     margin: 5px;
 }
 
     #order .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
     #history .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
-    #addProducDialog .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i {
+    #addProducDialog .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
+    #addCategoryDialog .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
+    #stockDialog .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
+    #couponDialog .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i,
+    #promotion-items-priority .SumoSelect > .optWrapper.multiple > .options li.opt.selected span i {
         background-color: #163f75b0;
     }
 
@@ -1449,7 +1493,9 @@ div.take-info-item:nth-child(odd) {
 }
 
 #order .SumoSelect > .CaptionCont,
-#history .SumoSelect > .CaptionCont {
+#history .SumoSelect > .CaptionCont
+#stockDialog .SumoSelect > .CaptionCont
+#couponDialog .SumoSelect > .CaptionCont {
     min-height: 17px;
     display: flex;
     justify-content: flex-start;
@@ -1695,7 +1741,7 @@ search-group-item search-group-ico {
     grid-template-columns: repeat(2, 1fr);
     grid-auto-rows: 230px;
     grid-column-gap: 25px;
-    grid-row-gap: 20px;
+    grid-row-gap: 5px;
     padding: 5px 10px 10px 10px;
     overflow-y: auto;
     position: relative;
@@ -1851,8 +1897,8 @@ dialog {
     grid-row: span 3;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 0.8fr 2.7fr 3fr;
-    grid-row-gap: 15px;
+    grid-template-rows: 0.8fr 3.1fr 3fr;
+    grid-row-gap: 10px;
     box-shadow: none;
 }
 
@@ -1945,7 +1991,7 @@ button.order-details-menu-item i {
 .order-details-item {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(7,1fr);
+    grid-template-rows: repeat(8,1fr);
     padding: 20px 0;
 }
 
@@ -1986,17 +2032,22 @@ button.order-details-menu-item i {
     overflow-x: hidden;
     overflow-y: auto;
     grid-template-columns: 1fr;
-    grid-auto-rows: 55px;
+    grid-auto-rows: min-content;
     grid-row-gap: 15px;
 }
 
 .order-details-product-item {
     display: grid;
     grid-template-columns: 55px 1fr;
-    grid-template-rows: 1fr;
+    grid-template-rows: 55px;
     align-items: center;
     grid-column-gap: 8px;
     font-size: 0.9em;
+}
+
+.order-details-product-img {
+    display:flex;
+    justify-content:center;
 }
 
 .order-details-product-img img {
@@ -2031,9 +2082,24 @@ button.order-details-menu-item i {
     margin-top: 5px;
 }
 
-button:disabled, button:disabled:hover {
+button:disabled,
+button:disabled:hover {
     color: #adadad;
     cursor: not-allowed;
+    background: gray !important;
+}
+
+button.disabled-no-background:disabled,
+button.disabled-no-background:disabled:hover,
+.no-background {
+    background: none !important;
+}
+
+button.simple-text-btn:disabled,
+button.simple-text-btn:disabled:hover {
+    color: gray;
+    cursor: not-allowed;
+    background: initial !important;
 }
 
 .order-details-comment {
@@ -2076,7 +2142,7 @@ button:disabled, button:disabled:hover {
     color: #505050;
 }
 
-.area-delivery-setting-close {
+.dialog-btn-close {
     font-size: 1.2em;
     justify-self: center;
     position: absolute;
@@ -2086,6 +2152,7 @@ button:disabled, button:disabled:hover {
     cursor: pointer;
     background-color: #fff;
     border: none;
+    z-index: 999;
 }
 
 .area-delivery-settings {
@@ -2104,6 +2171,15 @@ button:disabled, button:disabled:hover {
     background-color: #fff;
     border: none;
 }
+
+    .area-delivery-settings-add i {
+        transition-duration: 500ms;
+        transition-property: transform;
+    }
+
+    .area-delivery-settings-add:hover i {
+        transform: rotate(90deg);
+    }
 
 .area-delivery-settings-list {
     display: grid;
@@ -2190,7 +2266,8 @@ button:disabled, button:disabled:hover {
     color: #bbb;
 }
 
-#addProducDialog .SumoSelect {
+#addProducDialog .SumoSelect,
+#addCategoryDialog .SumoSelect {
     min-width: 320px;
     min-height: 25px;
     border-color: #c6c6c6;
@@ -2198,14 +2275,22 @@ button:disabled, button:disabled:hover {
     border-radius: 3px;
 }
 
-    #addProducDialog .SumoSelect .CaptionCont label {
+    #addProducDialog .SumoSelect .CaptionCont label,
+    #addCategoryDialog .SumoSelect .CaptionCont label,
+    #stockDialog .SumoSelect .CaptionCont label,
+    #couponDialog .SumoSelect .CaptionCont label,
+    .promotion-item-setting .SumoSelect .CaptionCont label {
         color: initial;
         pointer-events: initial;
         left: initial;
         transition: initial;
     }
 
-    #addProducDialog .SumoSelect .optWrapper label {
+    #addProducDialog .SumoSelect .optWrapper label,
+    #addCategoryDialog .SumoSelect .optWrapper label,
+    #stockDialog .SumoSelect .optWrapper label,
+    #couponDialog .SumoSelect .optWrapper label,
+    .promotion-item-setting .SumoSelect .optWrapper label {
         color: initial;
         position: initial;
         pointer-events: initial;
@@ -2218,9 +2303,98 @@ button:disabled, button:disabled:hover {
     min-width: 770px;
     display: flex;
     justify-content: center;
-    align-items: center
+    align-items: center;
 }
 
 .dialog-sm {
     min-width: 700px;
+}
+
+.section-grid-wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    width: 1024px;
+    margin: 0 auto;
+    padding: 40px 0 0 0;
+}
+
+.section-header {
+    font-size: 2em;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.section-content {
+    display: grid
+}
+
+.simple-text-btn {
+    font-size: 0.9em;
+    color: #1d73b7;
+    cursor: pointer;
+    background-color: #fff;
+    border: none;
+}
+
+    .dialog-btn-close:active,
+    .simple-text-btn:active,
+    .area-delivery-settings-add:active,
+    .area-delivery-settings-btn:active,
+    .order-details-menu-item:active,
+    .promotion-btn-settings-add:active {
+        outline: none;
+    }
+
+h4 {
+    margin-block-end: 0.2em;
+}
+
+.custom-dialog {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.1);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999999;
+}
+
+.custom-dialog-flex {
+    display: flex !important
+}
+
+.custom-dialog-body {
+    width: auto;
+    height: auto;
+    background-color: #fff;
+    display: none;
+    position: absolute;
+    padding: 1em;
+}
+
+input,
+button {
+    outline-color: #d0d0d0;
+}
+
+.row {
+    display: flex;
+}
+
+.gu-mirror {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+}
+
+.order-details-product-bonus {
+    color: #FF5722;
+}
+
+.order-details-price-discount {
+    grid-template-columns: 0.3fr 1fr;
 }
