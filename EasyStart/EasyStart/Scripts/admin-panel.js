@@ -1917,21 +1917,39 @@ function showCountOrder(count) {
     OrderStatusBar.setCountNewOrder(count, Pages.Order);
 }
 
-var NotifySoundNewOrder = new Audio('../Content/sounds/sound-new-order.mp3');
-NotifySoundNewOrder.autoplay = false;
+function initNotifySoundNewOrder() {
+    let notifySoundNewOrder = new Audio('../Content/sounds/sound-new-order.mp3')
+    notifySoundNewOrder.autoplay = false
+
+    return notifySoundNewOrder
+}
+
+var NotifySoundNewOrder = initNotifySoundNewOrder()
+
 NotifySoundNewOrder.stop = function () {
     if (!NotifySoundNewOrder.paused) {
-        NotifySoundNewOrder.pause();
-        NotifySoundNewOrder.currentTime = 0;
+        NotifySoundNewOrder.pause()
+        NotifySoundNewOrder.currentTime = 0
     }
 }
 
-function notifySoundNewOrder() {
+function notifySoundNewOrder(isRepead = false) {
     let soundOn = $("#sound-nodify").is(":checked");
 
     if (soundOn) {
-        NotifySoundNewOrder.stop();
-        NotifySoundNewOrder.play();
+        try {
+            NotifySoundNewOrder.stop()
+            NotifySoundNewOrder.play()
+        } catch {
+            logconsole.error('Error notifySoundNewOrder')
+
+            if (!isRepead) {
+                NotifySoundNewOrder = initNotifySoundNewOrder()
+                notifySoundNewOrder(true)
+            }
+        }
+        
+        
     }
 }
 
