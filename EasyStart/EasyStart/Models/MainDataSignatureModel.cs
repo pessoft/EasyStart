@@ -5,9 +5,9 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class RatingProducUpdater
+    public class MainDataSignatureModel
     {
-        public int ProductId {get;set;}
-        public double Score { get; set; }
+        public int BranchId { get; set; }
+        public int ClientId { get; set; }
     }
 }

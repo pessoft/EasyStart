@@ -18,7 +18,9 @@ namespace EasyStart.Utils
                 City = JsonConvert.DeserializeObject<Dictionary<int, string>>(city);
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
         }
 
         public static string GetCity(int id)

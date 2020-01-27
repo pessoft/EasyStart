@@ -55,3 +55,82 @@ function xFormatPrice(_number) {
     r = (rr[1] ? b + decpoint + rr[1] : b);
     return format_string.replace('#', r);
 }
+
+var ProductType = {
+    Normal: 0,
+    New: 1,
+    Hit: 2,
+    Stock: 4,
+    HotPeppers: 8,
+    Vegetarion: 16
+}
+
+class BitOperation {
+    static Add(item1, item2) {
+        return item1 | item2
+    }
+
+    static isHas(item, itemCheck) {
+        return (item & itemCheck) == itemCheck
+    }
+}
+
+function bindCustomDialogToggleEvent(id) {
+    const $items = id ? $(`#${id}`) : $('.custom-dialog')
+
+    $items.each(function () {
+        const $item = $(this)
+
+        bindCustomDialogShowEvent($item)
+        bindCustomDialogCloseEvent($item)
+    })
+}
+
+function bindCustomDialogShowEvent($item) {
+    const event = () => {
+        const animationOption = { effect: "scale", direction: "horizontal" }
+       
+        $item.addClass('custom-dialog-flex')
+        $item.find('.custom-dialog-body').show(animationOption,'', 150)
+    }
+
+    $item.bind('showModal', event)
+}
+
+function bindCustomDialogCloseEvent($item) {
+    const event = () => {
+        $item.removeClass('custom-dialog-flex')
+        $item.find('.custom-dialog-body').hide()
+    }
+
+    $item.bind('close', event)
+}
+
+function getCategoryIdByProductIdForPromotion(productId) {
+    for (let categoryId in ProductsForPromotion) {
+        const products = ProductsForPromotion[categoryId].filter(p => p.Id == productId)
+
+        if (products && products.length > 0)
+            return products[0].CategoryId
+    }
+}
+
+function showInfoConfirm(message) {
+    const $dialog = $('#infoConfirmationDialog')
+
+    if (message) {
+        $dialog.find('.info-message').html(message)
+        Dialog.showModal($dialog);
+    }
+}
+
+/**
+ * Глубокое копирование.
+ * Не копирует методы исходного объекта
+ * @param {any} obj
+ */
+function cloneObject(obj) {
+    let json = JSON.stringify(obj)
+
+    return JSON.parse(json)
+}

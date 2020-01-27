@@ -9,6 +9,12 @@ namespace EasyStart.Models
     {
         public int Id { get; set; }
         public string PhoneNumber { get; set; }
+        public string UserName { get; set; }
         public DateTime Date { get; set; }
+        public string ReferralCode { get; set; }
+        public int ParentReferralClientId { get; set; }
+        public string ParentReferralCode { get; set; }
+        public double VirtualMoney { get; set; }
+        public double ReferralDiscount { get; set; }
     }
 }

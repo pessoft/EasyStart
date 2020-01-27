@@ -8,7 +8,9 @@ namespace EasyStart.Models
     public class ProductReview
     {
         public int Id { get; set; }
+        public int ClientId { get; set; }
         public int CityId { get; set; }
+        public string Reviewer { get; set; }
         public int ProductId { get; set; }
         public string PhoneNumber { get; set; }
         public string ReviewText { get; set; }

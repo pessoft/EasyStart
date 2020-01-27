@@ -27,16 +27,16 @@ namespace EasyStart.Logic.Report
                         .Select(day => filter.DateFrom.AddDays(day))
                         .ToList();
 
-            dates?.ForEach(p =>
-            {
-                if (!data.ContainsKey(p))
-                {
-                    data.Add(p, 0);
-                }
-            });
-
             if (data != null && data.Any())
             {
+                dates?.ForEach(p =>
+                {
+                    if (!data.ContainsKey(p))
+                    {
+                        data.Add(p, 0);
+                    }
+                });
+
                 result = new ReportResult();
                 Action<string, double> setResult = (label, value) =>
                 {

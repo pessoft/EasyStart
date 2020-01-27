@@ -29,12 +29,22 @@ namespace EasyStart.Controllers
                     TypeBranch = Logic.TypeBranch.MainBranch
                 };
 
-                DataWrapper.SaveBranch(branch);
+                var savedBranch = DataWrapper.SaveBranch(branch);
+
+                new PromotionDefaultSetting(savedBranch.Id).SaveSettings();
             }
 
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("AdminPanel", "Admin");
+                if (!useState)
+                {
+                    FormsAuthentication.SignOut();
+                }
+                else
+                {
+                    return RedirectToAction("AdminPanel", "Admin");
+                }
+                
             }
 
             return View();

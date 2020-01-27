@@ -5,10 +5,11 @@ using System.Web;
 
 namespace EasyStart.Logic
 {
-    public enum StockType
+    public enum StockTypePeriod
     {
-        Custom = 0,
-        FirstOrder = 1,
-        OrderTakeYourself = 2
+        Unknown = 0,
+        OneOff = 1,
+        Infinity = 2,
+        ToDate = 3
     }
 }

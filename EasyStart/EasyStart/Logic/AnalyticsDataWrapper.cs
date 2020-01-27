@@ -11,7 +11,8 @@ namespace EasyStart.Logic
     {
         public static Dictionary<DateTime, double> GetCountOrder(DateTime dateFrom, DateTime dateTo, int branchId)
         {
-            Dictionary<DateTime, double> result = null;
+            var result = new Dictionary<DateTime, double> ();
+
             try
             {
                 using (var db = new AdminPanelContext())
@@ -25,7 +26,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -46,7 +49,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -66,7 +71,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -87,7 +94,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
@@ -107,7 +116,9 @@ namespace EasyStart.Logic
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                Logger.Log.Error(ex);
+            }
 
             return result;
         }
