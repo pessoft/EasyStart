@@ -68,6 +68,7 @@
     },
     addNewCoupon: function () {
         this.cleanCouponDialog()
+        this.bindSumoSelect()
         this.showCouponDialog()
     },
     saveCoupon: function () {
@@ -145,6 +146,7 @@
     },
     editCoupon: function (id) {
         this.cleanCouponDialog()
+        this.bindSumoSelect()
         this.setCouponDataInDialog(id)
         this.showCouponDialog()
     },
@@ -162,11 +164,18 @@
 
         $.post("/Admin/RemoveCoupon", { id: id }, null);
     },
+    bindSumoSelect: function () {
+        $('#couponDialog select').not('.promotion-custom-select').each(function (i) {
+            const sumo = $(this)[0].sumo
+
+            if (!sumo)
+                $(this).SumoSelect()
+        })
+    },
     showCouponDialog: function () {
         let $couponDialog = $('#couponDialog')
 
         Dialog.showModal($couponDialog)
-        $couponDialog.find('select').not('.promotion-custom-select').SumoSelect()
     },
     clearCouponList: function () {
         $("#coupon-list").empty();
@@ -180,15 +189,10 @@
             const sumo = $(this)[0].sumo
 
             if (sumo)
-                sumo.unload()
+                sumo.reload()
         })
 
         $('#couponDialog .promotion-coupon-index-block.hide-block').hide()
-
-        $('#couponDialog select option').removeAttr('disabled')
-        $('#couponDialog select option').removeAttr('selected')
-        $('#couponDialog select option[value=0]').attr('selected', true)
-        $('#couponDialog select option[value=0]').attr('disabled', true)
 
         $(".promotion-coupon-next").attr('disabled', true)
 
@@ -197,8 +201,11 @@
         $('#promotion-coupon-count').val(1)
 
         $('#coupon-discount-val').val('')
+        if ($('#coupon-discount-type')[0].sumo) {
+            $('#coupon-discount-type')[0].sumo.selectItem('1')
+        }
         $('#coupon-products-count').val(1)
-        $('#coupon-bonus-products-items')[0].sumo.unSelectAll()
+        $('#coupon-bonus-products-items')[0].sumo.reload()
         $('#coupon-discount-type').removeAttr('selected').find('option[value=1]').attr('selected', true)
 
         $('#toggle-one-coupon-one-client').prop('checked', false)
@@ -217,10 +224,11 @@
             return
 
         $('#couponDialog').attr('coupon-id', id)
-        $(".promotion-coupon-next").removeAttr('disabled')
-
+        
         this.setGeneralSettingData(data)
         this.setRewardSettingData(data)
+
+        $(".promotion-coupon-next").removeAttr('disabled')
     },
     setGeneralSettingData: function (data) {
         $('#promotion-coupon-name').val(data.Name)
@@ -232,14 +240,14 @@
         datePicker.selectDate([data.DateFrom, data.DateTo]);
     },
     setRewardSettingData: function (data) {
-        $(`#coupon-type-reward option[value="${data.RewardType}"]`).attr('selected', true)
+        $('#coupon-type-reward')[0].sumo.selectItem(data.RewardType)
 
         switch (data.RewardType) {
             case RewardType.Discount:
                 $('#coupon-type-discount-container').show()
 
                 $('#coupon-discount-val').val(data.DiscountValue)
-                $(`#coupon-discount-type option[value="${data.DiscountType}"]`).attr('selected', true)
+                $('#coupon-discount-type')[0].sumo.selectItem(data.DiscountType.toString())
                 break;
             case RewardType.Products:
                 $('#coupon-type-products-container').show()

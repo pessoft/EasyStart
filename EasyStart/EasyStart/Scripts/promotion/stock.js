@@ -131,32 +131,40 @@ var StockManger = {
     showStock: function (stockId) {
         const $stockDialog = $('#stockDialog')
 
+        $stockDialog.find('select').not('.promotion-custom-select').each(function (i) {
+            const sumo = $(this)[0].sumo
+
+            if (!sumo)
+                $(this).SumoSelect()
+        })
+
         if (stockId) {
             this.setStockData(stockId)
         }
 
         Dialog.showModal($stockDialog)
-        $stockDialog.find('select').not('.promotion-custom-select').SumoSelect()
+      
     },
     setStockData: function (stockId) {
         const data = this.getStockById(stockId)
 
         $('#stockDialog').attr('stock-id', data.Id)
-        $(".promotion-stock-next").removeAttr('disabled')
-
+        
         this.setSockTypePeriod(data)
         this.setStockReward(data)
         this.setStockCondition(data)
         this.setStockGeneralDescription(data)
         this.setStockImage(data)
+
+        $(".promotion-stock-next").removeAttr('disabled')
     },
     setSockTypePeriod: function (data) {
-        $(`#stock-type-period option[value="${data.StockTypePeriod}"]`).attr('selected', true)
+        $(`#stock-type-period`)[0].sumo.selectItem(data.StockTypePeriod)
 
         switch (data.StockTypePeriod) {
             case SotckTypePeriod.OneOff:
                 $('#stock-one-type-subtype-container').show()
-                $(`#stock-one-type-subtype option[value="${data.StockOneTypeSubtype}"]`).attr('selected', true)
+                $(`#stock-one-type-subtype`)[0].sumo.selectItem(data.StockOneTypeSubtype)
                 break;
             case SotckTypePeriod.ToDate:
                 $('#stock-type-calendar-container').show()
@@ -167,14 +175,14 @@ var StockManger = {
         }
     },
     setStockReward: function (data) {
-        $(`#stock-type-reward option[value="${data.RewardType}"]`).attr('selected', true)
+        $(`#stock-type-reward`)[0].sumo.selectItem(data.RewardType)
 
         switch (data.RewardType) {
             case RewardType.Discount:
                 $('#stock-type-discount-container').show()
 
                 $('#stock-discount-val').val(data.DiscountValue)
-                $(`#discount-type option[value="${data.DiscountType}"]`).attr('selected', true)
+                $(`#discount-type`)[0].sumo.selectItem(data.DiscountType.toString())
                 break;
             case RewardType.Products:
                 $('#stock-type-products-container').show()
@@ -187,12 +195,12 @@ var StockManger = {
         }
     },
     setStockCondition: function (data) {
-        $(`#stock-condition-type option[value="${data.ConditionType}"]`).attr('selected', true)
+        $(`#stock-condition-type`)[0].sumo.selectItem(data.ConditionType)
 
         switch (data.ConditionType) {
             case StockConditionTriggerType.DeliveryOrder:
                 $('#stock-condition-delivery-container').show()
-                $(`#stock-condition-delivery-type option[value="${data.ConditionDeliveryType}"]`).attr('selected', true)
+                $(`#stock-condition-delivery-type`)[0].sumo.selectItem(data.ConditionDeliveryType)
                 break;
             case StockConditionTriggerType.SummOrder:
                 $('#stock-condition-summ-container').show()
@@ -362,14 +370,10 @@ var StockManger = {
             const sumo = $(this)[0].sumo
 
             if (sumo)
-                sumo.unload()
+                sumo.reload()
         })
 
         $('#stockDialog').attr('stock-id', -1)
-        $('#stockDialog select option').removeAttr('disabled')
-        $('#stockDialog select option').removeAttr('selected')
-        $('#stockDialog select option[value=0]').attr('selected', true)
-        $('#stockDialog select option[value=0]').attr('disabled', true)
         $('#stockDialog .promotion-stock-index-block.hide-block').hide()
         $('#stockDialog .promotion-stock-dialog-slide').hide()
         $('#stockDialog #stock-slide-1').show()
@@ -377,14 +381,15 @@ var StockManger = {
         $('#stockDialog .dialog-image-upload').removeClass('hide')
         $('#stockDialog textarea').val('')
         $('#stockDialog input[type=text]').val('')
-        $('#stockDialog input[type = file]').val('')
+        $('#stockDialog input[type=file]').val('')
         $('#stock-discount-val').val('')
         $('#stock-products-count').val(1)
-        $('#bonus-product-items')[0].sumo.unSelectAll()
-        $('#discount-type').removeAttr('selected').find('option[value=1]').attr('selected', true)
+        $('#bonus-product-items')[0].sumo.reload()
+        if ($('#discount-type')[0].sumo) {
+            $('#discount-type')[0].sumo.selectItem('1')
+        }
         $('#stock-condition-sum-count').val('')
-        $('#condition-product-items')[0].sumo.unSelectAll()
-
+        $('#condition-product-items')[0].sumo.reload()
 
         $(".promotion-stock-next").attr('disabled', true)
 
