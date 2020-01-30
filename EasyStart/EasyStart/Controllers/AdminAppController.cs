@@ -549,9 +549,12 @@ namespace EasyStart
                     var client = DataWrapper.GetClient(review.ClientId);
                     review.Reviewer = client.UserName;
                     var savedReview = DataWrapper.SaveProductReviews(review);
-
-                    result.Success = true;
-                    result.Data = savedReview;
+                    
+                    if(savedReview != null)
+                    {
+                        result.Success = true;
+                        result.Data = savedReview;
+                    }
                 }
             }
             catch (Exception ex)
