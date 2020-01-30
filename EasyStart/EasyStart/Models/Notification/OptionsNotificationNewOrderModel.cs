@@ -13,7 +13,7 @@ namespace EasyStart.Models.Notification
         public OrderIfnoModel OrderInfo { get; set; }
         public string DomainUr {get;set;}
         public List<string> ToEmail { get; set; }
-        public IEmail Email { get; set; }
+        public IEmailSender EmailSender { get; set; }
         public string EmailBodyHTMLTemplate { get; set; }
     }
 }

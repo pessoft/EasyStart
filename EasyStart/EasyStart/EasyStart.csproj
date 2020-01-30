@@ -175,6 +175,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="HtmlRenderer\EmailOrderBodyHtmlRenderer.cs" />
+    <Compile Include="HtmlRenderer\EmailRestorePasswordBodyHtmlRenderer.cs" />
     <Compile Include="HtmlRenderer\IHtmlRenderer.cs" />
     <Compile Include="HtmlRenderer\Models\ConstructorProductInfoModel.cs" />
     <Compile Include="HtmlRenderer\Models\IngredientOrderModel.cs" />
@@ -186,6 +187,7 @@
     <Compile Include="Logic\BrachClone.cs" />
     <Compile Include="Logic\BuyType.cs" />
     <Compile Include="Logic\CategoryType.cs" />
+    <Compile Include="Logic\Notification\EmailNotification\RestorePasswordNotification.cs" />
     <Compile Include="Logic\PreprocessorDataAPI.cs" />
     <Compile Include="Logic\PromotionLogic.cs" />
     <Compile Include="Logic\SettingsValidator.cs" />
@@ -199,8 +201,8 @@
     <Compile Include="Logic\DayWeekly.cs" />
     <Compile Include="Logic\DeliveryType.cs" />
     <Compile Include="Logic\DiscountType.cs" />
-    <Compile Include="Logic\Notification\EmailNotification\Email.cs" />
-    <Compile Include="Logic\Notification\EmailNotification\IEmail.cs" />
+    <Compile Include="Logic\Notification\EmailNotification\EmailSender.cs" />
+    <Compile Include="Logic\Notification\EmailNotification\IEmailSender.cs" />
     <Compile Include="Logic\Notification\EmailNotification\OrderEmailNotification.cs" />
     <Compile Include="Logic\KeyGenerator.cs" />
     <Compile Include="Logic\List.cs" />
@@ -495,6 +497,10 @@
     <Compile Include="Migrations\202001111945051_RemoveIssueNameAdditionaName.Designer.cs">
       <DependentUpon>202001111945051_RemoveIssueNameAdditionaName.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001300513278_AddedPsAndEmailClient.cs" />
+    <Compile Include="Migrations\202001300513278_AddedPsAndEmailClient.Designer.cs">
+      <DependentUpon>202001300513278_AddedPsAndEmailClient.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -656,7 +662,8 @@
     <Content Include="Images\rating\star-half.png" />
     <Content Include="Images\rating\star-off.png" />
     <Content Include="Images\rating\star-on.png" />
-    <Content Include="Resource\EmailTemplate.html" />
+    <Content Include="Resource\EmailTemplateOrderNotify.html" />
+    <Content Include="Resource\EmailTemplateRestorePassword.html" />
     <Content Include="Scripts\admin-login.js" />
     <Content Include="Scripts\admin-panel.js" />
     <Content Include="Resource\City.json" />
@@ -937,6 +944,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001111945051_RemoveIssueNameAdditionaName.resx">
       <DependentUpon>202001111945051_RemoveIssueNameAdditionaName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001300513278_AddedPsAndEmailClient.resx">
+      <DependentUpon>202001300513278_AddedPsAndEmailClient.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

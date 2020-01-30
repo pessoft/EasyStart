@@ -1234,7 +1234,7 @@ namespace EasyStart.Logic
             return numberOrder;
         }
 
-        public static List<int> GetUsedOneOffStockIds(int clinetId, List<int> stockIds)
+        public static List<int> GetUsedOneOffStockIds(int clientId, List<int> stockIds)
         {
             List<int> result = null;
             try
@@ -1242,7 +1242,7 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     var orderIds = db.Orders
-                        .Where(p => p.ClientId == clinetId)
+                        .Where(p => p.ClientId == clientId)
                         .Select(p => p.Id)
                         .ToList();
 
@@ -1260,7 +1260,7 @@ namespace EasyStart.Logic
             return result;
         }
 
-        public static bool IsEmptyOrders(int clinetId)
+        public static bool IsEmptyOrders(int clientId)
         {
             var isEmpty = true;
             try
@@ -1268,7 +1268,7 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     isEmpty = db.Orders
-                        .Where(p => p.ClientId == clinetId).Count() == 0;
+                        .Where(p => p.ClientId == clientId).Count() == 0;
                 }
             }
             catch (Exception ex)
@@ -1606,7 +1606,7 @@ namespace EasyStart.Logic
             return success;
         }
 
-        public static Client AddOrUpdateClient(Client clinet)
+        public static Client RegistrationClient(Client client)
         {
             Client newClient = null;
 
@@ -1614,27 +1614,47 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    if (clinet.Id > 0)
+                    newClient = db.Clients.FirstOrDefault(p => p.PhoneNumber == client.PhoneNumber);
+
+                    if(newClient != null)
                     {
-                        newClient = db.Clients.FirstOrDefault(p => p.Id == clinet.Id);
+                        return null;
                     }
-                    else
+
+                    client.Date = DateTime.Now;
+                    newClient = db.Clients.Add(client);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return newClient;
+        }
+
+        public static Client UpdateClient(Client client)
+        {
+            Client newClient = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    if (client.Id > 0)
                     {
-                        newClient = db.Clients.FirstOrDefault(p => p.PhoneNumber == clinet.PhoneNumber);
+                        newClient = db.Clients.FirstOrDefault(p => p.Id == client.Id);
                     }
+                 
 
                     if (newClient != null)
                     {
-                        newClient.UserName = clinet.UserName;
-                        newClient.PhoneNumber = clinet.PhoneNumber;
-                        newClient.ParentReferralClientId = clinet.ParentReferralClientId;
-                        newClient.ParentReferralCode = clinet.ParentReferralCode;
-                        newClient.ReferralDiscount = clinet.ReferralDiscount;
-                    }
-                    else
-                    {
-                        clinet.Date = DateTime.Now.Date;
-                        newClient = db.Clients.Add(clinet);
+                        newClient.UserName = client.UserName;
+                        newClient.Email = client.Email;
+                        newClient.ParentReferralClientId = client.ParentReferralClientId;
+                        newClient.ParentReferralCode = client.ParentReferralCode;
+                        newClient.ReferralDiscount = client.ReferralDiscount;
                     }
 
                     db.SaveChanges();
@@ -1871,7 +1891,51 @@ namespace EasyStart.Logic
             return image;
         }
 
-        public static Client GetClient(int clinetId)
+        public static bool ValidatEmail(string phoneNumber, string email)
+        {
+            var result = false;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                   var client = db.Clients.FirstOrDefault(p => p.PhoneNumber != phoneNumber && p.Email == email);
+                    result = client == null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
+        public static Client GetClientByEmail(string email)
+        {
+            Client client = null;
+
+            if(string.IsNullOrEmpty(email))
+            {
+                return client;
+            }
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    client = db.Clients.FirstOrDefault(p => p.Email == email);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return client;
+        }
+
+        public static Client GetClient(int clientId)
         {
             Client client = null;
 
@@ -1879,7 +1943,7 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    client = db.Clients.FirstOrDefault(p => p.Id == clinetId);
+                    client = db.Clients.FirstOrDefault(p => p.Id == clientId);
                 }
             }
             catch (Exception ex)
@@ -1899,6 +1963,25 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     client = db.Clients.FirstOrDefault(p => p.PhoneNumber == phoneNumber);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return client;
+        }
+
+        public static Client GetClient(string phoneNumber, string password)
+        {
+            Client client = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    client = db.Clients.FirstOrDefault(p => p.PhoneNumber == phoneNumber && p.Password == password);
                 }
             }
             catch (Exception ex)
