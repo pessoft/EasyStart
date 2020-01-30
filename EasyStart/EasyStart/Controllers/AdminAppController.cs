@@ -532,8 +532,10 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public void SetProductReviews([FromBody]ProductReview review)
+        public JsonResultModel SetProductReviews([FromBody]ProductReview review)
         {
+            var result = new JsonResultModel();
+
             try
             {
                 if (review != null &&
@@ -546,13 +548,21 @@ namespace EasyStart
                     review.Date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
                     var client = DataWrapper.GetClient(review.ClientId);
                     review.Reviewer = client.UserName;
-                    DataWrapper.SaveProductReviews(review);
+                    var savedReview = DataWrapper.SaveProductReviews(review);
+                    
+                    if(savedReview != null)
+                    {
+                        result.Success = true;
+                        result.Data = savedReview;
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
             }
+
+            return result;
         }
 
         [HttpPost]

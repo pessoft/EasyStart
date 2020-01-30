@@ -1382,25 +1382,29 @@ namespace EasyStart.Logic
             return histroyOrders;
         }
 
-        public static bool SaveProductReviews(ProductReview previews)
+        public static ProductReview SaveProductReviews(ProductReview reviews)
         {
-            bool success = false;
+            var result = reviews;
             try
             {
                 using (var db = new AdminPanelContext())
                 {
-                    db.ProductReviews.Add(previews);
+                    var saved = db.ProductReviews.Add(reviews);
                     db.SaveChanges();
 
-                    success = true;
+                    if(saved != null)
+                    {
+                        result.Id = saved.Id;
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
+                result = null;
             }
 
-            return success;
+            return result;
         }
 
         public static List<ProductReview> GetProductReviews(int productId)
