@@ -636,11 +636,20 @@ namespace EasyStart
                     return result;
                 }
 
+                var isNewClient = DataWrapper.GetClientByPhoneNumber(client.PhoneNumber) == null;
+
+                if(!isNewClient)
+                {
+                    result.ErrorMessage = "Номер телефона уже зарегистрирован";
+                    return result;
+                }
+
                 client.ReferralCode = KeyGenerator.GetUniqueKey(8);
                 var newClient = DataWrapper.RegistrationClient(client);
 
                 result.Data = new
                 {
+                    isLogin = true,
                     clientId = newClient.Id,
                     phoneNumber = newClient.PhoneNumber,
                     password = newClient.Password,
@@ -824,17 +833,31 @@ namespace EasyStart
 
             try
             {
-                Client client = null;
 
                 if (string.IsNullOrEmpty(userData.PhoneNumber) ||
-                   string.IsNullOrEmpty(userData.Password) ||
-                   (client = DataWrapper.GetClient(userData.PhoneNumber, userData.Password)) == null)
+                  string.IsNullOrEmpty(userData.Password))
                 {
-                    result.ErrorMessage = "Не верный номер телефона или пароль";
-
+                    result.ErrorMessage = "Укажите данные для входа";
                     return result;
                 }
 
+                var isClientExist = DataWrapper.GetClientByPhoneNumber(userData.PhoneNumber) != null;
+
+                if(!isClientExist)
+                {
+                    result.ErrorMessage = "Номер телефона не зарегистрирован";
+                    return result;
+                }
+
+                Client client = DataWrapper.GetClient(userData.PhoneNumber, userData.Password);
+
+                if (client == null)
+                {
+                    result.ErrorMessage = "Не верный пароль";
+                    return result;
+                }
+
+                result.Success = true;
                 result.Data = new
                 {
                     isLogin = true,

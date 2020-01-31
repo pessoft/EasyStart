@@ -1642,11 +1642,7 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    if (client.Id > 0)
-                    {
-                        newClient = db.Clients.FirstOrDefault(p => p.Id == client.Id);
-                    }
-                 
+                    newClient = db.Clients.FirstOrDefault(p => p.PhoneNumber == client.PhoneNumber);
 
                     if (newClient != null)
                     {
