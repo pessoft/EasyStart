@@ -2651,7 +2651,7 @@ namespace EasyStart.Logic
                 {
                     result = db
                         .Ingredients
-                        .Where(p => ids.Contains(p.CategoryId))
+                        .Where(p => ids.Contains(p.CategoryId) && !p.IsDeleted)
                         .GroupBy(p => p.SubCategoryId)
                         .ToDictionary(p => p.Key, p => p.ToList());
                 }
