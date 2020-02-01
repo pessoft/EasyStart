@@ -1,4 +1,5 @@
-﻿using EasyStart.Hubs;
+﻿using EasyStart.HtmlRenderer;
+using EasyStart.Hubs;
 using EasyStart.Logic;
 using EasyStart.Logic.Notification;
 using EasyStart.Logic.Notification.EmailNotification;
@@ -324,7 +325,7 @@ namespace EasyStart
                     result.Success = true;
 
                     var currentContext = System.Web.HttpContext.Current;
-                    Task.Run(() => Notification(currentContext, order, deliverSetting));
+                    Task.Run(() => NotifyAboutNewOrder(currentContext, order, deliverSetting));
                 }
             }
             catch (Exception ex)
@@ -335,12 +336,12 @@ namespace EasyStart
             return result;
         }
 
-        private void Notification(System.Web.HttpContext currentContext, OrderModel order, DeliverySettingModel deliverSetting)
+        private void NotifyAboutNewOrder(System.Web.HttpContext currentContext, OrderModel order, DeliverySettingModel deliverSetting)
         {
             try
             {
                 System.Web.HttpContext.Current = currentContext;
-                var emailTemplate = File.ReadAllText(currentContext.Server.MapPath("~/Resource/EmailTemplate.html"));
+                var emailTemplate = File.ReadAllText(currentContext.Server.MapPath("~/Resource/EmailTemplateOrderNotify.html"));
                 var setting = DataWrapper.GetSetting(order.BranchId);
                 var categoryConstructor = DataWrapper.GetCategories(order.BranchId).Where(p => p.CategoryType == CategoryType.Constructor).ToList();
                 var constructorIngredients = order.ProductConstructorCount != null ?
@@ -361,7 +362,7 @@ namespace EasyStart
                 var optionsNotification = new OptionsNotificationNewOrderModel
                 {
                     DomainUr = Request.RequestUri.GetBaseUrl(),
-                    Email = new Email(),
+                    EmailSender = new EmailSender(),
                     EmailBodyHTMLTemplate = emailTemplate,
                     Order = order,
                     OrderInfo = order.GetOrderInfo(orderInfoParams),
@@ -375,6 +376,7 @@ namespace EasyStart
                 Logger.Log.Error(ex);
             }
         }
+
 
         [HttpPost]
         public JsonResultModel GetHistoryOrders([FromBody]DataHistoryForViewModel dataHistoryForLoad)
@@ -621,24 +623,81 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public JsonResultModel AddOrUpdateClient([FromBody]Client client)
+        public JsonResultModel RegistrationClient([FromBody]Client client)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                if (string.IsNullOrEmpty(client.PhoneNumber) ||
+                   string.IsNullOrEmpty(client.Password))
+                {
+                    result.ErrorMessage = "Укажите регистрационные данные";
+                    return result;
+                }
+
+                var isNewClient = DataWrapper.GetClientByPhoneNumber(client.PhoneNumber) == null;
+
+                if(!isNewClient)
+                {
+                    result.ErrorMessage = "Номер телефона уже зарегистрирован";
+                    return result;
+                }
+
+                client.ReferralCode = KeyGenerator.GetUniqueKey(8);
+                var newClient = DataWrapper.RegistrationClient(client);
+
+                result.Data = new
+                {
+                    isLogin = true,
+                    clientId = newClient.Id,
+                    phoneNumber = newClient.PhoneNumber,
+                    password = newClient.Password,
+                    email = newClient.Email,
+                    userName = newClient.UserName,
+                    cityId = newClient.CityId,
+                    branchId = newClient.BranchId,
+                    referralCode = newClient.ReferralCode,
+                    parentReferralClientId = newClient.ParentReferralClientId,
+                    parentReferralCode = newClient.ParentReferralCode,
+                    virtualMoney = newClient.VirtualMoney,
+                    referralDiscount = newClient.ReferralDiscount,
+                };
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = "Что-то пошло не так";
+            }
+
+
+            return result;
+        }
+
+        [HttpPost]
+        public JsonResultModel UpdateClient([FromBody]Client client)
         {
             var result = new JsonResultModel();
             try
             {
+                Client oldClient = null;
+
                 if (string.IsNullOrEmpty(client.PhoneNumber) ||
-                    string.IsNullOrEmpty(client.UserName))
-                    return result;
-
-                var oldClient = DataWrapper.GetClientByPhoneNumber(client.PhoneNumber);
-
-                var saveTransaction = false;
-
-                if (oldClient == null)
+                    string.IsNullOrEmpty(client.Password)||
+                    (oldClient = DataWrapper.GetClient(client.PhoneNumber, client.Password)) == null )
                 {
-                    client.ReferralCode = KeyGenerator.GetUniqueKey(8);
+                    result.ErrorMessage = "Не удалось авторизоваться";
+                    return result;
                 }
 
+                if (!DataWrapper.ValidatEmail(client.PhoneNumber, client.Email))
+                {
+                    result.ErrorMessage = "E-mail уже зарегистрирован";
+                    return result;
+                }
+
+                var saveTransaction = false;
 
                 Action setDefaultReferralData = () =>
                 {
@@ -646,14 +705,13 @@ namespace EasyStart
                     client.ParentReferralCode = null;
                 };
 
-                if (oldClient != null && oldClient.ParentReferralClientId < 1
+                if (oldClient.ParentReferralClientId < 1
                     && !string.IsNullOrEmpty(client.ParentReferralCode)
-                    && oldClient.ReferralCode != client.ParentReferralCode
-                    || oldClient == null && !string.IsNullOrEmpty(client.ParentReferralCode))
+                    && oldClient.ReferralCode != client.ParentReferralCode)
                 {
                     var parentClient = DataWrapper.GetClientByByReferralCode(client.ParentReferralCode);
 
-                    if (parentClient != null)
+                    if (parentClient != null && parentClient.ParentReferralClientId != oldClient.Id)
                     {
                         client.ParentReferralClientId = parentClient.Id;
                         client.ParentReferralCode = parentClient.ReferralCode;
@@ -691,7 +749,7 @@ namespace EasyStart
                     setDefaultReferralData();
                 }
 
-                var newClient = DataWrapper.AddOrUpdateClient(client);
+                var newClient = DataWrapper.UpdateClient(client);
 
                 if (saveTransaction)
                 {
@@ -703,7 +761,11 @@ namespace EasyStart
                 {
                     clientId = newClient.Id,
                     phoneNumber = newClient.PhoneNumber,
+                    password = newClient.Password,
+                    email = newClient.Email,
                     userName = newClient.UserName,
+                    cityId = newClient.CityId,
+                    branchId = newClient.BranchId,
                     referralCode = newClient.ReferralCode,
                     parentReferralClientId = newClient.ParentReferralClientId,
                     parentReferralCode = newClient.ParentReferralCode,
@@ -717,41 +779,105 @@ namespace EasyStart
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
+                result.ErrorMessage = "Что-то пошло не так";
                 return result;
             }
         }
 
-        [HttpPost]
-        public JsonResultModel CheckActualUserData([FromBody]UserDataPhoneApp userData)
+        private void NotifyRestorePassword(System.Web.HttpContext currentContext, Client client)
         {
-            var result = new JsonResultModel
+            try
             {
-                Success = true,
-                Data = false
-            };
+                var emailTemplate = File.ReadAllText(currentContext.Server.MapPath("~/Resource/EmailTemplateRestorePassword.html"));
+
+                var htmpBodyRenderer = new EmailRestorePasswordBodyHtmlRenderer(client, emailTemplate);
+                new RestorePasswordNotification(client, new EmailSender()).EmailNotify(htmpBodyRenderer);
+            }
+            catch(Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
+
+        [HttpPost]
+        public JsonResultModel RestorePasswordClient([FromBody]string email)
+        {
+            var result = new JsonResultModel();
+            try
+            {
+                var client = DataWrapper.GetClientByEmail(email);
+
+                if (client == null)
+                {
+                    result.ErrorMessage = "Email не зарегистрирован";
+                }
+                else
+                {
+                    var currentContext = System.Web.HttpContext.Current;
+
+                    Task.Run(() => NotifyRestorePassword(currentContext, client));
+                    
+                    result.Success = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = "Что-то пошло не так";
+            }
+            
+
+            return result;
+        }
+
+        [HttpPost]
+        public JsonResultModel Login([FromBody]UserDataPhoneApp userData)
+        {
+            var result = new JsonResultModel();
 
             try
             {
-                var setting = DataWrapper.GetSettingByCity(userData.CityId);
-                var client = DataWrapper.GetClient(userData.ClientId);
-                var isPhoneEquals = client != null ? client.PhoneNumber == userData.PhoneNumber : false;
-                if (setting != null &&
-                    client != null &&
-                    isPhoneEquals)
+
+                if (string.IsNullOrEmpty(userData.PhoneNumber) ||
+                  string.IsNullOrEmpty(userData.Password))
                 {
-                    result.Data = new
-                    {
-                        isLogin = true,
-                        clientId = client.Id,
-                        phoneNumber = client.PhoneNumber,
-                        userName = client.UserName,
-                        referralCode = client.ReferralCode,
-                        parentReferralClientId = client.ParentReferralClientId,
-                        parentReferralCode = client.ParentReferralCode,
-                        virtualMoney = client.VirtualMoney,
-                        referralDiscount = client.ReferralDiscount,
-                    };
+                    result.ErrorMessage = "Укажите данные для входа";
+                    return result;
                 }
+
+                var isClientExist = DataWrapper.GetClientByPhoneNumber(userData.PhoneNumber) != null;
+
+                if(!isClientExist)
+                {
+                    result.ErrorMessage = "Номер телефона не зарегистрирован";
+                    return result;
+                }
+
+                Client client = DataWrapper.GetClient(userData.PhoneNumber, userData.Password);
+
+                if (client == null)
+                {
+                    result.ErrorMessage = "Неверный пароль";
+                    return result;
+                }
+
+                result.Success = true;
+                result.Data = new
+                {
+                    isLogin = true,
+                    clientId = client.Id,
+                    phoneNumber = client.PhoneNumber,
+                    password = client.Password,
+                    email = client.Email,
+                    userName = client.UserName,
+                    cityId = client.CityId,
+                    branchId = client.BranchId,
+                    referralCode = client.ReferralCode,
+                    parentReferralClientId = client.ParentReferralClientId,
+                    parentReferralCode = client.ParentReferralCode,
+                    virtualMoney = client.VirtualMoney,
+                    referralDiscount = client.ReferralDiscount,
+                };
 
                 return result;
             }
@@ -803,7 +929,7 @@ namespace EasyStart
             {
                 Logger.Log.Error(ex);
 
-                result.ErrorMessage = "При загрузке партнерских транзакций пошло что то не так";
+                result.ErrorMessage = "При загрузке партнерских транзакций пошло что-то не так";
             }
 
             return result;
@@ -829,7 +955,7 @@ namespace EasyStart
             {
                 Logger.Log.Error(ex);
 
-                result.ErrorMessage = "При загрузке транзакций кешбека пошло что то не так";
+                result.ErrorMessage = "При загрузке транзакций кешбека пошло что-то не так";
             }
 
             return result;

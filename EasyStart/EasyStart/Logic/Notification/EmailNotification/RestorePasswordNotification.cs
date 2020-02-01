@@ -8,21 +8,24 @@ using System.Web;
 
 namespace EasyStart.Logic.Notification.EmailNotification
 {
-    public class OrderEmailNotification
+    public class RestorePasswordNotification
     {
-        private int orderNumber;
         private IEmailSender emailSender;
-        private string toEmail;
+        private Client client;
 
-        public OrderEmailNotification(int orderNumber, IEmailSender emailSender, List<string> toEmails)
+        public RestorePasswordNotification(Client clinet, IEmailSender emailSender)
         {
-            this.orderNumber = orderNumber;
             this.emailSender = emailSender;
-            this.toEmail = string.Join(",", toEmails);
+            this.client = clinet;
         }
 
         public void EmailNotify(IHtmlRenderer bodyHtmlRenderer)
         {
+            if (string.IsNullOrEmpty(client.Email))
+            {
+                return;
+            }
+
             var mailMessage = getMailMessage(bodyHtmlRenderer);
 
             emailSender.Send(mailMessage);
@@ -31,8 +34,8 @@ namespace EasyStart.Logic.Notification.EmailNotification
         private MailMessage getMailMessage(IHtmlRenderer bodyHtmlRenderer)
         {
             MailMessage mailMessage = new MailMessage();
-            mailMessage.To.Add(toEmail);
-            mailMessage.Subject = $"Заказ #{orderNumber}";
+            mailMessage.To.Add(client.Email);
+            mailMessage.Subject ="Восстановление пароля";
             mailMessage.Body = bodyHtmlRenderer.Render();
             mailMessage.IsBodyHtml = true;
 
