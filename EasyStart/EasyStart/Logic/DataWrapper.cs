@@ -1651,6 +1651,8 @@ namespace EasyStart.Logic
                         newClient.ParentReferralClientId = client.ParentReferralClientId;
                         newClient.ParentReferralCode = client.ParentReferralCode;
                         newClient.ReferralDiscount = client.ReferralDiscount;
+                        newClient.CityId = client.CityId;
+                        newClient.BranchId = client.BranchId;
                     }
 
                     db.SaveChanges();

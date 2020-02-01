@@ -501,6 +501,10 @@
     <Compile Include="Migrations\202001300513278_AddedPsAndEmailClient.Designer.cs">
       <DependentUpon>202001300513278_AddedPsAndEmailClient.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202002011159249_AddedUserLocation.cs" />
+    <Compile Include="Migrations\202002011159249_AddedUserLocation.Designer.cs">
+      <DependentUpon>202002011159249_AddedUserLocation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -947,6 +951,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001300513278_AddedPsAndEmailClient.resx">
       <DependentUpon>202001300513278_AddedPsAndEmailClient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202002011159249_AddedUserLocation.resx">
+      <DependentUpon>202002011159249_AddedUserLocation.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

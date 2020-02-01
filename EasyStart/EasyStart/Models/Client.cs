@@ -18,5 +18,8 @@ namespace EasyStart.Models
         public string ParentReferralCode { get; set; }
         public double VirtualMoney { get; set; }
         public double ReferralDiscount { get; set; }
+        public int CityId { get; set; }
+        public int BranchId { get; set; }
+
     }
 }

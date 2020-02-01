@@ -655,6 +655,8 @@ namespace EasyStart
                     password = newClient.Password,
                     email = newClient.Email,
                     userName = newClient.UserName,
+                    cityId = newClient.CityId,
+                    branchId = newClient.BranchId,
                     referralCode = newClient.ReferralCode,
                     parentReferralClientId = newClient.ParentReferralClientId,
                     parentReferralCode = newClient.ParentReferralCode,
@@ -762,6 +764,8 @@ namespace EasyStart
                     password = newClient.Password,
                     email = newClient.Email,
                     userName = newClient.UserName,
+                    cityId = newClient.CityId,
+                    branchId = newClient.BranchId,
                     referralCode = newClient.ReferralCode,
                     parentReferralClientId = newClient.ParentReferralClientId,
                     parentReferralCode = newClient.ParentReferralCode,
@@ -853,7 +857,7 @@ namespace EasyStart
 
                 if (client == null)
                 {
-                    result.ErrorMessage = "Не верный пароль";
+                    result.ErrorMessage = "Неверный пароль";
                     return result;
                 }
 
@@ -866,6 +870,8 @@ namespace EasyStart
                     password = client.Password,
                     email = client.Email,
                     userName = client.UserName,
+                    cityId = client.CityId,
+                    branchId = client.BranchId,
                     referralCode = client.ReferralCode,
                     parentReferralClientId = client.ParentReferralClientId,
                     parentReferralCode = client.ParentReferralCode,
