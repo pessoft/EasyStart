@@ -6,7 +6,7 @@ using System.Web;
 
 namespace EasyStart.Logic.Notification.EmailNotification
 {
-    public interface IEmail
+    public interface IEmailSender
     {
         void Send(MailMessage mailMessage);
     }

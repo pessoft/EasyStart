@@ -34,7 +34,7 @@ namespace EasyStart.Logic.Notification
             if (options.ToEmail == null || !options.ToEmail.Any())
                 return;
 
-            var emailNotification = new OrderEmailNotification(options.Order.Id, options.Email, options.ToEmail);
+            var emailNotification = new OrderEmailNotification(options.Order.Id, options.EmailSender, options.ToEmail);
             var orderBodyHtmlRenderer = new EmailOrderBodyHtmlRenderer(options.OrderInfo, options.DomainUr, options.EmailBodyHTMLTemplate);
 
             emailNotification.EmailNotify(orderBodyHtmlRenderer);

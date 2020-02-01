@@ -8,7 +8,6 @@ namespace EasyStart.Models
     public class UserDataPhoneApp
     {
         public string PhoneNumber { get; set;}
-        public int ClientId { get; set; }
-        public int CityId { get; set; }
+        public string Password { get; set; }
     }
 }

@@ -103,7 +103,7 @@ namespace EasyStart.Controllers
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result.ErrorMessage = "При загрузки изображения что то пошло не так";
+                result.ErrorMessage = "При загрузки изображения что-то пошло не так";
             }
 
             return Json(result);
@@ -124,7 +124,7 @@ namespace EasyStart.Controllers
             }
             else
             {
-                result.ErrorMessage = "При сохранении натсройки что то пошло не так...";
+                result.ErrorMessage = "При сохранении натсройки что-то пошло не так...";
             }
 
             return Json(result);
@@ -145,7 +145,7 @@ namespace EasyStart.Controllers
             }
             else
             {
-                result.ErrorMessage = "При сохранении натсройки что то пошло не так...";
+                result.ErrorMessage = "При сохранении натсройки что-то пошло не так...";
             }
 
             return Json(result);
@@ -184,7 +184,7 @@ namespace EasyStart.Controllers
             }
             else
             {
-                result.ErrorMessage = "При добавлении категории что то пошло не так...";
+                result.ErrorMessage = "При добавлении категории что-то пошло не так...";
             }
 
             return Json(result);
@@ -223,7 +223,7 @@ namespace EasyStart.Controllers
             }
             else
             {
-                result.ErrorMessage = "При добавлении продукта что то пошло не так...";
+                result.ErrorMessage = "При добавлении продукта что-то пошло не так...";
             }
 
             return Json(result);
@@ -259,7 +259,7 @@ namespace EasyStart.Controllers
                     var savedBranch = DataWrapper.SaveBranch(branch);
                     if (savedBranch == null)
                     {
-                        result.ErrorMessage = "При сохранении что то пошло не так";
+                        result.ErrorMessage = "При сохранении что-то пошло не так";
                     }
                     else
                     {
@@ -376,7 +376,7 @@ namespace EasyStart.Controllers
             }
             else
             {
-                result.ErrorMessage = "При загрузки категорий что то пошло не так";
+                result.ErrorMessage = "При загрузки категорий что-то пошло не так";
             }
 
             return Json(result);
@@ -454,7 +454,7 @@ namespace EasyStart.Controllers
             }
             else
             {
-                result.ErrorMessage = "При загрузки продуктов что то пошло не так";
+                result.ErrorMessage = "При загрузки продуктов что-то пошло не так";
             }
 
             return Json(result);
@@ -541,7 +541,7 @@ namespace EasyStart.Controllers
             }
             else
             {
-                result.ErrorMessage = "При добавлении акции что то пошло не так...";
+                result.ErrorMessage = "При добавлении акции что-то пошло не так...";
             }
 
             return Json(result);
@@ -581,7 +581,7 @@ namespace EasyStart.Controllers
             }
             else
             {
-                result.ErrorMessage = "При загрузки акций что то пошло не так";
+                result.ErrorMessage = "При загрузки акций что-то пошло не так";
             }
 
             return Json(result);
@@ -654,7 +654,7 @@ namespace EasyStart.Controllers
             }
             else
             {
-                result.ErrorMessage = "При загрузки отзывов что то пошло не так";
+                result.ErrorMessage = "При загрузки отзывов что-то пошло не так";
             }
 
             return Json(result);
@@ -685,7 +685,7 @@ namespace EasyStart.Controllers
             }
             else
             {
-                result.ErrorMessage = "При загрузки заказов, что то пошло не так";
+                result.ErrorMessage = "При загрузки заказов, что-то пошло не так";
             }
 
             return Json(result);
@@ -705,7 +705,7 @@ namespace EasyStart.Controllers
             }
             else
             {
-                result.ErrorMessage = "При загрузки заказов, что то пошло не так";
+                result.ErrorMessage = "При загрузки заказов, что-то пошло не так";
             }
 
             return Json(result);
@@ -741,7 +741,7 @@ namespace EasyStart.Controllers
 
                 if (products == null && ingredients == null)
                 {
-                    result.ErrorMessage = "При загрузки продуктов что то пошло не так";
+                    result.ErrorMessage = "При загрузки продуктов что-то пошло не так";
                 }
                 else
                 {
@@ -1147,7 +1147,7 @@ namespace EasyStart.Controllers
 
                     if (ingredients == null)
                     {
-                        result.ErrorMessage = "При добавлении ингредиентов что то пошло не так...";
+                        result.ErrorMessage = "При добавлении ингредиентов что-то пошло не так...";
                     }
                     else
                     {
@@ -1157,7 +1157,7 @@ namespace EasyStart.Controllers
                 }
                 else
                 {
-                    result.ErrorMessage = "При добавлении категории конструктора что то пошло не так...";
+                    result.ErrorMessage = "При добавлении категории конструктора что-то пошло не так...";
                 }
             }
             catch (Exception ex)
@@ -1208,7 +1208,7 @@ namespace EasyStart.Controllers
             }
             else
             {
-                result.ErrorMessage = "При загрузки конструктора что то пошло не так";
+                result.ErrorMessage = "При загрузки конструктора что-то пошло не так";
             }
 
             return Json(result);

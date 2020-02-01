@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace EasyStart.Logic.Notification.EmailNotification
 {
-    public class Email : IEmail
+    public class EmailSender : IEmailSender
     {
         public void Send(MailMessage mailMessage)
         {
