@@ -9,15 +9,18 @@ namespace EasyStart.HtmlRenderer
     public class EmailRestorePasswordBodyHtmlRenderer : IHtmlRenderer
     {
         private Client client;
-
+        private string template;
         public EmailRestorePasswordBodyHtmlRenderer(Client client, string emailTemplate)
         {
             this.client = client;
+            this.template = emailTemplate;
         }
 
         public string Render()
         {
-            throw new NotImplementedException();
+            return template
+                .Replace("{phoneNumber}", client.PhoneNumber)
+                .Replace("{password}", client.Password);
         }
     }
 }
