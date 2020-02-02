@@ -505,6 +505,14 @@
     <Compile Include="Migrations\202002011159249_AddedUserLocation.Designer.cs">
       <DependentUpon>202002011159249_AddedUserLocation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202002021555036_BranchIsDeletedProperty.cs" />
+    <Compile Include="Migrations\202002021555036_BranchIsDeletedProperty.Designer.cs">
+      <DependentUpon>202002021555036_BranchIsDeletedProperty.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202002021557361_AddedIsDeletedProperties.cs" />
+    <Compile Include="Migrations\202002021557361_AddedIsDeletedProperties.Designer.cs">
+      <DependentUpon>202002021557361_AddedIsDeletedProperties.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -567,6 +575,7 @@
     <Compile Include="Utils\ConstructorProductHelper.cs" />
     <Compile Include="Utils\DateTimeHepler.cs" />
     <Compile Include="Utils\EnumHelper.cs" />
+    <Compile Include="Utils\StringHelper.cs" />
     <Compile Include="Utils\WeeklyDayHelper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -690,6 +699,7 @@
     <Content Include="Images\rating\.DS_Store" />
     <Content Include="fonts\SFUIDisplay-Light.ttf" />
     <Content Include="Resource\UserManual.pdf" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\analytics.js" />
     <Content Include="Scripts\datepicker.min.js" />
@@ -955,6 +965,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202002011159249_AddedUserLocation.resx">
       <DependentUpon>202002011159249_AddedUserLocation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202002021555036_BranchIsDeletedProperty.resx">
+      <DependentUpon>202002021555036_BranchIsDeletedProperty.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202002021557361_AddedIsDeletedProperties.resx">
+      <DependentUpon>202002021557361_AddedIsDeletedProperties.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -20,6 +20,8 @@ namespace EasyStart.Models
 
         public string NotificationEmail { get; set; }
 
+        public bool IsDeleted { get; set; }
+
         /// <summary>
         /// Time Zone Id
         /// </summary>

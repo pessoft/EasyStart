@@ -16,7 +16,7 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    settingDict = db.Settings.ToDictionary(p => p.BranchId, p => p);
+                    settingDict = db.Settings.Where(p => !p.IsDeleted).ToDictionary(p => p.BranchId, p => p);
                 }
             }
             catch (Exception ex)
@@ -34,7 +34,7 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    setting = db.Settings.FirstOrDefault(p => p.BranchId == branchId);
+                    setting = db.Settings.FirstOrDefault(p => p.BranchId == branchId && !p.IsDeleted);
                 }
             }
             catch (Exception ex)
@@ -72,7 +72,7 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    setting = db.DeliverySettings.FirstOrDefault(p => p.BranchId == branchId);
+                    setting = db.DeliverySettings.FirstOrDefault(p => p.BranchId == branchId && !p.IsDeleted);
                     setting.AreaDeliveries = GetAreaDeliveris(setting.Id);
                 }
             }
@@ -91,7 +91,7 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    setting = db.Settings.FirstOrDefault(p => p.CityId == cityId); ;
+                    setting = db.Settings.FirstOrDefault(p => p.CityId == cityId && !p.IsDeleted); ;
                 }
             }
             catch (Exception ex)
@@ -148,7 +148,7 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    branch = db.Branches.FirstOrDefault(p => p.Login == login);
+                    branch = db.Branches.FirstOrDefault(p => p.Login == login && !p.IsDeleted);
                 }
             }
             catch (Exception ex)
@@ -280,15 +280,27 @@ namespace EasyStart.Logic
                     var branch = db.Branches.FirstOrDefault(p => p.Id == id);
                     var setting = db.Settings.FirstOrDefault(p => p.BranchId == id);
                     var deliverySetting = db.DeliverySettings.FirstOrDefault(p => p.BranchId == id);
+                    var clietns = db.Clients.Where(p => p.BranchId == id).ToList();
+                    var categories = db.Categories.Where(p => p.BranchId == id).ToList();
+                    var products = db.Products.Where(p => p.BranchId == id).ToList();
+                    var constructoCategories = db.ConstructorCategories.Where(p => p.BranchId == id).ToList();
+                    var categoryIds = categories.Select(p => p.Id).ToList();
+                    var ingredients = db.Ingredients.Where(p => categoryIds.Contains(p.CategoryId)).ToList();
+
+                    clietns.ForEach(p => { p.BranchId = -1; p.CityId = -1; });
+                    categories.ForEach(p => p.IsDeleted = true);
+                    products.ForEach(p => p.IsDeleted = true);
+                    constructoCategories.ForEach(p => p.IsDeleted = true);
+                    ingredients.ForEach(p => p.IsDeleted = true);
 
                     if (branch != null)
-                        db.Branches.Remove(branch);
+                        branch.IsDeleted = true;
 
                     if (setting != null)
-                        db.Settings.Remove(setting);
+                        setting.IsDeleted = true;
 
                     if (deliverySetting != null)
-                        db.DeliverySettings.Remove(deliverySetting);
+                        deliverySetting.IsDeleted = true;
 
                     db.SaveChanges();
 
@@ -352,10 +364,11 @@ namespace EasyStart.Logic
             {
                 var dict = areaDeliveries.ToDictionary(p => p.UniqId);
                 var ids = dict.Keys.ToList();
+                var deliverySettingId = areaDeliveries.First().DeliverySettingId;
 
                 using (var db = new AdminPanelContext())
                 {
-                    var allAreas = db.AreaDeliveryModels.ToList();
+                    var allAreas = db.AreaDeliveryModels.Where(p => p.DeliverySettingId == deliverySettingId).ToList();
                     var updates = allAreas
                         .Where(x => ids.Contains(x.UniqId))
                         .ToList();
@@ -642,6 +655,25 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     result = db.Categories.Add(category);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
+        public static ConstructorCategory SaveConstructorCategoryWihoutChangeOrderNumber(ConstructorCategory category)
+        {
+            ConstructorCategory result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.ConstructorCategories.Add(category);
                     db.SaveChanges();
                 }
             }
@@ -1119,12 +1151,14 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     var allowedBranches = db.DeliverySettings
+                        .Where(p => !p.IsDeleted)
                         .Select(p => p.BranchId)
                         .Distinct()
                         .ToList();
 
                     alloweCity = db
                         .Settings
+                        .Where(p => !p.IsDeleted)
                         .ToList()
                         .Where(p => allowedBranches.IndexOf(p.BranchId) != -1)
                         .Select(p => p.CityId)

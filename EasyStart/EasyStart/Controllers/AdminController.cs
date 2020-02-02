@@ -22,6 +22,13 @@ namespace EasyStart.Controllers
             try
             {
                 var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+
+                if (branchId  == -1)
+                {
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("AdminLogin", "Home");
+                }
+
                 var typeBranch = DataWrapper.GetBranchType(branchId);
                 var converter = new ConverterBranchSetting();
                 var branchViewvs = DataWrapper.GetAllSettingDictionary()
