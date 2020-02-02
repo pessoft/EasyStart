@@ -1408,21 +1408,26 @@ function removeBranch(e, id) {
     if ($(e).hasClass("disbled")) {
         return;
     }
-    let parent = $($(e).parents(".branch-item"));
-    let loader = new Loader(parent);
-    let successFunc = function (result, loader) {
-        loader.stop();
-        if (result.Success) {
-            $(`[branch-id=${id}]`).fadeOut(500, function () {
-                $(this).remove();
-            });
-        } else {
-            showErrorMessage(result.ErrorMessage);
-        }
-    }
-    loader.start();
 
-    $.post("/Admin/RemoveBranch", { id: id }, successCallBack(successFunc, loader));
+    const callback = () => {
+        let parent = $($(e).parents(".branch-item"))
+        let loader = new Loader(parent)
+        let successFunc = function (result, loader) {
+            loader.stop()
+            if (result.Success) {
+                $(`[branch-id=${id}]`).fadeOut(500, function () {
+                    $(this).remove()
+                });
+            } else {
+                showErrorMessage(result.ErrorMessage)
+            }
+        }
+        loader.start()
+
+        $.post("/Admin/RemoveBranch", { id: id }, successCallBack(successFunc, loader))
+    }
+    
+    deleteConfirmation(callback);
 }
 
 function setEmptyProductInfo() {

@@ -37,9 +37,16 @@ namespace EasyStart.Logic
 
                 newCategory = DataWrapper.SaveCategoryWihoutChangeOrderNumber(newCategory);
 
-                CloneProducts(category.Id, newCategory.Id);
+                switch(category.CategoryType)
+                {
+                    case CategoryType.Default:
+                        CloneProducts(category.Id, newCategory.Id);
+                        break;
+                    case CategoryType.Constructor:
+                        CloneConstructorProducts(category.Id, newCategory.Id);
+                        break;
+                }
             }
-
         }
 
         private void CloneProducts(int baseCategoryId, int newCategoryId)
@@ -56,6 +63,36 @@ namespace EasyStart.Logic
             }
 
             DataWrapper.SaveProductsWihoutChangeOrderNumber(newProdcts);
+        }
+
+        private void CloneConstructorProducts(int oldCategoryId, int newCategoryId)
+        {
+            var constructorCategories = DataWrapper.GetConstructorCategories(oldCategoryId);
+
+            foreach (var subCategory in constructorCategories)
+            {
+                var newSubCategory = subCategory.Clone(newBrachId, newCategoryId);
+
+                newSubCategory = DataWrapper.SaveConstructorCategoryWihoutChangeOrderNumber(newSubCategory);
+
+                CloneIngredients(subCategory.Id, newSubCategory.Id, newCategoryId);
+            }
+        }
+
+        private void CloneIngredients(int baseSubCategoryId, int newSubCategoryId, int newCategoryId)
+        {
+            var baseIngredients = DataWrapper.GetIngredientsVisible(baseSubCategoryId);
+            var newIngredients = new List<IngredientModel>();
+
+            foreach (var ingredient in baseIngredients)
+            {
+                var newImageName = CloneImage(ingredient.Image);
+                var newIngredient = ingredient.Clone(newCategoryId, newSubCategoryId, newImageName);
+
+                newIngredients.Add(newIngredient);
+            }
+
+            DataWrapper.AddOrUpdateIngredients(newIngredients);
         }
 
         private string CloneImage(string imagePath)
