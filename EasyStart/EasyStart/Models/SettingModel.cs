@@ -20,6 +20,7 @@ namespace EasyStart.Models
         public string Vkontakte { get; set; }
         public string Instagram { get; set; }
         public string Facebook { get; set; }
+        public bool IsDeleted { get; set; }
 
         [NotMapped]
         public string City

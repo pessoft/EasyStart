@@ -139,7 +139,7 @@ function editCategoryConstructor(id, event) {
     }
 }
 
-function removeCategoryConstructor(id) {
+function removeCategoryConstructor(id, event) {
     event.stopPropagation();
 
     let callback = function () {

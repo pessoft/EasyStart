@@ -13,5 +13,6 @@ namespace EasyStart.Models
         public string Login { get; set; }
         public string Password { get; set; }
         public TypeBranch TypeBranch { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
