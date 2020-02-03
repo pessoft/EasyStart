@@ -89,6 +89,12 @@ namespace EasyStart.Logic
         public List<StockModel> GetStock(int branchId, int clientId)
         {
             List<StockModel> stocks = DataWrapper.GetActiveStocks(branchId);
+
+            if (clientId < 1)
+            {
+                return stocks;
+            }
+
             List<StockModel> stocksOneOff = stocks
                 .Where(p => p.StockTypePeriod == StockTypePeriod.OneOff)
                 .ToList();
