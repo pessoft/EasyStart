@@ -92,10 +92,15 @@ namespace EasyStart
         {
             var result = new JsonResultModel();
             var branchId = data.BranchId;
+            var clientid = data.ClientId;
             result.Success = false;
 
             if (branchId < 1 || data.ClientId < 1)
-                return result;
+            {
+                var mainBranch = DataWrapper.GetMainBranch();
+                branchId = mainBranch.Id;
+                clientid = -1;
+            }
 
             try
             {
@@ -107,7 +112,7 @@ namespace EasyStart
                 var organizationSettings = DataWrapper.GetSetting(branchId);
 
                 var promotionLogic = new PromotionLogic();
-                var stocks = promotionLogic.GetStockForAPI(branchId, data.ClientId);
+                var stocks = promotionLogic.GetStockForAPI(branchId, clientid);
                 var mainBranch = DataWrapper.GetMainBranch();
                 var promotionCashbackSetting = promotionLogic.GetSettingCashBack(mainBranch.Id);
                 var promotionPartnersSetting = promotionLogic.GetSettingPartners(mainBranch.Id);
