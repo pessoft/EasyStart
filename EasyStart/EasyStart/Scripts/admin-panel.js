@@ -1282,7 +1282,9 @@ function saveDeliverySetting() {
     let priceDelivery = $("#price-delivery").val();
     let freePriceDelivery = $("#free-delivery").val();
 
-    if (!priceDelivery) {
+    if (!priceDelivery ||
+        Number.isNaN(parseInt(priceDelivery)) ||
+        parseInt(priceDelivery) <= 0) {
         showWarningMessage(warnMgs.PriceDelivery);
         return;
     }
