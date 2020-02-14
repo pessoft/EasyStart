@@ -23,7 +23,7 @@ namespace EasyStart.Controllers
             {
                 var branchId = DataWrapper.GetBranchId(User.Identity.Name);
 
-                if (branchId  == -1)
+                if (branchId == -1)
                 {
                     FormsAuthentication.SignOut();
                     return RedirectToAction("AdminLogin", "Home");
@@ -163,17 +163,19 @@ namespace EasyStart.Controllers
         public JsonResult AddCategory(CategoryModel category)
         {
             var result = new JsonResultModel();
+            var defaultImage = "/images/default-image.jpg";
 
             if (!System.IO.File.Exists(Server.MapPath(category.Image)))
             {
-                category.Image = "/images/default-image.jpg";
+                category.Image = defaultImage;
             }
             else if (category.Id > 0)
             {
                 var oldImage = DataWrapper.GetCategoryImage(category.Id);
 
-                if (oldImage != category.Image &&
-                   System.IO.File.Exists(Server.MapPath(oldImage)))
+                if (oldImage != category.Image
+                    && oldImage != defaultImage
+                   && System.IO.File.Exists(Server.MapPath(oldImage)))
                 {
                     System.IO.File.Delete(Server.MapPath(oldImage));
                 }
@@ -202,17 +204,18 @@ namespace EasyStart.Controllers
         public JsonResult AddProduct(ProductModel product)
         {
             var result = new JsonResultModel();
-
+            var defaultImage = "/images/default-image.jpg";
             if (!System.IO.File.Exists(Server.MapPath(product.Image)))
             {
-                product.Image = "/images/default-image.jpg";
+                product.Image = defaultImage;
             }
             else if (product.Id > 0)
             {
                 var oldImage = DataWrapper.GetProductImage(product.Id);
 
-                if (oldImage != product.Image &&
-                   System.IO.File.Exists(Server.MapPath(oldImage)))
+                if (oldImage != product.Image
+                    && oldImage != defaultImage
+                    && System.IO.File.Exists(Server.MapPath(oldImage)))
                 {
                     System.IO.File.Delete(Server.MapPath(oldImage));
                 }
@@ -413,17 +416,19 @@ namespace EasyStart.Controllers
         public JsonResult UpdateCategory(CategoryModel category)
         {
             var result = new JsonResultModel();
+            var defaultImage = "/images/default-image.jpg";
 
             if (!System.IO.File.Exists(Server.MapPath(category.Image)))
             {
-                category.Image = "/images/default-image.jpg";
+                category.Image = defaultImage;
             }
             else if (category.Id > 0)
             {
                 var oldImage = DataWrapper.GetCategoryImage(category.Id);
 
-                if (oldImage != category.Image &&
-                    System.IO.File.Exists(Server.MapPath(oldImage)))
+                if (oldImage != category.Image
+                    && oldImage != defaultImage
+                    && System.IO.File.Exists(Server.MapPath(oldImage)))
                 {
                     System.IO.File.Delete(Server.MapPath(oldImage));
                 }
@@ -491,17 +496,19 @@ namespace EasyStart.Controllers
         public JsonResult UpdateProduct(ProductModel product)
         {
             var result = new JsonResultModel();
+            var defaultImage = "/images/default-image.jpg";
 
             if (!System.IO.File.Exists(Server.MapPath(product.Image)))
             {
-                product.Image = "/images/default-image.jpg";
+                product.Image = defaultImage;
             }
             else if (product.Id > 0)
             {
                 var oldImage = DataWrapper.GetProductImage(product.Id);
 
-                if (oldImage != product.Image &&
-                    System.IO.File.Exists(Server.MapPath(oldImage)))
+                if (oldImage != product.Image
+                    && oldImage != defaultImage
+                    && System.IO.File.Exists(Server.MapPath(oldImage)))
                 {
                     System.IO.File.Delete(Server.MapPath(oldImage));
                 }
@@ -801,7 +808,7 @@ namespace EasyStart.Controllers
                 }
 
 
-                
+
 
             }
 
