@@ -459,7 +459,7 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    var orderNumber = db.Categories.Where(p => p.BranchId == category.BranchId).Count() + 1;
+                    var orderNumber = db.Categories.Where(p => p.BranchId == category.BranchId && !p.IsDeleted).Count() + 1;
 
                     category.OrderNumber = orderNumber;
                     result = db.Categories.Add(category);
@@ -498,7 +498,7 @@ namespace EasyStart.Logic
                     }
                     else
                     {
-                        var orderNumber = db.ConstructorCategories.Where(p => p.BranchId == category.BranchId).Count() + 1;
+                        var orderNumber = db.ConstructorCategories.Where(p => p.BranchId == category.BranchId && !p.IsDeleted).Count() + 1;
 
                         category.OrderNumber = orderNumber;
                         result = db.ConstructorCategories.Add(category);
