@@ -9,12 +9,14 @@ namespace EasyStart.Migrations
         {
             AddColumn("dbo.Clients", "Password", c => c.String());
             AddColumn("dbo.Clients", "Email", c => c.String());
+            AddColumn("dbo.Clients", "UserName", c => c.String()); 
         }
         
         public override void Down()
         {
             DropColumn("dbo.Clients", "Email");
             DropColumn("dbo.Clients", "Password");
+            DropColumn("dbo.Clients", "UserName");
         }
     }
 }

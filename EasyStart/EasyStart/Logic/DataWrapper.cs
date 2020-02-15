@@ -1488,6 +1488,10 @@ namespace EasyStart.Logic
         public static Dictionary<int, int> GetProductReviewsVisibleCount(List<int> productIds)
         {
             Dictionary<int, int> result = new Dictionary<int, int>();
+
+            if (productIds == null || !productIds.Any())
+                return result;
+
             try
             {
                 using (var db = new AdminPanelContext())
