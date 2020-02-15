@@ -15,6 +15,7 @@ namespace EasyStart.Migrations
                         PorudctId = c.Int(nullable: false),
                         PhoneNumber = c.String(),
                         ReviewText = c.String(),
+                        Reviewer = c.String(),
                         Date = c.DateTime(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
