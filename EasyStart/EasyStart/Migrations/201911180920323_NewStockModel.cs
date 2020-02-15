@@ -37,7 +37,7 @@ namespace EasyStart.Migrations
             DropColumn("dbo.StockModels", "DiscountType");
             DropColumn("dbo.StockModels", "DiscountValue");
             DropColumn("dbo.StockModels", "RewardType");
-            DropColumn("dbo.StockModels", "stockToDate");
+            DropColumn("dbo.StockModels", "StockToDate");
             DropColumn("dbo.StockModels", "StockFromDate");
             DropColumn("dbo.StockModels", "StockOneTypeSubtype");
             DropColumn("dbo.StockModels", "StockTypePeriod");
