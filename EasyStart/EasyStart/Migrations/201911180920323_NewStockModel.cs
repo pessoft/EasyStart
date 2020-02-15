@@ -10,7 +10,7 @@ namespace EasyStart.Migrations
             AddColumn("dbo.StockModels", "StockTypePeriod", c => c.Int(nullable: false));
             AddColumn("dbo.StockModels", "StockOneTypeSubtype", c => c.Int(nullable: false));
             AddColumn("dbo.StockModels", "StockFromDate", c => c.DateTime(nullable: false));
-            AddColumn("dbo.StockModels", "stockToDate", c => c.DateTime(nullable: false));
+            AddColumn("dbo.StockModels", "StockToDate", c => c.DateTime(nullable: false));
             AddColumn("dbo.StockModels", "RewardType", c => c.Int(nullable: false));
             AddColumn("dbo.StockModels", "DiscountValue", c => c.Int(nullable: false));
             AddColumn("dbo.StockModels", "DiscountType", c => c.Int(nullable: false));
