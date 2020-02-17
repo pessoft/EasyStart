@@ -1,5 +1,7 @@
 ﻿using EasyStart.Logic;
+using EasyStart.Logic.FCM;
 using EasyStart.Models;
+using EasyStart.Models.FCMNotification;
 using EasyStart.Utils;
 using Newtonsoft.Json;
 using System;
@@ -1223,6 +1225,106 @@ namespace EasyStart.Controllers
             else
             {
                 result.ErrorMessage = "При загрузки конструктора что-то пошло не так";
+            }
+
+            return Json(result);
+        }
+
+        private readonly int PAGE_PUSH_MESSAGE_SIZE = 10;
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult PushNotification(FMCMessage message)
+        {
+            var result = new JsonResultModel();
+
+            if (string.IsNullOrEmpty(message.Title))
+            {
+                result.ErrorMessage = "Отсутствует заголовок сообщения";
+                return Json(result);
+            }
+            else if (string.IsNullOrEmpty(message.Body))
+            {
+                result.ErrorMessage = "Отсутствует тело сообщения";
+                return Json(result);
+            }
+
+            try
+            {
+                var payload = new
+                {
+                    title = message.Title,
+                    message = message.Body,
+                };
+
+                if (message.Data != null)
+                    message.Data.Add("payload", JsonConvert.SerializeObject(payload));
+                else
+                    message.Data = new Dictionary<string, string>() { { "payload", JsonConvert.SerializeObject(payload) } };
+
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
+                var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
+                var pushMessage = new PushMessageModel(message, branchId, date);
+
+                var savedMessage = DataWrapper.SavePushMessage(pushMessage);
+
+                if (savedMessage == null)
+                    throw new Exception("Ошибка при сохранении PUSH сообщения");
+
+                var fcmAuthKeyPath = Server.MapPath("/Resource/FCMAuthKey.json");
+                var fcmTopicName = Server.MapPath("/Resource/FCMTopicName.txt");
+                var fcm = new FCMNotification(fcmAuthKeyPath, fcmTopicName);
+
+                fcm.SendMessage(message);
+
+                var historyMessage = DataWrapper.GetPushMessage(branchId, 1, PAGE_PUSH_MESSAGE_SIZE);
+
+                result.Success = true;
+                result.Data = new PagingPushMessageHistory
+                {
+                    HistoryMessages = historyMessage,
+                    PageNumber = 1,
+                    PageSize = PAGE_PUSH_MESSAGE_SIZE
+                };
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = "При отправке PUSH сообщения что-то пошло не так";
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult LoadPushNotification(int pageNumber)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var messagesCount = DataWrapper.GetCountPushMessage(branchId);
+                var messagesMaxPage = messagesCount == 0 ? 1 : Convert.ToInt32(Math.Ceiling((double)messagesCount / PAGE_PUSH_MESSAGE_SIZE));
+                pageNumber = pageNumber < 1 ? 1 : pageNumber;
+                pageNumber = pageNumber > messagesMaxPage ? messagesMaxPage : pageNumber;
+
+                var historyMessage = DataWrapper.GetPushMessage(branchId, pageNumber, PAGE_PUSH_MESSAGE_SIZE);
+
+                result.Success = true;
+                result.Data = new PagingPushMessageHistory
+                {
+                    HistoryMessages = historyMessage,
+                    PageNumber = pageNumber,
+                    PageSize = PAGE_PUSH_MESSAGE_SIZE
+                };
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = "При отправке PUSH сообщения что-то пошло не так";
             }
 
             return Json(result);
