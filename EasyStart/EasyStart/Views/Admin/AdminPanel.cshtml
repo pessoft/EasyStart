@@ -207,6 +207,7 @@
                             <li target-id="pormotion-stock" class="promotion-menu-active"><i class="fal fa-badge-percent"></i> Акции</li>
                             <li target-id="pormotion-coupons"><i class="fal fa-gift-card"></i> Купоны</li>
                             <li target-id="pormotion-cashback-partners"><i class="fal fa-hands-usd"></i> Кешбек и Партнерская программа</li>
+                            <li target-id="pormotion-push-notification"><i class="fal fa-paper-plane"></i> PUSH сообщения</li>
                             <li target-id="promotion-settings"><i class="fal fa-sliders-v"></i> Настройка</li>
                         </ul>
                     </div>
@@ -300,43 +301,88 @@
                                 </div>
                             </div>
                         </div>
-                        @*<div id="promotion-settings" class="promotion-content promotion-settings promotion-some-settings hide">
-                                <h2>Приорит разделов</h2>
-                                <div id="promotion-items-priority" class="promotion-items-priority">
-                                    <div class="promotion-item-setting" promotion-section="8" promotion-setting-id="-1">
-                                        <i class="fal fa-hands-usd"></i>
-                                        <div class="promotion-item-setting-body">
-                                            <span>Партнерская программа</span>
-                                            <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
-                                                <option value="2">Акции</option>
-                                                <option value="4">Купоны</option>
-                                            </select>
+                        <div id="pormotion-push-notification" class="promotion-content promotion-push-notification">
+                            <div class="wizard-push-notification">
+                                <div class="wizard-push-notification-item push-notification-constructor">
+                                    <span class="wizard-push-notification-item-header">Уведомление</span>
+                                    <div class="wizard-push-notification-item-body">
+                                        <div class="group wizard-push-title-group">
+                                            <input required type="text" autocomplete="off" id="push-title" />
+                                            <span class="bar"></span>
+                                            <label>Загаловок уведомления</label>
                                         </div>
-                                    </div>
-                                    <div class="promotion-item-setting" promotion-section="4" promotion-setting-id="-1">
-                                        <i class="fal fa-gift-card"></i>
-                                        <div class="promotion-item-setting-body">
-                                            <span>Купоны</span>
-                                            <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
-                                                <option value="2">Акции</option>
-                                                <option value="8">Партнерская программа</option>
-                                            </select>
+                                        <div class="group wizard-push-body-group">
+                                            <textarea id="push-body" placeholder="Введите текст уведомления"></textarea>
+                                            <span class="bar"></span>
+                                            <label>Текст уведомления</label>
                                         </div>
-                                    </div>
-                                    <div class="promotion-item-setting" promotion-section="2" promotion-setting-id="-1">
-                                        <i class="fal fa-badge-percent"></i>
-                                        <div class="promotion-item-setting-body">
-                                            <span>Акции</span>
-                                            <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
-                                                <option value="4">Купоны</option>
-                                                <option value="8">Партнерская программа</option>
-                                            </select>
+                                        <div class="push-image-container">
+                                            <div class="push-image">
+                                                <img src="/images/default-image.jpg" />
+                                            </div>
+                                            <div class="push-image-menu">
+                                                <span>Изображение уведомления (необязательно)</span>
+                                                <button id="push-image-btn-download" class="push-image-btn-download" onclick="">
+                                                    Загрузить
+                                                    <i class="fal fa-arrow-from-bottom"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="push-target-setting">
+                                            <div class="promotion-item-setting-body">
+                                                <span>Действие по нажатию на PUSH</span>
+                                                <select onchange="">
+                                                    <option value="0">Открыть приложение</option>
+                                                    <option value="1">Открыть категорию товаров</option>
+                                                    <option value="3">Открыть информацию о товаре</option>
+                                                    <option value="3">Открыть информацию об ацкии</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="push-menu">
+                                            <button class="btn btn-submit" onclick="">Отправить</button>
                                         </div>
                                     </div>
                                 </div>
-                                <button id="save-promotion-setting" class="btn btn-submit" onclick="PromotionSetting.saveSettings()">Сохранить</button>
-                            </div>*@
+                                <div class="wizard-push-notification-item">
+                                    <span class="wizard-push-notification-item-header">Предпросмотр устройства</span>
+                                    <div class="wizard-push-notification-item-body wizard-push-device-preview">
+                                        <div class="preview-device-description">
+                                            <span>
+                                                Посмотрите, как сообщение будет выглядеть на мобильных устройствах. У пользователей разных устройств сообщение может выглядеть по-разному.
+                                            </span>
+                                        </div>
+                                        
+                                        <div class="wrap-device-preview">
+                                            <div class="device-preview-container">
+                                                <div class="device-preview android"></div>
+                                                <div class="preview-push-container-android">
 
+                                                </div>
+                                            </div>
+                                            <span>Android</span>
+                                        </div>
+                                        <div class="wrap-device-preview">
+                                            <div class="device-preview-container">
+                                                <div class="device-preview ios"></div>
+                                                <div class="preview-push-container-ios">
+
+                                                </div>
+                                            </div>
+                                            <span>ios</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="history-push-notitification">
+                                <div class="history-push-notitification-short">
+                                    <button id="history-push-download" class="history-push-download" onclick="">
+                                        Показать историю PUSH сообщений
+                                        <i class="fal fa-history"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                         <div id="promotion-settings" class="promotion-content promotion-settings promotion-some-settings hide">
                             <div class="promotion-setting">
                                 <h2>Баннер из акций</h2>

@@ -86,6 +86,7 @@
     overflow: auto;
     background-color: #f5f5f5;
     border-radius: 2px;
+    box-shadow: 0px 0px 3px 1px #0f1e322b;
 }
 
 .promotion-coupon-list-container {
@@ -558,4 +559,252 @@ textarea.default-style-input {
 
 .checkbox-item-padding {
     padding: 0 10px;
+}
+
+
+.promotion-push-notification {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 500px 1fr;
+    grid-row-gap: 2%;
+    padding: 1% 2%;
+    background-color: #f9f9f9;
+}
+
+.wizard-push-notification {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid #bdbdbd35;
+    border-radius: 3px;
+    background-color: #f5f5f5;
+    padding: 25px 0px;
+    box-shadow: 0px 0px 3px 1px #0f1e322b;
+}
+
+.history-push-notitification {
+    border: 1px solid #bdbdbd35;
+    border-radius: 3px;
+    background-color: #f5f5f5;
+    box-shadow: 0px 0px 3px 1px #0f1e322b;
+}
+
+.push-notification-constructor {
+    border-right: 1px solid #bfbfbf35;
+}
+
+.wizard-push-notification-item {
+    display: grid;
+    justify-items: center;
+    grid-template-columns: 1fr;
+    grid-template-rows: 30px 1fr;
+    padding: 0px 25px;
+}
+
+    .wizard-push-notification-item-header {
+        justify-self: flex-start;
+        font-weight:600;
+        margin-bottom: 10px;
+    }
+
+.wizard-push-notification-item-body {
+    position: relative;
+}
+
+.wizard-push-device-preview {
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.wizard-push-title-group{
+    margin-bottom: 40px;
+}
+
+.wizard-push-body-group {
+    margin-bottom: 20px;
+}
+
+    .wizard-push-notification-item-body .group label {
+        font-size: 0.9em;
+    }
+
+    .wizard-push-notification-item-body .group textarea {
+        height: 50px;
+        font-size: 1em;
+    }
+
+    .wizard-push-notification-item-body .group input {
+        font-size: 1em;
+    }
+
+.push-image-container {
+    width: 320px;
+    height: 64px;
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #bdbdbd35;
+    border-radius: 3px;
+    background-color: #f9f9f9;
+    box-shadow: 0px 0px 3px 1px #0f1e322b;
+    margin-bottom: 15px;
+}
+
+.push-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 3px;
+    position: relative;
+    justify-self: center;
+}
+
+.push-image-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+}
+
+.push-image img {
+    max-width: 100%;
+    border-radius: 3px;
+}
+
+.push-image-menu span {
+    font-size: 0.7em;
+    margin-bottom: 5px;
+}
+
+.push-image-btn-download {
+    justify-self: center;
+    font-size: 0.9em;
+    color: #1d73b7;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    border: none;
+}
+
+.history-push-download {
+    justify-self: center;
+    font-size: 1em;
+    color: #1d73b7;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    border: none;
+}
+
+.push-target-setting {
+    width: 300px;
+    min-height: 55px;
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #bdbdbd35;
+    border-radius: 3px;
+    background-color: #f9f9f9;
+    padding: 5px 10px 8px 10px;
+    box-shadow: 0px 0px 3px 1px #0f1e322b;
+}
+
+    .push-target-setting .promotion-item-setting-body span {
+        font-size: 0.72em;
+        margin-bottom: 8px;
+    }
+
+    .push-target-setting .promotion-item-setting-body select {
+        height: 25px;
+        border-radius: 3px;
+    }
+
+.push-menu {
+    width: 320px;
+    display: flex;
+    justify-content: flex-end;
+    position: absolute;
+    bottom: 0;
+}
+
+.device-preview {
+    width: 100%;
+    height: 100%;
+    background-size: 100%;
+    display: flex;
+    
+}
+
+.android {
+    background-image: url(/Images/android.png);
+}
+
+.ios {
+    background-image: url(/Images/iphone.png);
+}
+
+.wrap-device-preview {
+    width: 320px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.device-preview-container {
+    width: 100%;
+    height: 115px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+    .wrap-device-preview span {
+        margin-top: 5px;
+        font-size: 0.8em;
+        font-weight: 600;
+        color: rgba(0,0,0,.4)
+    }
+
+.preview-device-description {
+    font-size: 0.7em;
+    border-radius: 3px;
+    padding: 10px;
+    margin-bottom: 10px;
+    color: rgba(0,0,0,.54);
+    text-align: justify;
+}
+
+.preview-push-container-android {
+    width: 280px;
+    height: 56px;
+    top: 54px;
+    background: white;
+    color: rgba(0,0,0,0.87);
+    position: absolute;
+    font-family: Roboto,"Helvetica Neue",sans-serif;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+}
+
+.preview-push-container-ios {
+    width: 270px;
+    height: 60px;
+    top: 50px;
+    background: white;
+    color: rgba(0,0,0,0.87);
+    position: absolute;
+    font-family: Roboto,"Helvetica Neue",sans-serif;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+}
+
+.history-push-notitification-short {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

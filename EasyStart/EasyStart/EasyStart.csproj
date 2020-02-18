@@ -218,6 +218,7 @@
     <Compile Include="Logic\BuyType.cs" />
     <Compile Include="Logic\CategoryType.cs" />
     <Compile Include="Logic\FCM\FCMNotification.cs" />
+    <Compile Include="Logic\FCM\NotificationActionType.cs" />
     <Compile Include="Logic\FCM\PushMessage.cs" />
     <Compile Include="Logic\Notification\EmailNotification\RestorePasswordNotification.cs" />
     <Compile Include="Logic\PreprocessorDataAPI.cs" />
@@ -690,6 +691,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\main.css" />
+    <Content Include="Images\android.png" />
     <Content Include="Images\blank-ingredients\glass-noodles.png" />
     <Content Include="Images\blank-ingredients\seafood.png" />
     <Content Include="Images\default-image.jpg" />
@@ -697,6 +699,7 @@
     <Content Include="Images\full-logo.png" />
     <Content Include="Images\full-logo-pink.png" />
     <Content Include="Images\full-logo-blue.png" />
+    <Content Include="Images\iphone.png" />
     <Content Include="Images\loader-empty-order.gif" />
     <Content Include="Images\loader.gif" />
     <Content Include="Images\loader_old.gif" />
@@ -771,6 +774,7 @@
     <Content Include="Scripts\promotion\coupon.js" />
     <Content Include="Scripts\promotion\promotion-setting.js" />
     <Content Include="Scripts\promotion\promotion.js" />
+    <Content Include="Scripts\promotion\push-notification.js" />
     <Content Include="Scripts\promotion\stock.js" />
     <Content Include="Scripts\singnal-logic.js" />
     <Content Include="Scripts\chart.js" />
