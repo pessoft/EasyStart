@@ -825,7 +825,7 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     var orderNumber = 1 + db.Products
-                        .Where(p => p.CategoryId == product.CategoryId)
+                        .Where(p => p.CategoryId == product.CategoryId && !p.IsDeleted)
                         .Count();
 
                     product.OrderNumber = orderNumber;
