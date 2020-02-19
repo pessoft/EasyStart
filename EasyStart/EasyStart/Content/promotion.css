@@ -209,6 +209,7 @@
     .promotion-castom-period i {
         font-size: 1.1em;
         cursor: pointer;
+        margin-left: 5px;
     }
 
     .promotion-castom-period input {
