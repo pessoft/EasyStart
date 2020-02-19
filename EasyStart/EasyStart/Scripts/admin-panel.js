@@ -1274,23 +1274,12 @@ function getTimeDeliveryJSON() {
 
 function saveDeliverySetting() {
     let warnMgs = {
-        PriceDelivery: "Укажите стоимость доставки",
-        FreePriceDelivery: "Укажите минимальные суммы закаов для бесплатной доставки в районы",
+        AreaDelivery: "Настройте районы доставки",
         WorkTime: "Укажите режим работы",
     }
 
-    let priceDelivery = $("#price-delivery").val();
-    let freePriceDelivery = $("#free-delivery").val();
-
-    if (!priceDelivery ||
-        Number.isNaN(parseInt(priceDelivery)) ||
-        parseInt(priceDelivery) <= 0) {
-        showWarningMessage(warnMgs.PriceDelivery);
-        return;
-    }
-
     if (!AreaDelivery || AreaDelivery.length == 0) {
-        showWarningMessage(warnMgs.FreePriceDelivery);
+        showWarningMessage(warnMgs.AreaDelivery);
         return;
     }
 
@@ -1300,8 +1289,6 @@ function saveDeliverySetting() {
     }
 
     let setting = {
-        PriceDelivery: priceDelivery,
-        FreePriceDelivery: freePriceDelivery,
         IsSoundNotify: $("#sound-nodify").is(":checked"),
         NotificationEmail: $("#notify-email").val(),
         ZoneId: $("#delivery-time-zone").val(),
@@ -2640,20 +2627,27 @@ class AreaDeliverySetting {
 
         if (AreaDelivery.length == 0) {
             const epmty = this.renderEmpty()
-            items.push(epmty);
+            this.setListContainer(epmty);
         } else {
+            const header = this.renderHeaderItem()
             for (let area of AreaDelivery.sort((a, b) => a.NameArea > b.NameArea ? 1 : -1)) {
                 let item = this.renderItem(area)
 
                 items.push(item)
             }
-        }
 
-        this.setToPage(items)
+            this.setListToPage(header, items)
+        }
     }
 
-    setToPage(items) {
-        $('.area-delivery-settings-list').html(items)
+    setListContainer(header) {
+        $('.area-delivery-settings-list-container').html(header)
+    }
+
+    setListToPage(header, items) {
+        let $settingsList = $('<div class="area-delivery-settings-list default-color"></div>')
+        $settingsList.html(items)
+        this.setListContainer([header, $settingsList])
     }
 
     renderEmpty() {
@@ -2661,13 +2655,15 @@ class AreaDeliverySetting {
     }
 
     renderItem(areaDelivery) {
-        const priceWithPrefix = `${areaDelivery.MinPrice} руб.`
-        const actionEditClick = () => this.showEditDialog(areaDelivery.NameArea, areaDelivery.MinPrice, areaDelivery.UniqId)
+        const minPriceWithPrefix = `${areaDelivery.MinPrice} руб.`
+        const deliveryPriceWithPrefix = `${areaDelivery.DeliveryPrice} руб.`
+        const actionEditClick = () => this.showEditDialog(areaDelivery.NameArea, areaDelivery.MinPrice, areaDelivery.DeliveryPrice, areaDelivery.UniqId)
         const actionRemoveClick = () => this.removeAreaDelivery(areaDelivery.UniqId)
         const template = `
             <div class="area-delivery-settings-item border-bottom">
                 <span class="area-name">${areaDelivery.NameArea}</span>
-                <span class="area-delivery-price">${priceWithPrefix}</span>
+                <span class="area-delivery-span">${minPriceWithPrefix}</span>
+                <span class="area-delivery-span">${deliveryPriceWithPrefix}</span>
                 <button class="area-delivery-settings-btn edit-btn"><i class="fal fa-edit"></i></button>
                 <button class="area-delivery-settings-btn remove-btn"><i class="fal fa-trash-alt"></i></button>
             </div>`
@@ -2675,6 +2671,19 @@ class AreaDeliverySetting {
 
         $item.find('.edit-btn').bind('click', actionEditClick)
         $item.find('.remove-btn').bind('click', actionRemoveClick)
+
+        return $item
+    }
+
+    renderHeaderItem() {
+        const template = `
+            <div class="area-delivery-settings-header border-bottom">
+                <span class="area-name">Имя района</span>
+                <span class="area-delivery-span">Мин. сумма заказа</span>
+                <span class="area-delivery-span">Стоимость доставки</span>
+                <span class="area-delivery-span">Действия</span>
+            </div>`
+        const $item = $(template)
 
         return $item
     }
@@ -2700,12 +2709,13 @@ class AreaDeliverySetting {
     appendNewArea() {
         const uniqId = generateRandomString(10)
 
-        this.showEditDialog('', '', uniqId)
+        this.showEditDialog('', '', '', uniqId)
     }
 
-    showEditDialog(name, minPrice, uniqId) {
+    showEditDialog(name, minPrice, deliveryPrice, uniqId) {
         $("#area-name").val(name)
         $("#area-price").val(minPrice)
+        $("#area-delivery-price").val(deliveryPrice)
         $("#area-uniqId").val(uniqId)
 
         const actionSaveClick = () => this.saveAreaDelivery()
@@ -2723,19 +2733,20 @@ class AreaDeliverySetting {
 
         const name = $("#area-name").val()
         const minPrice = $("#area-price").val()
+        const deliveryPrice = $("#area-delivery-price").val()
         const uniqId = $("#area-uniqId").val()
         const names = name.split(',').map(p => p.trim()).filter(p => p)
 
-        if (!name || !minPrice) {
+        if (!name || !minPrice || !deliveryPrice) {
             showInfoMessage('Заполните все поля')
             loader.stop()
             return
         }
 
         if (names.length > 1)
-            this.multiSaveAreaDelivery(names, minPrice)
+            this.multiSaveAreaDelivery(names, minPrice, deliveryPrice)
         else
-            this.singleSaveAreaDelivery(name, minPrice, uniqId)
+            this.singleSaveAreaDelivery(name, minPrice, deliveryPrice, uniqId)
 
         this.render()
         loader.stop()
@@ -2743,24 +2754,26 @@ class AreaDeliverySetting {
         Dialog.close('#areaDeliveryEditDialog')
     }
 
-    singleSaveAreaDelivery(name, minPrice, uniqId) {
+    singleSaveAreaDelivery(name, minPrice, deliveryPrice, uniqId) {
         const areaDelivery = this.findAreaByUniqId(uniqId)
 
         if (areaDelivery) {
             areaDelivery.NameArea = name
             areaDelivery.MinPrice = minPrice
+            areaDelivery.DeliveryPrice = deliveryPrice
         } else {
             const newAreaDelivery = {
                 UniqId: uniqId,
                 NameArea: name,
-                MinPrice: minPrice
+                MinPrice: minPrice,
+                DeliveryPrice: deliveryPrice
             }
 
             AreaDelivery.push(newAreaDelivery)
         }
     }
 
-    multiSaveAreaDelivery(names, minPrice) {
+    multiSaveAreaDelivery(names, minPrice, deliveryPrice) {
         for (name of names) {
             const uniqId = generateRandomString(10)
             const areaDelivery = this.findAreaByName(names)
@@ -2768,11 +2781,13 @@ class AreaDeliverySetting {
             if (areaDelivery) {
                 areaDelivery.NameArea = name
                 areaDelivery.MinPrice = minPrice
+                areaDelivery.DeliveryPrice = deliveryPrice
             } else {
                 const newAreaDelivery = {
                     UniqId: uniqId,
                     NameArea: name,
-                    MinPrice: minPrice
+                    MinPrice: minPrice,
+                    DeliveryPrice: deliveryPrice
                 }
 
                 AreaDelivery.push(newAreaDelivery)

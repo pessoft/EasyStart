@@ -33,9 +33,6 @@ namespace EasyStart.Logic
             if (setting == null)
                 return false;
 
-            if (setting.PriceDelivery < 0)
-                return false;
-
             if (setting.TimeDelivery == null || !setting.TimeDelivery.Any())
                 return false;
 
