@@ -245,3 +245,5 @@ ModelManifest.xml
 .fake/
 /EasyStart/EasyStart/Images/Products/
 /EasyStart/EasyStart/Logs/errors.log.2019-10-23
+/EasyStart/EasyStart/Resource/FCMAuthKey.json
+/EasyStart/EasyStart/Resource/FCMTopicName.txt

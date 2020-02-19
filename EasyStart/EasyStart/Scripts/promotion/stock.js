@@ -44,7 +44,7 @@ var StockManger = {
         datePicker = $inputDate.data("datepicker");
 
         $inputDate.next("i").bind("click", function () {
-            datePicker.show();
+            $inputDate.focus();
         })
 
         const fromDate = new Date()

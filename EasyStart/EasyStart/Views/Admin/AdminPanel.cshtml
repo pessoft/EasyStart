@@ -510,11 +510,6 @@
                         Настройка стоимости доставки
                     </div>
                     <div class="delivery-content">
-                        <div class="group">
-                            <input required type="text" id="price-delivery" value="@(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.PriceDelivery != 0 ? ViewBag.DeliverySetting.PriceDelivery : "")" />
-                            <div class="bar"></div>
-                            <label>Стоимость доставки (руб.)</label>
-                        </div>
                         <button class="btn btn-light" onclick="openSttingAreaDelivery()">Настроить районы доставкаи</button>
                     </div>
                 </div>
@@ -1126,12 +1121,9 @@
                     <i class="fal fa-plus"></i>
                     Добавить район
                 </button>
-                <div class="area-delivery-settings-list default-color">
-                    <div class="area-delivery-settings-item border-bottom">
-                        <span class="area-name">Карачиха</span>
-                        <span class="area-delivery-price">200 руб.</span>
-                        <button class="area-delivery-settings-btn edit-btn"><i class="fal fa-edit"></i></button>
-                        <button class="area-delivery-settings-btn remove-btn"><i class="fal fa-trash-alt"></i></button>
+                <div class="area-delivery-settings-list-container default-color">
+                    <div class="area-delivery-settings-list default-color">
+
                     </div>
                 </div>
             </div>
@@ -1142,8 +1134,25 @@
         <div class="area-delivery-edit-wrapper">
             <div class="area-delivery-edit-inputs">
                 <input id="area-uniqId" type="hidden" value="" />
-                <input id="area-name" type="text" placeholder="Название района">
-                <input id="area-price" min="0" step="1" value="0" type="number" placeholder="Минимальная сумма заказа">
+                <div class="group">
+                    <input required id="area-name" type="text">
+                    <span class="bar"></span>
+                    <label>Название района</label>
+                </div>
+                
+                <div class="area-delivery-edit-inputs-price">
+                    <div class="group">
+                        <input required id="area-price" min="0" step="1" value="0" type="number">
+                        <span class="bar"></span>
+                        <label>Мин. сумма заказа</label>
+                    </div>
+                    <div class="group">
+                        <input required id="area-delivery-price" min="0" step="1" value="0" type="number">
+                        <span class="bar"></span>
+                        <label>Стоимость доставки</label>
+                    </div>
+                </div>
+
             </div>
             <div class="area-delivery-edit-menu">
                 <button class="btn btn-submit">Сохранить</button>
