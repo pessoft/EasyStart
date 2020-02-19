@@ -1567,7 +1567,7 @@ namespace EasyStart.Logic
                     result = db.Stocks
                         .Where(p => p.BranchId == branchId && !p.IsDeleted
                         && (p.StockTypePeriod != StockTypePeriod.ToDate
-                        || (DbFunctions.TruncateTime(p.StockFromDate) >= date
+                        || (DbFunctions.TruncateTime(p.StockFromDate) <= date
                         && DbFunctions.TruncateTime(p.StockToDate) >= date)))
                         .ToList();
                 }
