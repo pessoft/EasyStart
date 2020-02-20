@@ -41,7 +41,8 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     result = db.Orders
-                        .Where(p => p.BranchId == branchId &&
+                        .Where(p => p.OrderStatus == OrderStatus.Processed &&
+                                    p.BranchId == branchId &&
                                     DbFunctions.TruncateTime(p.Date) >= dateFrom &&
                                     DbFunctions.TruncateTime(p.Date) <= dateTo)
                         .GroupBy(p => DbFunctions.TruncateTime(p.Date))
@@ -64,7 +65,8 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     result = db.Orders
-                        .Where(p => p.BranchId == branchId &&
+                        .Where(p => p.OrderStatus == OrderStatus.Processed && 
+                                    p.BranchId == branchId &&
                                     DbFunctions.TruncateTime(p.Date) >= dateFrom &&
                                     DbFunctions.TruncateTime(p.Date) <= dateTo)
                         .ToList();
@@ -86,7 +88,8 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     result = db.Orders
-                        .Where(p => p.BranchId == branchId &&
+                        .Where(p => p.OrderStatus == OrderStatus.Processed && 
+                                    p.BranchId == branchId &&
                                     DbFunctions.TruncateTime(p.Date) >= dateFrom &&
                                     DbFunctions.TruncateTime(p.Date) <= dateTo)
                          .GroupBy(p => p.DeliveryType)
