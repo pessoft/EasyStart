@@ -391,6 +391,7 @@ namespace EasyStart.Logic
                         {
                             p.NameArea = dict[p.UniqId].NameArea;
                             p.MinPrice = dict[p.UniqId].MinPrice;
+                            p.DeliveryPrice = dict[p.UniqId].DeliveryPrice;
                         });
                     }
 
@@ -424,7 +425,6 @@ namespace EasyStart.Logic
                     {
                         updateSetting.PayCard = setting.PayCard;
                         updateSetting.PayCash = setting.PayCash;
-                        updateSetting.PriceDelivery = setting.PriceDelivery;
                         updateSetting.TimeDeliveryJSON = setting.TimeDeliveryJSON;
                         updateSetting.ZoneId = setting.ZoneId;
                         updateSetting.IsSoundNotify = setting.IsSoundNotify;
@@ -826,7 +826,7 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     var orderNumber = 1 + db.Products
-                        .Where(p => p.CategoryId == product.CategoryId)
+                        .Where(p => p.CategoryId == product.CategoryId && !p.IsDeleted)
                         .Count();
 
                     product.OrderNumber = orderNumber;
@@ -1568,7 +1568,7 @@ namespace EasyStart.Logic
                     result = db.Stocks
                         .Where(p => p.BranchId == branchId && !p.IsDeleted
                         && (p.StockTypePeriod != StockTypePeriod.ToDate
-                        || (DbFunctions.TruncateTime(p.StockFromDate) >= date
+                        || (DbFunctions.TruncateTime(p.StockFromDate) <= date
                         && DbFunctions.TruncateTime(p.StockToDate) >= date)))
                         .ToList();
                 }

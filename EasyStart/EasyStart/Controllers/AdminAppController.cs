@@ -288,8 +288,15 @@ namespace EasyStart
                 if (order == null)
                     throw new Exception("Попытка оформления пустого заказа");
 
-                var deliverSetting = DataWrapper.GetDeliverySetting(order.BranchId);
                 var client = DataWrapper.GetClient(order.ClientId);
+
+                if (order.BranchId != client.BranchId)
+                {
+                    order.BranchId = client.BranchId;
+                }
+
+                var deliverSetting = DataWrapper.GetDeliverySetting(order.BranchId);
+                
 
                 order.Date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
                 order.UpdateDate = order.Date;
