@@ -2316,7 +2316,8 @@ button.simple-text-btn:disabled:hover {
     #addCategoryDialog .SumoSelect .CaptionCont label,
     #stockDialog .SumoSelect .CaptionCont label,
     #couponDialog .SumoSelect .CaptionCont label,
-    .promotion-item-setting .SumoSelect .CaptionCont label {
+    .promotion-item-setting .SumoSelect .CaptionCont label,
+    .promotion-item-setting-body .SumoSelect .CaptionCont label {
         color: initial;
         pointer-events: initial;
         left: initial;
@@ -2327,7 +2328,8 @@ button.simple-text-btn:disabled:hover {
     #addCategoryDialog .SumoSelect .optWrapper label,
     #stockDialog .SumoSelect .optWrapper label,
     #couponDialog .SumoSelect .optWrapper label,
-    .promotion-item-setting .SumoSelect .optWrapper label {
+    .promotion-item-setting .SumoSelect .optWrapper label,
+    .promotion-item-setting-body .SumoSelect .optWrapper label {
         color: initial;
         position: initial;
         pointer-events: initial;

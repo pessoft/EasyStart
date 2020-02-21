@@ -30,7 +30,7 @@
     bindShowModal("add-product-constructor", "addSubCategoryConstructorDialog", initNewCategoryConstructor, productConstructorCondition)
     bindShowModal("add-branch", "addBranchDialog", addNewBranchLoginData)
 
-    $("input[type=file]").change(function () {
+    $("input[type=file]").not('.not-bind-image').change(function () {
         addPreviewImage(this)
     });
 

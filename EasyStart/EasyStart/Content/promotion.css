@@ -174,13 +174,18 @@
 
 #stockDialog .SumoSelect,
 #couponDialog .SumoSelect,
-#promotion-items-priority .SumoSelect {
+#promotion-items-priority .SumoSelect,
+.promotion-item-setting-body .SumoSelect {
     min-width: 300px;
     min-height: 25px;
     border-color: #c6c6c6;
     color: #0f1e328f;
     border-radius: 3px;
 }
+
+    .promotion-item-setting-body .SumoSelect > .CaptionCont {
+        height: 12px;
+    }
 
 
 .promotion-item-setting .SumoSelect,
@@ -189,6 +194,7 @@
     min-height: 16px;
 }
 
+    .promotion-item-setting .SumoSelect p,
     .promotion-item-setting .SumoSelect p {
         width: 210px;
         height: 16px;
@@ -601,11 +607,11 @@ textarea.default-style-input {
     padding: 0px 25px;
 }
 
-    .wizard-push-notification-item-header {
-        justify-self: flex-start;
-        font-weight:600;
-        margin-bottom: 10px;
-    }
+.wizard-push-notification-item-header {
+    justify-self: flex-start;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
 
 .wizard-push-notification-item-body {
     position: relative;
@@ -618,7 +624,7 @@ textarea.default-style-input {
     justify-content: center;
 }
 
-.wizard-push-title-group{
+.wizard-push-title-group {
     margin-bottom: 30px;
 }
 
@@ -626,18 +632,18 @@ textarea.default-style-input {
     margin-bottom: 15px;
 }
 
-    .wizard-push-notification-item-body .group label {
-        font-size: 0.9em;
-    }
+.wizard-push-notification-item-body .group label {
+    font-size: 0.9em;
+}
 
-    .wizard-push-notification-item-body .group textarea {
-        height: 50px;
-        font-size: 1em;
-    }
+.wizard-push-notification-item-body .group textarea {
+    height: 50px;
+    font-size: 1em;
+}
 
-    .wizard-push-notification-item-body .group input {
-        font-size: 1em;
-    }
+.wizard-push-notification-item-body .group input {
+    font-size: 1em;
+}
 
 .push-image-container {
     width: 320px;
@@ -734,7 +740,6 @@ textarea.default-style-input {
     height: 100%;
     background-size: 100%;
     display: flex;
-    
 }
 
 .android {
@@ -762,12 +767,12 @@ textarea.default-style-input {
     justify-content: center;
 }
 
-    .wrap-device-preview span {
-        margin-top: 5px;
-        font-size: 0.8em;
-        font-weight: 600;
-        color: rgba(0,0,0,.4)
-    }
+.wrap-device-preview span {
+    margin-top: 5px;
+    font-size: 0.8em;
+    font-weight: 600;
+    color: rgba(0,0,0,.4)
+}
 
 .preview-device-description {
     font-size: 0.7em;
@@ -824,18 +829,25 @@ textarea.default-style-input {
     align-items: center;
 }
 
-.preview-msg-image-default {
+.preview-msg-image-device {
     width: 100%;
     height: 100%;
-    border: 1px solid #bdbdbd35;
     display: flex;
     justify-content: center;
-    align-items:center;
+    align-items: center;
 }
 
-.preview-msg-image-default img {
-    width: 60%
-}
+    .preview-msg-image-device img {
+        width: 60%;
+        border: 1px solid #bdbdbd35;
+        padding: 20%;
+    }
+
+    .preview-msg-image-loaded {
+        width: 90% !important;
+        border: none !important;
+        padding: 0 !important;
+    }
 
 .preview-msg-body {
     padding: 2px 0 0 2px;
@@ -868,3 +880,30 @@ textarea.default-style-input {
         white-space: nowrap;
         max-width: 207px;
     }
+
+.promotion-item-setting-body .SumoSelect:last-child {
+    margin-top: 5px;
+}
+
+.push-image-btn-remove {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 15px;
+    height: 15px;
+    font-size: 0.9em;
+    color: #5f0000;
+    cursor: pointer;
+    background-color: #ffffff69;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom-left-radius: 5px;
+}
+
+button#push-image-btn-remove:hover {
+    color: red;
+    transition: 600ms;
+    background-color: #ffffffb3;
+}

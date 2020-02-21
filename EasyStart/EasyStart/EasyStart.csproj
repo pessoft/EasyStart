@@ -219,7 +219,7 @@
     <Compile Include="Logic\CategoryType.cs" />
     <Compile Include="Logic\FCM\FCMNotification.cs" />
     <Compile Include="Logic\FCM\NotificationActionType.cs" />
-    <Compile Include="Logic\FCM\PushMessage.cs" />
+    <Compile Include="Logic\FCM\PlatformDevice.cs" />
     <Compile Include="Logic\Notification\EmailNotification\RestorePasswordNotification.cs" />
     <Compile Include="Logic\PreprocessorDataAPI.cs" />
     <Compile Include="Logic\PromotionLogic.cs" />
@@ -554,6 +554,10 @@
     <Compile Include="Migrations\202002190919550_RemoveMainPriceDelivery.Designer.cs">
       <DependentUpon>202002190919550_RemoveMainPriceDelivery.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202002211217517_AddedRegisterFCMDevice.cs" />
+    <Compile Include="Migrations\202002211217517_AddedRegisterFCMDevice.Designer.cs">
+      <DependentUpon>202002211217517_AddedRegisterFCMDevice.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -567,8 +571,11 @@
     <Compile Include="Models\CouponParamsModel.cs" />
     <Compile Include="Models\DataHistoryForViewModel.cs" />
     <Compile Include="Models\DeliverySettingModel.cs" />
-    <Compile Include="Models\FCMNotification\FMCMessage.cs" />
+    <Compile Include="Models\FCMNotification\ActionMessage.cs" />
+    <Compile Include="Models\FCMNotification\FCMDeviceModel.cs" />
+    <Compile Include="Models\FCMNotification\FCMMessage.cs" />
     <Compile Include="Models\FCMNotification\PushMessageModel.cs" />
+    <Compile Include="Models\FCMNotification\PushNotification.cs" />
     <Compile Include="Models\HistoryOrderFilter.cs" />
     <Compile Include="Models\IContainImage.cs" />
     <Compile Include="Models\IngredientHistoryModel.cs" />
@@ -1026,6 +1033,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202002190919550_RemoveMainPriceDelivery.resx">
       <DependentUpon>202002190919550_RemoveMainPriceDelivery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202002211217517_AddedRegisterFCMDevice.resx">
+      <DependentUpon>202002211217517_AddedRegisterFCMDevice.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -307,22 +307,26 @@
                                     <span class="wizard-push-notification-item-header">Уведомление</span>
                                     <div class="wizard-push-notification-item-body">
                                         <div class="group wizard-push-title-group">
-                                            <input required type="text" autocomplete="off" id="push-title" />
+                                            <input required type="text" autocomplete="off" id="push-title" oninput="PreviewDevice.onInputMessageTitle(this)"/>
                                             <span class="bar"></span>
-                                            <label>Загаловок уведомления</label>
+                                            <label>Заголовок сообщения</label>
                                         </div>
                                         <div class="group wizard-push-body-group">
-                                            <textarea id="push-body" placeholder="Введите текст уведомления"></textarea>
+                                            <textarea id="push-body" placeholder="Введите текст уведомления" oninput="PreviewDevice.onInputMessageBody(this)"></textarea>
                                             <span class="bar"></span>
-                                            <label>Текст уведомления</label>
+                                            <label>Текст сообщения</label>
                                         </div>
                                         <div class="push-image-container">
                                             <div class="push-image">
-                                                <img src="/images/default-image.jpg" />
+                                                <button id="push-image-btn-remove" class="push-image-btn-remove hide" onclick="PushNotitifactionImage.removeImage()">
+                                                    <i class="fal fa-times"></i>
+                                                </button>
+                                                <img id="push-notification-image-preview" src="/images/default-image.jpg" />
                                             </div>
                                             <div class="push-image-menu">
+                                                <input type="file" id="push-image-download" class="not-bind-image hide" accept="image/*">
                                                 <span>Изображение уведомления (необязательно)</span>
-                                                <button id="push-image-btn-download" class="push-image-btn-download" onclick="">
+                                                <button id="push-image-btn-download" class="push-image-btn-download" onclick="openDialogFile('push-image-download')">
                                                     Загрузить
                                                     <i class="fal fa-arrow-from-bottom"></i>
                                                 </button>
@@ -331,16 +335,21 @@
                                         <div class="push-target-setting">
                                             <div class="promotion-item-setting-body">
                                                 <span>Действие по нажатию на PUSH</span>
-                                                <select onchange="">
+                                                <select id="push-actions" onchange="NotificationAction.onChangeAction(this); PushDataHandler.toggleBtnSave()">
                                                     <option value="0">Открыть приложение</option>
                                                     <option value="1">Открыть категорию товаров</option>
-                                                    <option value="3">Открыть информацию о товаре</option>
+                                                    <option value="2">Открыть информацию о товаре</option>
                                                     <option value="3">Открыть информацию об ацкии</option>
+                                                    <option value="4">Открыть страницу партнёрской программы</option>
+                                                    <option value="5">Открыть страницу кешбека</option>
+                                                    
+                                                </select>
+                                                <select id="push-additional-action" class="push-additional-action">
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="push-menu">
-                                            <button class="btn btn-submit" onclick="">Отправить</button>
+                                            <button id="send-new-push-message" class="btn btn-submit">Отправить</button>
                                         </div>
                                     </div>
                                 </div>
@@ -362,7 +371,7 @@
                                                         <p class="preview-msg-body-text">Текст сообщения</p>
                                                     </div>
                                                     <div class="preview-msg-image">
-                                                        <div class="preview-msg-image-default">
+                                                        <div class="preview-msg-image-device">
                                                             <img src="/images/default-image.jpg" />
                                                         </div>
                                                     </div>
@@ -379,7 +388,7 @@
                                                         <p class="preview-msg-body-text">Текст сообщения</p>
                                                     </div>
                                                     <div class="preview-msg-image">
-                                                        <div class="preview-msg-image-default">
+                                                        <div class="preview-msg-image-device">
                                                             <img src="/images/default-image.jpg" />
                                                         </div>
                                                     </div>

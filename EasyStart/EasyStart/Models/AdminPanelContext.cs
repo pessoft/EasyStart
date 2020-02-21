@@ -34,7 +34,8 @@ namespace EasyStart.Models
         public DbSet<PromotionSetting> PromotionSettings { get; set; }
         public DbSet<ConstructorCategory> ConstructorCategories { get; set; }
         public DbSet<IngredientModel> Ingredients { get; set; }
-
+        
         public DbSet<PushMessageModel> PushMessages { get; set; }
+        public DbSet<FCMDeviceModel> FCMDevices { get; set; }
     }
 }

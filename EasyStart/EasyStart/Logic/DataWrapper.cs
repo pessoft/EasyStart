@@ -2826,5 +2826,65 @@ namespace EasyStart.Logic
 
             return count;
         }
+
+        public static void AddOrUpdateDevice(FCMDeviceModel device)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    if(device.ClientId > 0)
+                    {
+                        var updDevice = db.FCMDevices.FirstOrDefault(p => p.ClientId == device.ClientId);
+
+                        if (updDevice != null)
+                        {
+                            updDevice.Platform = device.Platform;
+                            updDevice.Token = device.Token;
+                            updDevice.BranchId = device.BranchId;
+
+                            db.SaveChanges();
+                        } else
+                        {
+                            var notRegisteDevice = db.FCMDevices.FirstOrDefault(p => p.Token == device.Token);
+                            if (notRegisteDevice != null)
+                            {
+                                notRegisteDevice.Platform = device.Platform;
+                                notRegisteDevice.Token = device.Token;
+
+                                db.SaveChanges();
+                            }
+                            else
+                            {
+                                db.FCMDevices.Add(device);
+                                db.SaveChanges();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
+
+        public static List<string> GetDeviceTokens(int branchId)
+        {
+            var tokens = new List<string>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    tokens = db.FCMDevices.Where(p => p.BranchId == branchId).Select(p => p.Token).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return tokens;
+        }
     }
 }

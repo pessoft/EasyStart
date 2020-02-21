@@ -1,14 +1,17 @@
 ﻿$(document).ready(function () {
     bindPromotinoMenuItemClick()
-
+    bindPushNotificationEvent()
     StockManger.initPeriodCalendar()
     CouponManager.initPeriodCalendar()
 
     PromotionSetting.bindDragula()
     PromotionSetting.binSumoSelectForPromotionSettings()
     PromotionSetting.loadSettings()
-    
+    bindSumoselectAction()
+    bindPushImagePreview()
 })
+
+
 
 const PromotionSection = {
     Unknown: 0,
@@ -35,19 +38,34 @@ function bindPromotinoMenuItemClick() {
 
 function changePromotionActiveMenu(e) {
     const $e = $(e)
+    const isAcurrentActive = $e.hasClass('promotion-menu-active')
+
+    if (isAcurrentActive)
+        return;
+
     $('.promotion-menu li').removeClass('promotion-menu-active')
     $e.addClass('promotion-menu-active')
 
     const targetId = $e.attr('target-id')
     $('.promotion-content').addClass('hide')
     $(`#${targetId}`).removeClass('hide')
+
+    changedPromotionActiveMenu(targetId)
+}
+
+function changedPromotionActiveMenu(targetId) {
+    switch (targetId) {
+        case 'pormotion-push-notification':
+            setDefaultPushNotification()
+            break
+    }
 }
 
 async function activePromotion() {
     initListsProducts()
 }
 
-function initListsProducts () {
+function initListsProducts() {
     const idSelect = 'bonus-product-items'
     const $contentWrapper = $('#bonus-products-setting')
     const $select = $contentWrapper.find(`#${idSelect}`)

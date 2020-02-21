@@ -15,6 +15,8 @@ namespace EasyStart.Logic.FCM
     {
         //Имя пакета приложениея
         private string topicName;
+        private List<string> tokens;
+
         public FCMNotification(string serviceAccountKeyPath, string topicNamePath)
         {
             try
@@ -34,7 +36,26 @@ namespace EasyStart.Logic.FCM
 
         }
 
-        public void SendMessage(FMCMessage message)
+        public FCMNotification(string serviceAccountKeyPath, List<string> tokens)
+        {
+            try
+            {
+                if (FirebaseApp.DefaultInstance == null)
+                    FirebaseApp.Create(new AppOptions()
+                    {
+                        Credential = GoogleCredential.FromFile(serviceAccountKeyPath)
+                    });
+
+                this.tokens = tokens;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+        }
+
+        public void SendMessage(FCMMessage message)
         {
             try
             {
@@ -44,16 +65,49 @@ namespace EasyStart.Logic.FCM
                     Body = message.Body
                 };
 
+                AndroidConfig androidConfig = string.IsNullOrEmpty(message.ImageUrl) ? null : new AndroidConfig { Notification = new AndroidNotification { ImageUrl = message.ImageUrl } };
+                ApnsConfig apnsConfig = string.IsNullOrEmpty(message.ImageUrl) ? null : new ApnsConfig { FcmOptions = new ApnsFcmOptions { ImageUrl = message.ImageUrl } };
+
                 var fcmMessage = new Message()
                 {
                     Notification = notification,
                     Data = message.Data,
                     Topic = topicName,
-                    Android = new AndroidConfig { Notification = new AndroidNotification { ImageUrl = message.ImageUrl } },
-                    Apns = new ApnsConfig { FcmOptions = new ApnsFcmOptions { ImageUrl = message.ImageUrl } }
+                    Android = androidConfig,
+                    Apns = apnsConfig
                 };
 
                 FirebaseMessaging.DefaultInstance.SendAsync(fcmMessage);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
+
+        public void SendMulticastMessage(FCMMessage message)
+        {
+            try
+            {
+                var notification = new FirebaseAdmin.Messaging.Notification
+                {
+                    Title = message.Title,
+                    Body = message.Body
+                };
+
+                AndroidConfig androidConfig = string.IsNullOrEmpty(message.ImageUrl) ? null : new AndroidConfig { Notification = new AndroidNotification { ImageUrl = message.ImageUrl } };
+                ApnsConfig apnsConfig = string.IsNullOrEmpty(message.ImageUrl) ? null : new ApnsConfig { FcmOptions = new ApnsFcmOptions { ImageUrl = message.ImageUrl } };
+
+                var fcmMessage = new MulticastMessage()
+                {
+                    Notification = notification,
+                    Data = message.Data,
+                    Tokens = tokens,
+                    Android = androidConfig,
+                    Apns = apnsConfig
+                };
+
+                FirebaseMessaging.DefaultInstance.SendMulticastAsync(fcmMessage);
             }
             catch (Exception ex)
             {

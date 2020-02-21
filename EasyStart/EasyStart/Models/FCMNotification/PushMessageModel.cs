@@ -13,7 +13,7 @@ namespace EasyStart.Models.FCMNotification
         public PushMessageModel()
         {  }
 
-        public PushMessageModel(FMCMessage message, int branchId, DateTime date)
+        public PushMessageModel(FCMMessage message, int branchId, DateTime date)
         {
             BranchId = branchId;
             Body = message.Body;
