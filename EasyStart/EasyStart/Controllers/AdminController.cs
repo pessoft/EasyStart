@@ -1280,7 +1280,7 @@ namespace EasyStart.Controllers
                         return;
 
                     var fcm = new FCMNotification(fcmAuthKeyPath, tokens);
-                    fcm.SendMessage(message);
+                    fcm.SendMulticastMessage(message);
                 });
 
                 result.Success = true;

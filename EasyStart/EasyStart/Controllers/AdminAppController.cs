@@ -980,12 +980,14 @@ namespace EasyStart
             var result = new JsonResultModel();
 
             if(device == null ||
-                device.BranchId < 1 ||
                 string.IsNullOrEmpty(device.Token))
             {
                 result.ErrorMessage = "Девайс не зарегестрирован";
                 return result;
             }
+
+            if (device.BranchId == -1)
+                device.BranchId = DataWrapper.GetMainBranch().Id;
 
             try
             {

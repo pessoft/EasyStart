@@ -2833,7 +2833,26 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    if(device.ClientId > 0)
+                    void addTokennotRegisterClient()
+                    {
+                        var notRegisteDevice = db.FCMDevices.FirstOrDefault(p => p.Token == device.Token);
+                        if (notRegisteDevice != null)
+                        {
+                            notRegisteDevice.Platform = device.Platform;
+                            notRegisteDevice.Token = device.Token;
+                            notRegisteDevice.ClientId = device.ClientId;
+                            notRegisteDevice.BranchId = device.BranchId;
+
+                            db.SaveChanges();
+                        }
+                        else
+                        {
+                            db.FCMDevices.Add(device);
+                            db.SaveChanges();
+                        }
+                    }
+
+                    if (device.ClientId > 0)
                     {
                         var updDevice = db.FCMDevices.FirstOrDefault(p => p.ClientId == device.ClientId);
 
@@ -2846,20 +2865,12 @@ namespace EasyStart.Logic
                             db.SaveChanges();
                         } else
                         {
-                            var notRegisteDevice = db.FCMDevices.FirstOrDefault(p => p.Token == device.Token);
-                            if (notRegisteDevice != null)
-                            {
-                                notRegisteDevice.Platform = device.Platform;
-                                notRegisteDevice.Token = device.Token;
-
-                                db.SaveChanges();
-                            }
-                            else
-                            {
-                                db.FCMDevices.Add(device);
-                                db.SaveChanges();
-                            }
+                            addTokennotRegisterClient();
                         }
+                    }
+                    else
+                    {
+                        addTokennotRegisterClient();
                     }
                 }
             }
