@@ -521,6 +521,10 @@
     <Compile Include="Migrations\202002190919550_RemoveMainPriceDelivery.Designer.cs">
       <DependentUpon>202002190919550_RemoveMainPriceDelivery.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202002222043387_RatingProduct.cs" />
+    <Compile Include="Migrations\202002222043387_RatingProduct.Designer.cs">
+      <DependentUpon>202002222043387_RatingProduct.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -985,6 +989,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202002190919550_RemoveMainPriceDelivery.resx">
       <DependentUpon>202002190919550_RemoveMainPriceDelivery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202002222043387_RatingProduct.resx">
+      <DependentUpon>202002222043387_RatingProduct.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
