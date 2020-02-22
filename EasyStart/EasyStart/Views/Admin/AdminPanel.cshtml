@@ -301,13 +301,19 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="pormotion-push-notification" class="promotion-content promotion-push-notification">
+                        <div id="pormotion-push-notification" class="promotion-content promotion-push-notification hide">
                             <div class="wizard-push-notification">
+                                <div class="max-container hide" id="container-collapse-edit-new-push-msg">
+                                    <button id="show-edit-new-push-msg" class="simple-text-button" onclick="HistoryNotification.showEditNewMessage()">
+                                        Создать PUSH уведомление
+                                        <i class="fal fa-comment-alt-lines"></i>
+                                    </button>
+                                </div>
                                 <div class="wizard-push-notification-item push-notification-constructor">
                                     <span class="wizard-push-notification-item-header">Уведомление</span>
                                     <div class="wizard-push-notification-item-body">
                                         <div class="group wizard-push-title-group">
-                                            <input required type="text" autocomplete="off" id="push-title" oninput="PreviewDevice.onInputMessageTitle(this)"/>
+                                            <input required type="text" autocomplete="off" id="push-title" oninput="PreviewDevice.onInputMessageTitle(this)" />
                                             <span class="bar"></span>
                                             <label>Заголовок сообщения</label>
                                         </div>
@@ -342,10 +348,9 @@
                                                     <option value="3">Открыть информацию об ацкии</option>
                                                     <option value="4">Открыть страницу партнёрской программы</option>
                                                     <option value="5">Открыть страницу кешбека</option>
-                                                    
+
                                                 </select>
-                                                <select id="push-additional-action" class="push-additional-action">
-                                                </select>
+                                                <select id="push-additional-action" class="push-additional-action"></select>
                                             </div>
                                         </div>
                                         <div class="push-menu">
@@ -361,7 +366,7 @@
                                                 Посмотрите, как сообщение будет выглядеть на мобильных устройствах. У пользователей разных устройств сообщение может выглядеть по-разному.
                                             </span>
                                         </div>
-                                        
+
                                         <div class="wrap-device-preview">
                                             <div class="device-preview-container">
                                                 <div class="device-preview android"></div>
@@ -400,8 +405,8 @@
                                 </div>
                             </div>
                             <div class="history-push-notitification">
-                                <div class="history-push-notitification-short">
-                                    <button id="history-push-download" class="history-push-download" onclick="">
+                                <div class="max-container" id="container-collapse-history-push-msg">
+                                    <button id="history-push-download" class="history-push-download" onclick="HistoryNotification.showHistory()">
                                         Показать историю PUSH сообщений
                                         <i class="fal fa-history"></i>
                                     </button>

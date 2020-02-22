@@ -1232,8 +1232,6 @@ namespace EasyStart.Controllers
             return Json(result);
         }
 
-        private readonly int PAGE_PUSH_MESSAGE_SIZE = 10;
-
         [HttpPost]
         [Authorize]
         public JsonResult PushNotification(PushNotification pushNotification)
@@ -1266,9 +1264,9 @@ namespace EasyStart.Controllers
                 var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
                 var pushMessage = new PushMessageModel(message, branchId, date);
 
-                //var savedMessage = DataWrapper.SavePushMessage(pushMessage);
-                //if (savedMessage == null)
-                //    throw new Exception("Ошибка при сохранении PUSH сообщения");
+                var savedMessage = DataWrapper.SavePushMessage(pushMessage);
+                if (savedMessage == null)
+                    throw new Exception("Ошибка при сохранении PUSH сообщения");
 
 
                 Task.Run(() =>
@@ -1294,6 +1292,8 @@ namespace EasyStart.Controllers
             return Json(result);
         }
 
+        private readonly int PAGE_PUSH_MESSAGE_SIZE = 10;
+
         [HttpPost]
         [Authorize]
         public JsonResult LoadPushNotification(int pageNumber)
@@ -1306,7 +1306,6 @@ namespace EasyStart.Controllers
                 var messagesCount = DataWrapper.GetCountPushMessage(branchId);
                 var messagesMaxPage = messagesCount == 0 ? 1 : Convert.ToInt32(Math.Ceiling((double)messagesCount / PAGE_PUSH_MESSAGE_SIZE));
                 pageNumber = pageNumber < 1 ? 1 : pageNumber;
-                pageNumber = pageNumber > messagesMaxPage ? messagesMaxPage : pageNumber;
 
                 var historyMessage = DataWrapper.GetPushMessage(branchId, pageNumber, PAGE_PUSH_MESSAGE_SIZE);
 
@@ -1315,13 +1314,14 @@ namespace EasyStart.Controllers
                 {
                     HistoryMessages = historyMessage,
                     PageNumber = pageNumber,
-                    PageSize = PAGE_PUSH_MESSAGE_SIZE
+                    PageSize = PAGE_PUSH_MESSAGE_SIZE,
+                    IsLast = messagesMaxPage == pageNumber
                 };
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result.ErrorMessage = "При отправке PUSH сообщения что-то пошло не так";
+                result.ErrorMessage = "При загрузге истории PUSH сообщений что-то пошло не так";
             }
 
             return Json(result);

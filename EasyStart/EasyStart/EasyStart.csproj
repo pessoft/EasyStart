@@ -558,6 +558,10 @@
     <Compile Include="Migrations\202002211217517_AddedRegisterFCMDevice.Designer.cs">
       <DependentUpon>202002211217517_AddedRegisterFCMDevice.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202002221356108_PushMessages.cs" />
+    <Compile Include="Migrations\202002221356108_PushMessages.Designer.cs">
+      <DependentUpon>202002221356108_PushMessages.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -1036,6 +1040,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202002211217517_AddedRegisterFCMDevice.resx">
       <DependentUpon>202002211217517_AddedRegisterFCMDevice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202002221356108_PushMessages.resx">
+      <DependentUpon>202002221356108_PushMessages.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

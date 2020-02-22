@@ -16,6 +16,7 @@ namespace EasyStart.Models.FCMNotification
         public PushMessageModel(FCMMessage message, int branchId, DateTime date)
         {
             BranchId = branchId;
+            Title = message.Title;
             Body = message.Body;
             ImageUrl = message.ImageUrl;
             DataJSON = message.Data != null ?  JsonConvert.SerializeObject(message.Data) : null;
@@ -24,6 +25,7 @@ namespace EasyStart.Models.FCMNotification
 
         public int Id { get; set; }
         public int BranchId { get; set; }
+        public string Title { get; set; }
         public string Body { get; set; }
         public string ImageUrl { get; set; }
         public string DataJSON { get; set;}

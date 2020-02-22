@@ -2792,9 +2792,9 @@ namespace EasyStart.Logic
                 {
                     historyMessages = db.PushMessages
                         .Where(p => p.BranchId == branchId)
-                        .Skip(pageSize - 1 * pageSize)
-                        .Take(pageSize)
                         .OrderByDescending(p => p.Date)
+                        .Skip(pageSize * (pageNumber-1))
+                        .Take(pageSize)
                         .ToList();
                 }
             }
