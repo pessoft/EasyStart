@@ -139,7 +139,7 @@ var NotificationAction = {
     },
     setOpenCategoryAction: function (defaultAdditionalTargetId) {
         let options = []
-        const fiersItemIsSelected = defaultAdditionalTargetId && defaultAdditionalTargetId > 0 ? 'selected' : ''
+        const fiersItemIsSelected = defaultAdditionalTargetId && defaultAdditionalTargetId > 0 ? '' : 'selected'
 
         options.push(`<option value='-1' disabled ${fiersItemIsSelected}>Выберите категорию</option>`)
         for (let id in CategoryDictionary) {
@@ -153,7 +153,7 @@ var NotificationAction = {
     },
     setOpenProductAction: function (defaultAdditionalTargetId) {
         let optGroups = []
-        const fiersItemIsSelected = defaultAdditionalTargetId && defaultAdditionalTargetId > 0 ? 'selected' : ''
+        const fiersItemIsSelected = defaultAdditionalTargetId && defaultAdditionalTargetId > 0 ? '' : 'selected'
 
         optGroups.push(`<option value='-1' disabled ${fiersItemIsSelected}>Выберите блюдо</option>`)
         for (let id in CategoryDictionary) {
@@ -178,7 +178,7 @@ var NotificationAction = {
     },
     setOpenStockAction: function (defaultAdditionalTargetId) {
         let options = []
-        const fiersItemIsSelected = defaultAdditionalTargetId && defaultAdditionalTargetId > 0 ? 'selected' : ''
+        const fiersItemIsSelected = defaultAdditionalTargetId && defaultAdditionalTargetId > 0 ? '' : 'selected'
 
         options.push(`<option value='-1' disabled  ${fiersItemIsSelected}>Выберите акцию</option>`)
         for (let stock of StockManger.stockList) {

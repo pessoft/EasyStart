@@ -89,21 +89,21 @@ namespace EasyStart.Logic.FCM
         {
             try
             {
+                message.ImageUrl = "https://es-admin-10.ru/Images/Products/7fdb659c-151d-40dc-9abb-99e5442dbdfe.jpg";
                 var notification = new FirebaseAdmin.Messaging.Notification
                 {
                     Title = message.Title,
-                    Body = message.Body
+                    Body = message.Body,
+                    ImageUrl = message.ImageUrl
                 };
 
-                AndroidConfig androidConfig = string.IsNullOrEmpty(message.ImageUrl) ? null : new AndroidConfig { Notification = new AndroidNotification { ImageUrl = message.ImageUrl } };
-                ApnsConfig apnsConfig = string.IsNullOrEmpty(message.ImageUrl) ? null : new ApnsConfig { FcmOptions = new ApnsFcmOptions { ImageUrl = message.ImageUrl } };
+                ApnsConfig apnsConfig = new ApnsConfig { Aps = new Aps { Sound = "default" } };
 
                 var fcmMessage = new MulticastMessage()
                 {
                     Notification = notification,
                     Data = message.Data,
                     Tokens = tokens,
-                    Android = androidConfig,
                     Apns = apnsConfig
                 };
 

@@ -557,6 +557,10 @@
     <Compile Include="Migrations\202002211217517_AddedRegisterFCMDevice.cs" />
     <Compile Include="Migrations\202002211217517_AddedRegisterFCMDevice.Designer.cs">
       <DependentUpon>202002211217517_AddedRegisterFCMDevice.cs</DependentUpon>
+      </Compile>
+    <Compile Include="Migrations\202002222043387_RatingProduct.cs" />
+    <Compile Include="Migrations\202002222043387_RatingProduct.Designer.cs">
+      <DependentUpon>202002222043387_RatingProduct.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\202002221356108_PushMessages.cs" />
     <Compile Include="Migrations\202002221356108_PushMessages.Designer.cs">
@@ -1040,6 +1044,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202002211217517_AddedRegisterFCMDevice.resx">
       <DependentUpon>202002211217517_AddedRegisterFCMDevice.cs</DependentUpon>
+      </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202002222043387_RatingProduct.resx">
+      <DependentUpon>202002222043387_RatingProduct.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202002221356108_PushMessages.resx">
       <DependentUpon>202002221356108_PushMessages.cs</DependentUpon>

@@ -701,6 +701,7 @@ textarea.default-style-input {
 .push-image-menu span {
     font-size: 0.7em;
     margin-bottom: 5px;
+    text-align:center;
 }
 
 .push-image-btn-download {
