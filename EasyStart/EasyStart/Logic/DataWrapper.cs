@@ -1,4 +1,5 @@
 ﻿using EasyStart.Models;
+using EasyStart.Models.FCMNotification;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -1426,7 +1427,7 @@ namespace EasyStart.Logic
                     var saved = db.ProductReviews.Add(reviews);
                     db.SaveChanges();
 
-                    if(saved != null)
+                    if (saved != null)
                     {
                         result.Id = saved.Id;
                     }
@@ -1654,7 +1655,7 @@ namespace EasyStart.Logic
                 {
                     newClient = db.Clients.FirstOrDefault(p => p.PhoneNumber == client.PhoneNumber);
 
-                    if(newClient != null)
+                    if (newClient != null)
                     {
                         return null;
                     }
@@ -1935,7 +1936,7 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                   var client = db.Clients.FirstOrDefault(p => p.PhoneNumber != phoneNumber && p.Email == email);
+                    var client = db.Clients.FirstOrDefault(p => p.PhoneNumber != phoneNumber && p.Email == email);
                     result = client == null;
                 }
             }
@@ -1951,7 +1952,7 @@ namespace EasyStart.Logic
         {
             Client client = null;
 
-            if(string.IsNullOrEmpty(email))
+            if (string.IsNullOrEmpty(email))
             {
                 return client;
             }
@@ -2680,7 +2681,7 @@ namespace EasyStart.Logic
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public static Dictionary<int,List<IngredientModel>> GetAllDictionaryIngredientsByCategoryIds(IEnumerable<int> ids)
+        public static Dictionary<int, List<IngredientModel>> GetAllDictionaryIngredientsByCategoryIds(IEnumerable<int> ids)
         {
             Dictionary<int, List<IngredientModel>> result = null;
             try
@@ -2753,6 +2754,148 @@ namespace EasyStart.Logic
             }
 
             return result;
+        }
+
+        public static PushMessageModel SavePushMessage(PushMessageModel message)
+        {
+            PushMessageModel savedMessage = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    savedMessage = db.PushMessages.Add(message);
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return savedMessage;
+        }
+
+        public static List<PushMessageModel> GetPushMessage(int branchId, int pageNumber, int pageSize)
+        {
+            List<PushMessageModel> historyMessages = null;
+
+            if (branchId < 1 ||
+                pageNumber < 1 ||
+                pageSize < 1)
+                return historyMessages;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    historyMessages = db.PushMessages
+                        .Where(p => p.BranchId == branchId)
+                        .OrderByDescending(p => p.Date)
+                        .Skip(pageSize * (pageNumber-1))
+                        .Take(pageSize)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return historyMessages;
+        }
+
+        public static int GetCountPushMessage(int branchId)
+        {
+            int count = 0;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    count = db.PushMessages
+                        .Where(p => p.BranchId == branchId)
+                       .Count();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return count;
+        }
+
+        public static void AddOrUpdateDevice(FCMDeviceModel device)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    void addTokennotRegisterClient()
+                    {
+                        var notRegisteDevice = db.FCMDevices.FirstOrDefault(p => p.Token == device.Token);
+                        if (notRegisteDevice != null)
+                        {
+                            notRegisteDevice.Platform = device.Platform;
+                            notRegisteDevice.Token = device.Token;
+                            notRegisteDevice.ClientId = device.ClientId;
+                            notRegisteDevice.BranchId = device.BranchId;
+
+                            db.SaveChanges();
+                        }
+                        else
+                        {
+                            db.FCMDevices.Add(device);
+                            db.SaveChanges();
+                        }
+                    }
+
+                    if (device.ClientId > 0)
+                    {
+                        var updDevice = db.FCMDevices.FirstOrDefault(p => p.ClientId == device.ClientId);
+
+                        if (updDevice != null)
+                        {
+                            updDevice.Platform = device.Platform;
+                            updDevice.Token = device.Token;
+                            updDevice.BranchId = device.BranchId;
+
+                            db.SaveChanges();
+                        } else
+                        {
+                            addTokennotRegisterClient();
+                        }
+                    }
+                    else
+                    {
+                        addTokennotRegisterClient();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
+
+        public static List<string> GetDeviceTokens(int branchId)
+        {
+            var tokens = new List<string>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    tokens = db.FCMDevices.Where(p => p.BranchId == branchId).Select(p => p.Token).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return tokens;
         }
     }
 }

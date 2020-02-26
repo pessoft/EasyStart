@@ -51,6 +51,30 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="FirebaseAdmin, Version=1.9.2.0, Culture=neutral, PublicKeyToken=97c8d00c348326ed, processorArchitecture=MSIL">
+      <HintPath>..\packages\FirebaseAdmin.1.9.2\lib\net45\FirebaseAdmin.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Api.Gax, Version=2.7.0.0, Culture=neutral, PublicKeyToken=3ec5ea7f18953e47, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Api.Gax.2.7.0\lib\net45\Google.Api.Gax.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Api.Gax.Rest, Version=2.7.0.0, Culture=neutral, PublicKeyToken=3ec5ea7f18953e47, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Api.Gax.Rest.2.7.0\lib\net45\Google.Api.Gax.Rest.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis, Version=1.40.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.40.0\lib\net45\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth, Version=1.40.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.40.0\lib\net45\Google.Apis.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth.PlatformServices, Version=1.40.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.40.0\lib\net45\Google.Apis.Auth.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Core, Version=1.40.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Core.1.40.0\lib\net45\Google.Apis.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.PlatformServices, Version=1.40.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.40.0\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
@@ -70,12 +94,21 @@
     <Reference Include="Microsoft.Owin.Security, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.5.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Interactive.Async, Version=3.2.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Interactive.Async.3.2.0\lib\net46\System.Interactive.Async.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
@@ -143,9 +176,6 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
@@ -187,6 +217,9 @@
     <Compile Include="Logic\BrachClone.cs" />
     <Compile Include="Logic\BuyType.cs" />
     <Compile Include="Logic\CategoryType.cs" />
+    <Compile Include="Logic\FCM\FCMNotification.cs" />
+    <Compile Include="Logic\FCM\NotificationActionType.cs" />
+    <Compile Include="Logic\FCM\PlatformDevice.cs" />
     <Compile Include="Logic\Notification\EmailNotification\RestorePasswordNotification.cs" />
     <Compile Include="Logic\PreprocessorDataAPI.cs" />
     <Compile Include="Logic\PromotionLogic.cs" />
@@ -521,9 +554,17 @@
     <Compile Include="Migrations\202002190919550_RemoveMainPriceDelivery.Designer.cs">
       <DependentUpon>202002190919550_RemoveMainPriceDelivery.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202002211217517_AddedRegisterFCMDevice.cs" />
+    <Compile Include="Migrations\202002211217517_AddedRegisterFCMDevice.Designer.cs">
+      <DependentUpon>202002211217517_AddedRegisterFCMDevice.cs</DependentUpon>
+      </Compile>
     <Compile Include="Migrations\202002222043387_RatingProduct.cs" />
     <Compile Include="Migrations\202002222043387_RatingProduct.Designer.cs">
       <DependentUpon>202002222043387_RatingProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202002221356108_PushMessages.cs" />
+    <Compile Include="Migrations\202002221356108_PushMessages.Designer.cs">
+      <DependentUpon>202002221356108_PushMessages.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
@@ -538,6 +579,11 @@
     <Compile Include="Models\CouponParamsModel.cs" />
     <Compile Include="Models\DataHistoryForViewModel.cs" />
     <Compile Include="Models\DeliverySettingModel.cs" />
+    <Compile Include="Models\FCMNotification\ActionMessage.cs" />
+    <Compile Include="Models\FCMNotification\FCMDeviceModel.cs" />
+    <Compile Include="Models\FCMNotification\FCMMessage.cs" />
+    <Compile Include="Models\FCMNotification\PushMessageModel.cs" />
+    <Compile Include="Models\FCMNotification\PushNotification.cs" />
     <Compile Include="Models\HistoryOrderFilter.cs" />
     <Compile Include="Models\IContainImage.cs" />
     <Compile Include="Models\IngredientHistoryModel.cs" />
@@ -553,6 +599,7 @@
     <Compile Include="Models\OrderInfoParams.cs" />
     <Compile Include="Models\OrderModel.cs" />
     <Compile Include="Models\OrderStockApply.cs" />
+    <Compile Include="Models\PagingPushMessageHistory.cs" />
     <Compile Include="Models\ProductConstructorIngredientModel.cs" />
     <Compile Include="Models\ProductConstructorOrderModel.cs" />
     <Compile Include="Models\ProductHistoryModel.cs" />
@@ -667,6 +714,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\main.css" />
+    <Content Include="Images\android.png" />
     <Content Include="Images\blank-ingredients\glass-noodles.png" />
     <Content Include="Images\blank-ingredients\seafood.png" />
     <Content Include="Images\default-image.jpg" />
@@ -674,6 +722,7 @@
     <Content Include="Images\full-logo.png" />
     <Content Include="Images\full-logo-pink.png" />
     <Content Include="Images\full-logo-blue.png" />
+    <Content Include="Images\iphone.png" />
     <Content Include="Images\loader-empty-order.gif" />
     <Content Include="Images\loader.gif" />
     <Content Include="Images\loader_old.gif" />
@@ -689,6 +738,7 @@
     <Content Include="Images\rating\star-on.png" />
     <Content Include="Resource\EmailTemplateOrderNotify.html" />
     <Content Include="Resource\EmailTemplateRestorePassword.html" />
+    <Content Include="Resource\FCMTopicName.txt" />
     <Content Include="Scripts\admin-login.js" />
     <Content Include="Scripts\admin-panel.js" />
     <Content Include="Resource\City.json" />
@@ -712,6 +762,7 @@
     <Content Include="fonts\SFUIDisplay-Light.ttf" />
     <Content Include="Resource\UserManual.pdf" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Resource\FCMAuthKey.json" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\analytics.js" />
     <Content Include="Scripts\datepicker.min.js" />
@@ -746,6 +797,7 @@
     <Content Include="Scripts\promotion\coupon.js" />
     <Content Include="Scripts\promotion\promotion-setting.js" />
     <Content Include="Scripts\promotion\promotion.js" />
+    <Content Include="Scripts\promotion\push-notification.js" />
     <Content Include="Scripts\promotion\stock.js" />
     <Content Include="Scripts\singnal-logic.js" />
     <Content Include="Scripts\chart.js" />
@@ -990,8 +1042,14 @@
     <EmbeddedResource Include="Migrations\202002190919550_RemoveMainPriceDelivery.resx">
       <DependentUpon>202002190919550_RemoveMainPriceDelivery.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202002211217517_AddedRegisterFCMDevice.resx">
+      <DependentUpon>202002211217517_AddedRegisterFCMDevice.cs</DependentUpon>
+      </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202002222043387_RatingProduct.resx">
       <DependentUpon>202002222043387_RatingProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202002221356108_PushMessages.resx">
+      <DependentUpon>202002221356108_PushMessages.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -207,6 +207,7 @@
                             <li target-id="pormotion-stock" class="promotion-menu-active"><i class="fal fa-badge-percent"></i> Акции</li>
                             <li target-id="pormotion-coupons"><i class="fal fa-gift-card"></i> Купоны</li>
                             <li target-id="pormotion-cashback-partners"><i class="fal fa-hands-usd"></i> Кешбек и Партнерская программа</li>
+                            <li target-id="pormotion-push-notification"><i class="fal fa-paper-plane"></i> PUSH сообщения</li>
                             <li target-id="promotion-settings"><i class="fal fa-sliders-v"></i> Настройка</li>
                         </ul>
                     </div>
@@ -300,43 +301,118 @@
                                 </div>
                             </div>
                         </div>
-                        @*<div id="promotion-settings" class="promotion-content promotion-settings promotion-some-settings hide">
-                                <h2>Приорит разделов</h2>
-                                <div id="promotion-items-priority" class="promotion-items-priority">
-                                    <div class="promotion-item-setting" promotion-section="8" promotion-setting-id="-1">
-                                        <i class="fal fa-hands-usd"></i>
-                                        <div class="promotion-item-setting-body">
-                                            <span>Партнерская программа</span>
-                                            <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
-                                                <option value="2">Акции</option>
-                                                <option value="4">Купоны</option>
-                                            </select>
+                        <div id="pormotion-push-notification" class="promotion-content promotion-push-notification hide">
+                            <div class="wizard-push-notification">
+                                <div class="max-container hide" id="container-collapse-edit-new-push-msg">
+                                    <button id="show-edit-new-push-msg" class="simple-text-button" onclick="HistoryNotification.showEditNewMessage()">
+                                        Создать PUSH уведомление
+                                        <i class="fal fa-comment-alt-lines"></i>
+                                    </button>
+                                </div>
+                                <div class="wizard-push-notification-item push-notification-constructor">
+                                    <span class="wizard-push-notification-item-header">Уведомление</span>
+                                    <div class="wizard-push-notification-item-body">
+                                        <div class="group wizard-push-title-group">
+                                            <input required type="text" autocomplete="off" id="push-title" oninput="PreviewDevice.onInputMessageTitle(this)" />
+                                            <span class="bar"></span>
+                                            <label>Заголовок сообщения</label>
                                         </div>
-                                    </div>
-                                    <div class="promotion-item-setting" promotion-section="4" promotion-setting-id="-1">
-                                        <i class="fal fa-gift-card"></i>
-                                        <div class="promotion-item-setting-body">
-                                            <span>Купоны</span>
-                                            <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
-                                                <option value="2">Акции</option>
-                                                <option value="8">Партнерская программа</option>
-                                            </select>
+                                        <div class="group wizard-push-body-group">
+                                            <textarea id="push-body" placeholder="Введите текст уведомления" oninput="PreviewDevice.onInputMessageBody(this)"></textarea>
+                                            <span class="bar"></span>
+                                            <label>Текст сообщения</label>
                                         </div>
-                                    </div>
-                                    <div class="promotion-item-setting" promotion-section="2" promotion-setting-id="-1">
-                                        <i class="fal fa-badge-percent"></i>
-                                        <div class="promotion-item-setting-body">
-                                            <span>Акции</span>
-                                            <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
-                                                <option value="4">Купоны</option>
-                                                <option value="8">Партнерская программа</option>
-                                            </select>
+                                        <div class="push-image-container">
+                                            <div class="push-image">
+                                                <button id="push-image-btn-remove" class="push-image-btn-remove hide" onclick="PushNotitifactionImage.removeImage()">
+                                                    <i class="fal fa-times"></i>
+                                                </button>
+                                                <img id="push-notification-image-preview" src="/images/default-image.jpg" />
+                                            </div>
+                                            <div class="push-image-menu">
+                                                <input type="file" id="push-image-download" class="not-bind-image hide" accept="image/*">
+                                                <span>Изображение уведомления (необязательно, только для Android)</span>
+                                                <button id="push-image-btn-download" class="push-image-btn-download" onclick="openDialogFile('push-image-download')">
+                                                    Загрузить
+                                                    <i class="fal fa-arrow-from-bottom"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="push-target-setting">
+                                            <div class="promotion-item-setting-body">
+                                                <span>Действие по нажатию на PUSH</span>
+                                                <select id="push-actions" onchange="NotificationAction.onChangeAction(this); PushDataHandler.toggleBtnSave()">
+                                                    <option value="0">Открыть приложение</option>
+                                                    <option value="1">Открыть категорию товаров</option>
+                                                    <option value="2">Открыть информацию о товаре</option>
+                                                    <option value="3">Открыть информацию об ацкии</option>
+                                                    <option value="4">Открыть страницу партнёрской программы</option>
+                                                    <option value="5">Открыть страницу кешбека</option>
+
+                                                </select>
+                                                <select id="push-additional-action" class="push-additional-action"></select>
+                                            </div>
+                                        </div>
+                                        <div class="push-menu">
+                                            <button id="send-new-push-message" class="btn btn-submit">Отправить</button>
                                         </div>
                                     </div>
                                 </div>
-                                <button id="save-promotion-setting" class="btn btn-submit" onclick="PromotionSetting.saveSettings()">Сохранить</button>
-                            </div>*@
+                                <div class="wizard-push-notification-item">
+                                    <span class="wizard-push-notification-item-header">Предпросмотр устройства</span>
+                                    <div class="wizard-push-notification-item-body wizard-push-device-preview">
+                                        <div class="preview-device-description">
+                                            <span>
+                                                Посмотрите, как сообщение будет выглядеть на мобильных устройствах. У пользователей разных устройств сообщение может выглядеть по-разному.
+                                            </span>
+                                        </div>
 
+                                        <div class="wrap-device-preview">
+                                            <div class="device-preview-container">
+                                                <div class="device-preview android"></div>
+                                                <div class="preview-push-container-android">
+                                                    <div class="preview-msg-body">
+                                                        <p class="preview-msg-title">Заголовок сообщения</p>
+                                                        <p class="preview-msg-body-text">Текст сообщения</p>
+                                                    </div>
+                                                    <div class="preview-msg-image">
+                                                        <div class="preview-msg-image-device">
+                                                            <img src="/images/default-image.jpg" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <span>Android</span>
+                                        </div>
+                                        <div class="wrap-device-preview">
+                                            <div class="device-preview-container">
+                                                <div class="device-preview ios"></div>
+                                                <div class="preview-push-container-ios">
+                                                    <div class="preview-msg-body">
+                                                        <p class="preview-msg-title">Заголовок сообщения</p>
+                                                        <p class="preview-msg-body-text">Текст сообщения</p>
+                                                    </div>
+                                                    <div class="preview-msg-image">
+                                                        <div class="preview-msg-image-device">
+                                                            <img src="/images/default-image.jpg" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <span>ios</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="history-push-notitification">
+                                <div class="max-container" id="container-collapse-history-push-msg">
+                                    <button id="history-push-download" class="history-push-download" onclick="HistoryNotification.showHistory()">
+                                        Показать историю PUSH сообщений
+                                        <i class="fal fa-history"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                         <div id="promotion-settings" class="promotion-content promotion-settings promotion-some-settings hide">
                             <div class="promotion-setting">
                                 <h2>Баннер из акций</h2>
