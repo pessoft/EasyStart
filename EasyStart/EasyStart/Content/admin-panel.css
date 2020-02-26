@@ -563,7 +563,8 @@ ul.options::-webkit-scrollbar,
 .order-list-grid::-webkit-scrollbar,
 .order-details-product-list::-webkit-scrollbar,
 .order-details-comment-value::-webkit-scrollbar,
-.area-delivery-settings-list::-webkit-scrollbar {
+.area-delivery-settings-list::-webkit-scrollbar,
+#push-history-list-cotainer::-webkit-scrollbar {
     width: 0.45em;
 }
 
@@ -581,7 +582,8 @@ ul.options::-webkit-scrollbar-track,
 .order-list-grid::-webkit-scrollbar-track,
 .order-details-product-list::-webkit-scrollbar-track,
 .order-details-comment-value::-webkit-scrollbar-track,
-.area-delivery-settings-list::-webkit-scrollbar-track {
+.area-delivery-settings-list::-webkit-scrollbar-track,
+#push-history-list-cotainer::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
     border-radius: 30px;
 }
@@ -600,7 +602,8 @@ ul.options::-webkit-scrollbar-thumb,
 .order-list-grid::-webkit-scrollbar-thumb,
 .order-details-product-list::-webkit-scrollbar-thumb,
 .order-details-comment-value::-webkit-scrollbar-thumb,
-.area-delivery-settings-list::-webkit-scrollbar-thumb {
+.area-delivery-settings-list::-webkit-scrollbar-thumb,
+#push-history-list-cotainer::-webkit-scrollbar-thumb {
     background-color: #163f752e;
     border-radius: 2px;
 }
@@ -625,7 +628,8 @@ ul.options::-webkit-scrollbar-thumb,
     .order-details-comment-value::-webkit-scrollbar-thumb:active,
     .order-details-comment-value::-webkit-scrollbar-thumb:hover,
     .area-delivery-settings-list::-webkit-scrollbar-thumb:active,
-    .area-delivery-settings-list::-webkit-scrollbar-thumb:hover {
+    .area-delivery-settings-list::-webkit-scrollbar-thumb:hover,
+    #push-history-list-cotainer::-webkit-scrollbar-thumb:hover {
         background-color: #163f75c9;
     }
 
@@ -2316,7 +2320,8 @@ button.simple-text-btn:disabled:hover {
     #addCategoryDialog .SumoSelect .CaptionCont label,
     #stockDialog .SumoSelect .CaptionCont label,
     #couponDialog .SumoSelect .CaptionCont label,
-    .promotion-item-setting .SumoSelect .CaptionCont label {
+    .promotion-item-setting .SumoSelect .CaptionCont label,
+    .promotion-item-setting-body .SumoSelect .CaptionCont label {
         color: initial;
         pointer-events: initial;
         left: initial;
@@ -2327,7 +2332,8 @@ button.simple-text-btn:disabled:hover {
     #addCategoryDialog .SumoSelect .optWrapper label,
     #stockDialog .SumoSelect .optWrapper label,
     #couponDialog .SumoSelect .optWrapper label,
-    .promotion-item-setting .SumoSelect .optWrapper label {
+    .promotion-item-setting .SumoSelect .optWrapper label,
+    .promotion-item-setting-body .SumoSelect .optWrapper label {
         color: initial;
         position: initial;
         pointer-events: initial;

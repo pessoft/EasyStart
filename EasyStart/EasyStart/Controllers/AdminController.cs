@@ -1,11 +1,14 @@
 ﻿using EasyStart.Logic;
+using EasyStart.Logic.FCM;
 using EasyStart.Models;
+using EasyStart.Models.FCMNotification;
 using EasyStart.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -103,7 +106,8 @@ namespace EasyStart.Controllers
                     }
                     else
                     {
-
+                        result.Success = false;
+                        result.ErrorMessage = " Не удалось загрузить изображение";
                     }
                 }
             }
@@ -1223,6 +1227,101 @@ namespace EasyStart.Controllers
             else
             {
                 result.ErrorMessage = "При загрузки конструктора что-то пошло не так";
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult PushNotification(PushNotification pushNotification)
+        {
+            var result = new JsonResultModel();
+
+            if (!string.IsNullOrEmpty(pushNotification.ImageUrl))
+            {
+                //pushNotification.ImageUrl = Request.Url.GetLeftPart(UriPartial.Authority) + pushNotification.ImageUrl.Substring(2);
+                pushNotification.ImageUrl = "https://easystart.conveyor.cloud" + pushNotification.ImageUrl.Substring(2);
+            }
+
+            var message = new FCMMessage(pushNotification);
+
+            if (string.IsNullOrEmpty(message.Title))
+            {
+                result.ErrorMessage = "Отсутствует заголовок сообщения";
+                return Json(result);
+            }
+            else if (string.IsNullOrEmpty(message.Body))
+            {
+                result.ErrorMessage = "Отсутствует тело сообщения";
+                return Json(result);
+            }
+
+            try
+            {
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
+                var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
+                var pushMessage = new PushMessageModel(message, branchId, date);
+
+                var savedMessage = DataWrapper.SavePushMessage(pushMessage);
+                if (savedMessage == null)
+                    throw new Exception("Ошибка при сохранении PUSH сообщения");
+
+
+                Task.Run(() =>
+                {
+                    var fcmAuthKeyPath = Server.MapPath("/Resource/FCMAuthKey.json");
+                    var tokens = DataWrapper.GetDeviceTokens(branchId);
+
+                    if (tokens == null || !tokens.Any())
+                        return;
+
+                    var fcm = new FCMNotification(fcmAuthKeyPath, tokens);
+                    fcm.SendMulticastMessage(message);
+                });
+
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = "При отправке PUSH сообщения что-то пошло не так";
+            }
+
+            return Json(result);
+        }
+
+        private readonly int PAGE_PUSH_MESSAGE_SIZE = 10;
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult LoadPushNotification(int pageNumber)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var messagesCount = DataWrapper.GetCountPushMessage(branchId);
+                var messagesMaxPage = messagesCount == 0 ? 1 : Convert.ToInt32(Math.Ceiling((double)messagesCount / PAGE_PUSH_MESSAGE_SIZE));
+                pageNumber = pageNumber < 1 ? 1 : pageNumber;
+
+                var historyMessage = DataWrapper.GetPushMessage(branchId, pageNumber, PAGE_PUSH_MESSAGE_SIZE);
+
+                result.Success = true;
+                result.Data = new PagingPushMessageHistory
+                {
+                    HistoryMessages = historyMessage,
+                    PageNumber = pageNumber,
+                    PageSize = PAGE_PUSH_MESSAGE_SIZE,
+                    IsLast = messagesMaxPage == pageNumber
+                };
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = "При загрузге истории PUSH сообщений что-то пошло не так";
             }
 
             return Json(result);

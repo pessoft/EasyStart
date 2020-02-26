@@ -5,6 +5,7 @@ using EasyStart.Logic.Notification;
 using EasyStart.Logic.Notification.EmailNotification;
 using EasyStart.Logic.Transaction;
 using EasyStart.Models;
+using EasyStart.Models.FCMNotification;
 using EasyStart.Models.Notification;
 using EasyStart.Models.Transaction;
 using EasyStart.Utils;
@@ -968,6 +969,34 @@ namespace EasyStart
                 Logger.Log.Error(ex);
 
                 result.ErrorMessage = "При загрузке транзакций кешбека пошло что-то не так";
+            }
+
+            return result;
+        }
+
+        [HttpPost]
+        public JsonResultModel RegisterDevice([FromBody]FCMDeviceModel device)
+        {
+            var result = new JsonResultModel();
+
+            if(device == null ||
+                string.IsNullOrEmpty(device.Token))
+            {
+                result.ErrorMessage = "Девайс не зарегестрирован";
+                return result;
+            }
+
+            if (device.BranchId == -1)
+                device.BranchId = DataWrapper.GetMainBranch().Id;
+
+            try
+            {
+                DataWrapper.AddOrUpdateDevice(device);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = "При регистрации девайса что-то пошло не так";
             }
 
             return result;

@@ -12,6 +12,14 @@ function generateRandomString(length = 6) {
 }
 
 
+
+function showSuccessMessage(message) {
+    $.notify(message, {
+        position: "top left",
+        className: "success"
+    });
+}
+
 function showInfoMessage(message) {
     $.notify(message, {
         position: "top left",

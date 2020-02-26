@@ -1,4 +1,5 @@
-﻿using EasyStart.Models.Transaction;
+﻿using EasyStart.Models.FCMNotification;
+using EasyStart.Models.Transaction;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -36,5 +37,8 @@ namespace EasyStart.Models
         public DbSet<PromotionSetting> PromotionSettings { get; set; }
         public DbSet<ConstructorCategory> ConstructorCategories { get; set; }
         public DbSet<IngredientModel> Ingredients { get; set; }
+        
+        public DbSet<PushMessageModel> PushMessages { get; set; }
+        public DbSet<FCMDeviceModel> FCMDevices { get; set; }
     }
 }
