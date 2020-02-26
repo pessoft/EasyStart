@@ -74,7 +74,9 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     setting = db.DeliverySettings.FirstOrDefault(p => p.BranchId == branchId && !p.IsDeleted);
-                    setting.AreaDeliveries = GetAreaDeliveris(setting.Id);
+
+                    if(setting != null)
+                        setting.AreaDeliveries = GetAreaDeliveris(setting.Id);
                 }
             }
             catch (Exception ex)
