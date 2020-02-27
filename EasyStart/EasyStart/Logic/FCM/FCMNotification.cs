@@ -96,6 +96,7 @@ namespace EasyStart.Logic.FCM
                     ImageUrl = message.ImageUrl
                 };
 
+                AndroidConfig androidConfig = new AndroidConfig { Notification = new AndroidNotification { Sound = "default" } };
                 ApnsConfig apnsConfig = new ApnsConfig { Aps = new Aps { Sound = "default", Alert = new ApsAlert { LaunchImage = message.ImageUrl } } };
 
                 var fcmMessage = new MulticastMessage()
@@ -103,6 +104,7 @@ namespace EasyStart.Logic.FCM
                     Notification = notification,
                     Data = message.Data,
                     Tokens = tokens,
+                    Android = androidConfig,
                     Apns = apnsConfig
                 };
 
