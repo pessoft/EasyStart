@@ -1240,8 +1240,7 @@ namespace EasyStart.Controllers
 
             if (!string.IsNullOrEmpty(pushNotification.ImageUrl))
             {
-                //pushNotification.ImageUrl = Request.Url.GetLeftPart(UriPartial.Authority) + pushNotification.ImageUrl.Substring(2);
-                pushNotification.ImageUrl = "https://easystart.conveyor.cloud" + pushNotification.ImageUrl.Substring(2);
+                pushNotification.ImageUrl = Request.Url.GetLeftPart(UriPartial.Authority) + pushNotification.ImageUrl.Substring(2);
             }
 
             var message = new FCMMessage(pushNotification);
