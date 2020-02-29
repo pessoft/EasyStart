@@ -591,7 +591,7 @@ textarea.default-style-input {
 }
 
 .wizard-push-notification-collapse {
-    height: 70px;
+    height: 20px;
 }
 
 .history-push-notitification {
@@ -960,6 +960,10 @@ button#push-image-btn-remove:hover {
 
 .push-history-item-text {
     font-size: 0.8em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 90%;
 }
 
 .push-history-item-icon-start {
@@ -984,4 +988,8 @@ button#push-image-btn-remove:hover {
     align-items: center;
     justify-items: center;
     color: #163f75cf;
+}
+
+.push-background-color {
+    background-color: #f5f5f5
 }

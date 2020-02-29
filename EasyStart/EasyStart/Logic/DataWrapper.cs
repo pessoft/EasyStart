@@ -2829,6 +2829,28 @@ namespace EasyStart.Logic
             return count;
         }
 
+        public static int GetCountPushMessageByDate(int branchId, DateTime date)
+        {
+            int count = 0;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    count = db.PushMessages
+                        .Where(p => p.BranchId == branchId &&
+                        DbFunctions.TruncateTime(p.Date) == date.Date)
+                       .Count();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return count;
+        }
+
         public static void AddOrUpdateDevice(FCMDeviceModel device)
         {
             try
