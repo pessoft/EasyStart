@@ -29,12 +29,48 @@ function bindSumoselectAction() {
     SumoSelects.PushAdditionalAction.hide()
 }
 
-function setDefaultPushNotification() {
-    DataCollectorNewMessage.setDefaultValues()
-    PreviewDevice.setDefaultValues()
-    NotificationAction.setDefaultAction()
-    PushNotitifactionImage.setPreviewImage()
-    PushDataHandler.toggleBtnSave()
+function loadPushNotificationLimits(callback, loader) {
+    let successFunc = (result, loader) => {
+        if (result.Success) {
+            setPushNotificationLimits(result.Data)
+
+            if (callback)
+                callback()
+        } else {
+            showErrorMessage(result.ErrorMessage)
+        }
+
+        loader.stop()
+    }
+
+    $.post("/Admin/GetPushNotificationLimits", null, successCallBack(successFunc, loader));
+}
+
+function setPushNotificationLimits(limits) {
+    const pushLimitQS = '#push-notification-limit'
+    const infoText = `(${limits.countMessagesSentToday}/${limits.limitPushMessageToday})`
+
+    $(pushLimitQS).html(infoText)
+}
+
+function setDefaultPushNotification(withLoadLimits = false) {
+    let loader = new Loader($("#pormotion-push-notification"))
+    loader.start()
+
+    const callback = () => {
+        DataCollectorNewMessage.setDefaultValues()
+        PreviewDevice.setDefaultValues()
+        NotificationAction.setDefaultAction()
+        PushNotitifactionImage.setPreviewImage()
+        PushDataHandler.toggleBtnSave()
+    }
+
+    if (withLoadLimits)
+        loadPushNotificationLimits(callback, loader)
+    else {
+        callback()
+        loader.stop()
+    }
 }
 
 function setPushMessage(data) {
@@ -337,6 +373,7 @@ var PushDataHandler = {
             const successFunc = function (result, loader) {
                 loader.stop();
                 if (result.Success) {
+                    setPushNotificationLimits(result.Data)
                     setDefaultPushNotification()
                     showSuccessMessage('Push уведомления отправлены')
                 } else {
@@ -474,7 +511,7 @@ var HistoryNotification = {
                 <span class="push-history-item-text">${data.Body}</span>
                 <img src="${data.ImageUrl ? data.ImageUrl : '/images/default-image.jpg'}">
                 <span class="push-history-item-text">${date}</span>
-                <button class="simple-text-button push-history-item-icon-edit" onClick="HistoryNotification.clonePushNotification(${data.Id})">
+                <button class="simple-text-button push-history-item-icon-edit push-background-color" onClick="HistoryNotification.clonePushNotification(${data.Id})">
                     <i class="fal fa-edit"></i>
                 </button>
             </div>`

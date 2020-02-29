@@ -53,7 +53,6 @@ namespace EasyStart.Logic.FCM
             {
                 Logger.Log.Error(ex);
             }
-
         }
 
         public void SendMessageForTopic(FCMMessage message)

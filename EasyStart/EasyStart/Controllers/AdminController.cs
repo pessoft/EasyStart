@@ -1232,6 +1232,9 @@ namespace EasyStart.Controllers
             return Json(result);
         }
 
+        //To Do:Сделать опцинольной
+        private static readonly int LIMIT_PUSH_MESSAGE_TODAY = 5;
+
         [HttpPost]
         [Authorize]
         public JsonResult PushNotification(PushNotification pushNotification)
@@ -1255,9 +1258,17 @@ namespace EasyStart.Controllers
                 var branchId = DataWrapper.GetBranchId(User.Identity.Name);
                 var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
                 var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
-                var pushMessage = new PushMessageModel(message, branchId, date);
+                var countMessagesSentToday = DataWrapper.GetCountPushMessageByDate(branchId, date);
 
+                if (countMessagesSentToday >= LIMIT_PUSH_MESSAGE_TODAY)
+                {
+                    result.ErrorMessage = "Превышен дневной лимит push уведомлений";
+                    return Json(result);
+                }
+
+                var pushMessage = new PushMessageModel(message, branchId, date);
                 var savedMessage = DataWrapper.SavePushMessage(pushMessage);
+
                 if (savedMessage == null)
                     throw new Exception("Ошибка при сохранении PUSH сообщения");
 
@@ -1279,11 +1290,46 @@ namespace EasyStart.Controllers
                 });
 
                 result.Success = true;
+                result.Data = new
+                {
+                    limitPushMessageToday = LIMIT_PUSH_MESSAGE_TODAY,
+                    countMessagesSentToday = countMessagesSentToday + 1
+                };
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
                 result.ErrorMessage = "При отправке PUSH сообщения что-то пошло не так";
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult GetPushNotificationLimits()
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
+                var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
+                var countMessagesSentToday = DataWrapper.GetCountPushMessageByDate(branchId, date);
+
+
+                result.Success = true;
+                result.Data = new
+                {
+                    limitPushMessageToday = LIMIT_PUSH_MESSAGE_TODAY,
+                    countMessagesSentToday
+                };
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = "При получении лимитов push уведомлений что-то пошло не так...";
             }
 
             return Json(result);
