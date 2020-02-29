@@ -304,6 +304,10 @@ var PushNotitifactionImage = {
     },
     removeInputFileImage: function () {
         $('#push-image-download').val('')
+    },
+    removeImage: function () {
+        this.setPreviewImage()
+        PreviewDevice.setMessageImage()
     }
 }
 
