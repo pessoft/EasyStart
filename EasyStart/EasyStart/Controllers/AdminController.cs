@@ -1237,12 +1237,6 @@ namespace EasyStart.Controllers
         public JsonResult PushNotification(PushNotification pushNotification)
         {
             var result = new JsonResultModel();
-
-            if (!string.IsNullOrEmpty(pushNotification.ImageUrl))
-            {
-                pushNotification.ImageUrl = Request.Url.GetLeftPart(UriPartial.Authority) + pushNotification.ImageUrl.Substring(2);
-            }
-
             var message = new FCMMessage(pushNotification);
 
             if (string.IsNullOrEmpty(message.Title))
@@ -1267,6 +1261,10 @@ namespace EasyStart.Controllers
                 if (savedMessage == null)
                     throw new Exception("Ошибка при сохранении PUSH сообщения");
 
+                if (!string.IsNullOrEmpty(message.ImageUrl))
+                {
+                    message.ImageUrl = Request.Url.GetLeftPart(UriPartial.Authority) + message.ImageUrl.Substring(2);
+                }
 
                 Task.Run(() =>
                 {

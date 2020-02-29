@@ -41,6 +41,7 @@ function setPushMessage(data) {
     DataCollectorNewMessage.setDefaultValues(data.Title, data.Body)
     PreviewDevice.setDefaultValues(data.Title, data.Body, data.ImageUrl)
     NotificationAction.setDefaultAction(getDataAction(data))
+    PushNotitifactionImage.removeInputFileImage()
     PushNotitifactionImage.setPreviewImage(data.ImageUrl)
     PushDataHandler.toggleBtnSave()
 }
@@ -162,7 +163,7 @@ var NotificationAction = {
             const products = ProductsForPromotion[id]
             let options = []
 
-            
+
 
             for (product of products) {
                 const selected = defaultAdditionalTargetId == product.Id ? 'selected' : ''
@@ -237,14 +238,23 @@ var NotificationAction = {
 
 var PushNotitifactionImage = {
     controlId: 'push-notification-image-preview',
+    defaultImageName: 'default-image.jpg',
     setPreviewImage: function (value) {
-        const src = value ? value : '/images/default-image.jpg'
+        const src = value ? value : `/images/${this.defaultImageName}`
 
         this.setImage(src)
         this.toggleRemoveButton(value)
     },
     setImage: function (src) {
         $(`#${this.controlId}`).attr('src', src)
+    },
+    getImageCloneOrNull: function () {
+        let src = $(`#${this.controlId}`).attr('src')
+
+        if (src.includes(this.defaultImageName))
+            return null
+
+        return src
     },
     toggleRemoveButton: function (src) {
         const query = '#push-image-btn-remove'
@@ -253,13 +263,11 @@ var PushNotitifactionImage = {
             $(query).removeClass('hide')
         } else {
             $(query).addClass('hide')
+            this.removeInputFileImage()
         }
     },
-    removeImage: function () {
+    removeInputFileImage: function () {
         $('#push-image-download').val('')
-        PreviewDevice.setMessageImage()
-        this.setPreviewImage()
-
     }
 }
 
@@ -341,14 +349,17 @@ var PushDataHandler = {
 
         let files = $("#push-image-download")[0].files;
         if (files.length == 0) {
-            saveFunc({ Success: true, URL: null });
+            let imageURL = PushNotitifactionImage.getImageCloneOrNull()
+            let dataImage = { Success: true, URL: imageURL }
 
-            return;
+            saveFunc(dataImage)
+
+            return
         }
 
-        let dataImage = new FormData();
+        let dataImage = new FormData()
         for (var x = 0; x < files.length; x++) {
-            dataImage.append("file" + x, files[x]);
+            dataImage.append("file" + x, files[x])
         }
 
         $.ajax({
@@ -504,7 +515,7 @@ var HistoryNotification = {
             this.loadHistoryData()
         }
         this.toggleButtonShowMore(0, callback)
-      
+
     },
     setEmptyInfo: function () {
         const template = `
