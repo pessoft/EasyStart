@@ -29,18 +29,55 @@ function bindSumoselectAction() {
     SumoSelects.PushAdditionalAction.hide()
 }
 
-function setDefaultPushNotification() {
-    DataCollectorNewMessage.setDefaultValues()
-    PreviewDevice.setDefaultValues()
-    NotificationAction.setDefaultAction()
-    PushNotitifactionImage.setPreviewImage()
-    PushDataHandler.toggleBtnSave()
+function loadPushNotificationLimits(callback, loader) {
+    let successFunc = (result, loader) => {
+        if (result.Success) {
+            setPushNotificationLimits(result.Data)
+
+            if (callback)
+                callback()
+        } else {
+            showErrorMessage(result.ErrorMessage)
+        }
+
+        loader.stop()
+    }
+
+    $.post("/Admin/GetPushNotificationLimits", null, successCallBack(successFunc, loader));
+}
+
+function setPushNotificationLimits(limits) {
+    const pushLimitQS = '#push-notification-limit'
+    const infoText = `(${limits.countMessagesSentToday}/${limits.limitPushMessageToday})`
+
+    $(pushLimitQS).html(infoText)
+}
+
+function setDefaultPushNotification(withLoadLimits = false) {
+    let loader = new Loader($("#pormotion-push-notification"))
+    loader.start()
+
+    const callback = () => {
+        DataCollectorNewMessage.setDefaultValues()
+        PreviewDevice.setDefaultValues()
+        NotificationAction.setDefaultAction()
+        PushNotitifactionImage.setPreviewImage()
+        PushDataHandler.toggleBtnSave()
+    }
+
+    if (withLoadLimits)
+        loadPushNotificationLimits(callback, loader)
+    else {
+        callback()
+        loader.stop()
+    }
 }
 
 function setPushMessage(data) {
     DataCollectorNewMessage.setDefaultValues(data.Title, data.Body)
     PreviewDevice.setDefaultValues(data.Title, data.Body, data.ImageUrl)
     NotificationAction.setDefaultAction(getDataAction(data))
+    PushNotitifactionImage.removeInputFileImage()
     PushNotitifactionImage.setPreviewImage(data.ImageUrl)
     PushDataHandler.toggleBtnSave()
 }
@@ -162,7 +199,7 @@ var NotificationAction = {
             const products = ProductsForPromotion[id]
             let options = []
 
-            
+
 
             for (product of products) {
                 const selected = defaultAdditionalTargetId == product.Id ? 'selected' : ''
@@ -237,14 +274,23 @@ var NotificationAction = {
 
 var PushNotitifactionImage = {
     controlId: 'push-notification-image-preview',
+    defaultImageName: 'default-image.jpg',
     setPreviewImage: function (value) {
-        const src = value ? value : '/images/default-image.jpg'
+        const src = value ? value : `/images/${this.defaultImageName}`
 
         this.setImage(src)
         this.toggleRemoveButton(value)
     },
     setImage: function (src) {
         $(`#${this.controlId}`).attr('src', src)
+    },
+    getImageCloneOrNull: function () {
+        let src = $(`#${this.controlId}`).attr('src')
+
+        if (src.includes(this.defaultImageName))
+            return null
+
+        return src
     },
     toggleRemoveButton: function (src) {
         const query = '#push-image-btn-remove'
@@ -253,13 +299,11 @@ var PushNotitifactionImage = {
             $(query).removeClass('hide')
         } else {
             $(query).addClass('hide')
+            this.removeInputFileImage()
         }
     },
-    removeImage: function () {
+    removeInputFileImage: function () {
         $('#push-image-download').val('')
-        PreviewDevice.setMessageImage()
-        this.setPreviewImage()
-
     }
 }
 
@@ -329,6 +373,7 @@ var PushDataHandler = {
             const successFunc = function (result, loader) {
                 loader.stop();
                 if (result.Success) {
+                    setPushNotificationLimits(result.Data)
                     setDefaultPushNotification()
                     showSuccessMessage('Push уведомления отправлены')
                 } else {
@@ -341,14 +386,17 @@ var PushDataHandler = {
 
         let files = $("#push-image-download")[0].files;
         if (files.length == 0) {
-            saveFunc({ Success: true, URL: null });
+            let imageURL = PushNotitifactionImage.getImageCloneOrNull()
+            let dataImage = { Success: true, URL: imageURL }
 
-            return;
+            saveFunc(dataImage)
+
+            return
         }
 
-        let dataImage = new FormData();
+        let dataImage = new FormData()
         for (var x = 0; x < files.length; x++) {
-            dataImage.append("file" + x, files[x]);
+            dataImage.append("file" + x, files[x])
         }
 
         $.ajax({
@@ -463,7 +511,7 @@ var HistoryNotification = {
                 <span class="push-history-item-text">${data.Body}</span>
                 <img src="${data.ImageUrl ? data.ImageUrl : '/images/default-image.jpg'}">
                 <span class="push-history-item-text">${date}</span>
-                <button class="simple-text-button push-history-item-icon-edit" onClick="HistoryNotification.clonePushNotification(${data.Id})">
+                <button class="simple-text-button push-history-item-icon-edit push-background-color" onClick="HistoryNotification.clonePushNotification(${data.Id})">
                     <i class="fal fa-edit"></i>
                 </button>
             </div>`
@@ -504,7 +552,7 @@ var HistoryNotification = {
             this.loadHistoryData()
         }
         this.toggleButtonShowMore(0, callback)
-      
+
     },
     setEmptyInfo: function () {
         const template = `

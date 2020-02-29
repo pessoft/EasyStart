@@ -56,7 +56,7 @@ function changePromotionActiveMenu(e) {
 function changedPromotionActiveMenu(targetId) {
     switch (targetId) {
         case 'pormotion-push-notification':
-            setDefaultPushNotification()
+            setDefaultPushNotification(true)
             break
     }
 }

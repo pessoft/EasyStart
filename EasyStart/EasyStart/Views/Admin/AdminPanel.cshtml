@@ -304,13 +304,16 @@
                         <div id="pormotion-push-notification" class="promotion-content promotion-push-notification hide">
                             <div class="wizard-push-notification">
                                 <div class="max-container hide" id="container-collapse-edit-new-push-msg">
-                                    <button id="show-edit-new-push-msg" class="simple-text-button" onclick="HistoryNotification.showEditNewMessage()">
+                                    <button id="show-edit-new-push-msg" class="simple-text-button push-background-color" onclick="HistoryNotification.showEditNewMessage()">
                                         Создать PUSH уведомление
                                         <i class="fal fa-comment-alt-lines"></i>
                                     </button>
                                 </div>
                                 <div class="wizard-push-notification-item push-notification-constructor">
-                                    <span class="wizard-push-notification-item-header">Уведомление</span>
+                                    <span class="wizard-push-notification-item-header">
+                                        Уведомление 
+                                        <span id="push-notification-limit"></span>
+                                    </span>
                                     <div class="wizard-push-notification-item-body">
                                         <div class="group wizard-push-title-group">
                                             <input required type="text" autocomplete="off" id="push-title" oninput="PreviewDevice.onInputMessageTitle(this)" />
@@ -406,7 +409,7 @@
                             </div>
                             <div class="history-push-notitification">
                                 <div class="max-container" id="container-collapse-history-push-msg">
-                                    <button id="history-push-download" class="history-push-download" onclick="HistoryNotification.showHistory()">
+                                    <button id="history-push-download" class="history-push-download push-background-color" onclick="HistoryNotification.showHistory()">
                                         Показать историю PUSH сообщений
                                         <i class="fal fa-history"></i>
                                     </button>
