@@ -16,6 +16,7 @@ namespace EasyStart.Logic.FCM
         //Имя пакета приложениея
         private string topicName;
         private List<string> tokens;
+        private static int LIMIT_TOKENS = 100;
 
         public FCMNotification(string serviceAccountKeyPath, string topicNamePath)
         {
@@ -55,7 +56,7 @@ namespace EasyStart.Logic.FCM
 
         }
 
-        public void SendMessage(FCMMessage message)
+        public void SendMessageForTopic(FCMMessage message)
         {
             try
             {
@@ -89,6 +90,9 @@ namespace EasyStart.Logic.FCM
         {
             try
             {
+                if (this.tokens == null || !this.tokens.Any())
+                    return;
+
                 var notification = new FirebaseAdmin.Messaging.Notification
                 {
                     Title = message.Title,
@@ -98,17 +102,28 @@ namespace EasyStart.Logic.FCM
 
                 AndroidConfig androidConfig = new AndroidConfig { Notification = new AndroidNotification { Sound = "default" } };
                 ApnsConfig apnsConfig = new ApnsConfig { Aps = new Aps { Sound = "default", Alert = new ApsAlert { LaunchImage = message.ImageUrl } } };
+                var sleepTimeMs = 100;
 
-                var fcmMessage = new MulticastMessage()
+                var countRepeatSendMsg =Convert.ToInt32(Math.Ceiling((double)tokens.Count / LIMIT_TOKENS));
+
+                for (var i = 1; i <= countRepeatSendMsg; ++i)
                 {
-                    Notification = notification,
-                    Data = message.Data,
-                    Tokens = tokens,
-                    Android = androidConfig,
-                    Apns = apnsConfig
-                };
+                    var packageTokens = tokens.Skip((i - 1) * LIMIT_TOKENS)
+                        .Take(LIMIT_TOKENS)
+                        .ToList();
+                    var fcmMessage = new MulticastMessage()
+                    {
+                        Notification = notification,
+                        Data = message.Data,
+                        Tokens = packageTokens,
+                        Android = androidConfig,
+                        Apns = apnsConfig
+                    };
 
-                FirebaseMessaging.DefaultInstance.SendMulticastAsync(fcmMessage);
+                    FirebaseMessaging.DefaultInstance.SendMulticastAsync(fcmMessage);
+
+                    Thread.Sleep(sleepTimeMs);
+                }
             }
             catch (Exception ex)
             {
