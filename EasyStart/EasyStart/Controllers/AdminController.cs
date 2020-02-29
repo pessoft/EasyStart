@@ -1233,7 +1233,7 @@ namespace EasyStart.Controllers
         }
 
         //To Do:Сделать опцинольной
-        private static readonly int LIMIT_PUSH_MESSAGE_TODAY = 5;
+        private static readonly int LIMIT_PUSH_MESSAGE_TODAY = 50;
 
         [HttpPost]
         [Authorize]
