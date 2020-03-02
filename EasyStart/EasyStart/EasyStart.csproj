@@ -270,6 +270,10 @@
     <Compile Include="Migrations\202002261818045_initial.Designer.cs">
       <DependentUpon>202002261818045_initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202003020545383_AddNumberAppliancesInCategoryModel.cs" />
+    <Compile Include="Migrations\202003020545383_AddNumberAppliancesInCategoryModel.Designer.cs">
+      <DependentUpon>202003020545383_AddNumberAppliancesInCategoryModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -532,6 +536,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202002261818045_initial.resx">
       <DependentUpon>202002261818045_initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202003020545383_AddNumberAppliancesInCategoryModel.resx">
+      <DependentUpon>202003020545383_AddNumberAppliancesInCategoryModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
