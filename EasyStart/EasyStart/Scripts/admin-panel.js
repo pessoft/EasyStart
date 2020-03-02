@@ -453,7 +453,8 @@ function updateCategory() {
         let category = {
             Id: $("#category-id").val(),
             Name: $("#name-category").val(),
-            Image: data.URL
+            Image: data.URL,
+            NumberAppliances: $("#addCategoryDialog #number-appliances").is(':checked')
         }
 
         let successFunc = function (result, loader) {
@@ -462,6 +463,7 @@ function updateCategory() {
                 let categoryItem = $(`[category-id=${category.Id}]`);
                 categoryItem.find(".category-item-image img").attr("src", category.Image);
                 categoryItem.find(".category-item-name").html(category.Name);
+                categoryItem.find(".number-appliances-data").val(category.NumberAppliances ? 'true' : '');
 
                 cancelDialog("#addCategoryDialog");
             } else {
@@ -509,7 +511,8 @@ function addCategory() {
         let category = {
             Name: $("#name-category").val(),
             CategoryType: parseInt($("#addCategoryDialog #category-type").val()),
-            Image: data.URL
+            Image: data.URL,
+            NumberAppliances: $("#addCategoryDialog #number-appliances").is(':checked')
         }
 
         let successFunc = function (result, loader) {
@@ -558,6 +561,7 @@ function addCategoryToList(category) {
         <div class="category-item-name">
             ${category.Name}
         </div>
+        <input type="hidden" class="number-appliances-data" value="${(category.NumberAppliances ? 'true' : '')}">
         <div class="category-item-action">
             <i onclick="editCategory(this, event);" class="fal fa-edit"></i>
             <i class="fal fa-eye item-show ${(category.Visible ? '' : 'hide')}" onclick="toggleShowItem(this, ${TypeItem.Categories}, event);"></i>
@@ -581,12 +585,15 @@ function editCategory(e, event) {
         Id: parent.attr("category-id"),
         CategoryType: parseInt(parent.attr("category-type")),
         Name: parent.find(".category-item-name").html().trim(),
-        Image: parent.find("img").attr("src")
+        Image: parent.find("img").attr("src"),
+        NumberAppliances: !!parent.find(".number-appliances-data").val()
     }
 
-    dialog.find("#category-id").val(category.Id);
-    dialog.find("#name-category").val(category.Name);
-    dialog.find("img").attr("src", category.Image);
+    dialog.find("#category-id").val(category.Id)
+    dialog.find("#name-category").val(category.Name)
+    dialog.find("img").attr("src", category.Image)
+
+    dialog.find("#number-appliances").prop('checked', category.NumberAppliances)
 
     if (category.Image.indexOf("default") == -1) {
         dialog.find("img").removeClass("hide");
@@ -2086,8 +2093,10 @@ var Dialog = {
         $dialog = $($dialog);
 
         $dialog.find("input").val("");
+        $dialog.find("input[type=checkbox]").prop('checked', false);
         $dialog.find("textarea").val("");
         $dialog.find(".dialog-image-upload").removeClass("hide");
+        $dialog.find("img").not('.no-clean').removeAttr("src");
         $dialog.find("img").not('.no-clean').addClass("hide");
         $dialog.find("option").removeAttr("selected");
         $dialog.find("select").val("0")

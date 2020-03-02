@@ -669,7 +669,7 @@
     </div>
 
     <dialog id="addCategoryDialog">
-        <form onsubmit="operationCategory(); return false;" autocomplete="off">
+        <form onsubmit="operationCategory(); cancelDialog($('#addCategoryDialog')); return false;" autocomplete="off">
             <div class="dialog-container dialog-sm">
                 <div class="enter-dialog-data">
                     <div class="header-dialog">
@@ -691,6 +691,10 @@
                                 <option value="0">По умолчанию</option>
                                 <option value="1">Конструктор</option>
                             </select>
+                        </div>
+                        <div class="checkbox-item number-appliances">
+                            <input id="number-appliances" type="checkbox" />
+                            <label for="number-appliances">Запрашивать количество приборов</label>
                         </div>
                     </div>
                     <div class="dialog-menu">
@@ -714,7 +718,7 @@
     </dialog>
 
     <dialog id="addProducDialog">
-        <form onsubmit="operationProduct(); return false;" autocomplete="off">
+        <form onsubmit="operationProduct(); cancelDialog($('#addProducDialog')); return false;" autocomplete="off">
             <div class="dialog-container">
                 <div class="enter-dialog-data">
                     <div class="header-dialog">

@@ -876,6 +876,8 @@ div.product-item:hover {
 
     .payment-type input[type=checkbox],
     .checkbox-item input[type=checkbox] {
+        min-width: 14px;
+        min-height: 14px;
         width: 14px;
         height: 14px;
     }
@@ -929,6 +931,13 @@ div.product-item:hover {
 }
 
 #delivery .label-for {
+    position: relative;
+    pointer-events: all;
+    top: 0px;
+    font-size: 0.75em;
+}
+
+#addCategoryDialog .checkbox-item label {
     position: relative;
     pointer-events: all;
     top: 0px;
@@ -2441,3 +2450,17 @@ button {
 .order-details-price-discount {
     grid-template-columns: 0.3fr 1fr;
 }
+
+.number-appliances {
+    justify-content: flex-start;
+    margin-top: 10px;
+}
+
+    .number-appliances input {
+        width: 16px !important;
+        height: 16px !important;
+    }
+
+    .number-appliances label {
+        font-size: 0.85em !important;
+    }

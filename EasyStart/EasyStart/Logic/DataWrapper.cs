@@ -756,6 +756,7 @@ namespace EasyStart.Logic
                     result = db.Categories.FirstOrDefault(p => p.Id == category.Id);
                     result.Image = category.Image;
                     result.Name = category.Name;
+                    result.NumberAppliances = category.NumberAppliances;
 
                     db.SaveChanges();
                 }
