@@ -71,14 +71,15 @@ function addOrUpdateIngredient() {
 function updateGloabalDataProduct(productConstructor) {
     const index = DataProduct.Products.findIndex(p => p.Id == productConstructor.Id)
 
-    if (index >= 0)
+    if (index >= 0) {
         DataProduct.Products[index] = productConstructor
-    else {
+        updateProductConstructorToList(productConstructor)
+    } else {
         DataProduct.Products.push(productConstructor)
         maybeClearProductList()
         addProductConstructorToList(productConstructor)
     }
-        
+
 }
 
 function maybeClearProductList() {
@@ -305,7 +306,7 @@ class CategoryIngredient {
     setData() {
         this.setConstructorCategoryParams()
         this.setIngredients()
-        
+
     }
 
     setIngredients() {
@@ -396,7 +397,7 @@ class CategoryIngredient {
         } else {
             this.categoryIngredient.Ingredients[index].IsDeleted = true
         }
-        
+
 
         if (this.categoryIngredient.Ingredients.filter(p => !p.IsDeleted).length == 0) {
             this.setEmptyList()

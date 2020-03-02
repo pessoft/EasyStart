@@ -311,7 +311,7 @@
                                 </div>
                                 <div class="wizard-push-notification-item push-notification-constructor">
                                     <span class="wizard-push-notification-item-header">
-                                        Уведомление 
+                                        Уведомление
                                         <span id="push-notification-limit"></span>
                                     </span>
                                     <div class="wizard-push-notification-item-body">
@@ -669,7 +669,7 @@
     </div>
 
     <dialog id="addCategoryDialog">
-        <form onsubmit="operationCategory(); cancelDialog($('#addCategoryDialog')); return false;" autocomplete="off">
+        <form onsubmit="operationCategory(); return false;" autocomplete="off">
             <div class="dialog-container dialog-sm">
                 <div class="enter-dialog-data">
                     <div class="header-dialog">
@@ -718,7 +718,7 @@
     </dialog>
 
     <dialog id="addProducDialog">
-        <form onsubmit="operationProduct(); cancelDialog($('#addProducDialog')); return false;" autocomplete="off">
+        <form onsubmit="operationProduct(); return false;" autocomplete="off">
             <div class="dialog-container">
                 <div class="enter-dialog-data">
                     <div class="header-dialog">
@@ -1155,6 +1155,33 @@
 
             <div class="order-details-number-date order-details-block">
 
+                <div class="order-details-date border-right default-color">
+                    <div class="flex-col-center">
+                        <div class="font-weight-bold text-no-wrap">
+                            <span class="order-details-value sm-lr-font-size value">15:46 02.03.2020</span>
+                        </div>
+                        <div class="sm-font-size">
+                            <i class="fal fa-calendar-alt"></i>
+                            дата заказа
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-details-date-delivery">
+                    <div class="flex-col-center">
+                        <div class="font-weight-bold text-no-wrap">
+                            <span class="order-details-value sm-lr-font-size value">Как можно быстрее</span>
+                        </div>
+                        <div class="sm-font-size">
+                            <i class="fal fa-calendar-check"></i>
+                            дата доставки
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-details-order-number-cutlery order-details-block">
+
                 <div class="order-details-number border-right">
                     <div class="flex-col-center">
                         <div class="bg-small-font-size font-weight-bold text-no-wrap">
@@ -1165,13 +1192,13 @@
                     </div>
                 </div>
 
-                <div class="order-details-date">
+                <div class="order-details-number-appliances border-right">
                     <div class="flex-col-center">
-                        <div class="font-weight-bold text-no-wrap">
-                            <i class="far fa-calendar-alt"></i>
-                            <span class="order-details-value sm-x-font-size value"></span>
+                        <div class="bg-small-font-size font-weight-bold text-no-wrap">
+                            <i class="fal fa-utensils-alt sm-font-size"></i>
+                            <span class="order-details-value value"></span>
                         </div>
-                        <div class="sm-font-size">дата заказа</div>
+                        <div class="sm-font-size">кол-во приборов</div>
                     </div>
                 </div>
 
@@ -1222,7 +1249,7 @@
                     <span class="bar"></span>
                     <label>Название района</label>
                 </div>
-                
+
                 <div class="area-delivery-edit-inputs-price">
                     <div class="group">
                         <input required id="area-price" min="0" step="1" value="0" type="number">

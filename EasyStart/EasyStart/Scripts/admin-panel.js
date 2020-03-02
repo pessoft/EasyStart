@@ -471,7 +471,15 @@ function updateCategory() {
             }
         }
 
-        $.post("/Admin/UpdateCategory", category, successCallBack(successFunc, loader));
+        $.post("/Admin/UpdateCategory", category, successCallBack(successFunc, loader)).catch(function () {
+            errorFunc()
+        });
+    }
+
+    let errorFunc = () => {
+        showErrorMessage('При сохранении категории что-то пошло не так...')
+        cancelDialog($('#addCategoryDialog'))
+        loader.stop()
     }
 
     if (files.length == 0) {
@@ -492,6 +500,9 @@ function updateCategory() {
         data: dataImage,
         success: function (data) {
             uppFunc(data);
+        },
+        error: function () {
+            errorFunc()
         }
     });
 }
@@ -527,7 +538,15 @@ function addCategory() {
             }
         }
 
-        $.post("/Admin/AddCategory", category, successCallBack(successFunc, loader));
+        $.post("/Admin/AddCategory", category, successCallBack(successFunc, loader)).catch(function () {
+            errorFunc()
+        });
+    }
+
+    let errorFunc = () => {
+        showErrorMessage('При сохранении категории что-то пошло не так...')
+        cancelDialog($('#addCategoryDialog'))
+        loader.stop()
     }
 
     if (files.length == 0) {
@@ -548,6 +567,9 @@ function addCategory() {
         data: dataImage,
         success: function (data) {
             addFunc(data);
+        },
+        error: function () {
+            errorFunc()
         }
     });
 }
@@ -793,7 +815,15 @@ function addProduct() {
             }
         }
 
-        $.post("/Admin/AddProduct", product, successCallBack(successFunc, loader));
+        $.post("/Admin/AddProduct", product, successCallBack(successFunc, loader)).catch(function () {
+            errorFunc()
+        });
+    }
+
+    let errorFunc = () => {
+        showErrorMessage('При сохранении что-то пошло не так...')
+        cancelDialog($('#addProducDialog'))
+        loader.stop()
     }
 
     if (files.length == 0) {
@@ -813,6 +843,9 @@ function addProduct() {
         data: dataImage,
         success: function (data) {
             addFunc(data);
+        },
+        error: function () {
+            errorFunc()
         }
     });
 }
@@ -866,7 +899,15 @@ function updateProduct() {
             }
         }
 
-        $.post("/Admin/UpdateProduct", product, successCallBack(successFunc, loader));
+        $.post("/Admin/UpdateProduct", product, successCallBack(successFunc, loader)).catch(function () {
+            errorFunc()
+        });
+    }
+
+    let errorFunc = () => {
+        showErrorMessage('При сохранении что-то пошло не так...')
+        cancelDialog($('#addProducDialog'))
+        loader.stop()
     }
 
     if (files.length == 0) {
@@ -886,6 +927,9 @@ function updateProduct() {
         data: dataImage,
         success: function (data) {
             uppProduct(data);
+        },
+        error: function () {
+            errorFunc()
         }
     });
 }
@@ -959,6 +1003,17 @@ function addProductConstructorToList(product) {
 
     let $template = $(templateCategoryItem);
     $(".product-list").append($template);
+}
+
+function updateProductConstructorToList(product) {
+    let $productContructorItem = $(`.product-constructor-item[product-id="${product.Id}"]`)
+
+    if ($productContructorItem.length > 0) {
+        $productContructorItem.find('.product-item-name').html(product.Name)
+
+        const additionalInfo = `${product.Ingredients.length} ${num2str(product.Ingredients.length, ['ингредиент', 'ингредиента', 'ингредиентов'])}`
+        $productContructorItem.find('.product-item-additional-info').html(additionalInfo)
+    }
 }
 
 function addProductToList(product) {
@@ -1422,7 +1477,7 @@ function removeBranch(e, id) {
 
         $.post("/Admin/RemoveBranch", { id: id }, successCallBack(successFunc, loader))
     }
-    
+
     deleteConfirmation(callback);
 }
 
@@ -1949,8 +2004,8 @@ function notifySoundNewOrder(isRepead = false) {
                 notifySoundNewOrder(true)
             }
         }
-        
-        
+
+
     }
 }
 
@@ -2269,8 +2324,12 @@ class OrderDetailsData {
         const commentEmptyTemplate = `<i class="fal fa-comment-slash"></i>Отсутсвтует</span>`;
         this.OrderId = order.Id;
         this.OrderNumber = order.Id;
+        this.NumberAppliances = order.NumberAppliances;
         this.Status = order.OrderStatus;
         this.OrderDate = toStringDateAndTime(order.Date);
+        this.OrderDeliveryDate = order.OrderDeliveryDate ?
+            toStringDateAndTime(order.OrderDeliveryDate) :
+            'Как можно быстрее';
         this.Comment = order.Comment || commentEmptyTemplate;
     }
 
@@ -2444,9 +2503,11 @@ class OrderDetailsData {
 }
 
 var OrderDetailsQSelector = {
-    OrderNumberBlock: ".order-details-number",//в истории заказов помечаем цветом оформленный или не оформленный ордер
+    OrderNumberBlock: ".order-details-order-number-cutlery",//в истории заказов помечаем цветом оформленный или не оформленный ордер
     OrderNumber: ".order-details-number .value",
+    NumberAppliances: ".order-details-number-appliances .value",
     OrderDate: ".order-details-date .value",
+    OrderDeliveryDate: ".order-details-date-delivery .value",
     UserName: ".order-details-short-user-name .value",
     PhoneNumber: ".order-details-short-phone .value",
     DeliveryType: ".order-details-short-delivery-type .value",
@@ -2516,6 +2577,7 @@ class OrderDetails {
 
     setValues() {
         this.setBaseInfo();
+        this.setDateAndDeliveryDateInfo();
         this.setShortInfo();
         this.setAmountInfo();
         this.setAddressInfo();
@@ -2549,7 +2611,12 @@ class OrderDetails {
     setBaseInfo() {
         this.markOrderNumberColorStatus(this.details.Status);
         this.setValue(OrderDetailsQSelector.OrderNumber, this.details.OrderNumber);
+        this.setValue(OrderDetailsQSelector.NumberAppliances, this.details.NumberAppliances);
+    }
+
+    setDateAndDeliveryDateInfo() {
         this.setValue(OrderDetailsQSelector.OrderDate, this.details.OrderDate);
+        this.setValue(OrderDetailsQSelector.OrderDeliveryDate, this.details.OrderDeliveryDate);
     }
 
     setShortInfo() {

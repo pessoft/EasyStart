@@ -1736,6 +1736,10 @@ search-group-item search-group-ico {
     font-size: 0.8em;
 }
 
+.sm-lr-font-size {
+    font-size: 0.85em;
+}
+
 .sm-x-font-size {
     font-size: 0.9em;
 }
@@ -1896,7 +1900,7 @@ dialog {
     height: 610px;
     display: grid;
     grid-template-columns: 350px 295px 300px;
-    grid-template-rows: 1fr 80px 70px;
+    grid-template-rows: 1fr 95px 70px;
     grid-gap: 15px;
 }
 
@@ -1919,7 +1923,7 @@ dialog {
     grid-column: span 2;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr 380px;
+    grid-template-rows: 1fr 365px;
     padding: 18px 5px 5px 5px;
 }
 
@@ -1965,7 +1969,8 @@ button.order-details-menu-item i {
     color: #484848;
 }
 
-.order-details-number-date {
+.order-details-number-date,
+.order-details-order-number-cutlery {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr;
@@ -2116,7 +2121,6 @@ button.simple-text-btn:disabled:hover {
 }
 
 .order-details-comment {
-    grid-column: span 2;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 25px 1fr;
