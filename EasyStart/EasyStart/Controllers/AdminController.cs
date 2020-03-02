@@ -167,7 +167,7 @@ namespace EasyStart.Controllers
         public JsonResult AddCategory(CategoryModel category)
         {
             var result = new JsonResultModel();
-            var defaultImage = "/images/default-image.jpg";
+            var defaultImage = "../Images/default-image.jpg";
 
             if (!System.IO.File.Exists(Server.MapPath(category.Image)))
             {
@@ -208,7 +208,7 @@ namespace EasyStart.Controllers
         public JsonResult AddProduct(ProductModel product)
         {
             var result = new JsonResultModel();
-            var defaultImage = "/images/default-image.jpg";
+            var defaultImage = "../Images/default-image.jpg";
             if (!System.IO.File.Exists(Server.MapPath(product.Image)))
             {
                 product.Image = defaultImage;
@@ -420,7 +420,7 @@ namespace EasyStart.Controllers
         public JsonResult UpdateCategory(CategoryModel category)
         {
             var result = new JsonResultModel();
-            var defaultImage = "/images/default-image.jpg";
+            var defaultImage = "../Images/default-image.jpg";
 
             if (!System.IO.File.Exists(Server.MapPath(category.Image)))
             {
@@ -500,7 +500,7 @@ namespace EasyStart.Controllers
         public JsonResult UpdateProduct(ProductModel product)
         {
             var result = new JsonResultModel();
-            var defaultImage = "/images/default-image.jpg";
+            var defaultImage = "../Images/default-image.jpg";
 
             if (!System.IO.File.Exists(Server.MapPath(product.Image)))
             {
