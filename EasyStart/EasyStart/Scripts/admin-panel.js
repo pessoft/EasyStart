@@ -499,10 +499,12 @@ function updateCategory() {
         processData: false,
         data: dataImage,
         success: function (data) {
-            uppFunc(data);
+            uppFunc(data)
+            cleatPrevInputImage()
         },
         error: function () {
             errorFunc()
+            cleatPrevInputImage()
         }
     });
 }
@@ -567,9 +569,11 @@ function addCategory() {
         data: dataImage,
         success: function (data) {
             addFunc(data);
+            cleatPrevInputImage()
         },
         error: function () {
             errorFunc()
+            cleatPrevInputImage()
         }
     });
 }
@@ -842,10 +846,12 @@ function addProduct() {
         processData: false,
         data: dataImage,
         success: function (data) {
-            addFunc(data);
+            addFunc(data)
+            cleatPrevInputImage()
         },
         error: function () {
             errorFunc()
+            cleatPrevInputImage()
         }
     });
 }
@@ -926,10 +932,12 @@ function updateProduct() {
         processData: false,
         data: dataImage,
         success: function (data) {
-            uppProduct(data);
+            uppProduct(data)
+            cleatPrevInputImage()
         },
         error: function () {
             errorFunc()
+            cleatPrevInputImage()
         }
     });
 }
@@ -1219,12 +1227,17 @@ function loadProductList(idCategory) {
 
     $.post("/Admin/LoadProductList", { idCategory: idCategory }, successCallBack(successFunc, loader));
 }
+var prevInput = null
+function cleatPrevInputImage() {
+    prevInput = null
+}
 
 function addPreviewImage(input) {
     if (input.files && input.files[0]) {
         let reader = new FileReader();
 
         reader.onload = function (e) {
+            prevInput = $(input).clone();
             let dialog = $(input).parents("dialog");
             dialog = dialog.length > 0 ? dialog : $(input).parents(".custom-dialog");
 
@@ -1239,6 +1252,9 @@ function addPreviewImage(input) {
         }
 
         reader.readAsDataURL(input.files[0]);
+    } else if (prevInput) {
+        let $prevInput = $(prevInput)
+        input.files = $prevInput[0].files
     }
 }
 
@@ -2147,6 +2163,7 @@ var Dialog = {
     clear: ($dialog) => {
         $dialog = $($dialog);
 
+        cleatPrevInputImage()
         $dialog.find("input").val("");
         $dialog.find("input[type=checkbox]").prop('checked', false);
         $dialog.find("textarea").val("");

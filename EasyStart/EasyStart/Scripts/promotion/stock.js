@@ -350,7 +350,11 @@ var StockManger = {
             processData: false,
             data: dataImage,
             success: function (data) {
-                saveFunc(data);
+                saveFunc(data)
+                cleatPrevInputImage()
+            },
+            error: function () {
+                cleatPrevInputImage()
             }
         });
 

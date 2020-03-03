@@ -422,36 +422,46 @@ namespace EasyStart.Controllers
             var result = new JsonResultModel();
             var defaultImage = "../Images/default-image.jpg";
 
-            if (!System.IO.File.Exists(Server.MapPath(category.Image)))
+            try
             {
-                category.Image = defaultImage;
-            }
-            else if (category.Id > 0)
-            {
-                var oldImage = DataWrapper.GetCategoryImage(category.Id);
-
-                if (oldImage != category.Image
-                    && oldImage != defaultImage
-                    && System.IO.File.Exists(Server.MapPath(oldImage)))
+                if (!System.IO.File.Exists(Server.MapPath(category.Image)))
                 {
-                    System.IO.File.Delete(Server.MapPath(oldImage));
+                    category.Image = defaultImage;
+                }
+                else if (category.Id > 0)
+                {
+                    var oldImage = DataWrapper.GetCategoryImage(category.Id);
+
+                    if (oldImage != category.Image
+                        && oldImage != defaultImage
+                        && System.IO.File.Exists(Server.MapPath(oldImage)))
+                    {
+                        System.IO.File.Delete(Server.MapPath(oldImage));
+                    }
+                }
+
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+
+                category.BranchId = branchId;
+                var updateCategory = DataWrapper.UpdateCategory(category);
+
+                if (updateCategory != null)
+                {
+                    result.Data = updateCategory;
+                    result.Success = true;
+                }
+                else
+                {
+                    result.ErrorMessage = "Категория не обновлена";
                 }
             }
-
-            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-
-            category.BranchId = branchId;
-            var updateCategory = DataWrapper.UpdateCategory(category);
-
-            if (updateCategory != null)
+            catch (Exception ex)
             {
-                result.Data = updateCategory;
-                result.Success = true;
+                Logger.Log.Error(ex);
+                result.ErrorMessage = "При загрузке изображения что-то пошло не так...";
             }
-            else
-            {
-                result.ErrorMessage = "Категория не обновлена";
-            }
+
+
 
             return Json(result);
         }

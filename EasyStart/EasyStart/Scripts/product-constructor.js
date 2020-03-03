@@ -63,7 +63,11 @@ function addOrUpdateIngredient() {
         processData: false,
         data: dataImage,
         success: function (data) {
-            addFunc(data);
+            addFunc(data)
+            cleatPrevInputImage()
+        },
+        error: function () {
+            cleatPrevInputImage()
         }
     });
 }
