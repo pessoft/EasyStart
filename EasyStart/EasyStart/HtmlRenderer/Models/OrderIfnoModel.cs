@@ -13,6 +13,8 @@ namespace EasyStart.HtmlRenderer.Models
 
         public string CustomerName { get; set; }
         public string CustomerNumberPhone { get; set; }
+        public string OrderDateDelivery { get; set; }
+        public string NumberAppliances { get; set; }
 
         public DeliveryType DeliveryType { get; set; }
         public string DeliveryTypeStr { get; set; }

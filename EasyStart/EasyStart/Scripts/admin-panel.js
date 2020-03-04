@@ -1773,6 +1773,7 @@ function processingOrders(orders) {
 
 function processsingOrder(order) {
     order.Date = jsonToDate(order.Date);
+    order.DateDelivery = order.DateDelivery ? jsonToDate(order.DateDelivery) : null;
     order.ProductCount = JSON.parse(order.ProductCountJSON);
     order.ProductBonusCount = JSON.parse(order.ProductBonusCountJSON);
     order.ProductConstructorCount = JSON.parse(order.ProductConstructorCountJSON);
@@ -2344,8 +2345,8 @@ class OrderDetailsData {
         this.NumberAppliances = order.NumberAppliances;
         this.Status = order.OrderStatus;
         this.OrderDate = toStringDateAndTime(order.Date);
-        this.OrderDeliveryDate = order.OrderDeliveryDate ?
-            toStringDateAndTime(order.OrderDeliveryDate) :
+        this.OrderDeliveryDate = order.DateDelivery ?
+            toStringDateAndTime(order.DateDelivery) :
             'Как можно быстрее';
         this.Comment = order.Comment || commentEmptyTemplate;
     }
