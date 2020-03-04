@@ -1794,6 +1794,17 @@ function toStringDateAndTime(date) {
     return dateStr;
 }
 
+
+function toStringDate(date) {
+    let day = date.getDate().toString();;
+    day = day.length == 1 ? "0" + day : day;
+    let month = (date.getMonth() + 1).toString();
+    month = month.length == 1 ? "0" + month : month;
+   
+    let dateStr = `${day}.${month}.${date.getFullYear()}`;
+    return dateStr;
+}
+
 function getParentItemFromOrdersDOM(e) {
     let $e = $(e);
     let cssClass = "order-item";
@@ -2200,11 +2211,17 @@ class CardOrder {
 
     setOrderNumber(value, status) {
         this.setValue(".order-item-number", value);
+        this.setValue(".preorder-item-grid .order-item-number", value);
         this.markNumberOrder(".order-item-number", status);
     }
 
     setAmount(value) {
         this.setValue(".order-item-amount", value);
+        this.setValue(".preorder-item-grid .order-item-amount", value);
+    }
+
+    setDateDeliveryPreoprder(value) {
+        this.setValue(".preorder-item-grid .preorder-date-delivery", value);
     }
 
     setPhoneNumber(value) {
@@ -2255,7 +2272,19 @@ class CardOrder {
         this.$htmlTemplate.find(`${qSelector} ${selectorLabelContainer}`).html(label);
     }
 
+    setPreorderViewMask() {
+        const templateId = "preorder-item-grid-template";
+        let htmlTemplatePreorderMask = $(`#${templateId}`).html();
+
+        this.$htmlTemplate.append(htmlTemplatePreorderMask)
+    }
+
     render() {
+        if (this.data.IsPreorder) {
+            this.setPreorderViewMask()
+            this.setDateDeliveryPreoprder(this.data.DateDelivery)
+        }
+
         this.setAttrOrderId(this.data.OrderId);
         this.setOrderNumber(this.data.OrderNumber, this.data.Status);
         this.setAmount(this.data.Amount);
@@ -2285,6 +2314,25 @@ class TodayOrder {
         this.UserName = order.Name;
         this.DeliveryType = getDeliveryType(order.DeliveryType);
         this.PayType = getBuyType(order.BuyType);
+        this.IsPreorder = this.isPreoprder(order.DateDelivery)
+        this.DateDelivery = this.IsPreorder ? toStringDate(order.DateDelivery) : null
+    }
+
+    isPreoprder(dateDelivery) {
+        let isPreorder = false
+
+        if (dateDelivery) {
+            let dateNow = new Date()
+            dateNow.setHours(0, 0, 0, 0)
+
+            let dateDeliveryCopy = new Date(dateDelivery)
+            dateDeliveryCopy.setHours(0, 0, 0, 0)
+
+            isPreorder = dateNow.toDateString() != dateDeliveryCopy.toDateString() &&
+                dateDelivery > new Date()
+        }
+
+        return isPreorder
     }
 }
 
