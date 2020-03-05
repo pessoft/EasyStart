@@ -431,6 +431,8 @@ namespace EasyStart.Logic
                         updateSetting.ZoneId = setting.ZoneId;
                         updateSetting.IsSoundNotify = setting.IsSoundNotify;
                         updateSetting.NotificationEmail = setting.NotificationEmail;
+                        updateSetting.MaxPreorderPeriod = setting.MaxPreorderPeriod;
+                        updateSetting.MinTimeProcessingOrder = setting.MinTimeProcessingOrder;
                     }
                     else
                     {

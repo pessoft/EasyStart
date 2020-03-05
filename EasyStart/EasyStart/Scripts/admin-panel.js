@@ -43,6 +43,7 @@
     selectToSumoSelectProductType()
     selectToSumoSelectCategoryType()
     bindChangePeriodWork()
+    bindChangePreorderMinTime()
     bindCustomDialogToggleEvent()
 
     checkSettings()
@@ -111,7 +112,19 @@ function productConstructorCondition() {
 }
 
 function bindChangePeriodWork() {
-    $(".period-work-input").hunterTimePicker();
+    const $e = $(".period-work-input")
+    $e.unbind('change')
+    $e.bind('change', function () { onChangeOnlyTime(this)})
+    $e.hunterTimePicker();
+    
+    
+}
+
+function bindChangePreorderMinTime() {
+    const $e = $("#preorder-min-time")
+    $e.unbind('change')
+    $e.bind('change', function () { onChangeOnlyTime(this, '01:00') })
+    $e.hunterTimePicker();
 }
 
 function selectToSumoSelectProductType() {
@@ -1354,6 +1367,15 @@ function saveDeliverySetting() {
     let warnMgs = {
         AreaDelivery: "Настройте районы доставки",
         WorkTime: "Укажите режим работы",
+        PreorderTime: "Натройте раздел предзаказ",
+    }
+
+    let maxPreorderPeriod = $('#preorder-max-date').val()
+    let minTimeProcessingOrder = $('#preorder-min-time').val()
+
+    if (!maxPreorderPeriod || !minTimeProcessingOrder) {
+        showWarningMessage(warnMgs.PreorderTime);
+        return;
     }
 
     if (!AreaDelivery || AreaDelivery.length == 0) {
@@ -1373,7 +1395,9 @@ function saveDeliverySetting() {
         PayCard: $("#payment-card").is(":checked"),
         PayCash: $("#payment-cash").is(":checked"),
         TimeDeliveryJSON: getTimeDeliveryJSON(),
-        AreaDeliveries: AreaDelivery
+        AreaDeliveries: AreaDelivery,
+        MaxPreorderPeriod: maxPreorderPeriod,
+        MinTimeProcessingOrder: minTimeProcessingOrder
     }
     let loader = new Loader($("#delivery"));
     let successFunc = function (result, loader) {
@@ -2985,3 +3009,14 @@ function setProductType(productType) {
     }
 
 } 
+
+
+function onChangeDeliveryMaxDate(e, defaultValue = 0) {
+    //format hh:mm
+    const reg = '^[ 0-9]+$'
+    let value = $(e).val()
+    const processingValue = value.match(reg)
+
+    if (!processingValue)
+        $(e).val(defaultValue)
+}

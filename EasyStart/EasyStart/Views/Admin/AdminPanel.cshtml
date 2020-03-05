@@ -568,77 +568,100 @@
         </div>
         <div class="section hide" id="delivery">
             <div class="section-wrapper">
-                <div class="delivery-block smaller">
-                    <div class="delivery-header">
-                        Дополнительные уведомления
-                    </div>
-                    <div class="delivery-content">
-                        <div class="group">
-                            <input required type="text" id="notify-email" value="@(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.NotificationEmail != null ? ViewBag.DeliverySetting.NotificationEmail : "")" />
-                            <div class="bar"></div>
-                            <label>Email оповещение</label>
+                <div class="delivery-setting-wrapper">
+                    <div class="delivery-block">
+                        <div class="delivery-header">
+                            Дополнительные уведомления
                         </div>
-                        <div class="checkbox-item sound-notify">
-                            <input type="checkbox" id="sound-nodify" @(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.IsSoundNotify ? "checked" : "") />
-                            <label for="sound-nodify" class="label-for">Оповещать звуковым сигналом о новом заказе</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="delivery-block">
-                    <div class="delivery-header">
-                        Настройка стоимости доставки
-                    </div>
-                    <div class="delivery-content">
-                        <button class="btn btn-light" onclick="openSttingAreaDelivery()">Настроить районы доставкаи</button>
-                    </div>
-                </div>
-                <div class="delivery-block smaller">
-                    <div class="delivery-header">
-                        Оплата заказа
-                    </div>
-                    <div class="delivery-content">
-                        <div class="payment-type">
-                            <input type="checkbox" id="payment-card" @(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.PayCard ? "checked" : "") />
-                            <label for="payment-card" class="label-for">Банковской картой</label>
-                        </div>
-                        <div class="payment-type">
-                            <input type="checkbox" id="payment-cash" checked disabled />
-                            <label for="payment-cash" class="label-for">Наличными</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="delivery-block smaller">
-                    <div class="delivery-header">
-                        Часовой пояс
-                    </div>
-                    <div class="delivery-content">
-                        <select id="delivery-time-zone">
-                            @foreach (var kv in ViewBag.Zones)
-                            {
-                                <option @(@kv.Key == @ViewBag.ZoneId ? "selected" : "") value="@kv.Key">@kv.Value</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-                <div class="delivery-block">
-                    <div class="delivery-header">
-                        Режим работы доставки
-                    </div>
-
-                    <div class="table-time">
-                        @foreach (var day in ViewBag.DeliveryTimeTable)
-                        {
-                            <div class="time-day" day-id="@day.Item2">
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="day-@day.Item2" @(@day.Item5 ? "checked" : "") />
-                                    <label for="day-@day.Item2" class="label-for">@day.Item1</label>
-                                </div>
-                                <div class="period-work">
-                                    <input type="text" class="period-work-input" name="start" min="0" max="24" step="0.1" placeholder="0.00" value="@day.Item3" />
-                                    <input type="text" readonly class="period-work-input" name="end" min="0" max="24" step="0.1" placeholder="0.00" value="@day.Item4" />
-                                </div>
+                        <div class="delivery-content">
+                            <div class="group">
+                                <input required type="text" id="notify-email" value="@(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.NotificationEmail != null ? ViewBag.DeliverySetting.NotificationEmail : "")" />
+                                <div class="bar"></div>
+                                <label>Email оповещение</label>
                             </div>
-                        }
+                            <div class="checkbox-item sound-notify">
+                                <input type="checkbox" id="sound-nodify" @(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.IsSoundNotify ? "checked" : "") />
+                                <label for="sound-nodify" class="label-for">Оповещать звуковым сигналом о новом заказе</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="delivery-block">
+                        <div class="delivery-header">
+                            Настройка предзаказа
+                        </div>
+                        <div class="delivery-content">
+                            <div class="group">
+                                <input required type="number" id="preorder-max-date" onchange="onChangeDeliveryMaxDate(this)"
+                                       value="@(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.MaxPreorderPeriod != null ? ViewBag.DeliverySetting.MaxPreorderPeriod : "0")"
+                                       />
+                                <div class="bar"></div>
+                                <label>Max длительность предзаказа (в днях)</label>
+                            </div>
+                            <div class="group">
+                                <input type="text" id="preorder-min-time" required
+                                       value="@(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.MinTimeProcessingOrder != null ? ViewBag.DeliverySetting.MinTimeProcessingOrder : "01:00")"
+                                       >
+                                <div class="bar"></div>
+                                <label>Min время приготовления 1-го заказа (чч:мм)</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="delivery-block">
+                        <div class="delivery-header">
+                            Настройка стоимости доставки
+                        </div>
+                        <div class="delivery-content">
+                            <button class="btn btn-light" onclick="openSttingAreaDelivery()">Настроить районы доставкаи</button>
+                        </div>
+                    </div>
+                    <div class="delivery-block">
+                        <div class="delivery-header">
+                            Оплата заказа
+                        </div>
+                        <div class="delivery-content">
+                            <div class="payment-type">
+                                <input type="checkbox" id="payment-card" @(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.PayCard ? "checked" : "") />
+                                <label for="payment-card" class="label-for">Банковской картой</label>
+                            </div>
+                            <div class="payment-type">
+                                <input type="checkbox" id="payment-cash" checked disabled />
+                                <label for="payment-cash" class="label-for">Наличными</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="delivery-block">
+                        <div class="delivery-header">
+                            Часовой пояс
+                        </div>
+                        <div class="delivery-content">
+                            <select id="delivery-time-zone">
+                                @foreach (var kv in ViewBag.Zones)
+                                {
+                                    <option @(@kv.Key == @ViewBag.ZoneId ? "selected" : "") value="@kv.Key">@kv.Value</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="delivery-block col-span-2">
+                        <div class="delivery-header">
+                            Режим работы доставки
+                        </div>
+
+                        <div class="table-time">
+                            @foreach (var day in ViewBag.DeliveryTimeTable)
+                            {
+                                <div class="time-day" day-id="@day.Item2">
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="day-@day.Item2" @(@day.Item5 ? "checked" : "") />
+                                        <label for="day-@day.Item2" class="label-for">@day.Item1</label>
+                                    </div>
+                                    <div class="period-work">
+                                        <input type="text" class="period-work-input" name="start" min="0" max="24" step="0.1" placeholder="0.00" value="@day.Item3" />
+                                        <input type="text" readonly class="period-work-input" name="end" min="0" max="24" step="0.1" placeholder="0.00" value="@day.Item4" />
+                                    </div>
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
                 <div class="delivery-menu">
