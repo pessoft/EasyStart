@@ -297,7 +297,9 @@ namespace EasyStart
                 }
 
                 var deliverSetting = DataWrapper.GetDeliverySetting(order.BranchId);
-                
+
+                if(order.DateDelivery != null)
+                    order.DateDelivery = order.DateDelivery.Value.GetDateTimeNow(deliverSetting.ZoneId);
 
                 order.Date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
                 order.UpdateDate = order.Date;
