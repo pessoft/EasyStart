@@ -1691,6 +1691,7 @@ namespace EasyStart.Logic
                     if (newClient != null)
                     {
                         newClient.UserName = client.UserName;
+                        newClient.DateBirth = client.DateBirth;
                         newClient.Email = client.Email;
                         newClient.ParentReferralClientId = client.ParentReferralClientId;
                         newClient.ParentReferralCode = client.ParentReferralCode;
