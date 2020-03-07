@@ -918,6 +918,7 @@ namespace EasyStart
                     password = client.Password,
                     email = client.Email,
                     userName = client.UserName,
+                    dateBirth = client.DateBirth,
                     cityId = client.CityId,
                     branchId = client.BranchId,
                     referralCode = client.ReferralCode,
