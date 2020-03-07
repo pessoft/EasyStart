@@ -286,6 +286,10 @@
     <Compile Include="Migrations\202003050833374_AddPreorderSettingDelivery.Designer.cs">
       <DependentUpon>202003050833374_AddPreorderSettingDelivery.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202003071216232_AddedDateBirthClietn.cs" />
+    <Compile Include="Migrations\202003071216232_AddedDateBirthClietn.Designer.cs">
+      <DependentUpon>202003071216232_AddedDateBirthClietn.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -561,6 +565,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202003050833374_AddPreorderSettingDelivery.resx">
       <DependentUpon>202003050833374_AddPreorderSettingDelivery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202003071216232_AddedDateBirthClietn.resx">
+      <DependentUpon>202003071216232_AddedDateBirthClietn.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
