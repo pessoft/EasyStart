@@ -293,6 +293,7 @@
     <Compile Include="Models\BranchSettingViewModel.cs" />
     <Compile Include="Models\BranchSignal.cs" />
     <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\ClientParentReferralCode.cs" />
     <Compile Include="Models\ConstructorCategory.cs" />
     <Compile Include="Models\ConstructorProductHistoryModel.cs" />
     <Compile Include="Models\CouponModel.cs" />
