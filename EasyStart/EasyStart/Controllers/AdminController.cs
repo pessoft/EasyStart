@@ -554,7 +554,7 @@ namespace EasyStart.Controllers
 
             if (!System.IO.File.Exists(Server.MapPath(stock.Image)))
             {
-                stock.Image = "/images/default-image.jpg";
+                stock.Image = "../Images/default-image.jpg";
             }
 
             var branchId = DataWrapper.GetBranchId(User.Identity.Name);

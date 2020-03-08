@@ -1396,6 +1396,7 @@
                                 <option value="1">Вручение заказа</option>
                                 <option value="2">Сумма заказа</option>
                                 <option value="3">Блюда</option>
+                                <option value="4">День рождения</option>
                             </select>
                         </div>
                         <div id="stock-condition-delivery-container" style="display:none" class="promotion-stock-index-block hide-block">
@@ -1416,6 +1417,19 @@
                                 <label>Минимальная сумма заказа</label>
                             </div>
                         </div>
+                        <div id="stock-condition-birthday-container" style="display:none" class="promotion-stock-index-block hide-block">
+                        <h4>Настройка периода активности ДР</h4>
+                        <div class="group">
+                            <input id="stock-condition-birthday-period-before" required type="number" min="0" oninput="StockManger.onStockConditionBirthdayPeriod()" />
+                            <span class="bar"></span>
+                            <label>Кол-во дней перед ДР</label>
+                        </div>
+                        <div class="group">
+                            <input id="stock-condition-birthday-period-after" required type="number" min="0" oninput="StockManger.onStockConditionBirthdayPeriod()" />
+                            <span class="bar"></span>
+                            <label>Кол-во дней после ДР</label>
+                        </div>
+                    </div>
                         <div id="stock-condition-products-container" style="display:none" class="promotion-stock-index-block hide-block">
                             <h4>Настройка блюд</h4>
                         </div>

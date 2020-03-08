@@ -290,6 +290,10 @@
     <Compile Include="Migrations\202003071216232_AddedDateBirthClietn.Designer.cs">
       <DependentUpon>202003071216232_AddedDateBirthClietn.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202003081340441_DateBirthdayPeriod.cs" />
+    <Compile Include="Migrations\202003081340441_DateBirthdayPeriod.Designer.cs">
+      <DependentUpon>202003081340441_DateBirthdayPeriod.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -568,6 +572,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202003071216232_AddedDateBirthClietn.resx">
       <DependentUpon>202003071216232_AddedDateBirthClietn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202003081340441_DateBirthdayPeriod.resx">
+      <DependentUpon>202003081340441_DateBirthdayPeriod.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

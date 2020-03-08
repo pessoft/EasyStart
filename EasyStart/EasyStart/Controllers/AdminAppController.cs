@@ -718,7 +718,7 @@ namespace EasyStart
 
                 if (parentClient == null)
                 {
-                    result.ErrorMessage = "Не верный реферальный код";
+                    result.ErrorMessage = "Неверный реферальный код";
                     return result;
                 }
 

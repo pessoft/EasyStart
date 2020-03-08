@@ -272,6 +272,10 @@
 #stockDialog #stock-condition-summ-container .group input,
 #stockDialog #stock-condition-summ-container .group .bar,
 #stockDialog #stock-condition-summ-container input:focus ~ .bar:before,
+#stockDialog #stock-condition-birthday-container .group input,
+#stockDialog #stock-condition-birthday-container .group .bar,
+#stockDialog #stock-condition-birthday-container input:focus ~ .bar:before,
+
 .coupon-type-bonus-setting .group,
 #couponDialog .coupon-type-bonus-setting .group input,
 #couponDialog .coupon-type-bonus-setting .group .bar,
@@ -683,6 +687,9 @@ textarea.default-style-input {
     border-radius: 3px;
     position: relative;
     justify-self: center;
+    justify-content: center;
+    align-items: center;
+    display: flex;
 }
 
 .push-image-menu {
@@ -695,6 +702,7 @@ textarea.default-style-input {
 
 .push-image img {
     max-width: 100%;
+    max-height: 100%;
     border-radius: 3px;
 }
 
