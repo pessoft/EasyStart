@@ -148,6 +148,39 @@ namespace EasyStart
             return result;
         }
 
+        [HttpPost]
+        public JsonResultModel GetStocks([FromBody] MainDataSignatureModel data)
+        {
+            var result = new JsonResultModel();
+            var branchId = data.BranchId;
+            var clientid = data.ClientId;
+            result.Success = false;
+
+            if (branchId < 1 || data.ClientId < 1)
+            {
+                result.Data = new { stocks = new List<int>() };
+                result.Success = true;
+
+                return result;
+            }
+
+            try
+            {
+                var promotionLogic = new PromotionLogic();
+                var stocks = promotionLogic.GetStockForAPI(branchId, clientid);
+
+                result.Data = new { stocks };
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.Success = false;
+            }
+
+            return result;
+        }
+
         public List<CategoryModel> GetCategories(int branchId)
         {
             try

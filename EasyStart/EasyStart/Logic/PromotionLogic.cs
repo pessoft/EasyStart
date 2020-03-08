@@ -152,13 +152,22 @@ namespace EasyStart.Logic
                 .Where(p => p.StockOneTypeSubtype == StockOneTypeSubtype.OneOrder)
                 .Select(p => p.UniqId)
                 .ToList();
-            var oneOrderStockIds = oneOrderStockGuids == null || !oneOrderStockGuids.Any() ? null : DataWrapper.GetStockIdsByGuid(oneOrderStockGuids);
+            var guidDictOneOff = oneOrderStockGuids == null || !oneOrderStockGuids.Any() ? null : DataWrapper.GetStockIdsByGuid(oneOrderStockGuids);
 
+            var oneOrderStockIds = guidDictOneOff?.SelectMany(p => p.Value).ToList();
             if (oneOrderStockIds != null && oneOrderStockIds.Any())
             {
-                var usedOneOffStockIds = DataWrapper.GetUsedOneOffStockIds(clientId, oneOrderStockIds);
+                var usedOneOffIds = DataWrapper.GetUsedOneOffStockIds(clientId, oneOrderStockIds);
 
-                if (usedOneOffStockIds != null && usedOneOffStockIds.Any())
+                var usedOneOffStockIds = new List<int>();
+
+                foreach (var kv in guidDictOneOff)
+                {
+                    if (kv.Value.Exists(p => usedOneOffIds.Contains(p)))
+                        usedOneOffStockIds.AddRange(kv.Value);
+                }
+
+                if (usedOneOffStockIds.Any())
                 {
                     stocks = stocks
                         .Where(p => !usedOneOffStockIds.Contains(p.Id))
@@ -170,7 +179,9 @@ namespace EasyStart.Logic
                 .Where(p => p.StockOneTypeSubtype == StockOneTypeSubtype.FirstOrder)
                 .Select(p => p.UniqId)
                 .ToList();
-            var ferstStockIds = firstStockGuids == null || !firstStockGuids.Any() ? null : DataWrapper.GetStockIdsByGuid(firstStockGuids);
+
+            var guidDictFirstOrder = firstStockGuids == null || !firstStockGuids.Any() ? null : DataWrapper.GetStockIdsByGuid(firstStockGuids);
+            var ferstStockIds = guidDictFirstOrder?.SelectMany(p => p.Value).ToList();
 
             if (ferstStockIds != null && ferstStockIds.Any() && !DataWrapper.IsEmptyOrders(clientId))
             {

@@ -1586,17 +1586,17 @@ namespace EasyStart.Logic
             return result;
         }
 
-        public static List<int> GetStockIdsByGuid(List<Guid> items)
+        public static Dictionary<Guid, List<int>> GetStockIdsByGuid(List<Guid> items)
         {
-            List<int> result = new List<int>();
+            Dictionary<Guid, List<int>> result = new Dictionary<Guid, List<int>>();
             try
             {
                 using (var db = new AdminPanelContext())
                 {
                     result = db.Stocks
                         .Where(p => items.Contains(p.UniqId))
-                        .Select(p => p.Id)
-                        .ToList();
+                        .GroupBy(p => p.UniqId)
+                        .ToDictionary(p => p.Key, p => p.Select(x => x.Id).ToList());
                 }
             }
             catch (Exception ex)
