@@ -75,7 +75,7 @@ namespace EasyStart.Logic
                 {
                     setting = db.DeliverySettings.FirstOrDefault(p => p.BranchId == branchId && !p.IsDeleted);
 
-                    if(setting != null)
+                    if (setting != null)
                         setting.AreaDeliveries = GetAreaDeliveris(setting.Id);
                 }
             }
@@ -2799,7 +2799,7 @@ namespace EasyStart.Logic
                     historyMessages = db.PushMessages
                         .Where(p => p.BranchId == branchId)
                         .OrderByDescending(p => p.Date)
-                        .Skip(pageSize * (pageNumber-1))
+                        .Skip(pageSize * (pageNumber - 1))
                         .Take(pageSize)
                         .ToList();
                 }
@@ -2891,7 +2891,8 @@ namespace EasyStart.Logic
                             updDevice.BranchId = device.BranchId;
 
                             db.SaveChanges();
-                        } else
+                        }
+                        else
                         {
                             addTokennotRegisterClient();
                         }
@@ -2924,6 +2925,124 @@ namespace EasyStart.Logic
             }
 
             return tokens;
+        }
+
+        public static bool IsUseStockWithTriggerBirthday(List<int> stockIds, int branchId)
+        {
+            bool isUse = false;
+
+            if (stockIds == null || !stockIds.Any())
+                return isUse;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    isUse = db.Stocks.Where(p => stockIds.Contains(p.Id) &&
+                    p.ConditionType == StockConditionTriggerType.HappyBirthday)
+                    .Count() > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return isUse;
+        }
+
+        public static void FixUseStockWithBirthday(int clientId, DateTime dateUse)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var client = GetClient(clientId);
+                    if (client == null)
+                        throw new Exception($"Клиент {clientId} не найден");
+
+                    var newFixUse = new FixBirthday
+                    {
+                        ClientId = client.Id,
+                        DateUse = dateUse.Date,
+                        DateBirth = client.DateBirth.Value
+                    };
+
+                    var fixUse = GetFixBirthday(clientId, dateUse.Date);
+                    if (fixUse == null)
+                    {
+                        db.FixBirthdays.Add(newFixUse);
+                    }
+                    else
+                    {
+                        var existingData = db.FixBirthdays.FirstOrDefault(p => p.Id == fixUse.Id);
+                        existingData.DateUse = dateUse.Date;
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
+
+        public static FixBirthday GetFixBirthday(int clientId, DateTime useDate)
+        {
+            FixBirthday fixBirthday = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var client = GetClient(clientId);
+                    if (client == null)
+                        throw new Exception($"Клиент {clientId} не найден");
+
+                    if (client.DateBirth != null)
+                    {
+                        var dateNow = useDate.Date;
+
+                        fixBirthday = db.FixBirthdays.FirstOrDefault(p => p.ClientId == clientId &&
+                        DbFunctions.DiffYears(p.DateUse, dateNow) == 0);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return fixBirthday;
+        }
+
+        public static bool AllowUseStockWithBirthday(int clientId)
+        {
+            var isAllow = false;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var client = GetClient(clientId);
+                    if (client == null)
+                        throw new Exception($"Клиент {clientId} не найден");
+
+                    if (client.DateBirth != null)
+                    {
+                        var dateNow = DateTime.Now.Date;
+
+                        var fixUse = GetFixBirthday(clientId, dateNow);
+
+                        isAllow = fixUse == null || fixUse.DateBirth.Date == client.DateBirth.Value.Date;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return isAllow;
         }
     }
 }

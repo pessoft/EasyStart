@@ -294,6 +294,14 @@
     <Compile Include="Migrations\202003081340441_DateBirthdayPeriod.Designer.cs">
       <DependentUpon>202003081340441_DateBirthdayPeriod.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202003081438022_AddedTableFixBirthdays.cs" />
+    <Compile Include="Migrations\202003081438022_AddedTableFixBirthdays.Designer.cs">
+      <DependentUpon>202003081438022_AddedTableFixBirthdays.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202003081610468_AddedClientIdInFixBirthdays.cs" />
+    <Compile Include="Migrations\202003081610468_AddedClientIdInFixBirthdays.Designer.cs">
+      <DependentUpon>202003081610468_AddedClientIdInFixBirthdays.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -313,6 +321,7 @@
     <Compile Include="Models\FCMNotification\FCMMessage.cs" />
     <Compile Include="Models\FCMNotification\PushMessageModel.cs" />
     <Compile Include="Models\FCMNotification\PushNotification.cs" />
+    <Compile Include="Models\FixBirthday.cs" />
     <Compile Include="Models\HistoryOrderFilter.cs" />
     <Compile Include="Models\IContainImage.cs" />
     <Compile Include="Models\IngredientHistoryModel.cs" />
@@ -575,6 +584,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202003081340441_DateBirthdayPeriod.resx">
       <DependentUpon>202003081340441_DateBirthdayPeriod.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202003081438022_AddedTableFixBirthdays.resx">
+      <DependentUpon>202003081438022_AddedTableFixBirthdays.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202003081610468_AddedClientIdInFixBirthdays.resx">
+      <DependentUpon>202003081610468_AddedClientIdInFixBirthdays.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -86,6 +86,53 @@ namespace EasyStart.Logic
             return stocks;
         }
 
+        public List<int> GetStockIdsWithTriggerBirthdayForExcluded(List<StockModel> stocks, int clientId)
+        {
+            var excluded = new List<int>();
+
+            if (stocks == null || !stocks.Any())
+                return excluded;
+
+            var stocksWithTriggerBirhday = stocks
+                .Where(p => p.ConditionType == StockConditionTriggerType.HappyBirthday)
+                .ToList();
+
+            if (stocksWithTriggerBirhday.Any())
+            {
+                var client = DataWrapper.GetClient(clientId);
+
+                if (client.DateBirth != null)
+                {
+                    var isAllowUseStockWithBirhda = DataWrapper.AllowUseStockWithBirthday(client.Id);
+
+                    if (isAllowUseStockWithBirhda)
+                    {
+                        stocksWithTriggerBirhday.ForEach(p =>
+                        {
+                            var dateBefore = DateTime.Now;
+                            dateBefore = dateBefore.AddDays(-p.ConditionBirthdayBefore);
+
+
+                            var dateAfter = DateTime.Now;
+                            dateAfter = dateAfter.AddDays(p.ConditionBirthdayAfter);
+
+                            var dateBirth = new DateTime(dateAfter.Year, client.DateBirth.Value.Month, client.DateBirth.Value.Day);
+
+                            if (!(dateBefore.Date <= dateBirth.Date &&
+                            dateBirth.Date <= dateAfter.Date))
+                                excluded.Add(p.Id);
+                        });
+                    }
+                    else
+                    {
+                        excluded = stocksWithTriggerBirhday.Select(p => p.Id).ToList();
+                    }
+                }
+            }
+
+            return excluded;
+        }
+
         public List<StockModel> GetStock(int branchId, int clientId)
         {
             List<StockModel> stocks = DataWrapper.GetActiveStocks(branchId);
@@ -94,6 +141,9 @@ namespace EasyStart.Logic
             {
                 return stocks;
             }
+
+            var excludedStocksWithBirthday = GetStockIdsWithTriggerBirthdayForExcluded(stocks, clientId);
+            stocks = stocks.Where(p => !excludedStocksWithBirthday.Contains(p.Id)).ToList();
 
             List<StockModel> stocksOneOff = stocks
                 .Where(p => p.StockTypePeriod == StockTypePeriod.OneOff)
@@ -129,7 +179,7 @@ namespace EasyStart.Logic
                        .ToList();
             }
 
-                return stocks;
+            return stocks;
         }
 
         public List<CouponModel> GetCoupons(int branchId)

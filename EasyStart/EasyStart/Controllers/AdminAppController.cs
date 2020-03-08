@@ -314,6 +314,17 @@ namespace EasyStart
 
                 if (numberOrder != -1)
                 {
+                    if (order.StockIds != null)
+                    {
+                        var isUseStockWithTriggerBirthday = DataWrapper.IsUseStockWithTriggerBirthday(order.StockIds, order.BranchId);
+
+                        if (isUseStockWithTriggerBirthday)
+                        {
+                            DataWrapper.FixUseStockWithBirthday(order.ClientId, order.Date);
+                        }
+                    }
+                    
+
                     if (order.AmountPayCashBack > 0)
                     {
                         client.VirtualMoney -= order.AmountPayCashBack;
