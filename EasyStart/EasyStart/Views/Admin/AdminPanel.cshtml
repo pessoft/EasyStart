@@ -208,6 +208,7 @@
                             <li target-id="pormotion-coupons"><i class="fal fa-gift-card"></i> Купоны</li>
                             <li target-id="pormotion-cashback-partners"><i class="fal fa-hands-usd"></i> Кешбек и Партнерская программа</li>
                             <li target-id="pormotion-push-notification"><i class="fal fa-paper-plane"></i> PUSH сообщения</li>
+                            <li target-id="pormotion-news"><i class="fal fa-rss"></i> Новости</li>
                             <li target-id="promotion-settings"><i class="fal fa-sliders-v"></i> Настройка</li>
                         </ul>
                     </div>
@@ -416,6 +417,20 @@
                                 </div>
                             </div>
                         </div>
+                        <div id="pormotion-news" class="promotion-content promotion-some-settings">
+                            <div class="promotion-some-settings-header">
+                                <button id="btn-add-stock" class="promotion-btn-settings-add" onclick="NewsManager.addNewNews()">
+                                    <i class="fal fa-plus"></i>
+                                    Добавить новость
+                                </button>
+                            </div>
+                            <div id="news-list" class="promotion-some-settings-content">
+                                <div class="empty-list">
+                                    <i class="fal fa-smile-plus"></i>
+                                    <span>Пока нет новостей</span>
+                                </div>
+                            </div>
+                        </div>
                         <div id="promotion-settings" class="promotion-content promotion-settings promotion-some-settings hide">
                             <div class="promotion-setting">
                                 <h2>Баннер из акций</h2>
@@ -592,15 +607,13 @@
                         <div class="delivery-content">
                             <div class="group">
                                 <input required type="number" id="preorder-max-date" onchange="onChangeDeliveryMaxDate(this)"
-                                       value="@(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.MaxPreorderPeriod != null ? ViewBag.DeliverySetting.MaxPreorderPeriod : "0")"
-                                       />
+                                       value="@(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.MaxPreorderPeriod != null ? ViewBag.DeliverySetting.MaxPreorderPeriod : "0")" />
                                 <div class="bar"></div>
                                 <label>Max длительность предзаказа (в днях)</label>
                             </div>
                             <div class="group">
                                 <input type="text" id="preorder-min-time" required
-                                       value="@(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.MinTimeProcessingOrder != null ? ViewBag.DeliverySetting.MinTimeProcessingOrder : "01:00")"
-                                       >
+                                       value="@(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.MinTimeProcessingOrder != null ? ViewBag.DeliverySetting.MinTimeProcessingOrder : "01:00")">
                                 <div class="bar"></div>
                                 <label>Min время приготовления 1-го заказа (чч:мм)</label>
                             </div>
@@ -892,18 +905,6 @@
                                 <i class="fal fa-smile-plus"></i>
                                 <span>Добавте ингредиенты</span>
                             </div>
-                            @*<div class="ingredient-row">
-                                    <img src="../Images/Products/e03e78d6-1ecb-4bfd-8679-e9a6f4165024.jpg" alt="ingredient image" />
-                                    <div class="product-ingredient-wrapper">
-                                        <span class="ingredient-row-name">Рисовая лапша</span>
-                                        <span class="ingredient-row-small-text">100 г.</span>
-                                        <span class="ingredient-row-small-text">100 руб.</span>
-                                        <div class="ingredient-row-menu">
-                                            <i onclick="" class="fal fa-edit"></i>
-                                            <i onclick="" class="fal fa-trash-alt"></i>
-                                        </div>
-                                    </div>
-                                </div>*@
                         </div>
                     </div>
                     <div class="category-constructor-block block-menu-ico">
@@ -1418,18 +1419,18 @@
                             </div>
                         </div>
                         <div id="stock-condition-birthday-container" style="display:none" class="promotion-stock-index-block hide-block">
-                        <h4>Настройка периода активности ДР</h4>
-                        <div class="group">
-                            <input id="stock-condition-birthday-period-before" required type="number" min="0" oninput="StockManger.onStockConditionBirthdayPeriod()" />
-                            <span class="bar"></span>
-                            <label>Кол-во дней перед ДР</label>
+                            <h4>Настройка периода активности ДР</h4>
+                            <div class="group">
+                                <input id="stock-condition-birthday-period-before" required type="number" min="0" oninput="StockManger.onStockConditionBirthdayPeriod()" />
+                                <span class="bar"></span>
+                                <label>Кол-во дней перед ДР</label>
+                            </div>
+                            <div class="group">
+                                <input id="stock-condition-birthday-period-after" required type="number" min="0" oninput="StockManger.onStockConditionBirthdayPeriod()" />
+                                <span class="bar"></span>
+                                <label>Кол-во дней после ДР</label>
+                            </div>
                         </div>
-                        <div class="group">
-                            <input id="stock-condition-birthday-period-after" required type="number" min="0" oninput="StockManger.onStockConditionBirthdayPeriod()" />
-                            <span class="bar"></span>
-                            <label>Кол-во дней после ДР</label>
-                        </div>
-                    </div>
                         <div id="stock-condition-products-container" style="display:none" class="promotion-stock-index-block hide-block">
                             <h4>Настройка блюд</h4>
                         </div>
@@ -1593,6 +1594,42 @@
         </div>
     </div>
 
+    <div id="newsDialog" class="custom-dialog" news-id="-1">
+        <div class="custom-dialog-body">
+            <div class="promotion-news-dialog-wrapper">
+                <input type="hidden" value="" />
+                <button class="dialog-btn-close" onclick="Dialog.close('#newsDialog')">
+                    <i class="fal fa-times"></i>
+                </button>
+                <div class="promotion-news-form">
+                    <div class="news-image-container">
+                        <input type="file" id="add-news-image" accept="image/*" class="hide">
+                        <div class="preview-image promotion-news-preview-imag " onclick="openDialogFile('add-news-image')">
+                            <img alt="your image" id="news-image" class="hide" onload="NewsManager.toggleSave()">
+                            <div class="dialog-image-upload default-border">
+                                <i class="fal fa-upload"></i>
+                                Загрузите изображение
+                            </div>
+                        </div>
+                    </div>
+                    <div class="promotion-news-index-block">
+                        <h4>Заголовок ности</h4>
+                        <input id="promotion-news-title" type="text" oninput="NewsManager.toggleSave()" class="default-color default-style-input">
+                    </div>
+                    <div class="promotion-news-index-block">
+                        <h4>Описание новости</h4>
+                        <textarea id="promotion-news-description" oninput="NewsManager.toggleSave()" class="default-style-input"></textarea>
+                    </div>
+                    <div class="promotion-news-index-block">
+                        <button class="simple-text-btn" id="btn-news-save" onclick="NewsManager.saveNewsFromDiaolog()">
+                            Сохранить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <template id="review-item-template">
         <div class="review-item">
             <div class="review-item-header">
@@ -1620,6 +1657,26 @@
                         <i class="fal fa-edit"></i>
                     </div>
                     <div class="stock-menu-el stock-remove">
+                        <i class="fal fa-trash-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="news-item-template">
+        <div class="news-item">
+            <div class="news-item-image">
+                <img src="" />
+            </div>
+            <div class="news-item-footer">
+                <div class="news-item-title">
+                </div>
+                <div class="news-item-menu">
+                    <div class="news-menu-el news-edit">
+                        <i class="fal fa-edit"></i>
+                    </div>
+                    <div class="news-menu-el news-remove">
                         <i class="fal fa-trash-alt"></i>
                     </div>
                 </div>

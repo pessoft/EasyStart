@@ -367,6 +367,7 @@ function postChangedPage(page) {
         case Pages.Promotion:
             StockManger.loadStockList()
             CouponManager.loadCoupons()
+            NewsManager.loadNewsList()
             CashbackPartners.loadCashbackPartnerSettings()
             break
         case Pages.Analytics: {

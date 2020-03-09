@@ -114,6 +114,7 @@ namespace EasyStart
 
                 var promotionLogic = new PromotionLogic();
                 var stocks = promotionLogic.GetStockForAPI(branchId, clientid);
+                var news = promotionLogic.GetNewsForAPI(branchId);
                 var mainBranch = DataWrapper.GetMainBranch();
                 var promotionCashbackSetting = promotionLogic.GetSettingCashBack(mainBranch.Id);
                 var promotionPartnersSetting = promotionLogic.GetSettingPartners(mainBranch.Id);
@@ -132,6 +133,7 @@ namespace EasyStart
                     deliverySettings,
                     organizationSettings,
                     stocks,
+                    news,
                     promotionCashbackSetting,
                     promotionPartnersSetting,
                     promotionSectionSettings,
@@ -980,7 +982,6 @@ namespace EasyStart
                 return result;
             }
         }
-
 
         [HttpPost]
         public JsonResultModel GetCoupun([FromBody]CouponParamsModel data)

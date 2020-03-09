@@ -302,6 +302,10 @@
     <Compile Include="Migrations\202003081610468_AddedClientIdInFixBirthdays.Designer.cs">
       <DependentUpon>202003081610468_AddedClientIdInFixBirthdays.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202003091200555_AddPromotionNewsModel.cs" />
+    <Compile Include="Migrations\202003091200555_AddPromotionNewsModel.Designer.cs">
+      <DependentUpon>202003091200555_AddPromotionNewsModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -344,6 +348,7 @@
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\ProductReview.cs" />
     <Compile Include="Models\PromotionCashbackSetting.cs" />
+    <Compile Include="Models\PromotionNewsModel.cs" />
     <Compile Include="Models\PromotionPartnerSetting.cs" />
     <Compile Include="Models\PromotionSectionSetting.cs" />
     <Compile Include="Models\PromotionSetting.cs" />
@@ -533,6 +538,7 @@
     <Content Include="Scripts\product-constructor.js" />
     <Content Include="Scripts\promotion\cashback-partners.js" />
     <Content Include="Scripts\promotion\coupon.js" />
+    <Content Include="Scripts\promotion\promotion-news.js" />
     <Content Include="Scripts\promotion\promotion-setting.js" />
     <Content Include="Scripts\promotion\promotion.js" />
     <Content Include="Scripts\promotion\push-notification.js" />
@@ -590,6 +596,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202003081610468_AddedClientIdInFixBirthdays.resx">
       <DependentUpon>202003081610468_AddedClientIdInFixBirthdays.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202003091200555_AddPromotionNewsModel.resx">
+      <DependentUpon>202003091200555_AddPromotionNewsModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

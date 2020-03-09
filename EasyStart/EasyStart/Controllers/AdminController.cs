@@ -548,6 +548,75 @@ namespace EasyStart.Controllers
 
         [HttpPost]
         [Authorize]
+        public JsonResult SaveNews(PromotionNewsModel promotionNews)
+        {
+            var result = new JsonResultModel();
+
+            if (!System.IO.File.Exists(Server.MapPath(promotionNews.Image)))
+            {
+                promotionNews.Image = "../Images/default-image.jpg";
+            }
+
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+            promotionNews.BranchId = branchId;
+            promotionNews.IsDeleted = false;
+            promotionNews = DataWrapper.SavePromotionNews(promotionNews);
+
+            if (promotionNews != null)
+            {
+                result.Data = promotionNews;
+                result.Success = true;
+            }
+            else
+            {
+                result.ErrorMessage = "При добавлении новости что-то пошло не так...";
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult RemoveNews(int id)
+        {
+            var result = new JsonResultModel();
+            var success = DataWrapper.RemovePromotionNews(id);
+
+            if (success)
+            {
+                result.Success = success;
+            }
+            else
+            {
+                result.ErrorMessage = "Новость не удалена";
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult LoadNewsList()
+        {
+            var result = new JsonResultModel();
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+            var news = DataWrapper.GetPromotionNews(branchId);
+
+            if (news != null)
+            {
+                result.Data = news;
+                result.Success = true;
+            }
+            else
+            {
+                result.ErrorMessage = "При загрузки новостей что-то пошло не так";
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
         public JsonResult SaveStock(StockModel stock)
         {
             var result = new JsonResultModel();

@@ -86,6 +86,14 @@ namespace EasyStart.Logic
             return stocks;
         }
 
+        public List<PromotionNewsModel> GetNewsForAPI(int branchId)
+        {
+            var news = DataWrapper.GetPromotionNews(branchId);
+            news.ForEach(p => PreprocessorDataAPI.ChangeImagePath(p));
+
+            return news;
+        }
+
         public List<int> GetStockIdsWithTriggerBirthdayForExcluded(List<StockModel> stocks, int clientId)
         {
             var excluded = new List<int>();

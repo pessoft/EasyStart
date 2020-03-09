@@ -3044,5 +3044,96 @@ namespace EasyStart.Logic
 
             return isAllow;
         }
+
+        public static PromotionNewsModel SavePromotionNews(PromotionNewsModel promotionNews)
+        {
+            PromotionNewsModel news = promotionNews;
+
+            if (news == null)
+                return news;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    if (news.Id > 0)
+                    {
+                        var oldNews = db.PromotionNews.FirstOrDefault(p => p.Id == news.Id);
+
+                        if (oldNews != null)
+                        {
+                            oldNews.Title = news.Title;
+                            oldNews.Description = news.Description;
+                            oldNews.Image = news.Image;
+                        }
+                    }
+                    else
+                    {
+                        news = db.PromotionNews.Add(news);
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return news;
+        }
+
+        public static bool RemovePromotionNews(int niewsId)
+        {
+            bool isRemoved = false;
+
+            if (niewsId < 1)
+                return isRemoved;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var oldNews = db.PromotionNews.FirstOrDefault(p => p.Id == niewsId);
+
+                    if (oldNews != null)
+                    {
+                        oldNews.IsDeleted = true;
+                        db.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return isRemoved;
+        }
+
+        public static List<PromotionNewsModel> GetPromotionNews(int branchId)
+        {
+            List<PromotionNewsModel> news = new List<PromotionNewsModel>();
+
+            if (branchId < 1)
+                return news;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    news = db.PromotionNews
+                        .Where(p => p.BranchId == branchId &&
+                        !p.IsDeleted)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return news;
+        }
     }
 }
