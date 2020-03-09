@@ -2515,6 +2515,7 @@ namespace EasyStart.Logic
                     if (oldSetting != null)
                     {
                         oldSetting.IsShowStockBanner = setting.IsShowStockBanner;
+                        oldSetting.IsShowNewsBanner = setting.IsShowNewsBanner;
                         result = oldSetting;
                     }
                     else

@@ -433,15 +433,23 @@
                         </div>
                         <div id="promotion-settings" class="promotion-content promotion-settings promotion-some-settings hide">
                             <div class="promotion-setting">
-                                <h2>Баннер из акций</h2>
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="toggle-stock-banner">
-                                    <label for="toggle-stock-banner">
-                                        Показывать баннер
-                                    </label>
+                                <h2>Настройка баннеров</h2>
+                                <div class="banner-setting-container">
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="toggle-stock-banner">
+                                        <label for="toggle-stock-banner">
+                                            Показывать акции в баннере
+                                        </label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="toggle-news-banner">
+                                        <label for="toggle-news-banner">
+                                            Показывать новости в баннере
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
-                            <div id="promotion-section-setting" class="promotion-setting">
+                            <div id="promotion-section-setting" class="promotion-setting promotion-section-block">
                                 <h2>Приорит разделов</h2>
                                 <div id="promotion-items-priority" class="promotion-items-priority">
                                     <div class="promotion-item-setting" promotion-section="8" promotion-setting-id="-1">
@@ -476,7 +484,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <button id="save-promotion-setting" class="btn btn-submit" onclick="PromotionSetting.saveSettings()">Сохранить</button>
+                            <div class="promotion-settings-footer">
+                                <button id="save-promotion-setting" class="btn btn-submit" onclick="PromotionSetting.saveSettings()">Сохранить</button>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>

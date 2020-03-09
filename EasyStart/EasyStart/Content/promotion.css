@@ -520,6 +520,14 @@ textarea.default-style-input {
     justify-items: center;
     align-items: center;
     min-width: 325px;
+    min-height: 100px;
+    max-height: 120px;
+    grid-row-gap: 10px;
+}
+
+.promotion-section-block {
+    max-height: 320px;
+    height: 320px;
 }
 
 .promotion-items-priority {
@@ -1039,3 +1047,12 @@ button#push-image-btn-remove:hover {
 .default-border {
     border: 1px solid #A4A4A4;
 }
+.banner-setting-container {
+    display: grid;
+    grid-template-columns: max-content;
+    grid-row-gap: 10px;
+}
+
+    .banner-setting-container .checkbox-item {
+        justify-content: flex-start
+    }
