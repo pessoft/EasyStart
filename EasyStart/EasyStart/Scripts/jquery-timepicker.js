@@ -30,6 +30,10 @@
                 left -= (left + 390) - windowWidth + 10
             }
 
+            if (top < 0) {
+                top += 230
+            }
+
             template.css({
                 'left': left,
                 'top': top

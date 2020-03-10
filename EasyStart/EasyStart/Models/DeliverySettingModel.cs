@@ -21,6 +21,13 @@ namespace EasyStart.Models
 
         public bool IsDeleted { get; set; }
 
+        public int MaxPreorderPeriod { get; set; }
+
+        /// <summary>
+        /// Format hh:mm
+        /// </summary>
+        public string MinTimeProcessingOrder { get; set; } = "01:00";
+
         /// <summary>
         /// Time Zone Id
         /// </summary>

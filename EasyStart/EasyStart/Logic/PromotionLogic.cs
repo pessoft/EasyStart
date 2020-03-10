@@ -86,6 +86,61 @@ namespace EasyStart.Logic
             return stocks;
         }
 
+        public List<PromotionNewsModel> GetNewsForAPI(int branchId)
+        {
+            var news = DataWrapper.GetPromotionNews(branchId);
+            news.ForEach(p => PreprocessorDataAPI.ChangeImagePath(p));
+
+            return news;
+        }
+
+        public List<int> GetStockIdsWithTriggerBirthdayForExcluded(List<StockModel> stocks, int clientId)
+        {
+            var excluded = new List<int>();
+
+            if (stocks == null || !stocks.Any())
+                return excluded;
+
+            var stocksWithTriggerBirhday = stocks
+                .Where(p => p.ConditionType == StockConditionTriggerType.HappyBirthday)
+                .ToList();
+
+            if (stocksWithTriggerBirhday.Any())
+            {
+                var client = DataWrapper.GetClient(clientId);
+
+                if (client.DateBirth != null)
+                {
+                    var isAllowUseStockWithBirhda = DataWrapper.AllowUseStockWithBirthday(client.Id);
+
+                    if (isAllowUseStockWithBirhda)
+                    {
+                        stocksWithTriggerBirhday.ForEach(p =>
+                        {
+                            var dateBefore = DateTime.Now;
+                            dateBefore = dateBefore.AddDays(-p.ConditionBirthdayBefore);
+
+
+                            var dateAfter = DateTime.Now;
+                            dateAfter = dateAfter.AddDays(p.ConditionBirthdayAfter);
+
+                            var dateBirth = new DateTime(dateAfter.Year, client.DateBirth.Value.Month, client.DateBirth.Value.Day);
+
+                            if (!(dateBefore.Date <= dateBirth.Date &&
+                            dateBirth.Date <= dateAfter.Date))
+                                excluded.Add(p.Id);
+                        });
+                    }
+                    else
+                    {
+                        excluded = stocksWithTriggerBirhday.Select(p => p.Id).ToList();
+                    }
+                }
+            }
+
+            return excluded;
+        }
+
         public List<StockModel> GetStock(int branchId, int clientId)
         {
             List<StockModel> stocks = DataWrapper.GetActiveStocks(branchId);
@@ -95,6 +150,9 @@ namespace EasyStart.Logic
                 return stocks;
             }
 
+            var excludedStocksWithBirthday = GetStockIdsWithTriggerBirthdayForExcluded(stocks, clientId);
+            stocks = stocks.Where(p => !excludedStocksWithBirthday.Contains(p.Id)).ToList();
+
             List<StockModel> stocksOneOff = stocks
                 .Where(p => p.StockTypePeriod == StockTypePeriod.OneOff)
                 .ToList();
@@ -102,13 +160,22 @@ namespace EasyStart.Logic
                 .Where(p => p.StockOneTypeSubtype == StockOneTypeSubtype.OneOrder)
                 .Select(p => p.UniqId)
                 .ToList();
-            var oneOrderStockIds = oneOrderStockGuids == null || !oneOrderStockGuids.Any() ? null : DataWrapper.GetStockIdsByGuid(oneOrderStockGuids);
+            var guidDictOneOff = oneOrderStockGuids == null || !oneOrderStockGuids.Any() ? null : DataWrapper.GetStockIdsByGuid(oneOrderStockGuids);
 
+            var oneOrderStockIds = guidDictOneOff?.SelectMany(p => p.Value).ToList();
             if (oneOrderStockIds != null && oneOrderStockIds.Any())
             {
-                var usedOneOffStockIds = DataWrapper.GetUsedOneOffStockIds(clientId, oneOrderStockIds);
+                var usedOneOffIds = DataWrapper.GetUsedOneOffStockIds(clientId, oneOrderStockIds);
 
-                if (usedOneOffStockIds != null && usedOneOffStockIds.Any())
+                var usedOneOffStockIds = new List<int>();
+
+                foreach (var kv in guidDictOneOff)
+                {
+                    if (kv.Value.Exists(p => usedOneOffIds.Contains(p)))
+                        usedOneOffStockIds.AddRange(kv.Value);
+                }
+
+                if (usedOneOffStockIds.Any())
                 {
                     stocks = stocks
                         .Where(p => !usedOneOffStockIds.Contains(p.Id))
@@ -120,7 +187,9 @@ namespace EasyStart.Logic
                 .Where(p => p.StockOneTypeSubtype == StockOneTypeSubtype.FirstOrder)
                 .Select(p => p.UniqId)
                 .ToList();
-            var ferstStockIds = firstStockGuids == null || !firstStockGuids.Any() ? null : DataWrapper.GetStockIdsByGuid(firstStockGuids);
+
+            var guidDictFirstOrder = firstStockGuids == null || !firstStockGuids.Any() ? null : DataWrapper.GetStockIdsByGuid(firstStockGuids);
+            var ferstStockIds = guidDictFirstOrder?.SelectMany(p => p.Value).ToList();
 
             if (ferstStockIds != null && ferstStockIds.Any() && !DataWrapper.IsEmptyOrders(clientId))
             {
@@ -129,7 +198,7 @@ namespace EasyStart.Logic
                        .ToList();
             }
 
-                return stocks;
+            return stocks;
         }
 
         public List<CouponModel> GetCoupons(int branchId)

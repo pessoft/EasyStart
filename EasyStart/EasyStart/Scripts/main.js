@@ -142,3 +142,13 @@ function cloneObject(obj) {
 
     return JSON.parse(json)
 }
+
+function onChangeOnlyTime(e, defaultValue = '00:00') {
+    //format hh:mm
+    const reg = '[0-9]{2}:[0-9]{2}'
+    let value = $(e).val()
+    const processingValue = value.match(reg)
+
+    if (!processingValue)
+        $(e).val(defaultValue)
+}

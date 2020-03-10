@@ -40,5 +40,8 @@ namespace EasyStart.Models
         
         public DbSet<PushMessageModel> PushMessages { get; set; }
         public DbSet<FCMDeviceModel> FCMDevices { get; set; }
+
+        public DbSet<FixBirthday> FixBirthdays { get; set; }
+        public DbSet<PromotionNewsModel> PromotionNews { get; set; }
     }
 }

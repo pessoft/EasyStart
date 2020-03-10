@@ -167,7 +167,7 @@ namespace EasyStart.Controllers
         public JsonResult AddCategory(CategoryModel category)
         {
             var result = new JsonResultModel();
-            var defaultImage = "/images/default-image.jpg";
+            var defaultImage = "../Images/default-image.jpg";
 
             if (!System.IO.File.Exists(Server.MapPath(category.Image)))
             {
@@ -208,7 +208,7 @@ namespace EasyStart.Controllers
         public JsonResult AddProduct(ProductModel product)
         {
             var result = new JsonResultModel();
-            var defaultImage = "/images/default-image.jpg";
+            var defaultImage = "../Images/default-image.jpg";
             if (!System.IO.File.Exists(Server.MapPath(product.Image)))
             {
                 product.Image = defaultImage;
@@ -420,38 +420,48 @@ namespace EasyStart.Controllers
         public JsonResult UpdateCategory(CategoryModel category)
         {
             var result = new JsonResultModel();
-            var defaultImage = "/images/default-image.jpg";
+            var defaultImage = "../Images/default-image.jpg";
 
-            if (!System.IO.File.Exists(Server.MapPath(category.Image)))
+            try
             {
-                category.Image = defaultImage;
-            }
-            else if (category.Id > 0)
-            {
-                var oldImage = DataWrapper.GetCategoryImage(category.Id);
-
-                if (oldImage != category.Image
-                    && oldImage != defaultImage
-                    && System.IO.File.Exists(Server.MapPath(oldImage)))
+                if (!System.IO.File.Exists(Server.MapPath(category.Image)))
                 {
-                    System.IO.File.Delete(Server.MapPath(oldImage));
+                    category.Image = defaultImage;
+                }
+                else if (category.Id > 0)
+                {
+                    var oldImage = DataWrapper.GetCategoryImage(category.Id);
+
+                    if (oldImage != category.Image
+                        && oldImage != defaultImage
+                        && System.IO.File.Exists(Server.MapPath(oldImage)))
+                    {
+                        System.IO.File.Delete(Server.MapPath(oldImage));
+                    }
+                }
+
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+
+                category.BranchId = branchId;
+                var updateCategory = DataWrapper.UpdateCategory(category);
+
+                if (updateCategory != null)
+                {
+                    result.Data = updateCategory;
+                    result.Success = true;
+                }
+                else
+                {
+                    result.ErrorMessage = "Категория не обновлена";
                 }
             }
-
-            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-
-            category.BranchId = branchId;
-            var updateCategory = DataWrapper.UpdateCategory(category);
-
-            if (updateCategory != null)
+            catch (Exception ex)
             {
-                result.Data = updateCategory;
-                result.Success = true;
+                Logger.Log.Error(ex);
+                result.ErrorMessage = "При загрузке изображения что-то пошло не так...";
             }
-            else
-            {
-                result.ErrorMessage = "Категория не обновлена";
-            }
+
+
 
             return Json(result);
         }
@@ -500,7 +510,7 @@ namespace EasyStart.Controllers
         public JsonResult UpdateProduct(ProductModel product)
         {
             var result = new JsonResultModel();
-            var defaultImage = "/images/default-image.jpg";
+            var defaultImage = "../Images/default-image.jpg";
 
             if (!System.IO.File.Exists(Server.MapPath(product.Image)))
             {
@@ -538,13 +548,82 @@ namespace EasyStart.Controllers
 
         [HttpPost]
         [Authorize]
+        public JsonResult SaveNews(PromotionNewsModel promotionNews)
+        {
+            var result = new JsonResultModel();
+
+            if (!System.IO.File.Exists(Server.MapPath(promotionNews.Image)))
+            {
+                promotionNews.Image = "../Images/default-image.jpg";
+            }
+
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+            promotionNews.BranchId = branchId;
+            promotionNews.IsDeleted = false;
+            promotionNews = DataWrapper.SavePromotionNews(promotionNews);
+
+            if (promotionNews != null)
+            {
+                result.Data = promotionNews;
+                result.Success = true;
+            }
+            else
+            {
+                result.ErrorMessage = "При добавлении новости что-то пошло не так...";
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult RemoveNews(int id)
+        {
+            var result = new JsonResultModel();
+            var success = DataWrapper.RemovePromotionNews(id);
+
+            if (success)
+            {
+                result.Success = success;
+            }
+            else
+            {
+                result.ErrorMessage = "Новость не удалена";
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult LoadNewsList()
+        {
+            var result = new JsonResultModel();
+            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+            var news = DataWrapper.GetPromotionNews(branchId);
+
+            if (news != null)
+            {
+                result.Data = news;
+                result.Success = true;
+            }
+            else
+            {
+                result.ErrorMessage = "При загрузки новостей что-то пошло не так";
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
         public JsonResult SaveStock(StockModel stock)
         {
             var result = new JsonResultModel();
 
             if (!System.IO.File.Exists(Server.MapPath(stock.Image)))
             {
-                stock.Image = "/images/default-image.jpg";
+                stock.Image = "../Images/default-image.jpg";
             }
 
             var branchId = DataWrapper.GetBranchId(User.Identity.Name);

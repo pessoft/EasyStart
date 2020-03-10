@@ -38,6 +38,8 @@ namespace EasyStart.Logic
         {
             orderInfo.CustomerName = order.Name;
             orderInfo.CustomerNumberPhone = order.PhoneNumber;
+            orderInfo.OrderDateDelivery = order.DateDelivery == null ? "Как можно быстрее" : order.DateDelivery?.ToString("HH:mm dd.MM.yyyy");
+            orderInfo.NumberAppliances = order.NumberAppliances.ToString();
         }
 
         private static void SetAddress(OrderIfnoModel orderInfo, OrderModel order, SettingModel setting)

@@ -75,7 +75,7 @@ namespace EasyStart.Logic
                 {
                     setting = db.DeliverySettings.FirstOrDefault(p => p.BranchId == branchId && !p.IsDeleted);
 
-                    if(setting != null)
+                    if (setting != null)
                         setting.AreaDeliveries = GetAreaDeliveris(setting.Id);
                 }
             }
@@ -431,6 +431,8 @@ namespace EasyStart.Logic
                         updateSetting.ZoneId = setting.ZoneId;
                         updateSetting.IsSoundNotify = setting.IsSoundNotify;
                         updateSetting.NotificationEmail = setting.NotificationEmail;
+                        updateSetting.MaxPreorderPeriod = setting.MaxPreorderPeriod;
+                        updateSetting.MinTimeProcessingOrder = setting.MinTimeProcessingOrder;
                     }
                     else
                     {
@@ -756,6 +758,7 @@ namespace EasyStart.Logic
                     result = db.Categories.FirstOrDefault(p => p.Id == category.Id);
                     result.Image = category.Image;
                     result.Name = category.Name;
+                    result.NumberAppliances = category.NumberAppliances;
 
                     db.SaveChanges();
                 }
@@ -1583,17 +1586,17 @@ namespace EasyStart.Logic
             return result;
         }
 
-        public static List<int> GetStockIdsByGuid(List<Guid> items)
+        public static Dictionary<Guid, List<int>> GetStockIdsByGuid(List<Guid> items)
         {
-            List<int> result = new List<int>();
+            Dictionary<Guid, List<int>> result = new Dictionary<Guid, List<int>>();
             try
             {
                 using (var db = new AdminPanelContext())
                 {
                     result = db.Stocks
                         .Where(p => items.Contains(p.UniqId))
-                        .Select(p => p.Id)
-                        .ToList();
+                        .GroupBy(p => p.UniqId)
+                        .ToDictionary(p => p.Key, p => p.Select(x => x.Id).ToList());
                 }
             }
             catch (Exception ex)
@@ -1688,6 +1691,7 @@ namespace EasyStart.Logic
                     if (newClient != null)
                     {
                         newClient.UserName = client.UserName;
+                        newClient.DateBirth = client.DateBirth;
                         newClient.Email = client.Email;
                         newClient.ParentReferralClientId = client.ParentReferralClientId;
                         newClient.ParentReferralCode = client.ParentReferralCode;
@@ -2511,6 +2515,7 @@ namespace EasyStart.Logic
                     if (oldSetting != null)
                     {
                         oldSetting.IsShowStockBanner = setting.IsShowStockBanner;
+                        oldSetting.IsShowNewsBanner = setting.IsShowNewsBanner;
                         result = oldSetting;
                     }
                     else
@@ -2795,7 +2800,7 @@ namespace EasyStart.Logic
                     historyMessages = db.PushMessages
                         .Where(p => p.BranchId == branchId)
                         .OrderByDescending(p => p.Date)
-                        .Skip(pageSize * (pageNumber-1))
+                        .Skip(pageSize * (pageNumber - 1))
                         .Take(pageSize)
                         .ToList();
                 }
@@ -2887,7 +2892,8 @@ namespace EasyStart.Logic
                             updDevice.BranchId = device.BranchId;
 
                             db.SaveChanges();
-                        } else
+                        }
+                        else
                         {
                             addTokennotRegisterClient();
                         }
@@ -2920,6 +2926,215 @@ namespace EasyStart.Logic
             }
 
             return tokens;
+        }
+
+        public static bool IsUseStockWithTriggerBirthday(List<int> stockIds, int branchId)
+        {
+            bool isUse = false;
+
+            if (stockIds == null || !stockIds.Any())
+                return isUse;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    isUse = db.Stocks.Where(p => stockIds.Contains(p.Id) &&
+                    p.ConditionType == StockConditionTriggerType.HappyBirthday)
+                    .Count() > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return isUse;
+        }
+
+        public static void FixUseStockWithBirthday(int clientId, DateTime dateUse)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var client = GetClient(clientId);
+                    if (client == null)
+                        throw new Exception($"Клиент {clientId} не найден");
+
+                    var newFixUse = new FixBirthday
+                    {
+                        ClientId = client.Id,
+                        DateUse = dateUse.Date,
+                        DateBirth = client.DateBirth.Value
+                    };
+
+                    var fixUse = GetFixBirthday(clientId, dateUse.Date);
+                    if (fixUse == null)
+                    {
+                        db.FixBirthdays.Add(newFixUse);
+                    }
+                    else
+                    {
+                        var existingData = db.FixBirthdays.FirstOrDefault(p => p.Id == fixUse.Id);
+                        existingData.DateUse = dateUse.Date;
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
+
+        public static FixBirthday GetFixBirthday(int clientId, DateTime useDate)
+        {
+            FixBirthday fixBirthday = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var client = GetClient(clientId);
+                    if (client == null)
+                        throw new Exception($"Клиент {clientId} не найден");
+
+                    if (client.DateBirth != null)
+                    {
+                        var dateNow = useDate.Date;
+
+                        fixBirthday = db.FixBirthdays.FirstOrDefault(p => p.ClientId == clientId &&
+                        DbFunctions.DiffYears(p.DateUse, dateNow) == 0);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return fixBirthday;
+        }
+
+        public static bool AllowUseStockWithBirthday(int clientId)
+        {
+            var isAllow = false;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var client = GetClient(clientId);
+                    if (client == null)
+                        throw new Exception($"Клиент {clientId} не найден");
+
+                    if (client.DateBirth != null)
+                    {
+                        var dateNow = DateTime.Now.Date;
+
+                        var fixUse = GetFixBirthday(clientId, dateNow);
+
+                        isAllow = fixUse == null || fixUse.DateBirth.Date == client.DateBirth.Value.Date;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return isAllow;
+        }
+
+        public static PromotionNewsModel SavePromotionNews(PromotionNewsModel promotionNews)
+        {
+            PromotionNewsModel news = promotionNews;
+
+            if (news == null)
+                return news;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    if (news.Id > 0)
+                    {
+                        var oldNews = db.PromotionNews.FirstOrDefault(p => p.Id == news.Id);
+
+                        if (oldNews != null)
+                        {
+                            oldNews.Title = news.Title;
+                            oldNews.Description = news.Description;
+                            oldNews.Image = news.Image;
+                        }
+                    }
+                    else
+                    {
+                        news = db.PromotionNews.Add(news);
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return news;
+        }
+
+        public static bool RemovePromotionNews(int niewsId)
+        {
+            bool isRemoved = false;
+
+            if (niewsId < 1)
+                return isRemoved;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var oldNews = db.PromotionNews.FirstOrDefault(p => p.Id == niewsId);
+
+                    if (oldNews != null)
+                    {
+                        oldNews.IsDeleted = true;
+                        db.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return isRemoved;
+        }
+
+        public static List<PromotionNewsModel> GetPromotionNews(int branchId)
+        {
+            List<PromotionNewsModel> news = new List<PromotionNewsModel>();
+
+            if (branchId < 1)
+                return news;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    news = db.PromotionNews
+                        .Where(p => p.BranchId == branchId &&
+                        !p.IsDeleted)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return news;
         }
     }
 }

@@ -15,6 +15,7 @@ namespace EasyStart.Models
         public int OrderNumber { get; set; }
         public bool Visible { get; set; } = true;
         public CategoryType CategoryType { get; set; } = CategoryType.Default;
+        public bool NumberAppliances { get; set; }
         public bool IsDeleted { get; set; }
     }
 }

@@ -84,6 +84,7 @@
     },
     setSetting: function (setting) {
         $('#toggle-stock-banner').prop('checked', setting.IsShowStockBanner)
+        $('#toggle-news-banner').prop('checked', setting.IsShowNewsBanner)
     },
     getSettings: function () {
         return {
@@ -94,7 +95,8 @@
     getMainSetting: function () {
         return {
             Id: this.setting && this.setting.Setting ? this.setting.Setting.Id: -1,
-            IsShowStockBanner: $('#toggle-stock-banner').is(':checked')
+            IsShowStockBanner: $('#toggle-stock-banner').is(':checked'),
+            IsShowNewsBanner: $('#toggle-news-banner').is(':checked')
         }
     },
     getSectionSettings: function () {

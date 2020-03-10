@@ -114,6 +114,7 @@ namespace EasyStart
 
                 var promotionLogic = new PromotionLogic();
                 var stocks = promotionLogic.GetStockForAPI(branchId, clientid);
+                var news = promotionLogic.GetNewsForAPI(branchId);
                 var mainBranch = DataWrapper.GetMainBranch();
                 var promotionCashbackSetting = promotionLogic.GetSettingCashBack(mainBranch.Id);
                 var promotionPartnersSetting = promotionLogic.GetSettingPartners(mainBranch.Id);
@@ -132,11 +133,45 @@ namespace EasyStart
                     deliverySettings,
                     organizationSettings,
                     stocks,
+                    news,
                     promotionCashbackSetting,
                     promotionPartnersSetting,
                     promotionSectionSettings,
                     promotionSetting
                 };
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.Success = false;
+            }
+
+            return result;
+        }
+
+        [HttpPost]
+        public JsonResultModel GetStocks([FromBody] MainDataSignatureModel data)
+        {
+            var result = new JsonResultModel();
+            var branchId = data.BranchId;
+            var clientid = data.ClientId;
+            result.Success = false;
+
+            if (branchId < 1 || data.ClientId < 1)
+            {
+                result.Data = new { stocks = new List<int>() };
+                result.Success = true;
+
+                return result;
+            }
+
+            try
+            {
+                var promotionLogic = new PromotionLogic();
+                var stocks = promotionLogic.GetStockForAPI(branchId, clientid);
+
+                result.Data = new { stocks };
                 result.Success = true;
             }
             catch (Exception ex)
@@ -297,7 +332,9 @@ namespace EasyStart
                 }
 
                 var deliverSetting = DataWrapper.GetDeliverySetting(order.BranchId);
-                
+
+                if(order.DateDelivery != null)
+                    order.DateDelivery = order.DateDelivery.Value.GetDateTimeNow(deliverSetting.ZoneId);
 
                 order.Date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
                 order.UpdateDate = order.Date;
@@ -312,6 +349,17 @@ namespace EasyStart
 
                 if (numberOrder != -1)
                 {
+                    if (order.StockIds != null)
+                    {
+                        var isUseStockWithTriggerBirthday = DataWrapper.IsUseStockWithTriggerBirthday(order.StockIds, order.BranchId);
+
+                        if (isUseStockWithTriggerBirthday)
+                        {
+                            DataWrapper.FixUseStockWithBirthday(order.ClientId, order.Date);
+                        }
+                    }
+                    
+
                     if (order.AmountPayCashBack > 0)
                     {
                         client.VirtualMoney -= order.AmountPayCashBack;
@@ -668,6 +716,7 @@ namespace EasyStart
                     password = newClient.Password,
                     email = newClient.Email,
                     userName = newClient.UserName,
+                    dateBirth = newClient.DateBirth,
                     cityId = newClient.CityId,
                     branchId = newClient.BranchId,
                     referralCode = newClient.ReferralCode,
@@ -686,6 +735,91 @@ namespace EasyStart
 
 
             return result;
+        }
+        
+        [HttpPost]
+        public JsonResultModel UpdateParrentReferral([FromBody]ClientParentReferralCode clientParentReferralCode)
+        {
+            var result = new JsonResultModel();
+            try
+            {
+                Client client = null;
+
+                if (string.IsNullOrEmpty(clientParentReferralCode.PhoneNumber) ||
+                    string.IsNullOrEmpty(clientParentReferralCode.Password) ||
+                    (client = DataWrapper.GetClient(clientParentReferralCode.PhoneNumber, clientParentReferralCode.Password)) == null)
+                {
+                    result.ErrorMessage = "Не удалось авторизоваться";
+                    return result;
+                }
+
+                if(client.ParentReferralClientId > 0 )
+                {
+                    result.ErrorMessage = "Реферальный код уже установлен";
+                    return result;
+                }
+
+                var saveTransaction = false;
+                var parentClient = DataWrapper.GetClientByByReferralCode(clientParentReferralCode.ParentReferralCode);
+
+                if (parentClient == null)
+                {
+                    result.ErrorMessage = "Неверный реферальный код";
+                    return result;
+                }
+
+                if (parentClient != null && parentClient.ParentReferralClientId != client.Id)
+                {
+                    client.ParentReferralClientId = parentClient.Id;
+                    client.ParentReferralCode = parentClient.ReferralCode;
+
+                    var mainBranch = DataWrapper.GetMainBranch();
+                    var partnersSetting = DataWrapper.GetPromotionPartnerSetting(mainBranch.Id);
+
+                    if (partnersSetting.IsUsePartners)
+                    {
+                        switch (partnersSetting.TypeBonusValue)
+                        {
+                            case DiscountType.Ruble:
+                                client.VirtualMoney += partnersSetting.BonusValue;
+                                saveTransaction = true;
+                                break;
+                            case DiscountType.Percent:
+                                client.ReferralDiscount = partnersSetting.BonusValue;
+                                break;
+                        }
+                    }
+                } else
+                {
+                    result.ErrorMessage = "Реферальный код не установлен";
+                    return result;
+                }
+
+                var newClient = DataWrapper.UpdateClient(client);
+
+                if (saveTransaction)
+                {
+                    var transactionLogic = new TransactionLogic();
+                    transactionLogic.AddPartnersTransaction(PartnersTransactionType.EnrollmentReferralBonus, newClient.Id, newClient.VirtualMoney);
+                }
+
+                result.Data = new
+                {
+                    parentReferralClientId = newClient.ParentReferralClientId,
+                    parentReferralCode = newClient.ParentReferralCode,
+                    virtualMoney = newClient.VirtualMoney,
+                    referralDiscount = newClient.ReferralDiscount,
+                };
+                result.Success = true;
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = "Что-то пошло не так";
+                return result;
+            }
         }
 
         [HttpPost]
@@ -710,65 +844,11 @@ namespace EasyStart
                     return result;
                 }
 
-                var saveTransaction = false;
-
-                Action setDefaultReferralData = () =>
-                {
-                    client.ParentReferralClientId = 0;
-                    client.ParentReferralCode = null;
-                };
-
-                if (oldClient.ParentReferralClientId < 1
-                    && !string.IsNullOrEmpty(client.ParentReferralCode)
-                    && oldClient.ReferralCode != client.ParentReferralCode)
-                {
-                    var parentClient = DataWrapper.GetClientByByReferralCode(client.ParentReferralCode);
-
-                    if (parentClient != null && parentClient.ParentReferralClientId != oldClient.Id)
-                    {
-                        client.ParentReferralClientId = parentClient.Id;
-                        client.ParentReferralCode = parentClient.ReferralCode;
-
-                        var mainBranch = DataWrapper.GetMainBranch();
-                        var partnersSetting = DataWrapper.GetPromotionPartnerSetting(mainBranch.Id);
-
-                        if (partnersSetting.IsUsePartners)
-                        {
-                            switch (partnersSetting.TypeBonusValue)
-                            {
-                                case DiscountType.Ruble:
-                                    client.VirtualMoney = partnersSetting.BonusValue;
-                                    saveTransaction = true;
-                                    break;
-                                case DiscountType.Percent:
-                                    client.ReferralDiscount = partnersSetting.BonusValue;
-                                    break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        setDefaultReferralData();
-                    }
-                }
-                else if (oldClient != null)
-                {
-                    client.ParentReferralClientId = oldClient.ParentReferralClientId;
-                    client.ParentReferralCode = oldClient.ParentReferralCode;
-                    client.ReferralDiscount = oldClient.ReferralDiscount;
-                }
-                else
-                {
-                    setDefaultReferralData();
-                }
+                client.ParentReferralClientId = oldClient.ParentReferralClientId;
+                client.ParentReferralCode = oldClient.ParentReferralCode;
+                client.ReferralDiscount = oldClient.ReferralDiscount;
 
                 var newClient = DataWrapper.UpdateClient(client);
-
-                if (saveTransaction)
-                {
-                    var transactionLogic = new TransactionLogic();
-                    transactionLogic.AddPartnersTransaction(PartnersTransactionType.EnrollmentReferralBonus, newClient.Id, newClient.VirtualMoney);
-                }
 
                 result.Data = new
                 {
@@ -777,6 +857,7 @@ namespace EasyStart
                     password = newClient.Password,
                     email = newClient.Email,
                     userName = newClient.UserName,
+                    dateBirth = newClient.DateBirth,
                     cityId = newClient.CityId,
                     branchId = newClient.BranchId,
                     referralCode = newClient.ReferralCode,
@@ -883,6 +964,7 @@ namespace EasyStart
                     password = client.Password,
                     email = client.Email,
                     userName = client.UserName,
+                    dateBirth = client.DateBirth,
                     cityId = client.CityId,
                     branchId = client.BranchId,
                     referralCode = client.ReferralCode,
@@ -900,7 +982,6 @@ namespace EasyStart
                 return result;
             }
         }
-
 
         [HttpPost]
         public JsonResultModel GetCoupun([FromBody]CouponParamsModel data)
