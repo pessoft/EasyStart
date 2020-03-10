@@ -43,6 +43,7 @@
     selectToSumoSelectProductType()
     selectToSumoSelectCategoryType()
     bindChangePeriodWork()
+    bindChangePreorderMinTime()
     bindCustomDialogToggleEvent()
 
     checkSettings()
@@ -111,7 +112,19 @@ function productConstructorCondition() {
 }
 
 function bindChangePeriodWork() {
-    $(".period-work-input").hunterTimePicker();
+    const $e = $(".period-work-input")
+    $e.unbind('change')
+    $e.bind('change', function () { onChangeOnlyTime(this)})
+    $e.hunterTimePicker();
+    
+    
+}
+
+function bindChangePreorderMinTime() {
+    const $e = $("#preorder-min-time")
+    $e.unbind('change')
+    $e.bind('change', function () { onChangeOnlyTime(this, '01:00') })
+    $e.hunterTimePicker();
 }
 
 function selectToSumoSelectProductType() {
@@ -354,6 +367,7 @@ function postChangedPage(page) {
         case Pages.Promotion:
             StockManger.loadStockList()
             CouponManager.loadCoupons()
+            NewsManager.loadNewsList()
             CashbackPartners.loadCashbackPartnerSettings()
             break
         case Pages.Analytics: {
@@ -453,7 +467,8 @@ function updateCategory() {
         let category = {
             Id: $("#category-id").val(),
             Name: $("#name-category").val(),
-            Image: data.URL
+            Image: data.URL,
+            NumberAppliances: $("#addCategoryDialog #number-appliances").is(':checked')
         }
 
         let successFunc = function (result, loader) {
@@ -462,6 +477,7 @@ function updateCategory() {
                 let categoryItem = $(`[category-id=${category.Id}]`);
                 categoryItem.find(".category-item-image img").attr("src", category.Image);
                 categoryItem.find(".category-item-name").html(category.Name);
+                categoryItem.find(".number-appliances-data").val(category.NumberAppliances ? 'true' : '');
 
                 cancelDialog("#addCategoryDialog");
             } else {
@@ -469,7 +485,15 @@ function updateCategory() {
             }
         }
 
-        $.post("/Admin/UpdateCategory", category, successCallBack(successFunc, loader));
+        $.post("/Admin/UpdateCategory", category, successCallBack(successFunc, loader)).catch(function () {
+            errorFunc()
+        });
+    }
+
+    let errorFunc = () => {
+        showErrorMessage('При сохранении категории что-то пошло не так...')
+        cancelDialog($('#addCategoryDialog'))
+        loader.stop()
     }
 
     if (files.length == 0) {
@@ -489,7 +513,12 @@ function updateCategory() {
         processData: false,
         data: dataImage,
         success: function (data) {
-            uppFunc(data);
+            uppFunc(data)
+            cleatPrevInputImage()
+        },
+        error: function () {
+            errorFunc()
+            cleatPrevInputImage()
         }
     });
 }
@@ -509,7 +538,8 @@ function addCategory() {
         let category = {
             Name: $("#name-category").val(),
             CategoryType: parseInt($("#addCategoryDialog #category-type").val()),
-            Image: data.URL
+            Image: data.URL,
+            NumberAppliances: $("#addCategoryDialog #number-appliances").is(':checked')
         }
 
         let successFunc = function (result, loader) {
@@ -524,7 +554,15 @@ function addCategory() {
             }
         }
 
-        $.post("/Admin/AddCategory", category, successCallBack(successFunc, loader));
+        $.post("/Admin/AddCategory", category, successCallBack(successFunc, loader)).catch(function () {
+            errorFunc()
+        });
+    }
+
+    let errorFunc = () => {
+        showErrorMessage('При сохранении категории что-то пошло не так...')
+        cancelDialog($('#addCategoryDialog'))
+        loader.stop()
     }
 
     if (files.length == 0) {
@@ -545,6 +583,11 @@ function addCategory() {
         data: dataImage,
         success: function (data) {
             addFunc(data);
+            cleatPrevInputImage()
+        },
+        error: function () {
+            errorFunc()
+            cleatPrevInputImage()
         }
     });
 }
@@ -558,6 +601,7 @@ function addCategoryToList(category) {
         <div class="category-item-name">
             ${category.Name}
         </div>
+        <input type="hidden" class="number-appliances-data" value="${(category.NumberAppliances ? 'true' : '')}">
         <div class="category-item-action">
             <i onclick="editCategory(this, event);" class="fal fa-edit"></i>
             <i class="fal fa-eye item-show ${(category.Visible ? '' : 'hide')}" onclick="toggleShowItem(this, ${TypeItem.Categories}, event);"></i>
@@ -581,12 +625,15 @@ function editCategory(e, event) {
         Id: parent.attr("category-id"),
         CategoryType: parseInt(parent.attr("category-type")),
         Name: parent.find(".category-item-name").html().trim(),
-        Image: parent.find("img").attr("src")
+        Image: parent.find("img").attr("src"),
+        NumberAppliances: !!parent.find(".number-appliances-data").val()
     }
 
-    dialog.find("#category-id").val(category.Id);
-    dialog.find("#name-category").val(category.Name);
-    dialog.find("img").attr("src", category.Image);
+    dialog.find("#category-id").val(category.Id)
+    dialog.find("#name-category").val(category.Name)
+    dialog.find("img").attr("src", category.Image)
+
+    dialog.find("#number-appliances").prop('checked', category.NumberAppliances)
 
     if (category.Image.indexOf("default") == -1) {
         dialog.find("img").removeClass("hide");
@@ -786,7 +833,15 @@ function addProduct() {
             }
         }
 
-        $.post("/Admin/AddProduct", product, successCallBack(successFunc, loader));
+        $.post("/Admin/AddProduct", product, successCallBack(successFunc, loader)).catch(function () {
+            errorFunc()
+        });
+    }
+
+    let errorFunc = () => {
+        showErrorMessage('При сохранении что-то пошло не так...')
+        cancelDialog($('#addProducDialog'))
+        loader.stop()
     }
 
     if (files.length == 0) {
@@ -805,7 +860,12 @@ function addProduct() {
         processData: false,
         data: dataImage,
         success: function (data) {
-            addFunc(data);
+            addFunc(data)
+            cleatPrevInputImage()
+        },
+        error: function () {
+            errorFunc()
+            cleatPrevInputImage()
         }
     });
 }
@@ -859,7 +919,15 @@ function updateProduct() {
             }
         }
 
-        $.post("/Admin/UpdateProduct", product, successCallBack(successFunc, loader));
+        $.post("/Admin/UpdateProduct", product, successCallBack(successFunc, loader)).catch(function () {
+            errorFunc()
+        });
+    }
+
+    let errorFunc = () => {
+        showErrorMessage('При сохранении что-то пошло не так...')
+        cancelDialog($('#addProducDialog'))
+        loader.stop()
     }
 
     if (files.length == 0) {
@@ -878,7 +946,12 @@ function updateProduct() {
         processData: false,
         data: dataImage,
         success: function (data) {
-            uppProduct(data);
+            uppProduct(data)
+            cleatPrevInputImage()
+        },
+        error: function () {
+            errorFunc()
+            cleatPrevInputImage()
         }
     });
 }
@@ -952,6 +1025,17 @@ function addProductConstructorToList(product) {
 
     let $template = $(templateCategoryItem);
     $(".product-list").append($template);
+}
+
+function updateProductConstructorToList(product) {
+    let $productContructorItem = $(`.product-constructor-item[product-id="${product.Id}"]`)
+
+    if ($productContructorItem.length > 0) {
+        $productContructorItem.find('.product-item-name').html(product.Name)
+
+        const additionalInfo = `${product.Ingredients.length} ${num2str(product.Ingredients.length, ['ингредиент', 'ингредиента', 'ингредиентов'])}`
+        $productContructorItem.find('.product-item-additional-info').html(additionalInfo)
+    }
 }
 
 function addProductToList(product) {
@@ -1157,12 +1241,17 @@ function loadProductList(idCategory) {
 
     $.post("/Admin/LoadProductList", { idCategory: idCategory }, successCallBack(successFunc, loader));
 }
+var prevInput = null
+function cleatPrevInputImage() {
+    prevInput = null
+}
 
 function addPreviewImage(input) {
     if (input.files && input.files[0]) {
         let reader = new FileReader();
 
         reader.onload = function (e) {
+            prevInput = $(input).clone();
             let dialog = $(input).parents("dialog");
             dialog = dialog.length > 0 ? dialog : $(input).parents(".custom-dialog");
 
@@ -1177,6 +1266,9 @@ function addPreviewImage(input) {
         }
 
         reader.readAsDataURL(input.files[0]);
+    } else if (prevInput) {
+        let $prevInput = $(prevInput)
+        input.files = $prevInput[0].files
     }
 }
 
@@ -1276,6 +1368,15 @@ function saveDeliverySetting() {
     let warnMgs = {
         AreaDelivery: "Настройте районы доставки",
         WorkTime: "Укажите режим работы",
+        PreorderTime: "Натройте раздел предзаказ",
+    }
+
+    let maxPreorderPeriod = $('#preorder-max-date').val()
+    let minTimeProcessingOrder = $('#preorder-min-time').val()
+
+    if (!maxPreorderPeriod || !minTimeProcessingOrder) {
+        showWarningMessage(warnMgs.PreorderTime);
+        return;
     }
 
     if (!AreaDelivery || AreaDelivery.length == 0) {
@@ -1295,7 +1396,9 @@ function saveDeliverySetting() {
         PayCard: $("#payment-card").is(":checked"),
         PayCash: $("#payment-cash").is(":checked"),
         TimeDeliveryJSON: getTimeDeliveryJSON(),
-        AreaDeliveries: AreaDelivery
+        AreaDeliveries: AreaDelivery,
+        MaxPreorderPeriod: maxPreorderPeriod,
+        MinTimeProcessingOrder: minTimeProcessingOrder
     }
     let loader = new Loader($("#delivery"));
     let successFunc = function (result, loader) {
@@ -1415,7 +1518,7 @@ function removeBranch(e, id) {
 
         $.post("/Admin/RemoveBranch", { id: id }, successCallBack(successFunc, loader))
     }
-    
+
     deleteConfirmation(callback);
 }
 
@@ -1695,6 +1798,7 @@ function processingOrders(orders) {
 
 function processsingOrder(order) {
     order.Date = jsonToDate(order.Date);
+    order.DateDelivery = order.DateDelivery ? jsonToDate(order.DateDelivery) : null;
     order.ProductCount = JSON.parse(order.ProductCountJSON);
     order.ProductBonusCount = JSON.parse(order.ProductBonusCountJSON);
     order.ProductConstructorCount = JSON.parse(order.ProductConstructorCountJSON);
@@ -1712,6 +1816,17 @@ function toStringDateAndTime(date) {
     let minutes = date.getMinutes().toString();
     minutes = minutes.length == 1 ? "0" + minutes : minutes;
     let dateStr = `${hours}:${minutes} ${day}.${month}.${date.getFullYear()}`;
+    return dateStr;
+}
+
+
+function toStringDate(date) {
+    let day = date.getDate().toString();;
+    day = day.length == 1 ? "0" + day : day;
+    let month = (date.getMonth() + 1).toString();
+    month = month.length == 1 ? "0" + month : month;
+   
+    let dateStr = `${day}.${month}.${date.getFullYear()}`;
     return dateStr;
 }
 
@@ -1942,8 +2057,8 @@ function notifySoundNewOrder(isRepead = false) {
                 notifySoundNewOrder(true)
             }
         }
-        
-        
+
+
     }
 }
 
@@ -2085,9 +2200,12 @@ var Dialog = {
     clear: ($dialog) => {
         $dialog = $($dialog);
 
+        cleatPrevInputImage()
         $dialog.find("input").val("");
+        $dialog.find("input[type=checkbox]").prop('checked', false);
         $dialog.find("textarea").val("");
         $dialog.find(".dialog-image-upload").removeClass("hide");
+        $dialog.find("img").not('.no-clean').removeAttr("src");
         $dialog.find("img").not('.no-clean').addClass("hide");
         $dialog.find("option").removeAttr("selected");
         $dialog.find("select").val("0")
@@ -2118,11 +2236,17 @@ class CardOrder {
 
     setOrderNumber(value, status) {
         this.setValue(".order-item-number", value);
+        this.setValue(".preorder-item-grid .order-item-number", value);
         this.markNumberOrder(".order-item-number", status);
     }
 
     setAmount(value) {
         this.setValue(".order-item-amount", value);
+        this.setValue(".preorder-item-grid .order-item-amount", value);
+    }
+
+    setDateDeliveryPreoprder(value) {
+        this.setValue(".preorder-item-grid .preorder-date-delivery", value);
     }
 
     setPhoneNumber(value) {
@@ -2173,7 +2297,19 @@ class CardOrder {
         this.$htmlTemplate.find(`${qSelector} ${selectorLabelContainer}`).html(label);
     }
 
+    setPreorderViewMask() {
+        const templateId = "preorder-item-grid-template";
+        let htmlTemplatePreorderMask = $(`#${templateId}`).html();
+
+        this.$htmlTemplate.append(htmlTemplatePreorderMask)
+    }
+
     render() {
+        if (this.data.IsPreorder) {
+            this.setPreorderViewMask()
+            this.setDateDeliveryPreoprder(this.data.DateDelivery)
+        }
+
         this.setAttrOrderId(this.data.OrderId);
         this.setOrderNumber(this.data.OrderNumber, this.data.Status);
         this.setAmount(this.data.Amount);
@@ -2203,6 +2339,25 @@ class TodayOrder {
         this.UserName = order.Name;
         this.DeliveryType = getDeliveryType(order.DeliveryType);
         this.PayType = getBuyType(order.BuyType);
+        this.IsPreorder = this.isPreoprder(order.DateDelivery)
+        this.DateDelivery = this.IsPreorder ? toStringDate(order.DateDelivery) : null
+    }
+
+    isPreoprder(dateDelivery) {
+        let isPreorder = false
+
+        if (dateDelivery) {
+            let dateNow = new Date()
+            dateNow.setHours(0, 0, 0, 0)
+
+            let dateDeliveryCopy = new Date(dateDelivery)
+            dateDeliveryCopy.setHours(0, 0, 0, 0)
+
+            isPreorder = dateNow.toDateString() != dateDeliveryCopy.toDateString() &&
+                dateDelivery > new Date()
+        }
+
+        return isPreorder
     }
 }
 
@@ -2260,8 +2415,12 @@ class OrderDetailsData {
         const commentEmptyTemplate = `<i class="fal fa-comment-slash"></i>Отсутсвтует</span>`;
         this.OrderId = order.Id;
         this.OrderNumber = order.Id;
+        this.NumberAppliances = order.NumberAppliances;
         this.Status = order.OrderStatus;
         this.OrderDate = toStringDateAndTime(order.Date);
+        this.OrderDeliveryDate = order.DateDelivery ?
+            toStringDateAndTime(order.DateDelivery) :
+            'Как можно быстрее';
         this.Comment = order.Comment || commentEmptyTemplate;
     }
 
@@ -2435,9 +2594,11 @@ class OrderDetailsData {
 }
 
 var OrderDetailsQSelector = {
-    OrderNumberBlock: ".order-details-number",//в истории заказов помечаем цветом оформленный или не оформленный ордер
+    OrderNumberBlock: ".order-details-order-number-cutlery",//в истории заказов помечаем цветом оформленный или не оформленный ордер
     OrderNumber: ".order-details-number .value",
+    NumberAppliances: ".order-details-number-appliances .value",
     OrderDate: ".order-details-date .value",
+    OrderDeliveryDate: ".order-details-date-delivery .value",
     UserName: ".order-details-short-user-name .value",
     PhoneNumber: ".order-details-short-phone .value",
     DeliveryType: ".order-details-short-delivery-type .value",
@@ -2507,6 +2668,7 @@ class OrderDetails {
 
     setValues() {
         this.setBaseInfo();
+        this.setDateAndDeliveryDateInfo();
         this.setShortInfo();
         this.setAmountInfo();
         this.setAddressInfo();
@@ -2540,7 +2702,12 @@ class OrderDetails {
     setBaseInfo() {
         this.markOrderNumberColorStatus(this.details.Status);
         this.setValue(OrderDetailsQSelector.OrderNumber, this.details.OrderNumber);
+        this.setValue(OrderDetailsQSelector.NumberAppliances, this.details.NumberAppliances);
+    }
+
+    setDateAndDeliveryDateInfo() {
         this.setValue(OrderDetailsQSelector.OrderDate, this.details.OrderDate);
+        this.setValue(OrderDetailsQSelector.OrderDeliveryDate, this.details.OrderDeliveryDate);
     }
 
     setShortInfo() {
@@ -2843,3 +3010,14 @@ function setProductType(productType) {
     }
 
 } 
+
+
+function onChangeDeliveryMaxDate(e, defaultValue = 0) {
+    //format hh:mm
+    const reg = '^[ 0-9]+$'
+    let value = $(e).val()
+    const processingValue = value.match(reg)
+
+    if (!processingValue)
+        $(e).val(defaultValue)
+}

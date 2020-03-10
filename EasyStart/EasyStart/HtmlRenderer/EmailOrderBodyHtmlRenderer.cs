@@ -47,7 +47,9 @@ namespace EasyStart.HtmlRenderer
         {
             body
             .Replace("{customerName}", orderInfo.CustomerName)
-            .Replace("{customerNumberPhone}", orderInfo.CustomerNumberPhone);
+            .Replace("{customerNumberPhone}", orderInfo.CustomerNumberPhone)
+            .Replace("{orderDateDelivery}", orderInfo.OrderDateDelivery)
+            .Replace("{numberAppliances}", orderInfo.NumberAppliances);
         }
 
         private void OrderAddressRender(StringBuilder body)

@@ -15,7 +15,8 @@ const StockConditionTriggerType = {
     Unknown: 0,
     DeliveryOrder: 1,
     SummOrder: 2,
-    ProductsOrder: 3
+    ProductsOrder: 3,
+    HappyBirthday: 4
 }
 
 const StockConditionDeliveryType = {
@@ -143,13 +144,13 @@ var StockManger = {
         }
 
         Dialog.showModal($stockDialog)
-      
+
     },
     setStockData: function (stockId) {
         const data = this.getStockById(stockId)
 
         $('#stockDialog').attr('stock-id', data.Id)
-        
+
         this.setSockTypePeriod(data)
         this.setStockReward(data)
         this.setStockCondition(data)
@@ -222,6 +223,11 @@ var StockManger = {
                 const countItems = this.getProductCountConditionalItems()
                 $(`#stock-condition-products-count-container .stock-setting-condition-count-products`).html(countItems)
 
+                break;
+            case StockConditionTriggerType.HappyBirthday:
+                $('#stock-condition-birthday-container').show()
+                $('#stock-condition-birthday-period-before').val(data.ConditionBirthdayBefore)
+                $('#stock-condition-birthday-period-after').val(data.ConditionBirthdayAfter)
                 break;
         }
     },
@@ -296,6 +302,8 @@ var StockManger = {
             conditionDeliveryType: parseInt($('#stock-condition-delivery-type option:selected').val()),
             conditionOrderSum: getIntValue($('#stock-condition-sum-count').val()),
             conditionCountProductsJSON: getConditionCountProductsJSON(),
+            conditionBirthdayBefore: getIntValue($('#stock-condition-birthday-period-before').val()),
+            conditionBirthdayAfter: getIntValue($('#stock-condition-birthday-period-after').val()),
             name: $('#promotion-stock-name').val(),
             description: $('#promotion-stock-description').val(),
             image: ''
@@ -323,7 +331,7 @@ var StockManger = {
                         self.stockList.push(result.Data);
                         self.addStockToList(result.Data);
                     }
-                    
+
                     cancelDialog("#stockDialog");
                 } else {
                     showErrorMessage(result.ErrorMessage)
@@ -350,7 +358,11 @@ var StockManger = {
             processData: false,
             data: dataImage,
             success: function (data) {
-                saveFunc(data);
+                saveFunc(data)
+                cleatPrevInputImage()
+            },
+            error: function () {
+                cleatPrevInputImage()
             }
         });
 
@@ -564,6 +576,16 @@ var StockManger = {
                     } else
                         disabledNextAction()
                     break
+                case StockConditionTriggerType.HappyBirthday:
+                    const periodBefore = parseInt($('#stock-condition-birthday-period-before').val())
+                    const periodAfter = parseInt($('#stock-condition-birthday-period-after').val())
+
+                    if (!Number.isNaN(periodBefore) && periodBefore >=0 &&
+                        !Number.isNaN(periodAfter) && periodAfter >= 0)
+                        enabledNextAction()
+                    else
+                        disabledNextAction()
+                    break
             }
         }
 
@@ -664,7 +686,9 @@ var StockManger = {
                         '',
                         150,
                         this.onStockConditionProductsChange())
-
+                    break
+                case StockConditionTriggerType.HappyBirthday:
+                    $('#stock-condition-birthday-container').show(animationOption, '', 150)
                     break
             }
         }
@@ -687,6 +711,9 @@ var StockManger = {
         this.btnNextToggle(this.slide.ConditionType)
     },
     onStockConditionSumChange: function () {
+        this.btnNextToggle(this.slide.ConditionType)
+    },
+    onStockConditionBirthdayPeriod: function () {
         this.btnNextToggle(this.slide.ConditionType)
     },
     productsCountConditional: {},

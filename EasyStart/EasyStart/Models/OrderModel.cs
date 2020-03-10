@@ -52,6 +52,7 @@ namespace EasyStart.Models
         public bool NeedCashBack { get; set; }
         public DateTime Date { get; set; }
         public DateTime UpdateDate { get; set; }
+        public DateTime? DateDelivery { get; set; }
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Processing;
 
         public string ProductBonusCountJSON { get; set; }
@@ -60,6 +61,8 @@ namespace EasyStart.Models
         /// Оплачено кешбеком
         /// </summary>
         public double AmountPayCashBack { get; set; }
+
+        public int NumberAppliances { get; set; }
 
         [NotMapped]
         public List<int> StockIds { get; set; }
