@@ -13,6 +13,6 @@ namespace EasyStart.Models
         /// key - Ingredient Id
         /// value - Ingredient count
         /// </summary>
-        public Dictionary<int, int> IngrdientCount { get; set; }
+        public Dictionary<int, int> IngredientCount { get; set; }
     }
 }

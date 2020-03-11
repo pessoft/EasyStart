@@ -2500,7 +2500,7 @@ class OrderDetailsData {
         if (order.ProductConstructorCount && order.ProductConstructorCount.length > 0) {
             for (let constructorItem of order.ProductConstructorCount) {
                 let contructor = OrderConstructorProducts[constructorItem.CategoryId]
-                let productConstructorData = this.getProductConstructorData(constructorItem.IngrdientCount, contructor.Ingredients)
+                let productConstructorData = this.getProductConstructorData(constructorItem.IngredientCount, contructor.Ingredients)
                 let constructorToView = {
                     Image: contructor.CategoryImage,
                     Name: contructor.CategoryName,
