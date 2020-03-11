@@ -657,6 +657,10 @@ function editCategory(e, event) {
     }
 }
 
+function removeProductsFromProductsPromotion(categoryId) {
+    delete ProductsForPromotion[categoryId]
+}
+
 function removeCategory(e, event) {
     event.stopPropagation();
 
@@ -667,6 +671,7 @@ function removeCategory(e, event) {
         let successFunc = function (result, loader) {
             loader.stop();
             if (result.Success) {
+                removeProductsFromProductsPromotion(id)
                 if (SelectIdCategoryId == id) {
                     SelectIdCategoryId = -1;
 
