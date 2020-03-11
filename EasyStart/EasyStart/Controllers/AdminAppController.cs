@@ -406,7 +406,7 @@ namespace EasyStart
                 var setting = DataWrapper.GetSetting(order.BranchId);
                 var categoryConstructor = DataWrapper.GetCategories(order.BranchId).Where(p => p.CategoryType == CategoryType.Constructor).ToList();
                 var constructorIngredients = order.ProductConstructorCount != null ?
-                DataWrapper.GetIngredients(order.ProductConstructorCount.SelectMany(p => p.IngrdientCount.Keys)) :
+                DataWrapper.GetIngredients(order.ProductConstructorCount.SelectMany(p => p.IngredientCount.Keys)) :
                 null;
                 var products = DataWrapper.GetOrderProducts(order.ProductCount.Keys.ToList());
                 var bonusProducts = order.ProductBonusCount != null ?
@@ -507,8 +507,8 @@ namespace EasyStart
 
                         if (categories.TryGetValue(p.CategoryId, out category))
                         {
-                            var ingredients = DataWrapper.GetIngredients(p.IngrdientCount.Keys);
-                            var price = ingredients.Sum(x => x.Price * p.IngrdientCount[x.Id]);
+                            var ingredients = DataWrapper.GetIngredients(p.IngredientCount.Keys);
+                            var price = ingredients.Sum(x => x.Price * p.IngredientCount[x.Id]);
                             var ingredientsHistory = new List<IngredientHistoryModel>();
                             var isDeleted = category.IsDeleted || ingredients.Exists(x => x.IsDeleted);
 
@@ -519,7 +519,7 @@ namespace EasyStart
                                     Id = x.Id,
                                     CategoryId = x.CategoryId,
                                     SubCategoryId = x.SubCategoryId,
-                                    Count = p.IngrdientCount[x.Id],
+                                    Count = p.IngredientCount[x.Id],
                                     Name = x.Name,
                                     Price = x.Price
                                 });

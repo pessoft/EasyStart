@@ -115,8 +115,8 @@ namespace EasyStart.Logic
                 {
                     ProductCount = orderProductConstructon.Count,
                     ProductName = category.Name,
-                    ProductPrice = GetConstructorProductPrice(orderProductConstructon.IngrdientCount, constructorIngredients),
-                    Ingredients = GetStrIngredientsCount(orderProductConstructon.IngrdientCount, constructorIngredients),
+                    ProductPrice = GetConstructorProductPrice(orderProductConstructon.IngredientCount, constructorIngredients),
+                    Ingredients = GetStrIngredientsCount(orderProductConstructon.IngredientCount, constructorIngredients),
                 });
             }
         }
