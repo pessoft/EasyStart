@@ -811,6 +811,8 @@ namespace EasyStart.Logic
                         db.SaveChanges();
 
                         RecalcCategoryOrderNumber(removeCategory.BranchId);
+                        RemoveProductByCategoryId(id);
+
                         success = true;
                     }
                 }
@@ -1137,6 +1139,33 @@ namespace EasyStart.Logic
                         db.SaveChanges();
 
                         RecalcProductsOrderNumber(removeProduct.CategoryId);
+                        success = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return success;
+        }
+
+        public static bool RemoveProductByCategoryId(int categoryId)
+        {
+            var success = false;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var removeProducts = db.Products.Where(p => p.CategoryId == categoryId).ToList();
+
+                    if (removeProducts != null)
+                    {
+                        removeProducts.ForEach(p => p.IsDeleted = true);
+                        db.SaveChanges();
+
+                        RecalcProductsOrderNumber(categoryId);
                         success = true;
                     }
                 }
