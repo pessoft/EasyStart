@@ -546,6 +546,7 @@ function addCategory() {
             loader.stop();
             if (result.Success) {
                 DataProduct.Categories.push(result.Data);
+                addCategoryInCategoryDictionary(result.Data);
                 $(".category .empty-list").remove();
                 addCategoryToList(result.Data);
                 cancelDialog("#addCategoryDialog");
@@ -657,6 +658,42 @@ function editCategory(e, event) {
     }
 }
 
+function addCategoryInCategoryDictionary(category) {
+    CategoryDictionary[category.Id] = category.Name
+}
+
+function removeCategoryFromCategoryDictionary(categoryId) {
+    delete CategoryDictionary[categoryId]
+}
+
+function removeProductsByCategoryIdFromProductsPromotion(categoryId) {
+    delete ProductsForPromotion[categoryId]
+}
+
+function removeProductsByIdFromProductsPromotion(productId) {
+    let products = ProductsForPromotion[SelectIdCategoryId]
+
+    if (products && products.length > 0) {
+        const index = products.findIndex(p => p.Id == productId)
+
+        if (index >= 0) {
+            products.splice(index, 1)
+
+            if (products.length == 0)
+                delete ProductsForPromotion[SelectIdCategoryId]
+        }
+    }
+    
+}
+
+function addProductsByCategoryIdInProductsPromotion(product) {
+    if (!ProductsForPromotion[SelectIdCategoryId]) {
+        ProductsForPromotion[SelectIdCategoryId] = [product]
+    } else {
+        ProductsForPromotion[SelectIdCategoryId].push(product)
+    }
+}
+
 function removeCategory(e, event) {
     event.stopPropagation();
 
@@ -667,6 +704,9 @@ function removeCategory(e, event) {
         let successFunc = function (result, loader) {
             loader.stop();
             if (result.Success) {
+                removeProductsByCategoryIdFromProductsPromotion(id)
+                removeCategoryFromCategoryDictionary(id)
+
                 if (SelectIdCategoryId == id) {
                     SelectIdCategoryId = -1;
 
@@ -826,6 +866,7 @@ function addProduct() {
             if (result.Success) {
                 $(".product .empty-list").remove();
                 DataProduct.Products.push(result.Data);
+                addProductsByCategoryIdInProductsPromotion(result.Data)
                 addProductToList(result.Data);
                 cancelDialog("#addProducDialog");
             } else {
@@ -1158,6 +1199,7 @@ function removeProduct(e, event) {
         let successFunc = function (result, loader) {
             loader.stop();
             if (result.Success) {
+                removeProductsByIdFromProductsPromotion(id)
                 $(`[product-id=${id}]`).fadeOut(500, function () {
                     $(this).remove();
 
@@ -2594,7 +2636,7 @@ class OrderDetailsData {
 }
 
 var OrderDetailsQSelector = {
-    OrderNumberBlock: ".order-details-order-number-cutlery",//в истории заказов помечаем цветом оформленный или не оформленный ордер
+    OrderNumberBlock: ".order-details-order-number-cutlery .order-details-number",//в истории заказов помечаем цветом оформленный или не оформленный ордер
     OrderNumber: ".order-details-number .value",
     NumberAppliances: ".order-details-number-appliances .value",
     OrderDate: ".order-details-date .value",
