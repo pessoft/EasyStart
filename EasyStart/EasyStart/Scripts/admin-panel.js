@@ -546,6 +546,7 @@ function addCategory() {
             loader.stop();
             if (result.Success) {
                 DataProduct.Categories.push(result.Data);
+                addCategoryInCategoryDictionary(result.Data);
                 $(".category .empty-list").remove();
                 addCategoryToList(result.Data);
                 cancelDialog("#addCategoryDialog");
@@ -657,6 +658,14 @@ function editCategory(e, event) {
     }
 }
 
+function addCategoryInCategoryDictionary(category) {
+    CategoryDictionary[category.Id] = category.Name
+}
+
+function removeCategoryFromCategoryDictionary(categoryId) {
+    delete CategoryDictionary[categoryId]
+}
+
 function removeProductsByCategoryIdFromProductsPromotion(categoryId) {
     delete ProductsForPromotion[categoryId]
 }
@@ -696,6 +705,8 @@ function removeCategory(e, event) {
             loader.stop();
             if (result.Success) {
                 removeProductsByCategoryIdFromProductsPromotion(id)
+                removeCategoryFromCategoryDictionary(id)
+
                 if (SelectIdCategoryId == id) {
                     SelectIdCategoryId = -1;
 
