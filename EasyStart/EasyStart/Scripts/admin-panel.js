@@ -2636,7 +2636,7 @@ class OrderDetailsData {
 }
 
 var OrderDetailsQSelector = {
-    OrderNumberBlock: ".order-details-order-number-cutlery",//в истории заказов помечаем цветом оформленный или не оформленный ордер
+    OrderNumberBlock: ".order-details-order-number-cutlery .order-details-number",//в истории заказов помечаем цветом оформленный или не оформленный ордер
     OrderNumber: ".order-details-number .value",
     NumberAppliances: ".order-details-number-appliances .value",
     OrderDate: ".order-details-date .value",
