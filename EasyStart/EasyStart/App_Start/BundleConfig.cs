@@ -57,6 +57,11 @@ namespace EasyStart
             bundles.Add(new ScriptBundle("~/bundles/chart").Include(
                       "~/Scripts/chart.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/image-processing").Include(
+                   "~/Scripts/cropper.js",
+                   "~/Scripts/compressor.js",
+                   "~/Scripts/image-processing.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/promotion").Include(
                 "~/Scripts/promotion/promotion.js",
                 "~/Scripts/promotion/stock.js",
@@ -96,6 +101,10 @@ namespace EasyStart
 
             bundles.Add(new StyleBundle("~/odometer/css").Include(
                   "~/Content/odometer/odometer-theme-minimal.css"));
+
+            bundles.Add(new StyleBundle("~/image-processing/css").Include(
+                "~/Content/cropper.css",
+                "~/Content/image-processing.css"));
         }
     }
 }

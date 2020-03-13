@@ -114,10 +114,10 @@ function productConstructorCondition() {
 function bindChangePeriodWork() {
     const $e = $(".period-work-input")
     $e.unbind('change')
-    $e.bind('change', function () { onChangeOnlyTime(this)})
+    $e.bind('change', function () { onChangeOnlyTime(this) })
     $e.hunterTimePicker();
-    
-    
+
+
 }
 
 function bindChangePreorderMinTime() {
@@ -157,6 +157,9 @@ function bindDialogCloseClickBackdor() {
 
             Dialog.clear($dialog);
             Dialog.close($dialog);
+
+            if (ImageProcessingInstance)
+                ImageProcessingInstance.destroy()
         }
     })
 
@@ -456,70 +459,29 @@ function updateCategory() {
     let loader = new Loader($("#addCategoryDialog form"));
     loader.start();
 
-    let files = $("#addCategoryDialog input[type=file]")[0].files;
-    var dataImage = new FormData();
-
-    for (var x = 0; x < files.length; x++) {
-        dataImage.append("file" + x, files[x]);
+    let category = {
+        Id: $("#category-id").val(),
+        Name: $("#name-category").val(),
+        Image: $("#addCategoryDialog img").attr("src"),
+        NumberAppliances: $("#addCategoryDialog #number-appliances").is(':checked')
     }
 
-    let uppFunc = (data) => {
-        let category = {
-            Id: $("#category-id").val(),
-            Name: $("#name-category").val(),
-            Image: data.URL,
-            NumberAppliances: $("#addCategoryDialog #number-appliances").is(':checked')
+    let successFunc = function (result, loader) {
+        loader.stop();
+        if (result.Success) {
+            let categoryItem = $(`[category-id=${category.Id}]`);
+            categoryItem.find(".category-item-image img").attr("src", category.Image);
+            categoryItem.find(".category-item-name").html(category.Name);
+            categoryItem.find(".number-appliances-data").val(category.NumberAppliances ? 'true' : '');
+
+            cancelDialog("#addCategoryDialog");
+        } else {
+            showErrorMessage(result.ErrorMessage);
         }
-
-        let successFunc = function (result, loader) {
-            loader.stop();
-            if (result.Success) {
-                let categoryItem = $(`[category-id=${category.Id}]`);
-                categoryItem.find(".category-item-image img").attr("src", category.Image);
-                categoryItem.find(".category-item-name").html(category.Name);
-                categoryItem.find(".number-appliances-data").val(category.NumberAppliances ? 'true' : '');
-
-                cancelDialog("#addCategoryDialog");
-            } else {
-                showErrorMessage(result.ErrorMessage);
-            }
-        }
-
-        $.post("/Admin/UpdateCategory", category, successCallBack(successFunc, loader)).catch(function () {
-            errorFunc()
-        });
     }
 
-    let errorFunc = () => {
-        showErrorMessage('При сохранении категории что-то пошло не так...')
-        cancelDialog($('#addCategoryDialog'))
-        loader.stop()
-    }
-
-    if (files.length == 0) {
-        let data = {
-            URL: $("#addCategoryDialog img").attr("src")
-        }
-
-        uppFunc(data);
-
-        return;
-    }
-
-    $.ajax({
-        type: 'POST',
-        url: '/Admin/UploadImage',
-        contentType: false,
-        processData: false,
-        data: dataImage,
-        success: function (data) {
-            uppFunc(data)
-            cleatPrevInputImage()
-        },
-        error: function () {
-            errorFunc()
-            cleatPrevInputImage()
-        }
+    $.post("/Admin/UpdateCategory", category, successCallBack(successFunc, loader)).catch(function () {
+        errorFunc()
     });
 }
 
@@ -527,69 +489,28 @@ function addCategory() {
     let loader = new Loader($("#addCategoryDialog form"));
     loader.start();
 
-    let files = $("#addCategoryDialog input[type=file]")[0].files;
-    var dataImage = new FormData();
-
-    for (var x = 0; x < files.length; x++) {
-        dataImage.append("file" + x, files[x]);
+    let category = {
+        Name: $("#name-category").val(),
+        CategoryType: parseInt($("#addCategoryDialog #category-type").val()),
+        Image: $("#addCategoryDialog img").attr("src"),
+        NumberAppliances: $("#addCategoryDialog #number-appliances").is(':checked')
     }
 
-    let addFunc = function (data) {
-        let category = {
-            Name: $("#name-category").val(),
-            CategoryType: parseInt($("#addCategoryDialog #category-type").val()),
-            Image: data.URL,
-            NumberAppliances: $("#addCategoryDialog #number-appliances").is(':checked')
+    let successFunc = function (result, loader) {
+        loader.stop();
+        if (result.Success) {
+            DataProduct.Categories.push(result.Data);
+            addCategoryInCategoryDictionary(result.Data);
+            $(".category .empty-list").remove();
+            addCategoryToList(result.Data);
+            cancelDialog("#addCategoryDialog");
+        } else {
+            showErrorMessage(result.ErrorMessage);
         }
-
-        let successFunc = function (result, loader) {
-            loader.stop();
-            if (result.Success) {
-                DataProduct.Categories.push(result.Data);
-                addCategoryInCategoryDictionary(result.Data);
-                $(".category .empty-list").remove();
-                addCategoryToList(result.Data);
-                cancelDialog("#addCategoryDialog");
-            } else {
-                showErrorMessage(result.ErrorMessage);
-            }
-        }
-
-        $.post("/Admin/AddCategory", category, successCallBack(successFunc, loader)).catch(function () {
-            errorFunc()
-        });
     }
 
-    let errorFunc = () => {
-        showErrorMessage('При сохранении категории что-то пошло не так...')
-        cancelDialog($('#addCategoryDialog'))
-        loader.stop()
-    }
-
-    if (files.length == 0) {
-        let data = {
-            URL: $("#addCategoryDialog img").attr("src")
-        }
-
-        addFunc(data);
-
-        return;
-    }
-
-    $.ajax({
-        type: 'POST',
-        url: '/Admin/UploadImage',
-        contentType: false,
-        processData: false,
-        data: dataImage,
-        success: function (data) {
-            addFunc(data);
-            cleatPrevInputImage()
-        },
-        error: function () {
-            errorFunc()
-            cleatPrevInputImage()
-        }
+    $.post("/Admin/AddCategory", category, successCallBack(successFunc, loader)).catch(function () {
+        errorFunc()
     });
 }
 
@@ -683,7 +604,7 @@ function removeProductsByIdFromProductsPromotion(productId) {
                 delete ProductsForPromotion[SelectIdCategoryId]
         }
     }
-    
+
 }
 
 function addProductsByCategoryIdInProductsPromotion(product) {
@@ -844,70 +765,30 @@ function addProduct() {
     let loader = new Loader($("#addProducDialog  form"));
     loader.start();
 
-    let files = $("#addProducDialog input[type=file]")[0].files;
-    var dataImage = new FormData();
-
-    for (var x = 0; x < files.length; x++) {
-        dataImage.append("file" + x, files[x]);
+    let product = {
+        CategoryId: SelectIdCategoryId,
+        Name: $("#name-product").val(),
+        AdditionInfo: $("#product-additional-info").val(),
+        Price: $("#product-price").val(),
+        Description: $("#description-product").val(),
+        Image: $("#addProducDialog img").attr("src"),
+        ProductType: getProductType($("#product-type option:selected"))
+    }
+    let successFunc = function (result, loader) {
+        loader.stop();
+        if (result.Success) {
+            $(".product .empty-list").remove();
+            DataProduct.Products.push(result.Data);
+            addProductsByCategoryIdInProductsPromotion(result.Data)
+            addProductToList(result.Data);
+            cancelDialog("#addProducDialog");
+        } else {
+            showErrorMessage(result.ErrorMessage);
+        }
     }
 
-    let addFunc = function (data) {
-        let product = {
-            CategoryId: SelectIdCategoryId,
-            Name: $("#name-product").val(),
-            AdditionInfo: $("#product-additional-info").val(),
-            Price: $("#product-price").val(),
-            Description: $("#description-product").val(),
-            Image: data.URL,
-            ProductType: getProductType($("#product-type option:selected"))
-        }
-        let successFunc = function (result, loader) {
-            loader.stop();
-            if (result.Success) {
-                $(".product .empty-list").remove();
-                DataProduct.Products.push(result.Data);
-                addProductsByCategoryIdInProductsPromotion(result.Data)
-                addProductToList(result.Data);
-                cancelDialog("#addProducDialog");
-            } else {
-                showErrorMessage(result.ErrorMessage);
-            }
-        }
-
-        $.post("/Admin/AddProduct", product, successCallBack(successFunc, loader)).catch(function () {
-            errorFunc()
-        });
-    }
-
-    let errorFunc = () => {
-        showErrorMessage('При сохранении что-то пошло не так...')
-        cancelDialog($('#addProducDialog'))
-        loader.stop()
-    }
-
-    if (files.length == 0) {
-        let data = {
-            URL: $("#addProducDialog img").attr("src")
-        }
-
-        addFunc(data);
-        return;
-    }
-
-    $.ajax({
-        type: 'POST',
-        url: '/Admin/UploadImage',
-        contentType: false,
-        processData: false,
-        data: dataImage,
-        success: function (data) {
-            addFunc(data)
-            cleatPrevInputImage()
-        },
-        error: function () {
-            errorFunc()
-            cleatPrevInputImage()
-        }
+    $.post("/Admin/AddProduct", product, successCallBack(successFunc, loader)).catch(function () {
+        errorFunc()
     });
 }
 
@@ -915,85 +796,45 @@ function updateProduct() {
     let loader = new Loader($("#addProducDialog form"));
     loader.start();
 
-    let files = $("#addProducDialog input[type=file]")[0].files;
-    var dataImage = new FormData();
-
-    for (var x = 0; x < files.length; x++) {
-        dataImage.append("file" + x, files[x]);
+    let product = {
+        Id: $("#product-id").val(),
+        CategoryId: SelectIdCategoryId,
+        Name: $("#name-product").val(),
+        AdditionInfo: $("#product-additional-info").val(),
+        Price: $("#product-price").val(),
+        Description: $("#description-product").val(),
+        Image: $("#addProducDialog img").attr("src"),
+        ProductType: getProductType($("#product-type option:selected"))
     }
 
-    let uppProduct = (data) => {
-        let product = {
-            Id: $("#product-id").val(),
-            CategoryId: SelectIdCategoryId,
-            Name: $("#name-product").val(),
-            AdditionInfo: $("#product-additional-info").val(),
-            Price: $("#product-price").val(),
-            Description: $("#description-product").val(),
-            Image: data.URL,
-            ProductType: getProductType($("#product-type option:selected"))
+    let successFunc = function (result, loader) {
+        loader.stop();
+        if (result.Success) {
+            var oldProduct = getProductById(product.Id);
+            oldProduct.Image = product.Image;
+            oldProduct.Name = product.Name;
+            oldProduct.AdditionInfo = product.AdditionInfo;
+            oldProduct.Price = product.Price;
+            oldProduct.Description = product.Description;
+            oldProduct.ProductType = product.ProductType;
+
+            let productItem = $(`[product-id=${product.Id}]`);
+            productItem.find(".product-item-image img").attr("src", product.Image);
+            productItem.find(".product-item-name").html(product.Name);
+            productItem.find(".product-item-additional-info").html(product.AdditionInfo);
+            productItem.find(".product-item-price span").html(product.Price);
+            productItem.find(".product-item-description").html(product.Description);
+            productItem.find(".product-type-item").html(product.ProductType);
+
+
+            cancelDialog("#addProducDialog");
+        } else {
+            showErrorMessage(result.ErrorMessage);
         }
-
-        let successFunc = function (result, loader) {
-            loader.stop();
-            if (result.Success) {
-                var oldProduct = getProductById(product.Id);
-                oldProduct.Image = product.Image;
-                oldProduct.Name = product.Name;
-                oldProduct.AdditionInfo = product.AdditionInfo;
-                oldProduct.Price = product.Price;
-                oldProduct.Description = product.Description;
-                oldProduct.ProductType = product.ProductType;
-
-                let productItem = $(`[product-id=${product.Id}]`);
-                productItem.find(".product-item-image img").attr("src", product.Image);
-                productItem.find(".product-item-name").html(product.Name);
-                productItem.find(".product-item-additional-info").html(product.AdditionInfo);
-                productItem.find(".product-item-price span").html(product.Price);
-                productItem.find(".product-item-description").html(product.Description);
-                productItem.find(".product-type-item").html(product.ProductType);
-
-
-                cancelDialog("#addProducDialog");
-            } else {
-                showErrorMessage(result.ErrorMessage);
-            }
-        }
-
-        $.post("/Admin/UpdateProduct", product, successCallBack(successFunc, loader)).catch(function () {
-            errorFunc()
-        });
     }
 
-    let errorFunc = () => {
-        showErrorMessage('При сохранении что-то пошло не так...')
-        cancelDialog($('#addProducDialog'))
-        loader.stop()
-    }
-
-    if (files.length == 0) {
-        let data = {
-            URL: $("#addProducDialog img").attr("src")
-        }
-
-        uppProduct(data);
-        return;
-    }
-
-    $.ajax({
-        type: 'POST',
-        url: '/Admin/UploadImage',
-        contentType: false,
-        processData: false,
-        data: dataImage,
-        success: function (data) {
-            uppProduct(data)
-            cleatPrevInputImage()
-        },
-        error: function () {
-            errorFunc()
-            cleatPrevInputImage()
-        }
+    $.post("/Admin/UpdateProduct", product, successCallBack(successFunc, loader)).catch(function () {
+        errorFunc()
     });
 }
 
@@ -1283,35 +1124,27 @@ function loadProductList(idCategory) {
 
     $.post("/Admin/LoadProductList", { idCategory: idCategory }, successCallBack(successFunc, loader));
 }
-var prevInput = null
-function cleatPrevInputImage() {
-    prevInput = null
-}
 
 function addPreviewImage(input) {
     if (input.files && input.files[0]) {
-        let reader = new FileReader();
+        let dialog = $(input).parents("dialog");
+        dialog = dialog.length > 0 ? dialog : $(input).parents(".custom-dialog");
 
-        reader.onload = function (e) {
-            prevInput = $(input).clone();
-            let dialog = $(input).parents("dialog");
-            dialog = dialog.length > 0 ? dialog : $(input).parents(".custom-dialog");
+        if (dialog.length == 0)
+            return;
 
-            if (dialog.length == 0)
-                return;
+        const aspectRatioName = $(input).attr('aspect-ratio')
+        let action = src => setDialogPreviewImage(dialog, src)
+        ImageProcessingInstance = new ImageProcessing(input, action, AspectRatioType[aspectRatioName])
+    } 
+}
 
-            let img = dialog.find("img");
+function setDialogPreviewImage(dialog, src) {
+    let img = dialog.find("img");
 
-            dialog.find(".dialog-image-upload").addClass("hide");
-            img.attr("src", e.target.result);
-            img.removeClass("hide");
-        }
-
-        reader.readAsDataURL(input.files[0]);
-    } else if (prevInput) {
-        let $prevInput = $(prevInput)
-        input.files = $prevInput[0].files
-    }
+    dialog.find(".dialog-image-upload").addClass("hide")
+    img.attr("src", src)
+    img.removeClass("hide")
 }
 
 function openDialogFile(id) {
@@ -1867,7 +1700,7 @@ function toStringDate(date) {
     day = day.length == 1 ? "0" + day : day;
     let month = (date.getMonth() + 1).toString();
     month = month.length == 1 ? "0" + month : month;
-   
+
     let dateStr = `${day}.${month}.${date.getFullYear()}`;
     return dateStr;
 }
@@ -2242,7 +2075,6 @@ var Dialog = {
     clear: ($dialog) => {
         $dialog = $($dialog);
 
-        cleatPrevInputImage()
         $dialog.find("input").val("");
         $dialog.find("input[type=checkbox]").prop('checked', false);
         $dialog.find("textarea").val("");
@@ -3051,7 +2883,7 @@ function setProductType(productType) {
             $selectProductType[0].sumo.selectItem(type.toString())
     }
 
-} 
+}
 
 
 function onChangeDeliveryMaxDate(e, defaultValue = 0) {

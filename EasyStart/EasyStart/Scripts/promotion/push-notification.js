@@ -411,12 +411,10 @@ var PushDataHandler = {
             data: dataImage,
             success: function (data) {
                 saveFunc(data)
-                cleatPrevInputImage()
             },
             error: function () {
                 loader.stop()
                 showErrorMessage(errMessage)
-                cleatPrevInputImage()
             }
         })
     }

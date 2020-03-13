@@ -384,6 +384,7 @@
     <Content Include="Content\admin-login.css" />
     <Content Include="Content\admin-panel.css" />
     <Content Include="Content\analytics.css" />
+    <Content Include="Content\cropper.css" />
     <Content Include="Content\datepicker.min.css" />
     <Content Include="Content\dragula.css" />
     <Content Include="Content\fontawesome\css\all.css" />
@@ -406,6 +407,7 @@
     <Content Include="Content\fontawesome\webfonts\fa-light-300.svg" />
     <Content Include="Content\fontawesome\webfonts\fa-regular-400.svg" />
     <Content Include="Content\fontawesome\webfonts\fa-solid-900.svg" />
+    <Content Include="Content\image-processing.css" />
     <Content Include="Content\material-input.css" />
     <Content Include="Content\odometer\odometer-theme-minimal.css" />
     <Content Include="Content\product-constructor.css" />
@@ -508,8 +510,11 @@
     <Content Include="Resource\FCMAuthKey.json" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\analytics.js" />
+    <Content Include="Scripts\compressor.js" />
+    <Content Include="Scripts\cropper.js" />
     <Content Include="Scripts\datepicker.min.js" />
     <Content Include="Scripts\dragula.js" />
+    <Content Include="Scripts\image-processing.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />

@@ -248,13 +248,6 @@ var StockManger = {
         let loader = new Loader($("#stockDialog .custom-dialog-body"));
         loader.start();
 
-        let files = $("#stockDialog input[type=file]")[0].files;
-        var dataImage = new FormData();
-
-        for (var x = 0; x < files.length; x++) {
-            dataImage.append("file" + x, files[x]);
-        }
-
         const getAllowedBonusProductsJSON = () => {
             const prodictIds = []
             $('#bonus-product-items option:selected').each(function () {
@@ -306,66 +299,36 @@ var StockManger = {
             conditionBirthdayAfter: getIntValue($('#stock-condition-birthday-period-after').val()),
             name: $('#promotion-stock-name').val(),
             description: $('#promotion-stock-description').val(),
-            image: ''
+            image: $("#stockDialog img").attr("src")
         }
 
-        const saveFunc = function (data) {
-            stock.image = data.URL
+        const successFunc = function (result, loader) {
+            loader.stop();
+            if (result.Success) {
+                $("#stock-list .empty-list").remove();
+                self.processingLoadStockData(result.Data)
 
-            const successFunc = function (result, loader) {
-                loader.stop();
-                if (result.Success) {
-                    $("#stock-list .empty-list").remove();
-                    self.processingLoadStockData(result.Data)
+                if (!Number.isNaN(stockIdToRemove) && stockIdToRemove > 0) {
+                    const index = self.getIndexStockById(stockIdToRemove)
+                    self.stockList[index] = result.Data
 
-                    if (!Number.isNaN(stockIdToRemove) && stockIdToRemove > 0) {
-                        const index = self.getIndexStockById(stockIdToRemove)
-                        self.stockList[index] = result.Data
+                    self.replaceStockInList(result.Data, stockIdToRemove)
 
-                        self.replaceStockInList(result.Data, stockIdToRemove)
-
-                    } else {
-                        if (self.stockList.length == 0)
-                            self.clearStockList()
-
-                        self.stockList.push(result.Data);
-                        self.addStockToList(result.Data);
-                    }
-
-                    cancelDialog("#stockDialog");
                 } else {
-                    showErrorMessage(result.ErrorMessage)
+                    if (self.stockList.length == 0)
+                        self.clearStockList()
+
+                    self.stockList.push(result.Data);
+                    self.addStockToList(result.Data);
                 }
-            }
 
-            $.post("/Admin/SaveStock", stock, successCallBack(successFunc, loader))
+                cancelDialog("#stockDialog");
+            } else {
+                showErrorMessage(result.ErrorMessage)
+            }
         }
 
-        if (files.length == 0) {
-            let data = {
-                URL: $("#stockDialog img").attr("src")
-            }
-
-            saveFunc(data);
-
-            return;
-        }
-
-        $.ajax({
-            type: 'POST',
-            url: '/Admin/UploadImage',
-            contentType: false,
-            processData: false,
-            data: dataImage,
-            success: function (data) {
-                saveFunc(data)
-                cleatPrevInputImage()
-            },
-            error: function () {
-                cleatPrevInputImage()
-            }
-        });
-
+        $.post("/Admin/SaveStock", stock, successCallBack(successFunc, loader))
     },
     processingLoadStockData: function (data) {
         data.StockFromDate = jsonToDate(data.StockFromDate)
@@ -580,7 +543,7 @@ var StockManger = {
                     const periodBefore = parseInt($('#stock-condition-birthday-period-before').val())
                     const periodAfter = parseInt($('#stock-condition-birthday-period-after').val())
 
-                    if (!Number.isNaN(periodBefore) && periodBefore >=0 &&
+                    if (!Number.isNaN(periodBefore) && periodBefore >= 0 &&
                         !Number.isNaN(periodAfter) && periodAfter >= 0)
                         enabledNextAction()
                     else
