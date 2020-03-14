@@ -1750,7 +1750,7 @@ namespace EasyStart.Logic
 
                     if (client != null)
                     {
-                        client.VirtualMoney = virtualMoney;
+                        client.VirtualMoney = Math.Round(virtualMoney, 2);
                         db.SaveChanges();
                     }
                 }

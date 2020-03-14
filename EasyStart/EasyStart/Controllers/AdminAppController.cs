@@ -345,6 +345,8 @@ namespace EasyStart
                     throw new Exception("Не достаточно виртуальных средств");
                 }
 
+                order.AmountPayCashBack = Math.Round(order.AmountPayCashBack, 2);
+                order.AmountPayDiscountDelivery = Math.Round(order.AmountPayDiscountDelivery, 2);
                 var numberOrder = DataWrapper.SaveOrder(order);
 
                 if (numberOrder != -1)
@@ -363,7 +365,7 @@ namespace EasyStart
                     if (order.AmountPayCashBack > 0)
                     {
                         client.VirtualMoney -= order.AmountPayCashBack;
-
+                        client.VirtualMoney = Math.Round(client.VirtualMoney, 2);
                         DataWrapper.ClientUpdateVirtualMoney(client.Id, client.VirtualMoney);
 
                         var transactionLogic = new TransactionLogic();
@@ -782,6 +784,7 @@ namespace EasyStart
                         {
                             case DiscountType.Ruble:
                                 client.VirtualMoney += partnersSetting.BonusValue;
+                                client.VirtualMoney = Math.Round(client.VirtualMoney, 2);
                                 saveTransaction = true;
                                 break;
                             case DiscountType.Percent:
