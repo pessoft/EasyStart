@@ -1311,7 +1311,8 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     var orderIds = db.Orders
-                        .Where(p => p.ClientId == clientId)
+                        .Where(p => p.ClientId == clientId &&
+                         p.OrderStatus != OrderStatus.Cancellation)
                         .Select(p => p.Id)
                         .ToList();
 
@@ -1337,7 +1338,9 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     isEmpty = db.Orders
-                        .Where(p => p.ClientId == clientId).Count() == 0;
+                        .Where(p => p.ClientId == clientId &&
+                         p.OrderStatus != OrderStatus.Cancellation)
+                        .Count() == 0;
                 }
             }
             catch (Exception ex)

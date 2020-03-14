@@ -905,7 +905,13 @@ namespace EasyStart.Controllers
         {
             try
             {
-                if (data.Status == OrderStatus.Processing)
+                if (data.Status == OrderStatus.Processing || data.OrderId < 1)
+                {
+                    return;
+                }
+
+                var order = DataWrapper.GetOrder(data.OrderId);
+                if(order.OrderStatus != OrderStatus.Processing)
                 {
                     return;
                 }
