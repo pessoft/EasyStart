@@ -333,7 +333,7 @@ namespace EasyStart
 
                 var deliverSetting = DataWrapper.GetDeliverySetting(order.BranchId);
 
-                if(order.DateDelivery != null)
+                if (order.DateDelivery != null)
                     order.DateDelivery = order.DateDelivery.Value.GetDateTimeNow(deliverSetting.ZoneId);
 
                 order.Date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
@@ -360,7 +360,7 @@ namespace EasyStart
                             DataWrapper.FixUseStockWithBirthday(order.ClientId, order.Date);
                         }
                     }
-                    
+
 
                     if (order.AmountPayCashBack > 0)
                     {
@@ -412,7 +412,7 @@ namespace EasyStart
                 null;
                 var products = DataWrapper.GetOrderProducts(order.ProductCount.Keys.ToList());
                 var bonusProducts = order.ProductBonusCount != null ?
-                    DataWrapper.GetOrderProducts(order.ProductBonusCount.Keys.ToList()):
+                    DataWrapper.GetOrderProducts(order.ProductBonusCount.Keys.ToList()) :
                     new List<ProductModel>();
                 var orderInfoParams = new OrderInfoParams
                 {
@@ -434,7 +434,7 @@ namespace EasyStart
 
                 new NotifyNewOrderManager(optionsNotification).AllNotify();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Logger.Log.Error(ex);
             }
@@ -479,7 +479,7 @@ namespace EasyStart
 
                     if (products != null)
                     {
-                        products.ForEach(p => 
+                        products.ForEach(p =>
                         {
                             var productHistory = new ProductHistoryModel
                             {
@@ -545,7 +545,7 @@ namespace EasyStart
                     });
                 }
 
-                
+
                 result.Data = new { productsHistory, constructorProductsHistory };
                 result.Success = true;
 
@@ -614,8 +614,8 @@ namespace EasyStart
                     var client = DataWrapper.GetClient(review.ClientId);
                     review.Reviewer = client.UserName;
                     var savedReview = DataWrapper.SaveProductReviews(review);
-                    
-                    if(savedReview != null)
+
+                    if (savedReview != null)
                     {
                         result.Success = true;
                         result.Data = savedReview;
@@ -701,7 +701,7 @@ namespace EasyStart
 
                 var isNewClient = DataWrapper.GetClientByPhoneNumber(client.PhoneNumber) == null;
 
-                if(!isNewClient)
+                if (!isNewClient)
                 {
                     result.ErrorMessage = "Номер телефона уже зарегистрирован";
                     return result;
@@ -738,7 +738,7 @@ namespace EasyStart
 
             return result;
         }
-        
+
         [HttpPost]
         public JsonResultModel UpdateParrentReferral([FromBody]ClientParentReferralCode clientParentReferralCode)
         {
@@ -755,7 +755,7 @@ namespace EasyStart
                     return result;
                 }
 
-                if(client.ParentReferralClientId > 0 )
+                if (client.ParentReferralClientId > 0)
                 {
                     result.ErrorMessage = "Реферальный код уже установлен";
                     return result;
@@ -792,7 +792,8 @@ namespace EasyStart
                                 break;
                         }
                     }
-                } else
+                }
+                else
                 {
                     result.ErrorMessage = "Реферальный код не установлен";
                     return result;
@@ -834,8 +835,8 @@ namespace EasyStart
                 Client oldClient = null;
 
                 if (string.IsNullOrEmpty(client.PhoneNumber) ||
-                    string.IsNullOrEmpty(client.Password)||
-                    (oldClient = DataWrapper.GetClient(client.PhoneNumber, client.Password)) == null )
+                    string.IsNullOrEmpty(client.Password) ||
+                    (oldClient = DataWrapper.GetClient(client.PhoneNumber, client.Password)) == null)
                 {
                     result.ErrorMessage = "Не удалось авторизоваться";
                     return result;
@@ -890,7 +891,7 @@ namespace EasyStart
                 var htmpBodyRenderer = new EmailRestorePasswordBodyHtmlRenderer(client, emailTemplate);
                 new RestorePasswordNotification(client, new EmailSender()).EmailNotify(htmpBodyRenderer);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Logger.Log.Error(ex);
             }
@@ -913,7 +914,7 @@ namespace EasyStart
                     var currentContext = System.Web.HttpContext.Current;
 
                     Task.Run(() => NotifyRestorePassword(currentContext, client));
-                    
+
                     result.Success = true;
                 }
             }
@@ -922,7 +923,7 @@ namespace EasyStart
                 Logger.Log.Error(ex);
                 result.ErrorMessage = "Что-то пошло не так";
             }
-            
+
 
             return result;
         }
@@ -944,7 +945,7 @@ namespace EasyStart
 
                 var isClientExist = DataWrapper.GetClientByPhoneNumber(userData.PhoneNumber) != null;
 
-                if(!isClientExist)
+                if (!isClientExist)
                 {
                     result.ErrorMessage = "Номер телефона не зарегистрирован";
                     return result;
@@ -1063,15 +1064,14 @@ namespace EasyStart
         {
             var result = new JsonResultModel();
 
-            if(device == null ||
-                string.IsNullOrEmpty(device.Token))
+            if (device == null ||
+                string.IsNullOrEmpty(device.Token) ||
+                device.ClientId < 1 ||
+                device.BranchId < 1)
             {
                 result.ErrorMessage = "Девайс не зарегестрирован";
                 return result;
             }
-
-            if (device.BranchId == -1)
-                device.BranchId = DataWrapper.GetMainBranch().Id;
 
             try
             {
