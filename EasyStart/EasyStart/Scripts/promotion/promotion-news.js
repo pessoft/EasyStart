@@ -105,75 +105,39 @@ var NewsManager = {
         let loader = new Loader($("#newsDialog .custom-dialog-body"));
         loader.start();
 
-        let files = $("#newsDialog input[type=file]")[0].files;
-        var dataImage = new FormData();
-
-        for (var x = 0; x < files.length; x++) {
-            dataImage.append("file" + x, files[x]);
-        }
-
         const news = {
             id: $('#newsDialog').attr('news-id'),
             title: $('#promotion-news-title').val(),
             description: $('#promotion-news-description').val(),
-            image: ''
+            image: $("#newsDialog img").attr("src")
         }
 
-        const saveFunc = function (data) {
-            news.image = data.URL
+        const successFunc = function (result, loader) {
+            loader.stop();
+            if (result.Success) {
+                $("#news-list .empty-list").remove();
 
-            const successFunc = function (result, loader) {
-                loader.stop();
-                if (result.Success) {
-                    $("#news-list .empty-list").remove();
+                if (!Number.isNaN(newsIdToRemove) && newsIdToRemove > 0) {
+                    const index = self.getIndexNewsById(newsIdToRemove)
+                    self.newsList[index] = result.Data
 
-                    if (!Number.isNaN(newsIdToRemove) && newsIdToRemove > 0) {
-                        const index = self.getIndexNewsById(newsIdToRemove)
-                        self.newsList[index] = result.Data
+                    self.replaceNewsInList(result.Data, newsIdToRemove)
 
-                        self.replaceNewsInList(result.Data, newsIdToRemove)
-
-                    } else {
-                        if (self.newsList.length == 0)
-                            self.clearNewsList()
-
-                        self.newsList.push(result.Data);
-                        self.addNewsToList(result.Data);
-                    }
-
-                    cancelDialog("#newsDialog");
                 } else {
-                    showErrorMessage(result.ErrorMessage)
+                    if (self.newsList.length == 0)
+                        self.clearNewsList()
+
+                    self.newsList.push(result.Data);
+                    self.addNewsToList(result.Data);
                 }
-            }
 
-            $.post("/Admin/SaveNews", news, successCallBack(successFunc, loader))
+                cancelDialog("#newsDialog");
+            } else {
+                showErrorMessage(result.ErrorMessage)
+            }
         }
 
-        if (files.length == 0) {
-            let data = {
-                URL: $("#newsDialog img").attr("src")
-            }
-
-            saveFunc(data);
-
-            return;
-        }
-
-        $.ajax({
-            type: 'POST',
-            url: '/Admin/UploadImage',
-            contentType: false,
-            processData: false,
-            data: dataImage,
-            success: function (data) {
-                saveFunc(data)
-                cleatPrevInputImage()
-            },
-            error: function () {
-                cleatPrevInputImage()
-            }
-        });
+        $.post("/Admin/SaveNews", news, successCallBack(successFunc, loader))
     },
     getIndexNewsById: function (searchId) {
         for (let id in this.newsList) {

@@ -15,6 +15,7 @@
     @Styles.Render("~/dragula/css")
     @Styles.Render("~/datepicker/css")
     @Styles.Render("~/promotion/css")
+    @Styles.Render("~/image-processing/css")
 </head>
 <body>
     <script>
@@ -47,15 +48,15 @@
         </div>
         <div class="menu-item" target-id="branch" onclick="loadBranchList();">
             <i class="fal fa-code-branch"></i>
-            Отделения
+            Филиалы
         </div>
         <div class="menu-item" target-id="setting">
             <i class="fal fa-map-marker-alt"></i>
-            Контакты отделения
+            Контакты
         </div>
         <div class="menu-item" target-id="delivery">
             <i class="fal fa-truck-loading"></i>
-            О доставке
+            Доставка
         </div>
         <div class="menu-item" target-id="analytics">
             <i class="fal fa-analytics"></i>
@@ -331,7 +332,7 @@
                                                 <button id="push-image-btn-remove" class="push-image-btn-remove hide" onclick="PushNotitifactionImage.removeImage()">
                                                     <i class="fal fa-times"></i>
                                                 </button>
-                                                <img id="push-notification-image-preview" src="/images/default-image.jpg" />
+                                                <img id="push-notification-image-preview" src="../Images/default-image.jpg" />
                                             </div>
                                             <div class="push-image-menu">
                                                 <input type="file" id="push-image-download" class="not-bind-image hide" accept="image/*">
@@ -381,7 +382,7 @@
                                                     </div>
                                                     <div class="preview-msg-image">
                                                         <div class="preview-msg-image-device">
-                                                            <img src="/images/default-image.jpg" />
+                                                            <img src="../Images/default-image.jpg" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -398,7 +399,7 @@
                                                     </div>
                                                     <div class="preview-msg-image">
                                                         <div class="preview-msg-image-device">
-                                                            <img src="/images/default-image.jpg" />
+                                                            <img src="../Images/default-image.jpg" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -487,7 +488,7 @@
                             <div class="promotion-settings-footer">
                                 <button id="save-promotion-setting" class="btn btn-submit" onclick="PromotionSetting.saveSettings()">Сохранить</button>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -496,14 +497,14 @@
 
         <div class="section hide" id="branch">
             <div class="branch-header">
-                Отделения
+                Филиалы
                 <i class="fal fa-chart-network"></i>
             </div>
             @if (ViewBag.TypeBranch == EasyStart.Logic.TypeBranch.MainBranch)
             {
                 <div class="branch-header-add" id="add-branch">
                     <i class="fal fa-plus"></i>
-                    Добавить отделение
+                    Добавить филиал
                 </div>
             }
             <div class="branch-list">
@@ -751,9 +752,9 @@
                 </div>
 
                 <div class="add-image-product">
-                    <input type="file" id="add-category-image" accept="image/*" class="hide">
+                    <input type="file" aspect-ratio="square" id="add-category-image" accept="image/*" class="hide">
                     <div class="preview-image" onclick="openDialogFile('add-category-image')">
-                        <img src=""/images/default-image.jpg"" alt="your image" class="hide" />
+                        <img src="../Images/default-image.jpg" alt="your image" class="hide" />
                         <div class="dialog-image-upload">
                             <i class="fal fa-upload"></i>
                             Загрузите изображение категории
@@ -815,7 +816,7 @@
                 </div>
 
                 <div class="add-image-product">
-                    <input type="file" id="add-product-image" accept="image/*" class="hide">
+                    <input type="file" aspect-ratio="square" id="add-product-image" accept="image/*" class="hide">
                     <div class="preview-image" onclick="openDialogFile('add-product-image')">
                         <img src="#" alt="your image" class="hide" />
                         <div class="dialog-image-upload">
@@ -989,7 +990,7 @@
                 </div>
 
                 <div class="add-image-product">
-                    <input type="file" id="add-ingredient-product-image" accept="image/*" class="hide">
+                    <input type="file" aspect-ratio="square" id="add-ingredient-product-image" accept="image/*" class="hide">
                     <div class="preview-image" onclick="openDialogFile('add-ingredient-product-image')">
                         <img src="#" alt="your image" class="hide" />
                         <div class="dialog-image-upload">
@@ -1008,7 +1009,7 @@
             <div class="enter-dialog-data">
                 <div class="header-dialog">
                     <i class="fal fa-chart-network"></i>
-                    Добавление отделения
+                    Добавление филиала
                 </div>
                 <div class="content-dialog-data">
                     <div class="group">
@@ -1024,7 +1025,7 @@
                     <div class="group">
                         <input list="branch-city-list" id="branch-city" type="text">
                         <span class="bar"></span>
-                        <label>Город отделения</label>
+                        <label>Город филиала</label>
                         <datalist id="branch-city-list">
                             @foreach (var cityPair in ViewBag.City)
                             {
@@ -1485,7 +1486,7 @@
                     <div class="promotion-stock-dialog-slide-header">Изображение акции</div>
                     <div class="promotion-stock-dialog-slide-content">
                         <div class="add-image-product">
-                            <input type="file" id="add-stock-image" accept="image/*" class="hide">
+                            <input type="file" aspect-ratio="news" id="add-stock-image" accept="image/*" class="hide">
                             <div class="preview-image promotion-stock-preview-image " onclick="openDialogFile('add-stock-image')">
                                 <img alt="your image" class="hide" onload="StockManger.toggleSave(this)">
                                 <div class="dialog-image-upload">
@@ -1614,7 +1615,7 @@
                 </button>
                 <div class="promotion-news-form">
                     <div class="news-image-container">
-                        <input type="file" id="add-news-image" accept="image/*" class="hide">
+                        <input type="file" aspect-ratio="news" id="add-news-image" accept="image/*" class="hide">
                         <div class="preview-image promotion-news-preview-imag " onclick="openDialogFile('add-news-image')">
                             <img alt="your image" id="news-image" class="hide" onload="NewsManager.toggleSave()">
                             <div class="dialog-image-upload default-border">
@@ -1640,6 +1641,29 @@
             </div>
         </div>
     </div>
+
+    <dialog id="imageProcessingDialog">
+        <div class="image-processing-wrapper">
+            <div class="image-processing-header-container">
+                <div class="image-processing-header">
+                    Выделите область изображения
+                </div>
+                <div class="image-processing-close">
+                    <button class="simple-text-btn dialog-btn-close-not-absolute" id="btn-image-processing-close" onclick="closeImageprocessingDialog()">
+                        <i class="fal fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="image-processing-preview-container">
+                <img id="image-processing" src="" />
+            </div>
+            <div class="image-processing-footer">
+                <button class="simple-text-btn" id="btn-image-processing-done" onclick="startImageprocessing()">
+                    Готово
+                </button>
+            </div>
+        </div>
+    </dialog>
 
     <template id="review-item-template">
         <div class="review-item">
@@ -1826,6 +1850,7 @@
     @Scripts.Render("~/bundles/jquery-raty")
     @Scripts.Render("~/bundles/darepicker")
     @Scripts.Render("~/bundles/promotion")
+    @Scripts.Render("~/bundles/image-processing")
 
 </body>
 </html>
