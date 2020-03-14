@@ -28,48 +28,15 @@ function addOrUpdateIngredient() {
     let loader = new Loader($("#addProducIngredientDialog form"));
     loader.start();
 
-    let files = $("#addProducIngredientDialog input[type=file]")[0].files;
-    var dataImage = new FormData();
+    const img = $("#addProducIngredientDialog img").attr("src")
+    let ingredient = getIngredientData(img)
 
-    for (var x = 0; x < files.length; x++) {
-        dataImage.append("file" + x, files[x]);
-    }
+    categoryIngredient.addOrUpdateIngredient(ingredient)
+    categoryIngredient.setIngredients()
 
-    let addFunc = (data) => {
-        let ingredient = getIngredientData(data.URL)
-
-        categoryIngredient.addOrUpdateIngredient(ingredient)
-        categoryIngredient.setIngredients()
-
-        loader.stop()
-        Dialog.close('#addProducIngredientDialog')
-        Dialog.clear('#addProducIngredientDialog')
-    }
-
-    if (files.length == 0) {
-        let data = {
-            URL: $("#addProducIngredientDialog img").attr("src")
-        }
-
-        addFunc(data);
-
-        return;
-    }
-
-    $.ajax({
-        type: 'POST',
-        url: '/Admin/UploadImage',
-        contentType: false,
-        processData: false,
-        data: dataImage,
-        success: function (data) {
-            addFunc(data)
-            cleatPrevInputImage()
-        },
-        error: function () {
-            cleatPrevInputImage()
-        }
-    });
+    loader.stop()
+    Dialog.close('#addProducIngredientDialog')
+    Dialog.clear('#addProducIngredientDialog')
 }
 
 function updateGloabalDataProduct(productConstructor) {

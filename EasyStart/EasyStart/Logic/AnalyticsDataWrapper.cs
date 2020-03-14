@@ -11,7 +11,7 @@ namespace EasyStart.Logic
     {
         public static Dictionary<DateTime, double> GetCountOrder(DateTime dateFrom, DateTime dateTo, int branchId)
         {
-            var result = new Dictionary<DateTime, double> ();
+            var result = new Dictionary<DateTime, double>();
 
             try
             {
@@ -46,7 +46,7 @@ namespace EasyStart.Logic
                                     DbFunctions.TruncateTime(p.Date) >= dateFrom &&
                                     DbFunctions.TruncateTime(p.Date) <= dateTo)
                         .GroupBy(p => DbFunctions.TruncateTime(p.Date))
-                        .ToDictionary(p => p.Key.Value.Date, p => p.Sum(s => s.AmountPayDiscountDelivery));
+                        .ToDictionary(p => p.Key.Value.Date, p => Math.Round(p.Sum(s => s.AmountPayDiscountDelivery), 2));
                 }
             }
             catch (Exception ex)
@@ -65,7 +65,7 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     result = db.Orders
-                        .Where(p => p.OrderStatus == OrderStatus.Processed && 
+                        .Where(p => p.OrderStatus == OrderStatus.Processed &&
                                     p.BranchId == branchId &&
                                     DbFunctions.TruncateTime(p.Date) >= dateFrom &&
                                     DbFunctions.TruncateTime(p.Date) <= dateTo)
@@ -88,7 +88,7 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     result = db.Orders
-                        .Where(p => p.OrderStatus == OrderStatus.Processed && 
+                        .Where(p => p.OrderStatus == OrderStatus.Processed &&
                                     p.BranchId == branchId &&
                                     DbFunctions.TruncateTime(p.Date) >= dateFrom &&
                                     DbFunctions.TruncateTime(p.Date) <= dateTo)

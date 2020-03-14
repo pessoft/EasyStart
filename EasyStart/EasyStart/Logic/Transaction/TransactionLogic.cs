@@ -15,7 +15,7 @@ namespace EasyStart.Logic.Transaction
                 TransactionType = transactionType,
                 ClientId = clientId,
                 OrderId = orderId,
-                Money = transactionType == CashbackTransactionType.OrderPayment ? -Math.Abs(money) : money,
+                Money = transactionType == CashbackTransactionType.OrderPayment ? Math.Round(-Math.Abs(money), 2) : Math.Round(money, 2),
                 Date = DateTime.Now
             };
 
@@ -40,7 +40,7 @@ namespace EasyStart.Logic.Transaction
                 TransactionType = transactionType,
                 ClientId = clientId,
                 ReferralId = referralId,
-                Money = money,
+                Money = Math.Round(money, 2),
                 Date = DateTime.Now
             };
 
