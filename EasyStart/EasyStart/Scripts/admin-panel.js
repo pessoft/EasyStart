@@ -2324,7 +2324,9 @@ class OrderDetailsData {
         this.DeliveryPrice = `${xFormatPrice(order.DeliveryPrice)} ${prefixRub}`;
         this.Discount = this.getDiscounText(order);
         this.PayType = getBuyType(order.BuyType);
-        this.CashBack = order.CashBack > 0 ? `${xFormatPrice(order.CashBack - order.AmountPayDiscountDelivery)} ${prefixRub}` : `${xFormatPrice(order.CashBack)} ${prefixRub}`;
+        this.CashBack = order.CashBack > 0 ?
+            `${xFormatPrice(order.CashBack - order.AmountPayDiscountDelivery)} ${prefixRub} (c ${xFormatPrice(order.CashBack)} ${prefixRub})` :
+            `${xFormatPrice(order.CashBack)} ${prefixRub}`;
         this.AmountPayDiscountDelivery = `${xFormatPrice(order.AmountPayDiscountDelivery)} ${prefixRub}`;
     }
 

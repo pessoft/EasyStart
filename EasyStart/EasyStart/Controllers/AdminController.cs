@@ -256,7 +256,7 @@ namespace EasyStart.Controllers
 
                 if (typeBranch != TypeBranch.MainBranch)
                 {
-                    result.ErrorMessage = "Вы не можете добавлять отделения";
+                    result.ErrorMessage = "Вы не можете добавлять филиалы";
                     return Json(result);
                 }
 
@@ -329,7 +329,7 @@ namespace EasyStart.Controllers
 
                 if (typeBranch != TypeBranch.MainBranch)
                 {
-                    result.ErrorMessage = "Вы не можете удалять отделения";
+                    result.ErrorMessage = "Вы не можете удалять филиалы";
                 }
                 else
                 {
@@ -1040,7 +1040,7 @@ namespace EasyStart.Controllers
 
                 if (branch == null)
                 {
-                    throw new Exception("Отсутсвует главное отделение");
+                    throw new Exception("Отсутсвует головной филиал");
                 }
 
                 var cashbackSetting = DataWrapper.GetPromotionCashbackSetting(branch.Id);

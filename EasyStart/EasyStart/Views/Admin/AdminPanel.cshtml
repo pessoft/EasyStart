@@ -48,15 +48,15 @@
         </div>
         <div class="menu-item" target-id="branch" onclick="loadBranchList();">
             <i class="fal fa-code-branch"></i>
-            Отделения
+            Филиалы
         </div>
         <div class="menu-item" target-id="setting">
             <i class="fal fa-map-marker-alt"></i>
-            Контакты отделения
+            Контакты
         </div>
         <div class="menu-item" target-id="delivery">
             <i class="fal fa-truck-loading"></i>
-            О доставке
+            Доставка
         </div>
         <div class="menu-item" target-id="analytics">
             <i class="fal fa-analytics"></i>
@@ -497,14 +497,14 @@
 
         <div class="section hide" id="branch">
             <div class="branch-header">
-                Отделения
+                Филиалы
                 <i class="fal fa-chart-network"></i>
             </div>
             @if (ViewBag.TypeBranch == EasyStart.Logic.TypeBranch.MainBranch)
             {
                 <div class="branch-header-add" id="add-branch">
                     <i class="fal fa-plus"></i>
-                    Добавить отделение
+                    Добавить филиал
                 </div>
             }
             <div class="branch-list">
@@ -1009,7 +1009,7 @@
             <div class="enter-dialog-data">
                 <div class="header-dialog">
                     <i class="fal fa-chart-network"></i>
-                    Добавление отделения
+                    Добавление филиала
                 </div>
                 <div class="content-dialog-data">
                     <div class="group">
@@ -1025,7 +1025,7 @@
                     <div class="group">
                         <input list="branch-city-list" id="branch-city" type="text">
                         <span class="bar"></span>
-                        <label>Город отделения</label>
+                        <label>Город филиала</label>
                         <datalist id="branch-city-list">
                             @foreach (var cityPair in ViewBag.City)
                             {
