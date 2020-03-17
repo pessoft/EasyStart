@@ -16,14 +16,13 @@ namespace EasyStart.Logic
             transactionLogic = new TransactionLogic();
         }
 
-        public void ProcessingVirtualMoney(int orderId)
+        public void ProcessingVirtualMoney(int orderId, int branchId)
         {
-            var mainBranch = DataWrapper.GetMainBranch();
             var order = DataWrapper.GetOrder(orderId);
             var client = DataWrapper.GetClient(order.ClientId);
 
-            ProcessingCashback(mainBranch.Id, order, client);
-            ProcessingPartners(mainBranch.Id, order, client);
+            ProcessingCashback(branchId, order, client);
+            ProcessingPartners(branchId, order, client);
         }
 
         public void Refund(int orderId)
