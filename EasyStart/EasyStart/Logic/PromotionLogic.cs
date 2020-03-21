@@ -134,6 +134,9 @@ namespace EasyStart.Logic
                     {
                         excluded = stocksWithTriggerBirhday.Select(p => p.Id).ToList();
                     }
+                } else
+                {
+                    excluded = stocksWithTriggerBirhday.Select(p => p.Id).ToList();
                 }
             }
 
