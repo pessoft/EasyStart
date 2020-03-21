@@ -2080,6 +2080,10 @@ button.order-details-menu-item i {
     margin: 0px 30px;
 }
 
+.order-details-price-cashback {
+	grid-template-columns: 1fr 1.2fr;
+}
+
 .order-details-info-label {
     font-size: 0.93em;
 }

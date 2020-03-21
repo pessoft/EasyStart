@@ -2334,7 +2334,7 @@ class OrderDetailsData {
         this.City = getCityNameById(order.CityId);
         this.Street = order.DeliveryType == DeliveryType.Delivery ? order.Street : $("#setting-street").val();
         this.House = order.DeliveryType == DeliveryType.Delivery ? order.HomeNumber : $("#setting-home").val();
-        this.Apartament = order.DeliveryType == DeliveryType.Delivery ? order.ApartamentNumber : $("#setting-home").val();
+        this.Apartament = order.DeliveryType == DeliveryType.Delivery ? order.ApartamentNumber : "-";
         this.Level = order.DeliveryType == DeliveryType.Delivery ? order.Level : "-";
         this.IntercomCode = order.DeliveryType == DeliveryType.Delivery ? order.IntercomCode : "-";
         this.Entrance = order.DeliveryType == DeliveryType.Delivery ? order.EntranceNumber : "-";

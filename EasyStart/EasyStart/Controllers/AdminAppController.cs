@@ -115,9 +115,8 @@ namespace EasyStart
                 var promotionLogic = new PromotionLogic();
                 var stocks = promotionLogic.GetStockForAPI(branchId, clientid);
                 var news = promotionLogic.GetNewsForAPI(branchId);
-                var mainBranch = DataWrapper.GetMainBranch();
-                var promotionCashbackSetting = promotionLogic.GetSettingCashBack(mainBranch.Id);
-                var promotionPartnersSetting = promotionLogic.GetSettingPartners(mainBranch.Id);
+                var promotionCashbackSetting = promotionLogic.GetSettingCashBack(branchId);
+                var promotionPartnersSetting = promotionLogic.GetSettingPartners(branchId);
                 var promotionSectionSettings = promotionLogic.GetSettingSections(branchId);
                 var promotionSetting = DataWrapper.GetPromotionSetting(branchId);
 
@@ -770,27 +769,23 @@ namespace EasyStart
                     return result;
                 }
 
-                if (parentClient != null && parentClient.ParentReferralClientId != client.Id)
+                var partnersSetting = DataWrapper.GetPromotionPartnerSetting(client.BranchId);
+                if (parentClient != null && parentClient.ParentReferralClientId != client.Id &&
+                    partnersSetting != null && partnersSetting.IsUsePartners)
                 {
                     client.ParentReferralClientId = parentClient.Id;
                     client.ParentReferralCode = parentClient.ReferralCode;
 
-                    var mainBranch = DataWrapper.GetMainBranch();
-                    var partnersSetting = DataWrapper.GetPromotionPartnerSetting(mainBranch.Id);
-
-                    if (partnersSetting.IsUsePartners)
+                    switch (partnersSetting.TypeBonusValue)
                     {
-                        switch (partnersSetting.TypeBonusValue)
-                        {
-                            case DiscountType.Ruble:
-                                client.VirtualMoney += partnersSetting.BonusValue;
-                                client.VirtualMoney = Math.Round(client.VirtualMoney, 2);
-                                saveTransaction = true;
-                                break;
-                            case DiscountType.Percent:
-                                client.ReferralDiscount = partnersSetting.BonusValue;
-                                break;
-                        }
+                        case DiscountType.Ruble:
+                            client.VirtualMoney += partnersSetting.BonusValue;
+                            client.VirtualMoney = Math.Round(client.VirtualMoney, 2);
+                            saveTransaction = true;
+                            break;
+                        case DiscountType.Percent:
+                            client.ReferralDiscount = partnersSetting.BonusValue;
+                            break;
                     }
                 }
                 else
@@ -1027,7 +1022,7 @@ namespace EasyStart
             {
                 Logger.Log.Error(ex);
 
-                result.ErrorMessage = "При загрузке партнерских транзакций пошло что-то не так";
+                result.ErrorMessage = "При загрузке партнерских транзакций что-то пошло не так";
             }
 
             return result;
@@ -1053,7 +1048,7 @@ namespace EasyStart
             {
                 Logger.Log.Error(ex);
 
-                result.ErrorMessage = "При загрузке транзакций кешбека пошло что-то не так";
+                result.ErrorMessage = "При загрузке транзакций кешбека что-то пошло не так";
             }
 
             return result;
