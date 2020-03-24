@@ -8,8 +8,8 @@ namespace EasyStart.Logic
 {
     public static class UseMethod
     {
-        private const string s1 = "1943283414";
-        private const string s2 = "-1931688329";
+        private const string s1 = "-1485457277";
+        private const string s2 = "-2090155228";
         public static void Use(string str)
         {
             var s = str.GetHashCode().ToString();
