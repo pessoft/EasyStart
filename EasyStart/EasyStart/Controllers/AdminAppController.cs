@@ -393,9 +393,35 @@ namespace EasyStart
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
+                result.Success = false;
+                result.ErrorMessage = ex.Message;
+                CancelOrder(order.Id, order.BranchId);
             }
 
             return result;
+        }
+
+        private void CancelOrder(int orderId, int branchId)
+        {
+            try
+            {
+                if (orderId < 1)
+                    return;
+
+                if (branchId < 1)
+                    branchId = DataWrapper.GetMainBranch().Id;
+
+                var data = new UpdaterOrderStatus { OrderId = orderId, Status = OrderStatus.Deleted };
+                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
+                var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
+                data.DateUpdate = date;
+
+                DataWrapper.UpdateStatusOrder(data);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
         }
 
         private void NotifyAboutNewOrder(System.Web.HttpContext currentContext, OrderModel order, DeliverySettingModel deliverSetting)
