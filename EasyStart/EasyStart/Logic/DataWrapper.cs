@@ -425,6 +425,8 @@ namespace EasyStart.Logic
 
                     if (updateSetting != null)
                     {
+                        updateSetting.IsDelivery = setting.IsDelivery;
+                        updateSetting.IsTakeYourSelf = setting.IsTakeYourSelf;
                         updateSetting.PayCard = setting.PayCard;
                         updateSetting.PayCash = setting.PayCash;
                         updateSetting.TimeDeliveryJSON = setting.TimeDeliveryJSON;

@@ -667,6 +667,21 @@
                             </select>
                         </div>
                     </div>
+                    <div class="delivery-block">
+                        <div class="delivery-header">
+                            Способы выдачи заказа
+                        </div>
+                        <div class="delivery-content">
+                            <div class="payment-type">
+                                <input type="checkbox" id="setting-delivery-type" @(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.IsDelivery ? "checked" : "") />
+                                <label for="setting-delivery-type" class="label-for">Доставка курьером</label>
+                            </div>
+                            <div class="payment-type">
+                                <input type="checkbox" id="setting-takeyourself-type" @(ViewBag.DeliverySetting != null && ViewBag.DeliverySetting.IsTakeYourSelf ? "checked" : "") />
+                                <label for="setting-takeyourself-type" class="label-for">Самовывоз клиентом</label>
+                            </div>
+                        </div>
+                    </div>
                     <div class="delivery-block col-span-2">
                         <div class="delivery-header">
                             Режим работы доставки

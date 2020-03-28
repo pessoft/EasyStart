@@ -1244,6 +1244,7 @@ function saveDeliverySetting() {
         AreaDelivery: "Настройте районы доставки",
         WorkTime: "Укажите режим работы",
         PreorderTime: "Натройте раздел предзаказ",
+        DeliveryType: "Добавте способы выдачи заказа",
     }
 
     let maxPreorderPeriod = $('#preorder-max-date').val()
@@ -1264,12 +1265,22 @@ function saveDeliverySetting() {
         return;
     }
 
+    const isDelivery = $("#setting-delivery-type").is(":checked")
+    const isTakeYourSelf = $("#setting-takeyourself-type").is(":checked")
+
+    if (!isDelivery && !isTakeYourSelf) {
+        showWarningMessage(warnMgs.DeliveryType);
+        return;
+    }
+
     let setting = {
         IsSoundNotify: $("#sound-nodify").is(":checked"),
         NotificationEmail: $("#notify-email").val(),
         ZoneId: $("#delivery-time-zone").val(),
         PayCard: $("#payment-card").is(":checked"),
         PayCash: $("#payment-cash").is(":checked"),
+        IsDelivery: isDelivery,
+        IsTakeYourSelf: isTakeYourSelf,
         TimeDeliveryJSON: getTimeDeliveryJSON(),
         AreaDeliveries: AreaDelivery,
         MaxPreorderPeriod: maxPreorderPeriod,
