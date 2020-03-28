@@ -20,6 +20,7 @@ namespace EasyStart.Logic
                 OrderNumber = category.OrderNumber,
                 Visible = category.Visible,
                 CategoryType = category.CategoryType,
+                NumberAppliances = category.NumberAppliances,
                 IsDeleted = category.IsDeleted
             };
         }
