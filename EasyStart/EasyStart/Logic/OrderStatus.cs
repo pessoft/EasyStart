@@ -9,6 +9,7 @@ namespace EasyStart.Logic
     {
         Processing = 0,
         Processed = 1,
-        Cancellation = 2
+        Cancellation = 2,
+        Deleted = 3
     }
 }

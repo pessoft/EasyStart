@@ -96,7 +96,8 @@ const NotificationActionType = {
     OpenProductInfo: 2,
     OpenStock: 3,
     OpenPartners: 4,
-    OpenCashback: 5
+    OpenCashback: 5,
+    OpenNews: 6,
 }
 
 var PreviewDevice = {
@@ -172,6 +173,9 @@ var NotificationAction = {
             case NotificationActionType.OpenStock:
                 this.setOpenStockAction(defaultAdditionalTargetId)
                 break
+            case NotificationActionType.OpenNews:
+                this.setOpenNewsAction(defaultAdditionalTargetId)
+                break
         }
     },
     setOpenCategoryAction: function (defaultAdditionalTargetId) {
@@ -226,6 +230,19 @@ var NotificationAction = {
 
         this.setDataAdditioanlAction(options)
     },
+    setOpenNewsAction: function (defaultAdditionalTargetId) {
+        let options = []
+        const fiersItemIsSelected = defaultAdditionalTargetId && defaultAdditionalTargetId > 0 ? '' : 'selected'
+
+        options.push(`<option value='-1' disabled  ${fiersItemIsSelected}>Выберите новость</option>`)
+        for (let news of NewsManager.newsList) {
+            const selected = defaultAdditionalTargetId == news.Id ? 'selected' : ''
+
+            options.push(`<option value='${news.Id}'  ${selected}>${news.Title}</option>`)
+        }
+
+        this.setDataAdditioanlAction(options)
+    },
     setDataAdditioanlAction(options) {
         const query = '#push-additional-action'
         $(query).html(options)
@@ -242,6 +259,7 @@ var NotificationAction = {
             case NotificationActionType.OpenCategory:
             case NotificationActionType.OpenProductInfo:
             case NotificationActionType.OpenStock:
+            case NotificationActionType.OpenNews:
                 targetId = parseInt($('#push-additional-action option:selected').val())
                 break
         }
@@ -264,6 +282,7 @@ var NotificationAction = {
             case NotificationActionType.OpenCategory:
             case NotificationActionType.OpenProductInfo:
             case NotificationActionType.OpenStock:
+            case NotificationActionType.OpenNews:
                 isValid = action.targetId > 0
                 break
         }

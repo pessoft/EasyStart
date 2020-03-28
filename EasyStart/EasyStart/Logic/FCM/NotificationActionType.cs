@@ -12,6 +12,7 @@ namespace EasyStart.Logic.FCM
         OpenProductInfo = 2,
         OpenStock = 3,
         OpenPartners = 4,
-        OpenCashback = 5
+        OpenCashback = 5,
+        OpenNews = 6,
     }
 }
