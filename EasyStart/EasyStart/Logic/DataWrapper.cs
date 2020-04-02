@@ -1315,7 +1315,8 @@ namespace EasyStart.Logic
                     var orderIds = db.Orders
                         .Where(p => p.ClientId == clientId &&
                          p.OrderStatus != OrderStatus.Cancellation &&
-                         p.OrderStatus != OrderStatus.Deleted)
+                         p.OrderStatus != OrderStatus.Deleted &&
+                         p.OrderStatus != OrderStatus.PendingPay)
                         .Select(p => p.Id)
                         .ToList();
 
@@ -1343,7 +1344,8 @@ namespace EasyStart.Logic
                     isEmpty = db.Orders
                         .Where(p => p.ClientId == clientId &&
                          p.OrderStatus != OrderStatus.Cancellation &&
-                         p.OrderStatus != OrderStatus.Deleted)
+                         p.OrderStatus != OrderStatus.Deleted &&
+                         p.OrderStatus != OrderStatus.PendingPay)
                         .Count() == 0;
                 }
             }
@@ -1411,6 +1413,7 @@ namespace EasyStart.Logic
                         .Where(p => brandchIds.Contains(p.BranchId) &&
                                     p.OrderStatus != OrderStatus.Processing &&
                                     p.OrderStatus != OrderStatus.Deleted &&
+                                    p.OrderStatus != OrderStatus.PendingPay &&
                                     DbFunctions.TruncateTime(p.UpdateDate) >= startDate.Date &&
                                     DbFunctions.TruncateTime(p.UpdateDate) <= endDate.Date)
                         .ToList();
@@ -1444,7 +1447,8 @@ namespace EasyStart.Logic
                     histroyOrders = db.Orders
                         .Where(p => p.ClientId == clientId &&
                         p.BranchId == branchId &&
-                        p.OrderStatus != OrderStatus.Deleted)
+                        p.OrderStatus != OrderStatus.Deleted &&
+                        p.OrderStatus != OrderStatus.PendingPay)
                         .ToList();
 
                     if (histroyOrders != null && histroyOrders.Any())
@@ -2105,6 +2109,7 @@ namespace EasyStart.Logic
                         .Where(p => brandchIds.Contains(p.BranchId) &&
                                     p.OrderStatus != OrderStatus.Processing &&
                                     p.OrderStatus != OrderStatus.Deleted &&
+                                    p.OrderStatus != OrderStatus.PendingPay &&
                                     DbFunctions.TruncateTime(p.UpdateDate) == date.Date)
                         .ToList()
                         .ForEach(p =>
@@ -2236,7 +2241,8 @@ namespace EasyStart.Logic
                         Func<OrderModel, bool> condition = p => p.ClientId == data.ClientId &&
                         coupons.Contains(p.CouponId) &&
                         p.OrderStatus != OrderStatus.Cancellation &&
-                        p.OrderStatus != OrderStatus.Deleted;
+                        p.OrderStatus != OrderStatus.Deleted &&
+                        p.OrderStatus != OrderStatus.PendingPay;
                         var isFirstUseCoupon = db.Orders.FirstOrDefault(condition) == null;
 
                         if (!isFirstUseCoupon)

@@ -10,6 +10,7 @@ namespace EasyStart.Logic
         Processing = 0,
         Processed = 1,
         Cancellation = 2,
-        Deleted = 3
+        Deleted = 3,
+        PendingPay = 4,
     }
 }

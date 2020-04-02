@@ -310,6 +310,10 @@
     <Compile Include="Migrations\202003281344574_AddTypeDeliverySetting.Designer.cs">
       <DependentUpon>202003281344574_AddTypeDeliverySetting.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202004021753547_AddOnlinePayInDeliverySetting.cs" />
+    <Compile Include="Migrations\202004021753547_AddOnlinePayInDeliverySetting.Designer.cs">
+      <DependentUpon>202004021753547_AddOnlinePayInDeliverySetting.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -612,6 +616,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202003281344574_AddTypeDeliverySetting.resx">
       <DependentUpon>202003281344574_AddTypeDeliverySetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004021753547_AddOnlinePayInDeliverySetting.resx">
+      <DependentUpon>202004021753547_AddOnlinePayInDeliverySetting.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1810,7 +1810,8 @@ function getCityNameById(id) {
 
 var BuyType = {
     Cash: 1,
-    Card: 2
+    Card: 2,
+    Online: 3,
 }
 
 function getBuyType(id) {
@@ -1822,6 +1823,9 @@ function getBuyType(id) {
             break;
         case BuyType.Card:
             buyType = "Банковская карта";
+            break;
+        case BuyType.Online:
+            buyType = "Онлайн";
             break;
     }
 

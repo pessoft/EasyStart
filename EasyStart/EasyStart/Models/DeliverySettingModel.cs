@@ -14,6 +14,7 @@ namespace EasyStart.Models
         public int BranchId { get; set; }
         public bool PayCard { get; set; }
         public bool PayCash { get; set; }
+        public bool PayOnline { get; set; }
         public bool IsDelivery { get; set; } = true;
         public bool IsTakeYourSelf { get; set; } = true;
         public bool IsSoundNotify { get; set; }
