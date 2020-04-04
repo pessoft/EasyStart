@@ -958,7 +958,8 @@ div.product-item:hover {
     align-items: center;
 }
 
-#delivery .label-for {
+#delivery .label-for,
+#onlinePayDeliverySettingDialog .label-for {
     position: relative;
     pointer-events: all;
     top: 0px;
@@ -2081,7 +2082,7 @@ button.order-details-menu-item i {
 }
 
 .order-details-price-cashback {
-	grid-template-columns: 1fr 1.2fr;
+    grid-template-columns: 1fr 1.2fr;
 }
 
 .order-details-info-label {
@@ -2208,6 +2209,21 @@ button.simple-text-btn:disabled:hover {
     position: relative;
 }
 
+.dialog-wrapper {
+    display: grid;
+    grid-template-columns: 700px 40px;
+    grid-template-rows: 30px 290px;
+    grid-gap: 10px;
+    grid-row-gap: 5px;
+    padding: 10px;
+    position: relative;
+}
+
+.dialog-online-pay-setting {
+    grid-template-columns: 300px 40px;
+    grid-template-rows: 30px 200px;
+}
+
 .area-delivery-settings-list-container {
     border: 1px solid #bdbdbd35;
     position: relative;
@@ -2216,7 +2232,13 @@ button.simple-text-btn:disabled:hover {
 .area-delivery-setting-header {
     font-weight: bold;
     font-size: 1.4em;
-    color: #505050;2426
+    color: #505050;
+}
+
+.dialog-header-title {
+    font-weight: bold;
+    font-size: 1.4em;
+    color: #505050;
 }
 
 .area-delivery-settings-header .area-name {
@@ -2229,6 +2251,16 @@ button.simple-text-btn:disabled:hover {
     grid-template-columns: 1fr;
     grid-template-rows: 40px 1fr;
     grid-row-gap: 10px;
+}
+
+.dialog-body {
+}
+
+.dialog-body-online-pay-setting {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(5, 1fr);
 }
 
 .area-delivery-settings-add {
@@ -2443,9 +2475,20 @@ button.simple-text-btn:disabled:hover {
     .area-delivery-settings-add:active,
     .area-delivery-settings-btn:active,
     .order-details-menu-item:active,
-    .promotion-btn-settings-add:active {
+    .promotion-btn-settings-add:active,
+    .deliver-btn-setting-online-pay:active {
         outline: none;
     }
+
+.deliver-btn-setting-online-pay {
+    justify-self: center;
+    font-size: 0.9em;
+    color: #1d73b7;
+    cursor: pointer;
+    background-color: #f3f3f3;
+    border: none;
+    padding: 0 0 0 4px;
+}
 
 h4 {
     margin-block-end: 0.2em;
@@ -2561,3 +2604,15 @@ button {
         color: #ce6a6b;
         transition: 200ms ease-in;
     }
+
+.pay-online-setting-footer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.pay-online-cbx input[type=checkbox] {
+    margin-left: 0;
+}

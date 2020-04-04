@@ -652,6 +652,10 @@
                                 <input type="checkbox" id="payment-cash" checked disabled />
                                 <label for="payment-cash" class="label-for">Наличными</label>
                             </div>
+                            <button id="btn-setting-online-pay" class="deliver-btn-setting-online-pay" onclick="openSttingOnlinePay()">
+                                <i class="fal fa-credit-card"></i>
+                                Настроить онлайн оплату
+                            </button>
                         </div>
                     </div>
                     <div class="delivery-block">
@@ -1284,8 +1288,44 @@
                 </button>
                 <div class="area-delivery-settings-list-container default-color">
                     <div class="area-delivery-settings-list default-color">
-
                     </div>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="onlinePayDeliverySettingDialog">
+        <div class="dialog-wrapper dialog-online-pay-setting">
+            <div class="dialog-header-title">
+                Настройка онлайн оплаты
+            </div>
+            <button class="dialog-btn-close" onclick="Dialog.close('#onlinePayDeliverySettingDialog')">
+                <i class="fal fa-times"></i>
+            </button>
+            <div class="dialog-body dialog-body-online-pay-setting">
+                <div class="payment-type pay-online-cbx">
+                    <input type="checkbox" id="payment-online" />
+                    <label for="payment-online" class="label-for">Онлайн оплата</label>
+                </div>
+                <div class="group">
+                    <input required id="merchant-id" type="text">
+                    <span class="bar"></span>
+                    <label>ID мерчанта</label>
+                </div>
+                <div class="group">
+                    <input required id="payment-key" type="text">
+                    <span class="bar"></span>
+                    <label>Ключ платежа</label>
+                </div>
+                <div class="group">
+                    <input required id="credit-key" type="text">
+                    <span class="bar"></span>
+                    <label>Кредитный ключ</label>
+                </div>
+                <div class="pay-online-setting-footer">
+                    <button class="simple-text-btn" onclick="OnlinePaySetting.done()">
+                        Готово
+                    </button>
                 </div>
             </div>
         </div>

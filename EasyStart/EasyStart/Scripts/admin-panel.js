@@ -2912,3 +2912,65 @@ function onChangeDeliveryMaxDate(e, defaultValue = 0) {
     if (!processingValue)
         $(e).val(defaultValue)
 }
+
+function openSttingOnlinePay() {
+    const setting = new OnlinePaySetting()
+    setting.render()
+
+    Dialog.showModal('#onlinePayDeliverySettingDialog')
+}
+
+var OnlinePayData = {
+    isPayOnline: false,
+    merchantId: '',
+    paymentKey: '',
+    creditKey: ''
+}
+
+class OnlinePaySetting {
+    render() {
+        const $paymentCbx = $('#payment-online')
+        $paymentCbx.prop("select", OnlinePayData.isPayOnline)
+        $('#merchant-id').val(OnlinePayData.merchantId)
+        $('#payment-key').val(OnlinePayData.paymentKey)
+        $('#credit-key').val(OnlinePayData.creditKey)
+
+        $paymentCbx.unbind('change')
+        $paymentCbx.bind('change', this.pymentOnlineToggle)
+
+        this.toggleInputs()
+    }
+
+    pymentOnlineToggle = () => {
+        OnlinePayData.isPayOnline = $('#payment-online').is(':checked')
+        this.toggleInputs()
+    }
+
+    toggleInputs() {
+        const $dialog = $('#onlinePayDeliverySettingDialog')
+        $dialog.find('.group input').attr('disabled', !OnlinePayData.isPayOnline)
+        $dialog.find('.pay-online-setting-footer button').attr('disabled', !OnlinePayData.isPayOnline)
+    }
+
+    static done() {
+        const isPayOnline = $('#payment-online').is(':checked')
+        const merchantId = $('#merchant-id').val()
+        const paymentKey = $('#payment-key').val()
+        const creditKey = $('#credit-key').val()
+
+        if (!isPayOnline ||
+            !merchantId ||
+            !paymentKey ||
+            !creditKey) {
+
+            showErrorMessage('Заполните все поля')
+
+            return
+        }
+
+        OnlinePayData.isPayOnline = isPayOnline
+        OnlinePayData.merchantId = merchantId
+        OnlinePayData.paymentKey = paymentKey
+        OnlinePayData.creditKey = creditKey
+    }
+}
