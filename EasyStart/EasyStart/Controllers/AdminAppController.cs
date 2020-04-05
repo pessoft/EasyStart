@@ -88,6 +88,15 @@ namespace EasyStart
             return branchCityDict;
         }
 
+        private DeliverySettingModel GetDeliverySettingForAPI(int branchId)
+        {
+            var deliverySettings = DataWrapper.GetDeliverySetting(branchId);
+            deliverySettings.PaymentKey = "";
+            deliverySettings.CreditKey = "";
+
+            return deliverySettings;
+        }
+
         [HttpPost]
         public JsonResultModel GetMainData([FromBody] MainDataSignatureModel data)
         {
@@ -109,7 +118,7 @@ namespace EasyStart
                 var products = GetAllProducts(branchId);
                 var constructorCategories = GetConstructorCategories(branchId);
                 var ingredients = GetIngredients(constructorCategories.Keys);
-                var deliverySettings = DataWrapper.GetDeliverySetting(branchId);
+                var deliverySettings = GetDeliverySettingForAPI(branchId);
                 var organizationSettings = DataWrapper.GetSetting(branchId);
 
                 var promotionLogic = new PromotionLogic();

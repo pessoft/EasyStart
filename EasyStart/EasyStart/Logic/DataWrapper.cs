@@ -429,6 +429,10 @@ namespace EasyStart.Logic
                         updateSetting.IsTakeYourSelf = setting.IsTakeYourSelf;
                         updateSetting.PayCard = setting.PayCard;
                         updateSetting.PayCash = setting.PayCash;
+                        updateSetting.PayOnline = setting.PayOnline;
+                        updateSetting.MerchantId = setting.MerchantId;
+                        updateSetting.PaymentKey = setting.PaymentKey;
+                        updateSetting.CreditKey = setting.CreditKey;
                         updateSetting.TimeDeliveryJSON = setting.TimeDeliveryJSON;
                         updateSetting.ZoneId = setting.ZoneId;
                         updateSetting.IsSoundNotify = setting.IsSoundNotify;

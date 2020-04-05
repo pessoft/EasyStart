@@ -314,6 +314,10 @@
     <Compile Include="Migrations\202004021753547_AddOnlinePayInDeliverySetting.Designer.cs">
       <DependentUpon>202004021753547_AddOnlinePayInDeliverySetting.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202004051002153_AddedFondyOnlinePayData.cs" />
+    <Compile Include="Migrations\202004051002153_AddedFondyOnlinePayData.Designer.cs">
+      <DependentUpon>202004051002153_AddedFondyOnlinePayData.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -619,6 +623,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202004021753547_AddOnlinePayInDeliverySetting.resx">
       <DependentUpon>202004021753547_AddOnlinePayInDeliverySetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004051002153_AddedFondyOnlinePayData.resx">
+      <DependentUpon>202004051002153_AddedFondyOnlinePayData.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

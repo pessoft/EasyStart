@@ -1284,7 +1284,11 @@ function saveDeliverySetting() {
         TimeDeliveryJSON: getTimeDeliveryJSON(),
         AreaDeliveries: AreaDelivery,
         MaxPreorderPeriod: maxPreorderPeriod,
-        MinTimeProcessingOrder: minTimeProcessingOrder
+        MinTimeProcessingOrder: minTimeProcessingOrder,
+        PayOnline: OnlinePayData.isPayOnline,
+        MerchantId: OnlinePayData.merchantId,
+        PaymentKey: OnlinePayData.paymentKey,
+        CreditKey: OnlinePayData.creditKey,
     }
     let loader = new Loader($("#delivery"));
     let successFunc = function (result, loader) {

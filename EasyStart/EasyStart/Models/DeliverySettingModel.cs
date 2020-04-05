@@ -36,6 +36,10 @@ namespace EasyStart.Models
         public string ZoneId { get; set; } = DateTimeHepler.DEFAULT_ZONE_ID;
         public string TimeDeliveryJSON { get; set; }
 
+        public int MerchantId { get; set; }
+        public string PaymentKey { get; set; }
+        public string CreditKey { get; set; }
+
         [NotMapped]
         public List<AreaDeliveryModel> AreaDeliveries { get; set; }
 
