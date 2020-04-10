@@ -24,6 +24,13 @@
         var CategoryDictionary = JSON.parse(@Html.Raw(Json.Encode(ViewBag.CategoryDictionary)))
         var IsValidSetting = @ViewBag.IsValidSetting.ToString().ToLower()
         var IsValidDeliverySetting = @ViewBag.IsValidDeliverySetting.ToString().ToLower()
+        var OnlinePayData = {
+            isPayOnline: @ViewBag.DeliverySetting.PayOnline.ToString().ToLower(),
+            isAcceptedOnlinePayCondition: @ViewBag.DeliverySetting.IsAcceptedOnlinePayCondition.ToString().ToLower(),
+            merchantId: @ViewBag.DeliverySetting.MerchantId || '',
+            paymentKey: '@ViewBag.DeliverySetting.PaymentKey',
+            creditKey: '@ViewBag.DeliverySetting.CreditKey'
+        }
     </script>
     <div class="header-menu">
         <div class="logo-img menu-item" target-id="about-us">

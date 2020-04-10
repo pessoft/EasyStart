@@ -433,6 +433,7 @@ namespace EasyStart.Logic
                         updateSetting.MerchantId = setting.MerchantId;
                         updateSetting.PaymentKey = setting.PaymentKey;
                         updateSetting.CreditKey = setting.CreditKey;
+                        updateSetting.IsAcceptedOnlinePayCondition = setting.IsAcceptedOnlinePayCondition;
                         updateSetting.TimeDeliveryJSON = setting.TimeDeliveryJSON;
                         updateSetting.ZoneId = setting.ZoneId;
                         updateSetting.IsSoundNotify = setting.IsSoundNotify;

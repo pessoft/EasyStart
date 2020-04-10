@@ -1136,7 +1136,7 @@ function addPreviewImage(input) {
         const aspectRatioName = $(input).attr('aspect-ratio')
         let action = src => setDialogPreviewImage(dialog, src)
         ImageProcessingInstance = new ImageProcessing(input, action, AspectRatioType[aspectRatioName])
-    } 
+    }
 }
 
 function setDialogPreviewImage(dialog, src) {
@@ -1289,6 +1289,7 @@ function saveDeliverySetting() {
         MerchantId: OnlinePayData.merchantId,
         PaymentKey: OnlinePayData.paymentKey,
         CreditKey: OnlinePayData.creditKey,
+        IsAcceptedOnlinePayCondition: OnlinePayData.isAcceptedOnlinePayCondition
     }
     let loader = new Loader($("#delivery"));
     let successFunc = function (result, loader) {
@@ -2924,14 +2925,6 @@ function openSttingOnlinePay() {
     Dialog.showModal('#onlinePayDeliverySettingDialog')
 }
 
-var OnlinePayData = {
-    isPayOnline: false,
-    isAcceptedOnlinePayCondition: false,
-    merchantId: '',
-    paymentKey: '',
-    creditKey: ''
-}
-
 class OnlinePaySetting {
     render() {
         const $paymentCbx = $('#payment-online')
@@ -2948,18 +2941,18 @@ class OnlinePaySetting {
     }
 
     pymentOnlineToggle = () => {
-        OnlinePayData.isPayOnline = $('#payment-online').is(':checked')
         this.toggleInputs()
     }
 
     toggleInputs() {
         const $dialog = $('#onlinePayDeliverySettingDialog')
         const $inputs = $dialog.find('.group input')
-        
-        $inputs.attr('disabled', !OnlinePayData.isPayOnline)
+        const isPayOnline = $('#payment-online').is(':checked')
+
+        $inputs.attr('disabled', !isPayOnline)
 
         let $payCondition = $dialog.find('#payment-condition')
-        if (!OnlinePayData.isPayOnline) {
+        if (!isPayOnline) {
             $inputs.val('')
             $payCondition.prop('checked', false)
             $payCondition.attr('disabled', true)
@@ -2990,5 +2983,7 @@ class OnlinePaySetting {
         OnlinePayData.paymentKey = paymentKey
         OnlinePayData.creditKey = creditKey
         OnlinePayData.isAcceptedOnlinePayCondition = isAccepted
+
+        Dialog.close('#onlinePayDeliverySettingDialog')
     }
 }

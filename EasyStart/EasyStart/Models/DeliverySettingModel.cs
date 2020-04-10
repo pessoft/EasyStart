@@ -39,6 +39,7 @@ namespace EasyStart.Models
         public int MerchantId { get; set; }
         public string PaymentKey { get; set; }
         public string CreditKey { get; set; }
+        public bool IsAcceptedOnlinePayCondition { get; set; }
 
         [NotMapped]
         public List<AreaDeliveryModel> AreaDeliveries { get; set; }
