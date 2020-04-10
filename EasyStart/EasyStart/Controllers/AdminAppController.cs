@@ -7,6 +7,8 @@ using EasyStart.Logic.Transaction;
 using EasyStart.Models;
 using EasyStart.Models.FCMNotification;
 using EasyStart.Models.Notification;
+using EasyStart.Models.OnlinePay;
+using EasyStart.Models.OnlinePay.Fondy;
 using EasyStart.Models.Transaction;
 using EasyStart.Utils;
 using Newtonsoft.Json;
@@ -16,6 +18,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -323,6 +326,115 @@ namespace EasyStart
         }
 
         [HttpPost]
+        public JsonResultModel CompleteOrderPay([FromBody]int orderId)
+        {
+            var result = new JsonResultModel();
+            OrderModel order = null;
+
+            try
+            {
+                var currentContext = System.Web.HttpContext.Current;
+                order = DataWrapper.GetOrder(orderId);
+
+                if (order == null)
+                    throw new Exception($"Заказ {orderId} не найден");
+
+                var deliverSetting = DataWrapper.GetDeliverySetting(order.BranchId);
+
+                Func<string> getSignature = () =>
+                {
+                    var currency = "RUB";
+                    var amount = Utils.Utils.ConvertRubToKopeks(order.AmountPayDiscountDelivery);
+                    var signatureStr = $"{order.Id}|{amount}|{currency}|{deliverSetting.MerchantId}|{order.Id}";
+                    var signatureSHA = Utils.Utils.SHA1(signatureStr);
+                    return signatureSHA;
+                };
+
+                Func<PaymentStatus> checkPaymentStatus = () =>
+               {
+                   var response = "";
+                   var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.fondy.eu/api/status/order_id");
+                   httpWebRequest.ContentType = "application/json";
+                   httpWebRequest.Method = "POST";
+
+                   using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                   {
+                       string json = String.Format(@"
+                        '{
+                            request': {
+                                'order_id': '{0}',
+                                'merchant_id': '{1}',
+                                'signature': '{2}'
+                            }
+                         }
+                        ",
+                       order.Id,
+                       deliverSetting.MerchantId,
+                       getSignature());
+
+                       streamWriter.Write(json);
+                   }
+
+                   var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                   using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                   {
+                       response = streamReader.ReadToEnd();
+                   }
+
+                   var indexOpenBracket = response.LastIndexOf("{");
+                   var indexCloseBracket = response.IndexOf("}");
+                   var jsonResponse = response.Substring(indexOpenBracket, indexCloseBracket);
+                   var payStatus = JsonConvert.DeserializeObject<PaymentStatus>(jsonResponse);
+
+                   return payStatus;
+               };
+
+                var paymentStatus = checkPaymentStatus();
+
+                if (paymentStatus.ResponseStatus == StatusResponse.SUCCESS)
+                {
+                    if (order.OrderStatus == OrderStatus.PendingPay)
+                    {
+                        var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
+                        var dateUpdate = date;
+                        var updateOrderStatus = new UpdaterOrderStatus { DateUpdate = dateUpdate, OrderId = order.Id, Status = OrderStatus.Processing };
+
+                        DataWrapper.UpdateStatusOrder(updateOrderStatus);
+                        var updateOrder = DataWrapper.GetOrder(order.Id);
+
+                        if (updateOrder.OrderStatus == OrderStatus.Processing)
+                        {
+                            result.Success = true;
+                            result.Data = orderId;
+                            Task.Run(() => NotifyAboutNewOrder(currentContext, updateOrder, deliverSetting));
+                        }
+                        else
+                            throw new Exception("При обработке заказа что-то пошло не так");
+                    }
+                    else
+                    {
+                        result.ErrorMessage = "Закак уже был оплачен";
+                    }
+                }
+                else
+                {
+                    result.ErrorMessage = FondyErrorCodeHelper.GetErrorDescription(paymentStatus.ErrorCode);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.Success = false;
+                result.ErrorMessage = ex.Message;
+
+                if (order != null)
+                    CancelOrder(order.Id, order.BranchId);
+            }
+
+            return result;
+        }
+
+        [HttpPost]
         public JsonResultModel SendOrder([FromBody]OrderModel order)
         {
             var result = new JsonResultModel();
@@ -337,6 +449,11 @@ namespace EasyStart
                 if (order.BranchId != client.BranchId)
                 {
                     order.BranchId = client.BranchId;
+                }
+
+                if (order.OrderStatus != OrderStatus.PendingPay)
+                {
+                    order.OrderStatus = OrderStatus.Processing;
                 }
 
                 var deliverSetting = DataWrapper.GetDeliverySetting(order.BranchId);
@@ -395,8 +512,11 @@ namespace EasyStart
                     result.Data = numberOrder;
                     result.Success = true;
 
-                    var currentContext = System.Web.HttpContext.Current;
-                    Task.Run(() => NotifyAboutNewOrder(currentContext, order, deliverSetting));
+                    if (order.OrderStatus == OrderStatus.Processing)
+                    {
+                        var currentContext = System.Web.HttpContext.Current;
+                        Task.Run(() => NotifyAboutNewOrder(currentContext, order, deliverSetting));
+                    }
                 }
             }
             catch (Exception ex)

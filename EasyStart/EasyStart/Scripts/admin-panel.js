@@ -2926,6 +2926,7 @@ function openSttingOnlinePay() {
 
 var OnlinePayData = {
     isPayOnline: false,
+    isAcceptedOnlinePayCondition: false,
     merchantId: '',
     paymentKey: '',
     creditKey: ''
@@ -2934,7 +2935,8 @@ var OnlinePayData = {
 class OnlinePaySetting {
     render() {
         const $paymentCbx = $('#payment-online')
-        $paymentCbx.prop("select", OnlinePayData.isPayOnline)
+        $paymentCbx.prop("checked", OnlinePayData.isPayOnline)
+        $('#payment-condition').prop("checked", OnlinePayData.isAcceptedOnlinePayCondition)
         $('#merchant-id').val(OnlinePayData.merchantId)
         $('#payment-key').val(OnlinePayData.paymentKey)
         $('#credit-key').val(OnlinePayData.creditKey)
@@ -2952,20 +2954,31 @@ class OnlinePaySetting {
 
     toggleInputs() {
         const $dialog = $('#onlinePayDeliverySettingDialog')
-        $dialog.find('.group input').attr('disabled', !OnlinePayData.isPayOnline)
-        $dialog.find('.pay-online-setting-footer button').attr('disabled', !OnlinePayData.isPayOnline)
+        const $inputs = $dialog.find('.group input')
+        
+        $inputs.attr('disabled', !OnlinePayData.isPayOnline)
+
+        let $payCondition = $dialog.find('#payment-condition')
+        if (!OnlinePayData.isPayOnline) {
+            $inputs.val('')
+            $payCondition.prop('checked', false)
+            $payCondition.attr('disabled', true)
+        } else
+            $payCondition.attr('disabled', false)
     }
 
     static done() {
         const isPayOnline = $('#payment-online').is(':checked')
+        const isAccepted = $('#payment-condition').is(':checked')
         const merchantId = $('#merchant-id').val()
         const paymentKey = $('#payment-key').val()
         const creditKey = $('#credit-key').val()
 
-        if (!isPayOnline ||
+        if (isPayOnline && (
+            !isAccepted ||
             !merchantId ||
             !paymentKey ||
-            !creditKey) {
+            !creditKey)) {
 
             showErrorMessage('Заполните все поля')
 
@@ -2976,5 +2989,6 @@ class OnlinePaySetting {
         OnlinePayData.merchantId = merchantId
         OnlinePayData.paymentKey = paymentKey
         OnlinePayData.creditKey = creditKey
+        OnlinePayData.isAcceptedOnlinePayCondition = isAccepted
     }
 }

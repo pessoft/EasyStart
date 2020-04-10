@@ -889,14 +889,21 @@ div.product-item:hover {
     background-color: #fff;
 }
 
-.payment-type {
+.payment-type,
+.payment-condition {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     flex-direction: row;
 }
 
+.payment-condition {
+    height: 30px;
+    margin-bottom: 5px;
+}
+
     .payment-type input[type=checkbox],
+    .payment-condition input[type=checkbox],
     .checkbox-item input[type=checkbox] {
         min-width: 14px;
         min-height: 14px;
@@ -2221,7 +2228,7 @@ button.simple-text-btn:disabled:hover {
 
 .dialog-online-pay-setting {
     grid-template-columns: 300px 40px;
-    grid-template-rows: 30px 200px;
+    grid-template-rows: 30px 215px;
 }
 
 .area-delivery-settings-list-container {
@@ -2260,7 +2267,7 @@ button.simple-text-btn:disabled:hover {
     grid-column: span 2;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(5, 1fr);
+    grid-template-rows: repeat(6, 1fr);
 }
 
 .area-delivery-settings-add {
