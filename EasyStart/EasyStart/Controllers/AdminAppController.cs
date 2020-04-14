@@ -23,6 +23,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using System.Web.Script.Serialization;
 
 namespace EasyStart
 {
@@ -345,51 +346,41 @@ namespace EasyStart
                 {
                     var currency = "RUB";
                     var amount = Utils.Utils.ConvertRubToKopeks(order.AmountPayDiscountDelivery);
-                    var signatureStr = $"{order.Id}|{amount}|{currency}|{deliverSetting.MerchantId}|{order.Id}";
+                    var signatureStr = $"{deliverSetting.PaymentKey}|{deliverSetting.MerchantId}|{order.Id}";
                     var signatureSHA = Utils.Utils.SHA1(signatureStr);
                     return signatureSHA;
                 };
 
-                Func<PaymentStatus> checkPaymentStatus = () =>
+                Func<Task<PaymentStatus>> checkPaymentStatus = async () =>
                {
-                   var response = "";
-                   var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.fondy.eu/api/status/order_id");
-                   httpWebRequest.ContentType = "application/json";
-                   httpWebRequest.Method = "POST";
-
-                   using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                   string json = new JavaScriptSerializer().Serialize(new
                    {
-                       string json = String.Format(@"
-                        '{
-                            request': {
-                                'order_id': '{0}',
-                                'merchant_id': '{1}',
-                                'signature': '{2}'
-                            }
-                         }
-                        ",
-                       order.Id,
-                       deliverSetting.MerchantId,
-                       getSignature());
+                       request = new
+                       {
+                           order_id = order.Id,
+                           merchant_id = deliverSetting.MerchantId,
+                           signature = getSignature()
+                       }
+                   });
 
-                       streamWriter.Write(json);
+                   var rContent = "";
+                   using (var client = new HttpClient())
+                   {
+                       var response = client.PostAsync(
+                           "https://api.fondy.eu/api/status/order_id",
+                            new StringContent(json, Encoding.UTF8, "application/json")).Result;
+                       rContent = await response.Content.ReadAsStringAsync();
                    }
 
-                   var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                   using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-                   {
-                       response = streamReader.ReadToEnd();
-                   }
-
-                   var indexOpenBracket = response.LastIndexOf("{");
-                   var indexCloseBracket = response.IndexOf("}");
-                   var jsonResponse = response.Substring(indexOpenBracket, indexCloseBracket);
+                   var indexOpenBracket = rContent.LastIndexOf("{");
+                   var length = rContent.IndexOf("}") - indexOpenBracket + 1;
+                   var jsonResponse = rContent.Substring(indexOpenBracket, length);
                    var payStatus = JsonConvert.DeserializeObject<PaymentStatus>(jsonResponse);
 
                    return payStatus;
                };
 
-                var paymentStatus = checkPaymentStatus();
+                var paymentStatus = checkPaymentStatus().Result;
 
                 if (paymentStatus.ResponseStatus == StatusResponse.SUCCESS)
                 {
