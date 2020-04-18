@@ -531,6 +531,7 @@
     <Content Include="Resource\FCMAuthKey.json" />
     <Content Include="Resource\fondy-error-code-ru.json" />
     <Content Include="Resource\Condition.pdf" />
+    <Content Include="Resource\OnlinePaySettingHelper.pdf" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\analytics.js" />
     <Content Include="Scripts\compressor.js" />

@@ -2228,7 +2228,7 @@ button.simple-text-btn:disabled:hover {
 
 .dialog-online-pay-setting {
     grid-template-columns: 300px 40px;
-    grid-template-rows: 30px 215px;
+    grid-template-rows: 30px 235px;
 }
 
 .area-delivery-settings-list-container {
@@ -2267,7 +2267,14 @@ button.simple-text-btn:disabled:hover {
     grid-column: span 2;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(6, 1fr);
+    grid-template-rows: repeat(7, 1fr);
+}
+
+.online-pay-setting-helper {
+    font-size: 0.7em;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
 }
 
 .area-delivery-settings-add {
