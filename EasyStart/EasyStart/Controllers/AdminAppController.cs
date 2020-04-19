@@ -200,8 +200,13 @@ namespace EasyStart
             try
             {
                 var categories = DataWrapper.GetCategoriesVisible(branchId);
-                categories.ForEach(p => PreprocessorDataAPI.ChangeImagePath(p));
-
+                for (var i = 0; i < categories.Count; ++i)
+                {
+                    var category = categories[i];
+                    category.OrderNumber = i + 1;
+                    PreprocessorDataAPI.ChangeImagePath(category);
+                }
+                
                 return categories;
             }
             catch (Exception ex)

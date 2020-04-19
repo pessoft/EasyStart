@@ -744,6 +744,7 @@ namespace EasyStart.Logic
                 {
                     result = db.Categories
                         .Where(p => p.BranchId == brancId && p.Visible && !p.IsDeleted)
+                        .OrderBy(p => p.OrderNumber)
                         .ToList();
                 }
             }
