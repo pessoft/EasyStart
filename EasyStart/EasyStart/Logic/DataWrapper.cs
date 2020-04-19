@@ -930,6 +930,9 @@ namespace EasyStart.Logic
                     {
                         order.OrderStatus = data.Status;
                         order.UpdateDate = data.DateUpdate;
+
+                        if (data.Status == OrderStatus.Cancellation)
+                            order.CommentCauseCancel = data.CommentCauseCancel;
                     }
 
                     db.SaveChanges();

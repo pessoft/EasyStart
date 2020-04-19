@@ -1887,7 +1887,7 @@ const OrderStatus = {
     Cancellation: 2
 }
 
-function changeOrderStatus(orderId, orderStatus) {
+function changeOrderStatus(orderId, orderStatus, commentCauseCancel) {
     let $order = $(`#order .order-list-grid [order-id=${orderId}]`);
 
     $order.hide(500, function () {
@@ -1906,7 +1906,7 @@ function changeOrderStatus(orderId, orderStatus) {
         }
     });
 
-    $.post("/Admin/UpdateStatusOrder", { OrderId: orderId, Status: orderStatus }, successCallBack(() => getTodayDataOrders(Pages.Order)));
+    $.post("/Admin/UpdateStatusOrder", { OrderId: orderId, Status: orderStatus, CommentCauseCancel: commentCauseCancel }, successCallBack(() => getTodayDataOrders(Pages.Order)));
 }
 
 function searchByOrderNumber(containerId, isAnimation = true) {
@@ -2059,10 +2059,11 @@ function convertIngredientsToDictionary(ingredients) {
 function showOrderDetails(orderId) {
     const currentSectionId = getCurrentSectionId();
     const order = currentSectionId == Pages.HistoryOrder ? getHistoryOrderById(orderId) : getOrderById(orderId);
+    const dialogId = currentSectionId == Pages.HistoryOrder ? 'historyOrderDetailsDialog' : 'orderDetailsDialog';
     const getOrderDetails = () => {
         const orderDetailsData = new OrderDetailsData(order)
 
-        return new OrderDetails(orderDetailsData);
+        return new OrderDetails(orderDetailsData, dialogId);
     }
 
 
@@ -2345,6 +2346,7 @@ class OrderDetailsData {
         this.OrderNumber = order.Id;
         this.NumberAppliances = order.NumberAppliances;
         this.Status = order.OrderStatus;
+        this.CauseCancelOrderComment = order.CommentCauseCancel || ''
         this.OrderDate = toStringDateAndTime(order.Date);
         this.OrderDeliveryDate = order.DateDelivery ?
             toStringDateAndTime(order.DateDelivery) :
@@ -2550,7 +2552,8 @@ var OrderDetailsQSelector = {
     OrderList: ".order-details-product-list",
     Comment: ".order-details-comment .value",
     ApplyBtn: ".order-details-menu .btn-details-apply",
-    CancelBtn: ".order-details-menu .btn-details-cancel"
+    CancelBtn: ".order-details-menu .btn-details-cancel",
+    CauseCancelBtn: ".order-details-menu .btn-details-cause-comment"
 }
 
 var StatusAtrr = {
@@ -2573,8 +2576,8 @@ class OrderDetails {
      *
      * @param {OrderDetailsData} details
      */
-    constructor(details) {
-        const detailsDialogId = "orderDetailsDialog";
+    constructor(details, dialogId) {
+        const detailsDialogId = dialogId;
         this.$dialog = $(`#${detailsDialogId}`);
         this.details = details;
     }
@@ -2679,22 +2682,64 @@ class OrderDetails {
     buttonsConfig() {
         const $proccesed = $(OrderDetailsQSelector.ApplyBtn);
         const $cancel = $(OrderDetailsQSelector.CancelBtn);
+        const $causeCancelComment = $(OrderDetailsQSelector.CauseCancelBtn);
+
         const actionOrder = (orderStatus) => () => {
             this.close();
             changeOrderStatus(this.details.OrderId, orderStatus)
         }
 
+        const $inputCommentCauseCancel = $('#cause-comment-cancel-order')
+        $inputCommentCauseCancel.val('')
+
+        const actionConfirmCancel = orderStatus => {
+            const commentCauseCancel = $inputCommentCauseCancel.val()
+            Dialog.close('#confirmOrderCancelDialog')
+            this.close();
+
+            changeOrderStatus(this.details.OrderId, orderStatus, commentCauseCancel)
+        }
+
+        const actionCancel = (orderStatus) => () => {
+            const $btn = $('#cause-comment-cancel-order-btn')
+            $btn.unbind('click')
+            $btn.click('click', () => actionConfirmCancel(orderStatus))
+       
+            Dialog.showModal('#confirmOrderCancelDialog')
+        }
+
+        
+
+        const actionShowCauseCancelComment = () => {
+            const $inputHistoryCommentCauseCancel = $('#history-cause-comment-cancel-order')
+            $inputHistoryCommentCauseCancel.val(this.details.CauseCancelOrderComment)
+
+            const $btn = $('#history-cause-comment-cancel-order-btn')
+
+            $btn.unbind('click')
+            $btn.click('click', () => Dialog.close('#confirmOrderCancelCommentDialog'))
+
+            Dialog.showModal('#confirmOrderCancelCommentDialog')
+        }
+
         $proccesed.unbind("click");
         $cancel.unbind("click");
+        $causeCancelComment.unbind("click");
 
         if (getCurrentSectionId() == Pages.HistoryOrder) {
             $proccesed.attr("disabled", true);
             $cancel.attr("disabled", true);
+            $causeCancelComment.removeAttr("disabled")
+
+            if (this.details.Status == OrderStatus.Cancellation)
+                $causeCancelComment.bind("click", actionShowCauseCancelComment)
+            else 
+                $causeCancelComment.attr("disabled", true);
         } else {
             $proccesed.removeAttr("disabled");
             $cancel.removeAttr("disabled");
             $proccesed.bind("click", actionOrder(OrderStatus.Processed));
-            $cancel.bind("click", actionOrder(OrderStatus.Cancellation));
+            $cancel.bind("click", actionCancel(OrderStatus.Cancellation));
         }
     }
 }
