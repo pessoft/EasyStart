@@ -6,7 +6,9 @@ const ReportType = {
     Top5Products: 3,
     DeliveryMethod: 4,
     NewUsers: 5,
-    Revenue: 6
+    Revenue: 6,
+    ActiveUsers: 7,
+    GeneralUsersQuantity: 8
 }
 
 class BaseReport {
@@ -180,6 +182,7 @@ class CountBaseReport extends BaseReport {
     getOptionForChart(labels, data) {
         return {
             type: 'line',
+            responsive: true,
             data: {
                 labels: labels,
                 datasets: [{
@@ -234,6 +237,43 @@ class RevenueReport extends CountBaseReport {
         this.filter.DateFrom = this.dateFrom.toGMTString();
 
         this.init();
+    }
+
+    getOptionForChart(labels, data) {
+        return {
+            type: 'line',
+            responsive: true,
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: this.nameReport,
+                    data: data,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    borderWidth: 2,
+                }]
+            },
+            options: {
+                legend: {
+                    display: false,
+                    labels: {
+                        fontSize: 10
+                    }
+                },
+                title: {
+                    display: true,
+                    text: this.nameReport,
+                    fontSize: 18
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        }
     }
 }
 
@@ -400,5 +440,120 @@ class DeliveryMethod extends BaseReport {
                 },
             }
         }
+    }
+}
+
+class ActiveUsersReport extends CountBaseReport {
+    constructor(containerId, branchId, urlAnalytics) {
+        super(containerId, branchId, ReportType.ActiveUsers, urlAnalytics);
+
+        this.nameReport = 'Количество активных пользователей';
+        this.dateTo = new Date();
+        this.dateFrom = new Date(this.dateTo);
+        this.dateFrom.setMonth(this.dateFrom.getMonth() - 3);
+        this.dateFrom.setDate(1);
+        this.filter.DateFrom = this.dateFrom.toGMTString();
+
+        this.init();
+    }
+
+    getOptionForChart(labels, data) {
+        return {
+            type: 'line',
+            responsive: true,
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: this.nameReport,
+                    data: data,
+                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                    borderColor: 'rgb(255, 205, 86)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                legend: {
+                    display: false,
+                    labels: {
+                        fontSize: 10
+                    }
+                },
+                title: {
+                    display: true,
+                    text: this.nameReport,
+                    fontSize: 18
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        }
+    }
+}
+
+class GeneralUserQuantityrReport {
+    constructor(containerId, branchId, urlAnalytics) {
+        this.nameReport = 'Общее количество пользователей'
+        this.$container = $(`#${containerId}`)
+        this.branchId = branchId
+        this.urlAnalytics = urlAnalytics
+        this.filter = {
+            BranchId: this.branchId,
+            ReportType: ReportType.GeneralUsersQuantity
+        }
+        this.chartId = `_${Math.random().toString(36).substr(2, 9)}`
+        this.$chartItem = $(`
+            <div class="chart-item general-user-quantity-report">
+                <span class="general-user-quantity-report-name">${this.nameReport}</span>
+                <div class="chart-container general-user-quantity-container">
+                    <span class="general-user-quantity" id='${this.chartId}'> </span>
+                </div>
+                <div class="chart-footer">
+                    <div class='period'>
+                        <span class="period-description">
+                            Период:
+                        </span>
+                        <div class="group">
+                            <input readonly required="" value="за все время">
+                            <i class="fal fa-calendar-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>`)
+
+        this.initReport();
+    }
+
+    initReport() {
+        let loader = new Loader(this.$chartItem)
+        loader.start()
+
+        this.loadReportData(loader);
+    }
+
+    loadReportData(loader) {
+        const successFunc = (reportData) => {
+            let labels = reportData.Success ? reportData.Data.Labels : [];
+            let data = reportData.Success ? reportData.Data.Data : [];
+
+            this.renderChart(labels, data)
+
+            if (loader) {
+                loader.stop();
+            }
+        }
+
+        $.post(this.urlAnalytics, this.filter, successCallBack(successFunc, null));
+    }
+
+    renderChart = (labels, data) => {
+        const count = data.length > 0 ? data[0] : 0
+
+        this.$chartItem.find(`#${this.chartId}`).html(count)
+        this.$container.append(this.$chartItem);
     }
 }

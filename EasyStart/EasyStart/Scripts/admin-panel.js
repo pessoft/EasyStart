@@ -391,6 +391,8 @@ function loadAnalyticsReport() {
     new Top5Products(containerId, currentBrunchId, URLAnalytics);
     new DeliveryMethod(containerId, currentBrunchId, URLAnalytics);
     new NewUsersReport(containerId, currentBrunchId, URLAnalytics);
+    new ActiveUsersReport(containerId, currentBrunchId, URLAnalytics);
+    new GeneralUserQuantityrReport(containerId, currentBrunchId, URLAnalytics);
 }
 
 function resetSearchForOrderNumber(containerId) {

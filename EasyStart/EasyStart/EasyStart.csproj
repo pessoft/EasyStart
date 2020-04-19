@@ -223,6 +223,8 @@
     <Compile Include="Logic\Notification\EmailNotification\RestorePasswordNotification.cs" />
     <Compile Include="Logic\PreprocessorDataAPI.cs" />
     <Compile Include="Logic\PromotionLogic.cs" />
+    <Compile Include="Logic\Report\GeneralUserQuantity.cs" />
+    <Compile Include="Logic\Report\ActiveUsersReport.cs" />
     <Compile Include="Logic\SettingsValidator.cs" />
     <Compile Include="Logic\StyleTypeIngredient.cs" />
     <Compile Include="Logic\Transaction\TransactionLogic.cs" />
