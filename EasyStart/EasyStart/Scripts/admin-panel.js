@@ -1583,11 +1583,20 @@ function getCurrentBranchId() {
 }
 
 var Orders = [];
-
+const newOrderToolOptions = {
+    containerId: 'new-order-tool',
+    orderType: OrderType.NewOrders,
+    tools: [
+        { type: OrderToolType.OrderAsk, isActive: true },
+        { type: OrderToolType.OrderDesc, isActive: false }
+    ]
+}
 function loadOrders(reload = false) {
     if (Orders.length != 0 && !reload) {
         return;
     }
+
+    new OrderTools(newOrderToolOptions)
 
     clearSearchInput(Pages.Order);
     let currentBranchId = getCurrentBranchId();
@@ -1627,12 +1636,25 @@ function clearOrdersContainer(containerId) {
     $(`#${containerId} .order-list-grid`).empty();
 }
 
+const historyOrderToolOptions = {
+    containerId: 'history-order-tool',
+    orderType: OrderType.HistoryOrders,
+    tools: [
+        { type: OrderToolType.OrderAsk, isActive: true },
+        { type: OrderToolType.OrderDesc, isActive: false },
+        { type: OrderToolType.OrderApply, isActive: true },
+        { type: OrderToolType.OrderCancel, isActive: true }
+    ]
+}
+
 function loadHistoryOrders() {
     clearSearchInput(Pages.HistoryOrder);
     currentBranchId = getCurrentBranchId();
     let brnachIds = [...AdditionalHistoryBranch];
 
     brnachIds.push(currentBranchId);
+
+    new OrderTools(historyOrderToolOptions)
 
     let $list = $("#history .orders .order-list");
     $list.empty();
@@ -2124,8 +2146,11 @@ class CardOrder {
         this.$htmlTemplate = $($(`#${templateId}`).html());
     }
 
-    setAttrOrderId(value) {
-        this.$htmlTemplate.attr("order-id", value);
+    setOrderAttres(orderId, statusId) {
+        this.$htmlTemplate.attr("order-id", orderId);
+
+        if (statusId != StatusAtrr.Processing)
+            this.$htmlTemplate.attr("status-id", statusId);
     }
 
     setOrderNumber(value, status) {
@@ -2204,7 +2229,7 @@ class CardOrder {
             this.setDateDeliveryPreoprder(this.data.DateDelivery)
         }
 
-        this.setAttrOrderId(this.data.OrderId);
+        this.setOrderAttres(this.data.OrderId, this.data.Status);
         this.setOrderNumber(this.data.OrderNumber, this.data.Status);
         this.setAmount(this.data.Amount);
         this.setPhoneNumber(this.data.PhoneNumber);
@@ -2279,8 +2304,15 @@ class CardOrderRenderer {
     static addCardToPage(card, containerId, speed) {
         const cardContainer = ".order-list-grid";
         const cardRender = card.render()
+        const isAppnd = $(`#${containerId} .order-tools button[order-type=${OrderToolType.OrderAsk}]`)
+            .hasClass('active-tool-item')
+        const $cardContainer = $(`#${containerId} ${cardContainer}`)
 
-        $(`#${containerId} ${cardContainer}`).append(cardRender);
+        if (isAppnd)
+            $cardContainer.append(cardRender);
+        else
+            $cardContainer.prepend(cardRender);
+
         this.showCard(cardRender, speed);
     }
 
