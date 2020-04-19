@@ -2347,7 +2347,8 @@ class OrderDetailsData {
         this.CashBack = order.CashBack > 0 ?
             `${xFormatPrice(order.CashBack - order.AmountPayDiscountDelivery)} ${prefixRub} (c ${xFormatPrice(order.CashBack)} ${prefixRub})` :
             `${xFormatPrice(order.CashBack)} ${prefixRub}`;
-        this.AmountPayDiscountDelivery = `${xFormatPrice(order.AmountPayDiscountDelivery)} ${prefixRub}`;
+        const markPay = order.BuyType == BuyType.Online ? 'Оплачено ' : ''
+        this.AmountPayDiscountDelivery = `${markPay}${xFormatPrice(order.AmountPayDiscountDelivery)} ${prefixRub}`;
     }
 
     convertAddressInfo(order) {
