@@ -149,3 +149,12 @@ class OrderTools {
             $orderCards.hide(animationDuration)
     }
 }
+
+//бодрим сервер раз в 2 минуту
+//что бы не уснул
+function cheerupServer() {
+    setInterval(
+        () => $.post('/Admin/CheerupServer'),
+        1000 * 20
+    )
+}

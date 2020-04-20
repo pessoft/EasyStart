@@ -1,4 +1,6 @@
 ﻿$(document).ready(function () {
+    cheerupServer()
+
     bindSelectSumo()
     initHistoryOrderDatePicker()
     bindDialogCloseClickBackdor()
