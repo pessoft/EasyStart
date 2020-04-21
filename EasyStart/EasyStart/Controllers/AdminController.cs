@@ -292,6 +292,8 @@ namespace EasyStart.Controllers
                         var converter = new ConverterBranchSetting();
                         var branchView = converter.GetBranchSettingViews(branch, setting, typeBranch);
 
+                        new PromotionDefaultSetting(newBranchId).SaveSettings();
+
                         result.Data = branchView;
                         result.Success = true;
                     }
