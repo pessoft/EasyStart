@@ -1,4 +1,28 @@
-﻿var PromotionSetting = {
+﻿const StockInteractionType = {
+    FullJoin: 0,
+    PartialJoin: 1,
+    FullExclude: 2
+}
+
+const StockInteractionDescription = (() => {
+    let description = {}
+
+    description[StockInteractionType.FullJoin] = `Применяются все акции условия которых выполняются.
+                                                  Таким образом все акции с типом вознаграждения "скидка" будут просуммированы.
+                                                  Акции с типом вознаграждения "блюда" будут собраны в один общий список с последующей возможностью выбора.`
+    description[StockInteractionType.PartialJoin] = `Выбираются все акции условия которых выполняются,
+                                                     но акции с типом вознаграждения "скидка" не суммируются,
+                                                     а применяется наибольшая скидка. Акции с типом вознаграждения
+                                                     "блюда" будут собраны в один общий список с последующей возможностью выбора.`
+    description[StockInteractionType.FullExclude] = `Применяется только 1 акция с наибольшей ценностью для клиента. Например одновременно
+                                                     выполняются акция со скидкой в 10% и подарок стоимостью 300 рублей. Клиент оформил
+                                                     заказ на сумму 2000 рублей, следовательно, скидка составит 200 рублей.
+                                                     200 рублей < чем подарок стоимостью 300 рублей, следовательно, применится только акция с подарком.`
+
+    return description
+})()
+
+var PromotionSetting = {
     setting: {},
     loadSettings: function () {
         let loader = new Loader($("#promotion-section-setting"));
@@ -54,6 +78,7 @@
     setSettings: function (data) {
         this.setSectionsSetting(data.Sections)
         this.setSetting(data.Setting)
+        this.setStockInteractionSetting(data.Setting)
     },
     setSectionsSetting: function (settings) {
         if (!settings || settings.length == 0)
@@ -86,6 +111,32 @@
         $('#toggle-stock-banner').prop('checked', setting.IsShowStockBanner)
         $('#toggle-news-banner').prop('checked', setting.IsShowNewsBanner)
     },
+    setStockInteractionSetting: function (setting) {
+        $('#stock-interaction-type').val(setting.StockInteractionType)
+        this.setStockInteractionDescription(setting.StockInteractionType)
+
+        this.unbinSumoSelectForStockInteraction()
+        this.binSumoSelectForStockInteraction()
+    },
+    setStockInteractionDescription: function (stockInteractionType) {
+        $('#stock-interaction-description').html(StockInteractionDescription[stockInteractionType])
+    },
+    unbinSumoSelectForStockInteraction: function () {
+        $('#stock-interaction-type').each(function () {
+            const sumo = $(this)[0].sumo
+
+            if (sumo)
+                sumo.unload()
+        })
+    },
+    binSumoSelectForStockInteraction: function () {
+        $('#stock-interaction-type').SumoSelect()
+    },
+    onChangeStockInteraction: function(e) {
+        const stockInterctionSelectedType = $(e).find('option:selected').val()
+
+        this.setStockInteractionDescription(stockInterctionSelectedType)
+    },
     getSettings: function () {
         return {
             Sections: this.getSectionSettings(),
@@ -96,7 +147,8 @@
         return {
             Id: this.setting && this.setting.Setting ? this.setting.Setting.Id: -1,
             IsShowStockBanner: $('#toggle-stock-banner').is(':checked'),
-            IsShowNewsBanner: $('#toggle-news-banner').is(':checked')
+            IsShowNewsBanner: $('#toggle-news-banner').is(':checked'),
+            StockInteractionType: $('#stock-interaction-type').find('option:selected').val()
         }
     },
     getSectionSettings: function () {

@@ -505,7 +505,7 @@ textarea.default-style-input {
 .promotion-settings {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 0.2fr 0.78fr 35px;
+    grid-template-rows: 1fr 35px;
     padding: 1% 2%;
     position: relative;
     justify-items: center;
@@ -1060,3 +1060,47 @@ button#push-image-btn-remove:hover {
     .banner-setting-container .checkbox-item {
         justify-content: flex-start
     }
+
+.promotion-settings-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 50px;
+}
+
+.stock-setting-container {
+    display: grid;
+    grid-template-columns: 320px;
+    grid-row-gap: 25px;
+    grid-template-rows: 30px max-content;
+}
+
+    .stock-setting-container .promotion-item-setting-body .SumoSelect {
+        min-width: 320px;
+    }
+
+    .stock-interaction-description {
+        border-radius: 3px;
+        border: 1px solid #bdbdbd35;
+        width: 290px;
+    }
+
+    .stock-interaction-description legend {
+        font-weight: bold;
+        font-size: 1.1em;
+        color: #505050;
+    }
+
+        .stock-interaction-description p {
+            font-size: 0.85em;
+            color: #505050;
+            line-height: 1.6em;
+        }
+
+.promotion-setting-item {
+    width: 370px;
+}
+
+.promotion-setting-item-left {
+    display: grid;
+    grid-row-gap: 15px;
+}

@@ -2576,6 +2576,7 @@ namespace EasyStart.Logic
                     {
                         oldSetting.IsShowStockBanner = setting.IsShowStockBanner;
                         oldSetting.IsShowNewsBanner = setting.IsShowNewsBanner;
+                        oldSetting.StockInteractionType = setting.StockInteractionType;
                         result = oldSetting;
                     }
                     else

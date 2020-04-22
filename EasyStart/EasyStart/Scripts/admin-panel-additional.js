@@ -107,23 +107,37 @@ class OrderTools {
     }
 
     orderReverse(e) {
-        const $e = $(e)
-        const $conteiner = this.$orderContainer
+        let loader = new Loader(this.$orderContainer)
+        loader.start()
 
-        $conteiner.children().each(function (i, item) {
-            $conteiner.prepend(item)
-        })
+        const action = () => {
+            try {
+                const $e = $(e)
+                const $conteiner = this.$orderContainer
 
-        const newActiveOrderType = parseInt($e.attr('order-type'))
-        const lastOrderType = OrderToolType.OrderAsk == newActiveOrderType ? 
-            OrderToolType.OrderDesc :
-            OrderToolType.OrderAsk
-            
+                if ($e.hasClass(this.isActiveCssClass))
+                    return
 
-        $e.addClass(this.isActiveCssClass)
-        this.$container.
-            find(`button[order-type=${lastOrderType}]`).
-            removeClass(this.isActiveCssClass)
+                $conteiner.children().each(function (i, item) {
+                    $conteiner.prepend(item)
+                })
+
+                const newActiveOrderType = parseInt($e.attr('order-type'))
+                const lastOrderType = OrderToolType.OrderAsk == newActiveOrderType ?
+                    OrderToolType.OrderDesc :
+                    OrderToolType.OrderAsk
+
+
+                $e.addClass(this.isActiveCssClass)
+                this.$container.
+                    find(`button[order-type=${lastOrderType}]`).
+                    removeClass(this.isActiveCssClass)
+            } finally {
+                loader.stop()
+            }
+        }
+
+        setTimeout(action, 250)
     }
 
     toggleApplyOrders = e => {
@@ -135,18 +149,29 @@ class OrderTools {
     }
 
     toggleOrdersByStatus(e, statusId) {
-        const $e = $(e)
-        const $conteiner = this.$orderContainer
+        let loader = new Loader(this.$orderContainer)
+        loader.start()
 
-        $e.toggleClass(this.isActiveCssClass)
-        const isActive = $e.hasClass(this.isActiveCssClass)
-        const animationDuration = 500
-        const $orderCards = $conteiner.find(`.order-item-grid[status-id=${statusId}]`)
+        const action = () => {
+            try {
+                const $e = $(e)
+                const $conteiner = this.$orderContainer
 
-        if (isActive)
-            $orderCards.show(animationDuration)
-        else
-            $orderCards.hide(animationDuration)
+                $e.toggleClass(this.isActiveCssClass)
+                const isActive = $e.hasClass(this.isActiveCssClass)
+                const animationDuration = 500
+                const $orderCards = $conteiner.find(`.order-item-grid[status-id=${statusId}]`)
+
+                if (isActive)
+                    $orderCards.show(animationDuration)
+                else
+                    $orderCards.hide(animationDuration)
+            } finally {
+                loader.stop()
+            }
+        }
+
+        setTimeout(action, 250)
     }
 }
 

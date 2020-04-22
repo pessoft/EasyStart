@@ -226,6 +226,7 @@
     <Compile Include="Logic\Report\GeneralUserQuantity.cs" />
     <Compile Include="Logic\Report\ActiveUsersReport.cs" />
     <Compile Include="Logic\SettingsValidator.cs" />
+    <Compile Include="Logic\StockInteractionType.cs" />
     <Compile Include="Logic\StyleTypeIngredient.cs" />
     <Compile Include="Logic\Transaction\TransactionLogic.cs" />
     <Compile Include="Logic\Transaction\TransactionWrapper.cs" />
@@ -327,6 +328,10 @@
     <Compile Include="Migrations\202004191818185_AddedCommentCauseCancelInOrderModel.cs" />
     <Compile Include="Migrations\202004191818185_AddedCommentCauseCancelInOrderModel.Designer.cs">
       <DependentUpon>202004191818185_AddedCommentCauseCancelInOrderModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202004222215089_AddedStockInteractionTypeInPromotionSetting.cs" />
+    <Compile Include="Migrations\202004222215089_AddedStockInteractionTypeInPromotionSetting.Designer.cs">
+      <DependentUpon>202004222215089_AddedStockInteractionTypeInPromotionSetting.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
@@ -651,6 +656,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202004191818185_AddedCommentCauseCancelInOrderModel.resx">
       <DependentUpon>202004191818185_AddedCommentCauseCancelInOrderModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004222215089_AddedStockInteractionTypeInPromotionSetting.resx">
+      <DependentUpon>202004222215089_AddedStockInteractionTypeInPromotionSetting.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
