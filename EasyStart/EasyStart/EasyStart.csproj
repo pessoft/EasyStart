@@ -333,6 +333,10 @@
     <Compile Include="Migrations\202004222215089_AddedStockInteractionTypeInPromotionSetting.Designer.cs">
       <DependentUpon>202004222215089_AddedStockInteractionTypeInPromotionSetting.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202004231125389_AddedStockExcludedProductsJSONInStockModel.cs" />
+    <Compile Include="Migrations\202004231125389_AddedStockExcludedProductsJSONInStockModel.Designer.cs">
+      <DependentUpon>202004231125389_AddedStockExcludedProductsJSONInStockModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -659,6 +663,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202004222215089_AddedStockInteractionTypeInPromotionSetting.resx">
       <DependentUpon>202004222215089_AddedStockInteractionTypeInPromotionSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004231125389_AddedStockExcludedProductsJSONInStockModel.resx">
+      <DependentUpon>202004231125389_AddedStockExcludedProductsJSONInStockModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

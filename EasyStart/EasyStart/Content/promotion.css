@@ -1104,3 +1104,29 @@ button#push-image-btn-remove:hover {
     display: grid;
     grid-row-gap: 15px;
 }
+
+.stock-excluded-products-description-wrapper {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 20px 1fr;
+}
+
+#stockDialog .SumoSelect > .optWrapper > .options {
+    max-height: 230px;
+}
+
+#stock-type-products-excluded-container .SumoSelect > .optWrapper > .options {
+    max-height: 185px;
+}
+
+    .stock-excluded-products-description-wrapper i {
+        font-size: 0.9em;
+    }
+
+    .stock-excluded-products-description {
+        font-size: 0.7em;
+    }
+
+.promotion-stock-index-block {
+    width: 310px;
+}

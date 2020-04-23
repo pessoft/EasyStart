@@ -93,10 +93,20 @@ function initListsProducts() {
 
     $selectCoupon.remove()
 
+    const idSelectExcludedProducts = 'stock-excluded-products-items'
+    const $contentStockExcledeWrapper = $('#stock-type-products-excluded-container')
+    const $selectStockExcludeProducts = $contentStockExcledeWrapper.find(`#${idSelectExcludedProducts}`)
+
+    if ($selectStockExcludeProducts.length > 0 && $selectStockExcludeProducts[0].sumo)
+        $selectStockExcludeProducts[0].sumo.unload()
+
+    $selectStockExcludeProducts.remove()
+
     if (ProductsForPromotion) {
         const $newSelect = $(`<select id="${idSelect}" onchange="StockManger.onBonusProductsChange()" class="promotion-custom-select" multiple placeholder="Выберите блюда"></select>`)
         const $newSelectConditino = $(`<select id="${idSelectCondition}" onchange="StockManger.onStockConditionProductsChange()" class="promotion-custom-select" multiple placeholder="Выберите блюда"></select>`)
         const $newSelectCoupon = $(`<select id="${idSelectCoupon}" onchange="CouponManager.onBonusProductsChange()" class="promotion-custom-select" multiple placeholder="Выберите блюда"></select>`)
+        const $newSelectStockExcludeProducts = $(`<select id="${idSelectExcludedProducts}" onchange="" class="promotion-custom-select" multiple placeholder="Выберите блюда"></select>`)
         const selectContent = []
 
         for (let categoryId in ProductsForPromotion) {
@@ -114,14 +124,20 @@ function initListsProducts() {
 
         $newSelect.append(selectContent)
         $contentWrapper.append($newSelect)
+
         $newSelectConditino.append(selectContent)
         $contentConditionWrapper.append($newSelectConditino)
+
         $newSelectCoupon.append(selectContent)
         $contentCouponWrapper.append($newSelectCoupon)
+
+        $newSelectStockExcludeProducts.append(selectContent)
+        $contentStockExcledeWrapper.append($newSelectStockExcludeProducts)
 
         const $select = $(`#${idSelect}`)
         const $selectCondition = $(`#${idSelectCondition}`)
         const $selectCoupon = $(`#${idSelectCoupon}`)
+        const $selectStockExcludeProducts = $(`#${idSelectExcludedProducts}`)
         const sumoOptions = {
             search: true,
             searchText: 'Поиск...',
@@ -133,5 +149,6 @@ function initListsProducts() {
         $select.SumoSelect(sumoOptions)
         $selectCondition.SumoSelect(sumoOptions)
         $selectCoupon.SumoSelect(sumoOptions)
+        $selectStockExcludeProducts.SumoSelect(sumoOptions)
     }
 }
