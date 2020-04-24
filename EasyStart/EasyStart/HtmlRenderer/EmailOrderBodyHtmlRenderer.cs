@@ -121,13 +121,14 @@ namespace EasyStart.HtmlRenderer
 
         private void OrderPriceRender(StringBuilder body)
         {
+            var markPay = orderInfo.BuyType == Logic.BuyType.Online ? "Оплачено " : "";
             var orderCheckoutPrice = $"<tr style='height: 25px;'><td style='min-width: 110px;'>Сумма заказа</td><td style='text-align: right; min-width: 100px;'>{orderInfo.AmountPrice}</td></tr>" +
               $"<tr style='height: 25px;'><td style='min-width: 110px;'>Оплачено бонусами</td><td style='text-align: right; min-width: 100px;'>{orderInfo.AmountPayCashBack}</td></tr>" +
               $"<tr style='height: 25px;'><td style='min-width: 110px;'>Стоимость доставки</td><td style='text-align: right; min-width: 100px;'>{orderInfo.DeliveryPrice}</td></tr>" +
               $"<tr style='height: 25px;'><td style='min-width: 110px;'>Скидка</td><td style='text-align: right; min-width: 100px;'>{orderInfo.Discount}</td></tr>" +
-              $"<tr style='height: 25px;'><td style='min-width: 110px;'>Способ оплаты</td><td style='text-align: right; min-width: 100px;'>{orderInfo.ButType}</td></tr>" +
+              $"<tr style='height: 25px;'><td style='min-width: 110px;'>Способ оплаты</td><td style='text-align: right; min-width: 100px;'>{orderInfo.BuyTypeName}</td></tr>" +
               $"<tr style='height: 25px;'><td style='min-width: 110px;'>Сдача c</td><td style='text-align: right; min-width: 100px;'>{orderInfo.CashBack}</td></tr>" +
-              $"<tr style='height: 25px;'><td style='min-width: 110px;'>К оплате</td><td style='text-align: right; min-width: 100px;'>{orderInfo.AmountPayDiscountDelivery}</td></tr>";
+              $"<tr style='height: 25px;'><td style='min-width: 110px;'>К оплате</td><td style='text-align: right; min-width: 100px;'>{markPay}{orderInfo.AmountPayDiscountDelivery}</td></tr>";
 
             body.Replace("{orderCheckoutPrice}", orderCheckoutPrice);
         }

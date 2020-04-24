@@ -69,6 +69,8 @@ namespace EasyStart.Models
 
         public int CouponId { get; set; }
 
+        public string CommentCauseCancel { get; set; } 
+
         [NotMapped]
         [ScriptIgnore]
         public Dictionary<int, int> ProductCount

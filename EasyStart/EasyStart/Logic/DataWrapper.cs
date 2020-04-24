@@ -429,6 +429,11 @@ namespace EasyStart.Logic
                         updateSetting.IsTakeYourSelf = setting.IsTakeYourSelf;
                         updateSetting.PayCard = setting.PayCard;
                         updateSetting.PayCash = setting.PayCash;
+                        updateSetting.PayOnline = setting.PayOnline;
+                        updateSetting.MerchantId = setting.MerchantId;
+                        updateSetting.PaymentKey = setting.PaymentKey;
+                        updateSetting.CreditKey = setting.CreditKey;
+                        updateSetting.IsAcceptedOnlinePayCondition = setting.IsAcceptedOnlinePayCondition;
                         updateSetting.TimeDeliveryJSON = setting.TimeDeliveryJSON;
                         updateSetting.ZoneId = setting.ZoneId;
                         updateSetting.IsSoundNotify = setting.IsSoundNotify;
@@ -739,6 +744,7 @@ namespace EasyStart.Logic
                 {
                     result = db.Categories
                         .Where(p => p.BranchId == brancId && p.Visible && !p.IsDeleted)
+                        .OrderBy(p => p.OrderNumber)
                         .ToList();
                 }
             }
@@ -924,6 +930,9 @@ namespace EasyStart.Logic
                     {
                         order.OrderStatus = data.Status;
                         order.UpdateDate = data.DateUpdate;
+
+                        if (data.Status == OrderStatus.Cancellation)
+                            order.CommentCauseCancel = data.CommentCauseCancel;
                     }
 
                     db.SaveChanges();
@@ -1315,7 +1324,8 @@ namespace EasyStart.Logic
                     var orderIds = db.Orders
                         .Where(p => p.ClientId == clientId &&
                          p.OrderStatus != OrderStatus.Cancellation &&
-                         p.OrderStatus != OrderStatus.Deleted)
+                         p.OrderStatus != OrderStatus.Deleted &&
+                         p.OrderStatus != OrderStatus.PendingPay)
                         .Select(p => p.Id)
                         .ToList();
 
@@ -1343,7 +1353,8 @@ namespace EasyStart.Logic
                     isEmpty = db.Orders
                         .Where(p => p.ClientId == clientId &&
                          p.OrderStatus != OrderStatus.Cancellation &&
-                         p.OrderStatus != OrderStatus.Deleted)
+                         p.OrderStatus != OrderStatus.Deleted &&
+                         p.OrderStatus != OrderStatus.PendingPay)
                         .Count() == 0;
                 }
             }
@@ -1411,6 +1422,7 @@ namespace EasyStart.Logic
                         .Where(p => brandchIds.Contains(p.BranchId) &&
                                     p.OrderStatus != OrderStatus.Processing &&
                                     p.OrderStatus != OrderStatus.Deleted &&
+                                    p.OrderStatus != OrderStatus.PendingPay &&
                                     DbFunctions.TruncateTime(p.UpdateDate) >= startDate.Date &&
                                     DbFunctions.TruncateTime(p.UpdateDate) <= endDate.Date)
                         .ToList();
@@ -1444,7 +1456,8 @@ namespace EasyStart.Logic
                     histroyOrders = db.Orders
                         .Where(p => p.ClientId == clientId &&
                         p.BranchId == branchId &&
-                        p.OrderStatus != OrderStatus.Deleted)
+                        p.OrderStatus != OrderStatus.Deleted &&
+                        p.OrderStatus != OrderStatus.PendingPay)
                         .ToList();
 
                     if (histroyOrders != null && histroyOrders.Any())
@@ -2105,6 +2118,7 @@ namespace EasyStart.Logic
                         .Where(p => brandchIds.Contains(p.BranchId) &&
                                     p.OrderStatus != OrderStatus.Processing &&
                                     p.OrderStatus != OrderStatus.Deleted &&
+                                    p.OrderStatus != OrderStatus.PendingPay &&
                                     DbFunctions.TruncateTime(p.UpdateDate) == date.Date)
                         .ToList()
                         .ForEach(p =>
@@ -2236,7 +2250,8 @@ namespace EasyStart.Logic
                         Func<OrderModel, bool> condition = p => p.ClientId == data.ClientId &&
                         coupons.Contains(p.CouponId) &&
                         p.OrderStatus != OrderStatus.Cancellation &&
-                        p.OrderStatus != OrderStatus.Deleted;
+                        p.OrderStatus != OrderStatus.Deleted &&
+                        p.OrderStatus != OrderStatus.PendingPay;
                         var isFirstUseCoupon = db.Orders.FirstOrDefault(condition) == null;
 
                         if (!isFirstUseCoupon)
@@ -2561,6 +2576,7 @@ namespace EasyStart.Logic
                     {
                         oldSetting.IsShowStockBanner = setting.IsShowStockBanner;
                         oldSetting.IsShowNewsBanner = setting.IsShowNewsBanner;
+                        oldSetting.StockInteractionType = setting.StockInteractionType;
                         result = oldSetting;
                     }
                     else

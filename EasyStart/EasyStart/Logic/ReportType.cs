@@ -13,6 +13,8 @@ namespace EasyStart.Logic
         Top5Products = 3,
         DeliveryMethod = 4,
         NewUsers = 5,
-        Revenue = 6
+        Revenue = 6,
+        ActiveUsers = 7,
+        GeneralUsersQuantity = 8
     }
 }

@@ -1,4 +1,6 @@
 ﻿$(document).ready(function () {
+    cheerupServer()
+
     bindSelectSumo()
     initHistoryOrderDatePicker()
     bindDialogCloseClickBackdor()
@@ -391,6 +393,8 @@ function loadAnalyticsReport() {
     new Top5Products(containerId, currentBrunchId, URLAnalytics);
     new DeliveryMethod(containerId, currentBrunchId, URLAnalytics);
     new NewUsersReport(containerId, currentBrunchId, URLAnalytics);
+    new ActiveUsersReport(containerId, currentBrunchId, URLAnalytics);
+    new GeneralUserQuantityrReport(containerId, currentBrunchId, URLAnalytics);
 }
 
 function resetSearchForOrderNumber(containerId) {
@@ -1136,7 +1140,7 @@ function addPreviewImage(input) {
         const aspectRatioName = $(input).attr('aspect-ratio')
         let action = src => setDialogPreviewImage(dialog, src)
         ImageProcessingInstance = new ImageProcessing(input, action, AspectRatioType[aspectRatioName])
-    } 
+    }
 }
 
 function setDialogPreviewImage(dialog, src) {
@@ -1284,7 +1288,12 @@ function saveDeliverySetting() {
         TimeDeliveryJSON: getTimeDeliveryJSON(),
         AreaDeliveries: AreaDelivery,
         MaxPreorderPeriod: maxPreorderPeriod,
-        MinTimeProcessingOrder: minTimeProcessingOrder
+        MinTimeProcessingOrder: minTimeProcessingOrder,
+        PayOnline: OnlinePayData.isPayOnline,
+        MerchantId: OnlinePayData.merchantId,
+        PaymentKey: OnlinePayData.paymentKey,
+        CreditKey: OnlinePayData.creditKey,
+        IsAcceptedOnlinePayCondition: OnlinePayData.isAcceptedOnlinePayCondition
     }
     let loader = new Loader($("#delivery"));
     let successFunc = function (result, loader) {
@@ -1578,11 +1587,20 @@ function getCurrentBranchId() {
 }
 
 var Orders = [];
-
+const newOrderToolOptions = {
+    containerId: 'new-order-tool',
+    orderType: OrderType.NewOrders,
+    tools: [
+        { type: OrderToolType.OrderAsk, isActive: true },
+        { type: OrderToolType.OrderDesc, isActive: false }
+    ]
+}
 function loadOrders(reload = false) {
     if (Orders.length != 0 && !reload) {
         return;
     }
+
+    new OrderTools(newOrderToolOptions)
 
     clearSearchInput(Pages.Order);
     let currentBranchId = getCurrentBranchId();
@@ -1622,12 +1640,25 @@ function clearOrdersContainer(containerId) {
     $(`#${containerId} .order-list-grid`).empty();
 }
 
+const historyOrderToolOptions = {
+    containerId: 'history-order-tool',
+    orderType: OrderType.HistoryOrders,
+    tools: [
+        { type: OrderToolType.OrderAsk, isActive: true },
+        { type: OrderToolType.OrderDesc, isActive: false },
+        { type: OrderToolType.OrderApply, isActive: true },
+        { type: OrderToolType.OrderCancel, isActive: true }
+    ]
+}
+
 function loadHistoryOrders() {
     clearSearchInput(Pages.HistoryOrder);
     currentBranchId = getCurrentBranchId();
     let brnachIds = [...AdditionalHistoryBranch];
 
     brnachIds.push(currentBranchId);
+
+    new OrderTools(historyOrderToolOptions)
 
     let $list = $("#history .orders .order-list");
     $list.empty();
@@ -1810,7 +1841,8 @@ function getCityNameById(id) {
 
 var BuyType = {
     Cash: 1,
-    Card: 2
+    Card: 2,
+    Online: 3,
 }
 
 function getBuyType(id) {
@@ -1822,6 +1854,9 @@ function getBuyType(id) {
             break;
         case BuyType.Card:
             buyType = "Банковская карта";
+            break;
+        case BuyType.Online:
+            buyType = "Онлайн";
             break;
     }
 
@@ -1854,7 +1889,7 @@ const OrderStatus = {
     Cancellation: 2
 }
 
-function changeOrderStatus(orderId, orderStatus) {
+function changeOrderStatus(orderId, orderStatus, commentCauseCancel) {
     let $order = $(`#order .order-list-grid [order-id=${orderId}]`);
 
     $order.hide(500, function () {
@@ -1873,7 +1908,7 @@ function changeOrderStatus(orderId, orderStatus) {
         }
     });
 
-    $.post("/Admin/UpdateStatusOrder", { OrderId: orderId, Status: orderStatus }, successCallBack(() => getTodayDataOrders(Pages.Order)));
+    $.post("/Admin/UpdateStatusOrder", { OrderId: orderId, Status: orderStatus, CommentCauseCancel: commentCauseCancel }, successCallBack(() => getTodayDataOrders(Pages.Order)));
 }
 
 function searchByOrderNumber(containerId, isAnimation = true) {
@@ -2026,10 +2061,11 @@ function convertIngredientsToDictionary(ingredients) {
 function showOrderDetails(orderId) {
     const currentSectionId = getCurrentSectionId();
     const order = currentSectionId == Pages.HistoryOrder ? getHistoryOrderById(orderId) : getOrderById(orderId);
+    const dialogId = currentSectionId == Pages.HistoryOrder ? 'historyOrderDetailsDialog' : 'orderDetailsDialog';
     const getOrderDetails = () => {
         const orderDetailsData = new OrderDetailsData(order)
 
-        return new OrderDetails(orderDetailsData);
+        return new OrderDetails(orderDetailsData, dialogId);
     }
 
 
@@ -2115,8 +2151,11 @@ class CardOrder {
         this.$htmlTemplate = $($(`#${templateId}`).html());
     }
 
-    setAttrOrderId(value) {
-        this.$htmlTemplate.attr("order-id", value);
+    setOrderAttres(orderId, statusId) {
+        this.$htmlTemplate.attr("order-id", orderId);
+
+        if (statusId != StatusAtrr.Processing)
+            this.$htmlTemplate.attr("status-id", statusId);
     }
 
     setOrderNumber(value, status) {
@@ -2195,7 +2234,7 @@ class CardOrder {
             this.setDateDeliveryPreoprder(this.data.DateDelivery)
         }
 
-        this.setAttrOrderId(this.data.OrderId);
+        this.setOrderAttres(this.data.OrderId, this.data.Status);
         this.setOrderNumber(this.data.OrderNumber, this.data.Status);
         this.setAmount(this.data.Amount);
         this.setPhoneNumber(this.data.PhoneNumber);
@@ -2270,8 +2309,15 @@ class CardOrderRenderer {
     static addCardToPage(card, containerId, speed) {
         const cardContainer = ".order-list-grid";
         const cardRender = card.render()
+        const isAppnd = $(`#${containerId} .order-tools button[order-type=${OrderToolType.OrderAsk}]`)
+            .hasClass('active-tool-item')
+        const $cardContainer = $(`#${containerId} ${cardContainer}`)
 
-        $(`#${containerId} ${cardContainer}`).append(cardRender);
+        if (isAppnd)
+            $cardContainer.append(cardRender);
+        else
+            $cardContainer.prepend(cardRender);
+
         this.showCard(cardRender, speed);
     }
 
@@ -2302,6 +2348,7 @@ class OrderDetailsData {
         this.OrderNumber = order.Id;
         this.NumberAppliances = order.NumberAppliances;
         this.Status = order.OrderStatus;
+        this.CauseCancelOrderComment = order.CommentCauseCancel || ''
         this.OrderDate = toStringDateAndTime(order.Date);
         this.OrderDeliveryDate = order.DateDelivery ?
             toStringDateAndTime(order.DateDelivery) :
@@ -2338,7 +2385,8 @@ class OrderDetailsData {
         this.CashBack = order.CashBack > 0 ?
             `${xFormatPrice(order.CashBack - order.AmountPayDiscountDelivery)} ${prefixRub} (c ${xFormatPrice(order.CashBack)} ${prefixRub})` :
             `${xFormatPrice(order.CashBack)} ${prefixRub}`;
-        this.AmountPayDiscountDelivery = `${xFormatPrice(order.AmountPayDiscountDelivery)} ${prefixRub}`;
+        const markPay = order.BuyType == BuyType.Online ? 'Оплачено ' : ''
+        this.AmountPayDiscountDelivery = `${markPay}${xFormatPrice(order.AmountPayDiscountDelivery)} ${prefixRub}`;
     }
 
     convertAddressInfo(order) {
@@ -2506,7 +2554,8 @@ var OrderDetailsQSelector = {
     OrderList: ".order-details-product-list",
     Comment: ".order-details-comment .value",
     ApplyBtn: ".order-details-menu .btn-details-apply",
-    CancelBtn: ".order-details-menu .btn-details-cancel"
+    CancelBtn: ".order-details-menu .btn-details-cancel",
+    CauseCancelBtn: ".order-details-menu .btn-details-cause-comment"
 }
 
 var StatusAtrr = {
@@ -2529,8 +2578,8 @@ class OrderDetails {
      *
      * @param {OrderDetailsData} details
      */
-    constructor(details) {
-        const detailsDialogId = "orderDetailsDialog";
+    constructor(details, dialogId) {
+        const detailsDialogId = dialogId;
         this.$dialog = $(`#${detailsDialogId}`);
         this.details = details;
     }
@@ -2635,22 +2684,64 @@ class OrderDetails {
     buttonsConfig() {
         const $proccesed = $(OrderDetailsQSelector.ApplyBtn);
         const $cancel = $(OrderDetailsQSelector.CancelBtn);
+        const $causeCancelComment = $(OrderDetailsQSelector.CauseCancelBtn);
+
         const actionOrder = (orderStatus) => () => {
             this.close();
             changeOrderStatus(this.details.OrderId, orderStatus)
         }
 
+        const $inputCommentCauseCancel = $('#cause-comment-cancel-order')
+        $inputCommentCauseCancel.val('')
+
+        const actionConfirmCancel = orderStatus => {
+            const commentCauseCancel = $inputCommentCauseCancel.val()
+            Dialog.close('#confirmOrderCancelDialog')
+            this.close();
+
+            changeOrderStatus(this.details.OrderId, orderStatus, commentCauseCancel)
+        }
+
+        const actionCancel = (orderStatus) => () => {
+            const $btn = $('#cause-comment-cancel-order-btn')
+            $btn.unbind('click')
+            $btn.click('click', () => actionConfirmCancel(orderStatus))
+       
+            Dialog.showModal('#confirmOrderCancelDialog')
+        }
+
+        
+
+        const actionShowCauseCancelComment = () => {
+            const $inputHistoryCommentCauseCancel = $('#history-cause-comment-cancel-order')
+            $inputHistoryCommentCauseCancel.val(this.details.CauseCancelOrderComment)
+
+            const $btn = $('#history-cause-comment-cancel-order-btn')
+
+            $btn.unbind('click')
+            $btn.click('click', () => Dialog.close('#confirmOrderCancelCommentDialog'))
+
+            Dialog.showModal('#confirmOrderCancelCommentDialog')
+        }
+
         $proccesed.unbind("click");
         $cancel.unbind("click");
+        $causeCancelComment.unbind("click");
 
         if (getCurrentSectionId() == Pages.HistoryOrder) {
             $proccesed.attr("disabled", true);
             $cancel.attr("disabled", true);
+            $causeCancelComment.removeAttr("disabled")
+
+            if (this.details.Status == OrderStatus.Cancellation)
+                $causeCancelComment.bind("click", actionShowCauseCancelComment)
+            else 
+                $causeCancelComment.attr("disabled", true);
         } else {
             $proccesed.removeAttr("disabled");
             $cancel.removeAttr("disabled");
             $proccesed.bind("click", actionOrder(OrderStatus.Processed));
-            $cancel.bind("click", actionOrder(OrderStatus.Cancellation));
+            $cancel.bind("click", actionCancel(OrderStatus.Cancellation));
         }
     }
 }
@@ -2907,4 +2998,74 @@ function onChangeDeliveryMaxDate(e, defaultValue = 0) {
 
     if (!processingValue)
         $(e).val(defaultValue)
+}
+
+function openSttingOnlinePay() {
+    const setting = new OnlinePaySetting()
+    setting.render()
+
+    Dialog.showModal('#onlinePayDeliverySettingDialog')
+}
+
+class OnlinePaySetting {
+    render() {
+        const $paymentCbx = $('#payment-online')
+        $paymentCbx.prop("checked", OnlinePayData.isPayOnline)
+        $('#payment-condition').prop("checked", OnlinePayData.isAcceptedOnlinePayCondition)
+        $('#merchant-id').val(OnlinePayData.merchantId)
+        $('#payment-key').val(OnlinePayData.paymentKey)
+        $('#credit-key').val(OnlinePayData.creditKey)
+
+        $paymentCbx.unbind('change')
+        $paymentCbx.bind('change', this.pymentOnlineToggle)
+
+        this.toggleInputs()
+    }
+
+    pymentOnlineToggle = () => {
+        this.toggleInputs()
+    }
+
+    toggleInputs() {
+        const $dialog = $('#onlinePayDeliverySettingDialog')
+        const $inputs = $dialog.find('.group input')
+        const isPayOnline = $('#payment-online').is(':checked')
+
+        $inputs.attr('disabled', !isPayOnline)
+
+        let $payCondition = $dialog.find('#payment-condition')
+        if (!isPayOnline) {
+            $inputs.val('')
+            $payCondition.prop('checked', false)
+            $payCondition.attr('disabled', true)
+        } else
+            $payCondition.attr('disabled', false)
+    }
+
+    static done() {
+        const isPayOnline = $('#payment-online').is(':checked')
+        const isAccepted = $('#payment-condition').is(':checked')
+        const merchantId = $('#merchant-id').val()
+        const paymentKey = $('#payment-key').val()
+        const creditKey = $('#credit-key').val()
+
+        if (isPayOnline && (
+            !isAccepted ||
+            !merchantId ||
+            !paymentKey ||
+            !creditKey)) {
+
+            showErrorMessage('Заполните все поля')
+
+            return
+        }
+
+        OnlinePayData.isPayOnline = isPayOnline
+        OnlinePayData.merchantId = merchantId
+        OnlinePayData.paymentKey = paymentKey
+        OnlinePayData.creditKey = creditKey
+        OnlinePayData.isAcceptedOnlinePayCondition = isAccepted
+
+        Dialog.close('#onlinePayDeliverySettingDialog')
+    }
 }

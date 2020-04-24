@@ -24,6 +24,13 @@
         var CategoryDictionary = JSON.parse(@Html.Raw(Json.Encode(ViewBag.CategoryDictionary)))
         var IsValidSetting = @ViewBag.IsValidSetting.ToString().ToLower()
         var IsValidDeliverySetting = @ViewBag.IsValidDeliverySetting.ToString().ToLower()
+        var OnlinePayData = {
+            isPayOnline: @(ViewBag.DeliverySetting != null ? ViewBag.DeliverySetting.PayOnline.ToString().ToLower() : false.ToString().ToLower()),
+            isAcceptedOnlinePayCondition: @(ViewBag.DeliverySetting != null ? ViewBag.DeliverySetting.IsAcceptedOnlinePayCondition.ToString().ToLower(): false.ToString().ToLower()),
+            merchantId: '@(ViewBag.DeliverySetting != null ? ViewBag.DeliverySetting.MerchantId : "")' || '',
+            paymentKey: '@(ViewBag.DeliverySetting != null ? ViewBag.DeliverySetting.PaymentKey: "")',
+            creditKey: '@(ViewBag.DeliverySetting != null ? ViewBag.DeliverySetting.CreditKey: "")'
+        }
     </script>
     <div class="header-menu">
         <div class="logo-img menu-item" target-id="about-us">
@@ -105,6 +112,8 @@
                         <div class="sm-font-size">выручка (руб.)</div>
                     </div>
                 </div>
+                <div class="order-tools" id="new-order-tool">
+                </div>
                 <div class="order-list-grid">
                 </div>
             </div>
@@ -151,6 +160,8 @@
                         <div class="bg-font-size font-weight-bold text-no-wrap status-bar-value odometer odometer-theme-minimal"></div>
                         <div class="sm-font-size">выручка (руб.)</div>
                     </div>
+                </div>
+                <div class="order-tools" id="history-order-tool">
                 </div>
                 <div class="order-list-grid">
                 </div>
@@ -433,54 +444,76 @@
                             </div>
                         </div>
                         <div id="promotion-settings" class="promotion-content promotion-settings promotion-some-settings hide">
-                            <div class="promotion-setting">
-                                <h2>Настройка баннеров</h2>
-                                <div class="banner-setting-container">
-                                    <div class="checkbox-item">
-                                        <input type="checkbox" id="toggle-stock-banner">
-                                        <label for="toggle-stock-banner">
-                                            Показывать акции в баннере
-                                        </label>
+                            <div class="promotion-settings-wrapper">
+                                <div class="promotion-setting-item promotion-setting-item-left">
+                                    <div class="promotion-setting">
+                                        <h2>Настройка баннеров</h2>
+                                        <div class="banner-setting-container">
+                                            <div class="checkbox-item">
+                                                <input type="checkbox" id="toggle-stock-banner">
+                                                <label for="toggle-stock-banner">
+                                                    Показывать акции в баннере
+                                                </label>
+                                            </div>
+                                            <div class="checkbox-item">
+                                                <input type="checkbox" id="toggle-news-banner">
+                                                <label for="toggle-news-banner">
+                                                    Показывать новости в баннере
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="checkbox-item">
-                                        <input type="checkbox" id="toggle-news-banner">
-                                        <label for="toggle-news-banner">
-                                            Показывать новости в баннере
-                                        </label>
+                                    <div id="promotion-section-setting" class="promotion-setting promotion-section-block">
+                                        <h2>Приорит разделов</h2>
+                                        <div id="promotion-items-priority" class="promotion-items-priority">
+                                            <div class="promotion-item-setting" promotion-section="8" promotion-setting-id="-1">
+                                                <i class="fal fa-hands-usd"></i>
+                                                <div class="promotion-item-setting-body">
+                                                    <span>Партнерская программа</span>
+                                                    <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
+                                                        <option value="2">Акции</option>
+                                                        <option value="4">Купоны</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="promotion-item-setting" promotion-section="4" promotion-setting-id="-1">
+                                                <i class="fal fa-gift-card"></i>
+                                                <div class="promotion-item-setting-body">
+                                                    <span>Купоны</span>
+                                                    <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
+                                                        <option value="2">Акции</option>
+                                                        <option value="8">Партнерская программа</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="promotion-item-setting" promotion-section="2" promotion-setting-id="-1">
+                                                <i class="fal fa-badge-percent"></i>
+                                                <div class="promotion-item-setting-body">
+                                                    <span>Акции</span>
+                                                    <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
+                                                        <option value="4">Купоны</option>
+                                                        <option value="8">Партнерская программа</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div id="promotion-section-setting" class="promotion-setting promotion-section-block">
-                                <h2>Приорит разделов</h2>
-                                <div id="promotion-items-priority" class="promotion-items-priority">
-                                    <div class="promotion-item-setting" promotion-section="8" promotion-setting-id="-1">
-                                        <i class="fal fa-hands-usd"></i>
-                                        <div class="promotion-item-setting-body">
-                                            <span>Партнерская программа</span>
-                                            <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
-                                                <option value="2">Акции</option>
-                                                <option value="4">Купоны</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="promotion-item-setting" promotion-section="4" promotion-setting-id="-1">
-                                        <i class="fal fa-gift-card"></i>
-                                        <div class="promotion-item-setting-body">
-                                            <span>Купоны</span>
-                                            <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
-                                                <option value="2">Акции</option>
-                                                <option value="8">Партнерская программа</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="promotion-item-setting" promotion-section="2" promotion-setting-id="-1">
-                                        <i class="fal fa-badge-percent"></i>
-                                        <div class="promotion-item-setting-body">
-                                            <span>Акции</span>
-                                            <select multiple onchange="PromotionSetting.onChangeIntesections(this)">
-                                                <option value="4">Купоны</option>
-                                                <option value="8">Партнерская программа</option>
-                                            </select>
+                                <div class="promotion-setting-item">
+                                    <div class="promotion-setting">
+                                        <h2>Взаимодействие акций</h2>
+                                        <div class="stock-setting-container">
+                                            <div class="promotion-item-setting-body">
+                                                <select id="stock-interaction-type" onchange="PromotionSetting.onChangeStockInteraction(this)">
+                                                    <option value="0">Полное объединение</option>
+                                                    <option value="1">Частичное объединение</option>
+                                                    <option value="2">Полное исключение</option>
+                                                </select>
+                                            </div>
+                                            <fieldset class="stock-interaction-description">
+                                                <legend>Описание</legend>
+                                                <p id="stock-interaction-description">Какое то описание</p>
+                                            </fieldset>
                                         </div>
                                     </div>
                                 </div>
@@ -652,6 +685,10 @@
                                 <input type="checkbox" id="payment-cash" checked disabled />
                                 <label for="payment-cash" class="label-for">Наличными</label>
                             </div>
+                            <button id="btn-setting-online-pay" class="deliver-btn-setting-online-pay" onclick="openSttingOnlinePay()">
+                                <i class="fal fa-credit-card"></i>
+                                Настроить онлайн оплату
+                            </button>
                         </div>
                     </div>
                     <div class="delivery-block">
@@ -1269,6 +1306,165 @@
         </div>
     </dialog>
 
+    <dialog id="historyOrderDetailsDialog" class="default-color">
+        <div class="order-details-wrapper">
+            <div class="order-details-full-info order-details-block">
+
+                <div class="order-details-full-info-block order-details-short">
+                    <div class="order-details-short-item border-right order-details-short-user-name">
+                        <i class="fal fa-user-alt"></i>
+                        <span class="order-details-short-value value"></span>
+                    </div>
+                    <div class="order-details-short-item border-right order-details-short-phone">
+                        <i class="fal fa-phone-office"></i>
+                        <span class="order-details-short-value value"></span>
+                    </div>
+                    <div class="order-details-short-item order-details-short-delivery-type">
+                        <i class="fal fa-hand-holding-box"></i>
+                        <span class="order-details-short-value value"></span>
+                    </div>
+                </div>
+
+                <div class="order-details-full-info-block order-details-item order-details-price">
+                    <span class="order-details-header">Стоимость заказа</span>
+
+                    <div class="order-details-info-item order-details-price-amount">
+                        <span class="order-details-info-label">Сумма заказа:</span>
+                        <span class="order-details-info-value value"></span>
+                    </div>
+                    <div class="order-details-info-item order-details-price-amount-casback-bonus">
+                        <span class="order-details-info-label">Оплачено бонусами:</span>
+                        <span class="order-details-info-value value"></span>
+                    </div>
+                    <div class="order-details-info-item order-details-price-delivery">
+                        <span class="order-details-info-label">Стоимость доставки:</span>
+                        <span class="order-details-info-value value"></span>
+                    </div>
+                    <div class="order-details-info-item order-details-price-discount">
+                        <span class="order-details-info-label">Скидка:</span>
+                        <span class="order-details-info-value value"></span>
+                    </div>
+                    <div class="order-details-info-item order-details-price-pay-type">
+                        <span class="order-details-info-label">Способ оплаты:</span>
+                        <span class="order-details-info-value value"></span>
+                    </div>
+                    <div class="order-details-info-item order-details-price-cashback">
+                        <span class="order-details-info-label">Сдача:</span>
+                        <span class="order-details-info-value value"></span>
+                    </div>
+                    <div class="order-details-info-item order-details-price-to-pay">
+                        <span class="order-details-info-label">К оплате:</span>
+                        <span class="order-details-info-value value"></span>
+                    </div>
+                </div>
+
+                <div class="order-details-full-info-block order-details-item order-details-address">
+                    <span class="order-details-header">Адрес доставки</span>
+
+                    <div class="order-details-info-item order-details-address-city">
+                        <span class="order-details-info-label">Город</span>
+                        <span class="order-details-info-value value"></span>
+                    </div>
+                    <div class="order-details-info-item order-details-address-street">
+                        <span class="order-details-info-label">Улица</span>
+                        <span class="order-details-info-value value"></span>
+                    </div>
+
+                    <div class="order-details-info-item order-details-address-house">
+                        <span class="order-details-info-label">Дом(офис):</span>
+                        <span class="order-details-info-value value"></span>
+                    </div>
+                    <div class="order-details-info-item order-details-address-apartment">
+                        <span class="order-details-info-label">Номер квартиры:</span>
+                        <span class="order-details-info-value value"></span>
+                    </div>
+                    <div class="order-details-info-item order-details-address-level">
+                        <span class="order-details-info-label">Этаж:</span>
+                        <span class="order-details-info-value value"></span>
+                    </div>
+                    <div class="order-details-info-item order-details-address-intercom-code">
+                        <span class="order-details-info-label">Код домофона:</span>
+                        <span class="order-details-info-value value"></span>
+                    </div>
+                    <div class="order-details-info-item order-details-address-entrance">
+                        <span class="order-details-info-label">Номер подъезда:</span>
+                        <span class="order-details-info-value value"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-details-products order-details-block">
+                <span class="order-details-header">Состав заказа</span>
+                <div class="order-details-product-list">
+                </div>
+            </div>
+            <div class="order-details-comment order-details-block">
+                <span class="order-details-header">Комментарий к заказу</span>
+                <span class="order-details-comment-value value sm-font-size"></span>
+            </div>
+
+            <div class="order-details-number-date order-details-block">
+
+                <div class="order-details-date border-right default-color">
+                    <div class="flex-col-center">
+                        <div class="font-weight-bold text-no-wrap">
+                            <span class="order-details-value sm-lr-font-size value">15:46 02.03.2020</span>
+                        </div>
+                        <div class="sm-font-size">
+                            <i class="fal fa-calendar-alt"></i>
+                            дата заказа
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-details-date-delivery">
+                    <div class="flex-col-center">
+                        <div class="font-weight-bold text-no-wrap">
+                            <span class="order-details-value sm-lr-font-size value">Как можно быстрее</span>
+                        </div>
+                        <div class="sm-font-size">
+                            <i class="fal fa-calendar-check"></i>
+                            дата выдачи
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-details-order-number-cutlery order-details-block">
+
+                <div class="order-details-number border-right">
+                    <div class="flex-col-center">
+                        <div class="bg-small-font-size font-weight-bold text-no-wrap">
+                            #
+                            <span class="order-details-value value"></span>
+                        </div>
+                        <div class="sm-font-size">номер заказа</div>
+                    </div>
+                </div>
+
+                <div class="order-details-number-appliances border-right">
+                    <div class="flex-col-center">
+                        <div class="bg-small-font-size font-weight-bold text-no-wrap">
+                            <i class="fal fa-utensils-alt sm-font-size"></i>
+                            <span class="order-details-value value"></span>
+                        </div>
+                        <div class="sm-font-size">кол-во приборов</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="order-details-menu history-order-details-menu order-details-block">
+                <button class="order-details-menu-item border-right default-color btn-details-cause-comment disabled-no-background">
+                    <i class="fal fa-comment-alt-lines"></i>Причина отмены заказа
+                </button>
+                <button class="order-details-menu-item  default-color btn-details-close" onclick="Dialog.close($('#historyOrderDetailsDialog'))">
+                    <i class="far fa-share-square"></i>Закрыть
+                </button>
+            </div>
+        </div>
+    </dialog>
+
     <dialog id="areaDeliverySettingDialog">
         <div class="area-delivery-setting-wrapper">
             <div class="area-delivery-setting-header">
@@ -1284,8 +1480,51 @@
                 </button>
                 <div class="area-delivery-settings-list-container default-color">
                     <div class="area-delivery-settings-list default-color">
-
                     </div>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="onlinePayDeliverySettingDialog">
+        <div class="dialog-wrapper dialog-online-pay-setting">
+            <div class="dialog-header-title">
+                Настройка онлайн оплаты
+            </div>
+            <button class="dialog-btn-close" onclick="Dialog.close('#onlinePayDeliverySettingDialog')">
+                <i class="fal fa-times"></i>
+            </button>
+            <div class="dialog-body dialog-body-online-pay-setting">
+                <div class="payment-type pay-online-cbx">
+                    <input type="checkbox" id="payment-online" />
+                    <label for="payment-online" class="label-for">Онлайн оплата</label>
+                </div>
+                <div class="group">
+                    <input required id="merchant-id" type="text">
+                    <span class="bar"></span>
+                    <label>ID мерчанта</label>
+                </div>
+                <div class="group">
+                    <input required id="payment-key" type="text">
+                    <span class="bar"></span>
+                    <label>Ключ платежа</label>
+                </div>
+                <div class="group">
+                    <input required id="credit-key" type="text">
+                    <span class="bar"></span>
+                    <label>Кредитный ключ</label>
+                </div>
+                <div class="payment-condition pay-online-cbx">
+                    <input type="checkbox" id="payment-condition" />
+                    <label for="payment-condition" class="label-for">Принимаю <a href="~/Resource/Condition.pdf" target="_blank">условия</a> использования онлайн оплаты</label>
+                </div>
+                <div class="online-pay-setting-helper">
+                    <a href="~/Resource/OnlinePaySettingHelper.pdf" target="_blank">Инструкция по настройке онлайн оплаты</a>
+                </div>
+                <div class="pay-online-setting-footer">
+                    <button class="simple-text-btn" onclick="OnlinePaySetting.done()">
+                        Готово
+                    </button>
                 </div>
             </div>
         </div>
@@ -1443,6 +1682,15 @@
                                 <input id="stock-condition-sum-count" required type="number" min="0" oninput="StockManger.onStockConditionSumChange()" />
                                 <span class="bar"></span>
                                 <label>Минимальная сумма заказа</label>
+                            </div>
+                            <div id="stock-type-products-excluded-container" style="display:none" class="promotion-stock-index-block hide-block">
+                                <h4>Фильтр блюд</h4>
+                                <div class="stock-type-bonus-setting" id="stock-exclude-products-setting">
+                                    <div class="stock-excluded-products-description-wrapper">
+                                        <i class="fal fa-question-circle"></i>
+                                        <span class="stock-excluded-products-description">Если акция не распространяется на некоторые блюда, то добавте их в фильтр.</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div id="stock-condition-birthday-container" style="display:none" class="promotion-stock-index-block hide-block">
@@ -1676,6 +1924,48 @@
                 <button class="simple-text-btn" id="btn-image-processing-done" onclick="startImageprocessing()">
                     Готово
                 </button>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="confirmOrderCancelDialog">
+        <div class="dialog-wrapper dialog-body-cause-cancel-wrapper">
+            <div class="dialog-header-title">
+                Отмена заказа
+            </div>
+            <button class="dialog-btn-close" onclick="Dialog.close('#confirmOrderCancelDialog')">
+                <i class="fal fa-times"></i>
+            </button>
+            <div class="dialog-body dialog-body-cause-cancel">
+                <div class="cause-comment-cancel-order-block">
+                    <textarea id="cause-comment-cancel-order" class="default-style-input" placeholder="Укажите причину отмены заказа (не обязательно)"></textarea>
+                </div>
+                <div class="cause-cancel-footer">
+                    <button class="simple-text-btn" id="cause-comment-cancel-order-btn">
+                        Отменить заказ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="confirmOrderCancelCommentDialog">
+        <div class="dialog-wrapper dialog-body-cause-cancel-wrapper">
+            <div class="dialog-header-title">
+                Причина отмены заказа
+            </div>
+            <button class="dialog-btn-close" onclick="Dialog.close('#confirmOrderCancelCommentDialog')">
+                <i class="fal fa-times"></i>
+            </button>
+            <div class="dialog-body dialog-body-cause-cancel">
+                <div class="cause-comment-cancel-order-block">
+                    <textarea id="history-cause-comment-cancel-order" class="default-style-input" placeholder="Причина не указана" readonly></textarea>
+                </div>
+                <div class="cause-cancel-footer">
+                    <button class="simple-text-btn" id="history-cause-comment-cancel-order-btn">
+                        Закрыть
+                    </button>
+                </div>
             </div>
         </div>
     </dialog>
