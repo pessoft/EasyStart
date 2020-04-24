@@ -1,22 +1,22 @@
-﻿using System;
+﻿using EasyStart.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using EasyStart.Models;
 
 namespace EasyStart.Logic.Report
 {
-    public class CountBaseReport : BaseReport, IReport
+    public class ActiveUsersReport : BaseReport, IReport
     {
-        public CountBaseReport(ReportFilter filter): base(filter)
+        public ActiveUsersReport(ReportFilter filter) : base(filter)
         { }
 
-        protected virtual Dictionary<DateTime, double> GetData()
+        protected  Dictionary<DateTime, List<int>> GetData()
         {
-            throw new Exception("Not implemented method");
+            return AnalyticsDataWrapper.GetActiveUsers(filter.DateFrom, filter.DateTo);
         }
 
-        public virtual ReportResult GetReport()
+        public ReportResult GetReport()
         {
             ReportResult result = null;
             var data = GetData();
@@ -33,7 +33,7 @@ namespace EasyStart.Logic.Report
                 {
                     if (!data.ContainsKey(p))
                     {
-                        data.Add(p, 0);
+                        data.Add(p, new List<int>());
                     }
                 });
 
@@ -46,10 +46,9 @@ namespace EasyStart.Logic.Report
 
                 if (dateDiff > 12)
                 {
-
                     foreach (var group in data.GroupBy(p => p.Key.Year).OrderBy(p => p.Key))
                     {
-                        setResult(group.Key.ToString(), group.Sum(s => s.Value));
+                        setResult(group.Key.ToString(), group.SelectMany(s => s.Value).Distinct().Count());
                     }
                 }
                 else if (dateDiff > 0 && countDays > 28)
@@ -60,14 +59,14 @@ namespace EasyStart.Logic.Report
                                                                        DateTime.DaysInMonth(p.Key.Year, p.Key.Month)))
                                             .OrderBy(p => p.Key))
                     {
-                        setResult(group.Key.ToString("MM/yy"), group.Sum(s => s.Value));
+                        setResult(group.Key.ToString("MM/yy"), group.SelectMany(s => s.Value).Distinct().Count());
                     }
                 }
                 else
                 {
                     foreach (var pk in data.OrderBy(p => p.Key))
                     {
-                        setResult(pk.Key.ToString("dd/MM/yy"), pk.Value);
+                        setResult(pk.Key.ToString("dd/MM/yy"), pk.Value.Count());
                     }
                 }
             }

@@ -14,6 +14,7 @@ namespace EasyStart.Models
         public int BranchId { get; set; }
         public bool PayCard { get; set; }
         public bool PayCash { get; set; }
+        public bool PayOnline { get; set; }
         public bool IsDelivery { get; set; } = true;
         public bool IsTakeYourSelf { get; set; } = true;
         public bool IsSoundNotify { get; set; }
@@ -34,6 +35,11 @@ namespace EasyStart.Models
         /// </summary>
         public string ZoneId { get; set; } = DateTimeHepler.DEFAULT_ZONE_ID;
         public string TimeDeliveryJSON { get; set; }
+
+        public int MerchantId { get; set; }
+        public string PaymentKey { get; set; }
+        public string CreditKey { get; set; }
+        public bool IsAcceptedOnlinePayCondition { get; set; }
 
         [NotMapped]
         public List<AreaDeliveryModel> AreaDeliveries { get; set; }

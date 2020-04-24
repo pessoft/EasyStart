@@ -125,5 +125,50 @@ namespace EasyStart.Logic
 
             return result;
         }
+
+        public static Dictionary<DateTime, List<int>> GetActiveUsers(DateTime dateFrom, DateTime dateTo)
+        {
+            Dictionary<DateTime, List<int>> result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.Orders
+                        .Where(p => DbFunctions.TruncateTime(p.Date) >= dateFrom &&
+                                    DbFunctions.TruncateTime(p.Date) <= dateTo &&
+                                    (p.OrderStatus == OrderStatus.Processed))
+                         .GroupBy(p => p.Date)
+                        .ToDictionary(
+                        p => p.Key,
+                        p => p.Select(o => o.ClientId).Distinct().ToList());
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
+        public static int GetGeneralUserQuantity(int branchId)
+        {
+            int result = 0;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    result = db.Clients
+                        .Where(p => p.BranchId == branchId)
+                        .Count();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
     }
 }
