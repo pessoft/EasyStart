@@ -186,9 +186,6 @@ var StockManger = {
                 $(`#discount-type`)[0].sumo.selectItem(data.DiscountType.toString())
 
                 $('#stock-products-count').val(data.CountBonusProducts)
-                data.StockExcludedProducts.forEach(p => {
-                    $(`#stock-excluded-products-items`)[0].sumo.selectItem(p.toString())
-                })
                 break;
             case RewardType.Products:
                 $('#stock-type-products-container').show()
@@ -211,6 +208,10 @@ var StockManger = {
             case StockConditionTriggerType.SummOrder:
                 $('#stock-condition-summ-container').show()
                 $('#stock-condition-sum-count').val(data.ConditionOrderSum)
+
+                data.StockExcludedProducts.forEach(p => {
+                    $(`#stock-excluded-products-items`)[0].sumo.selectItem(p.toString())
+                })
                 break;
             case StockConditionTriggerType.ProductsOrder:
                 $('#stock-condition-products-container').show()
@@ -599,7 +600,6 @@ var StockManger = {
             switch (rewardType) {
                 case RewardType.Discount:
                     $('#stock-type-discount-container').show(animationOption, '', 150)
-                    $('#stock-type-products-excluded-container').show(animationOption, '', 150)
                     break
                 case RewardType.Products:
                     $('#stock-type-products-container').show(animationOption, '', 150)
@@ -659,6 +659,7 @@ var StockManger = {
                     break
                 case StockConditionTriggerType.SummOrder:
                     $('#stock-condition-summ-container').show(animationOption, '', 150)
+                    $('#stock-type-products-excluded-container').show(animationOption, '', 150)
                     break
                 case StockConditionTriggerType.ProductsOrder:
                     $('#stock-condition-products-container').show(
