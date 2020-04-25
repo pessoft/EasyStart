@@ -442,6 +442,15 @@ namespace EasyStart
 
                 var client = DataWrapper.GetClient(order.ClientId);
 
+                // to do fix in mobile app
+                #region hot fix 
+                if (client.BranchId < 1)
+                {
+                    var branchId = DataWrapper.GetBranchIdByCity(client.CityId);
+                    client.BranchId = branchId;
+                    client = DataWrapper.UpdateClient(client);
+                }
+                #endregion
                 if (order.BranchId != client.BranchId)
                 {
                     order.BranchId = client.BranchId;
