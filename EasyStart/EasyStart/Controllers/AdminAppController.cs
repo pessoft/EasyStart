@@ -998,6 +998,8 @@ namespace EasyStart
                 client.ParentReferralCode = oldClient.ParentReferralCode;
                 client.ReferralDiscount = oldClient.ReferralDiscount;
 
+                var branchId = DataWrapper.GetBranchIdByCity(client.CityId);
+                client.BranchId = branchId;
                 var newClient = DataWrapper.UpdateClient(client);
 
                 result.Data = new
