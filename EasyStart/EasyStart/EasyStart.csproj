@@ -446,6 +446,7 @@
     <Content Include="Content\image-processing.css" />
     <Content Include="Content\material-input.css" />
     <Content Include="Content\odometer\odometer-theme-minimal.css" />
+    <Content Include="Content\product-additional-options.css" />
     <Content Include="Content\product-constructor.css" />
     <Content Include="Content\promotion.css" />
     <Content Include="Content\sounds\sound-new-order.mp3" />
@@ -581,6 +582,7 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\notify.js" />
     <Content Include="Scripts\odometer\odometer.js" />
+    <Content Include="Scripts\product-additional-options.js" />
     <Content Include="Scripts\product-constructor.js" />
     <Content Include="Scripts\promotion\cashback-partners.js" />
     <Content Include="Scripts\promotion\coupon.js" />
