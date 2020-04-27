@@ -1098,6 +1098,7 @@ namespace EasyStart.Logic
                     result.Price = product.Price;
                     result.AdditionInfo = product.AdditionInfo;
                     result.ProductType = product.ProductType;
+                    result.ProductAdditionalInfoType = product.ProductAdditionalInfoType;
                     db.SaveChanges();
 
                 }

@@ -2671,3 +2671,17 @@ button {
     justify-content: center;
     align-items: flex-end;
 }
+
+.product-additional-info .bar {
+    width: 145px;
+}
+
+.product-additional-info input {
+    min-width: 145px;
+    width: 145px;
+    margin-right: 20px;
+}
+
+    .product-additional-info input:focus ~ .bar:before {
+        width: 145px;
+    }

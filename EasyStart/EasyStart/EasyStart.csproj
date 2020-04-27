@@ -213,6 +213,7 @@
     <Compile Include="HtmlRenderer\Models\ProductInfoModel.cs" />
     <Compile Include="Hubs\NewOrderHub.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="Logic\AdditionalOptions\ProductAdditionalInfoType.cs" />
     <Compile Include="Logic\AnalyticsDataWrapper.cs" />
     <Compile Include="Logic\BrachClone.cs" />
     <Compile Include="Logic\BuyType.cs" />
@@ -336,6 +337,10 @@
     <Compile Include="Migrations\202004231125389_AddedStockExcludedProductsJSONInStockModel.cs" />
     <Compile Include="Migrations\202004231125389_AddedStockExcludedProductsJSONInStockModel.Designer.cs">
       <DependentUpon>202004231125389_AddedStockExcludedProductsJSONInStockModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202004272052481_AddedProductAdditionalInfoTypeInProductModel.cs" />
+    <Compile Include="Migrations\202004272052481_AddedProductAdditionalInfoTypeInProductModel.Designer.cs">
+      <DependentUpon>202004272052481_AddedProductAdditionalInfoTypeInProductModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
@@ -668,6 +673,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202004231125389_AddedStockExcludedProductsJSONInStockModel.resx">
       <DependentUpon>202004231125389_AddedStockExcludedProductsJSONInStockModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004272052481_AddedProductAdditionalInfoTypeInProductModel.resx">
+      <DependentUpon>202004272052481_AddedProductAdditionalInfoTypeInProductModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

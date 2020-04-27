@@ -845,10 +845,18 @@
                             <span class="bar"></span>
                             <label>Название продукта</label>
                         </div>
-                        <div class="group">
-                            <input required type="text" maxlength="20" id="product-additional-info" />
-                            <span class="bar"></span>
-                            <label>Информация о количестве, массе или объеме</label>
+                        <div class="row product-additional-info-block">
+                            <div class="group product-additional-info">
+                                <input required type="text" maxlength="20" id="product-additional-info" />
+                                <span class="bar"></span>
+                                <label>Информация о количестве</label>
+                            </div>
+                            <select id="product-additional-info-type">
+                                <option value="0">Произвольно</option>
+                                <option value="1">Граммы</option>
+                                <option value="2">Миллилитры</option>
+                                <option value="3">Литры</option>
+                            </select>
                         </div>
                         <div class="group">
                             <input type="number" required id="product-price" min="0" step="0.1" />

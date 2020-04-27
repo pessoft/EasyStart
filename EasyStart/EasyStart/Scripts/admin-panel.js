@@ -43,6 +43,7 @@
     }
 
     selectToSumoSelectProductType()
+    selectToSumoSelectProductAdditionalInfoType()
     selectToSumoSelectCategoryType()
     bindChangePeriodWork()
     bindChangePreorderMinTime()
@@ -135,6 +136,10 @@ function selectToSumoSelectProductType() {
         okCancelInMulti: true,
         locale: ['ОК', 'Отмена', 'Выбрать все'],
     });
+}
+
+function selectToSumoSelectProductAdditionalInfoType() {
+    $("#addProducDialog #product-additional-info-type").SumoSelect()
 }
 
 function selectToSumoSelectCategoryType() {
@@ -776,7 +781,8 @@ function addProduct() {
         Price: $("#product-price").val(),
         Description: $("#description-product").val(),
         Image: $("#addProducDialog img").attr("src"),
-        ProductType: getProductType($("#product-type option:selected"))
+        ProductType: getProductType($("#product-type option:selected")),
+        ProductAdditionalInfoType: $("#product-additional-info-type").val()
     }
     let successFunc = function (result, loader) {
         loader.stop();
@@ -808,7 +814,8 @@ function updateProduct() {
         Price: $("#product-price").val(),
         Description: $("#description-product").val(),
         Image: $("#addProducDialog img").attr("src"),
-        ProductType: getProductType($("#product-type option:selected"))
+        ProductType: getProductType($("#product-type option:selected")),
+        ProductAdditionalInfoType: $("#product-additional-info-type").val()
     }
 
     let successFunc = function (result, loader) {
@@ -829,7 +836,7 @@ function updateProduct() {
             productItem.find(".product-item-price span").html(product.Price);
             productItem.find(".product-item-description").html(product.Description);
             productItem.find(".product-type-item").html(product.ProductType);
-
+            productItem.find(".product-additional-info-value").html(product.ProductAdditionalInfoType);
 
             cancelDialog("#addProducDialog");
         } else {
@@ -957,6 +964,9 @@ function addProductToList(product) {
         <div class="product-type-item hide">
             ${product.ProductType}
         </div>
+        <div class="product-additional-info-value hide">
+            ${product.ProductAdditionalInfoType}
+        </div>
     </div >`;
 
     let $template = $(templateCategoryItem);
@@ -996,17 +1006,21 @@ function editProduct(e, event) {
         Price: parent.find(".product-item-price span").html().trim(),
         Description: parent.find(".product-item-description").html().trim(),
         Image: parent.find("img").attr("src"),
-        ProductType: parseInt(parent.find(".product-type-item").html().trim())
+        ProductType: parseInt(parent.find(".product-type-item").html().trim()),
+        ProductAdditionalInfoType: parseInt(parent.find(".product-additional-info-value").html().trim())
     }
 
     dialog.find("#product-id").val(product.Id);
     dialog.find("#name-product").val(product.Name);
-    dialog.find("#product-additional-info").val(product.AdditionInfo);
+    dialog.find("#product-additional-info").val(product.AdditionInfo); 
+
+    let productAdditionalInfoTypeSumo = dialog.find("#product-additional-info-type")[0].sumo
+    productAdditionalInfoTypeSumo.unSelectAll()
+    productAdditionalInfoTypeSumo.selectItem(product.ProductAdditionalInfoType);
+
     dialog.find("#product-price").val(product.Price);
     dialog.find("#description-product").val(product.Description);
     dialog.find("img").attr("src", product.Image);
-
-
 
     if (product.Image.indexOf("default") == -1) {
         dialog.find("img").removeClass("hide");
