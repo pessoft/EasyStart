@@ -26,11 +26,12 @@ namespace EasyStart.HtmlRenderer.Models
         public string IntercomCode { get; set; }
         public string EntranceNumber { get; set; }
 
+        public BuyType BuyType { get; set; }
         public string AmountPrice { get; set; }
         public string AmountPayCashBack { get; set; }
         public string DeliveryPrice { get; set; }
         public string Discount { get; set; }
-        public string ButType { get; set; }
+        public string BuyTypeName { get; set; }
         public string CashBack { get; set; }
         public string AmountPayDiscountDelivery { get; set; }
 

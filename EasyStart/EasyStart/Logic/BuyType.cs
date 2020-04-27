@@ -11,6 +11,8 @@ namespace EasyStart.Logic
         [Description("Наличные")]
         Cash =1,
         [Description("Банковская карта")]
-        Card =2
+        Card =2,
+        [Description("Онлайн")]
+        Online = 3,
     }
 }

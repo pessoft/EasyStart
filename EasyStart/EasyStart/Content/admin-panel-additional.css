@@ -1,0 +1,18 @@
+﻿.order-tools {
+    display: grid;
+    grid-auto-columns: 30px;
+    grid-auto-flow: column;
+    padding-left: 5px;
+    grid-column-gap: 5px;
+}
+
+.order-tool-btn {
+    background-color: #f3f3f3;
+    border-radius: 3px;
+    color: #a9a9a9;
+    font-size: 1.1em;
+}
+
+.active-tool-item {
+    color: #1d73b7;
+}

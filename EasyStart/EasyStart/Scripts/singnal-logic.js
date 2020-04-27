@@ -11,8 +11,16 @@
     };
 
     $.connection.hub.start().done(function () {
+        console.log('Connection estabilished')
         const currentBrunch = $("#current-brnach").val();
         addListenByBranch([currentBrunch]);
+    });
+
+    $.connection.hub.disconnected(function () {
+        console.log('Connection disconnected')
+        setTimeout(function () {
+            $.connection.hub.start();
+        }, 10000);
     });
 });
 
@@ -21,3 +29,4 @@ var OrderHub;
 function addListenByBranch(brnachIds) {
     OrderHub.server.connect(brnachIds);
 }
+

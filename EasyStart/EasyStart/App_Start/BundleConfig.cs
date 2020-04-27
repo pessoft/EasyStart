@@ -44,6 +44,7 @@ namespace EasyStart
                         "~/Scripts/admin-login.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/admin-panel").Include(
+                        "~/Scripts/admin-panel-additional.js",
                         "~/Scripts/admin-panel.js",
                         "~/Scripts/product-constructor.js",
                         "~/Scripts/analytics.js"));
@@ -82,6 +83,7 @@ namespace EasyStart
 
             bundles.Add(new StyleBundle("~/admin-panel/css").Include(
                       "~/Content/admin-panel.css",
+                      "~/Content/admin-panel-additional.css",
                       "~/Content/product-constructor.css",
                       "~/Content/analytics.css"));
 

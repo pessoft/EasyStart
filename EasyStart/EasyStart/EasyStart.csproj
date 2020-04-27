@@ -223,7 +223,10 @@
     <Compile Include="Logic\Notification\EmailNotification\RestorePasswordNotification.cs" />
     <Compile Include="Logic\PreprocessorDataAPI.cs" />
     <Compile Include="Logic\PromotionLogic.cs" />
+    <Compile Include="Logic\Report\GeneralUserQuantity.cs" />
+    <Compile Include="Logic\Report\ActiveUsersReport.cs" />
     <Compile Include="Logic\SettingsValidator.cs" />
+    <Compile Include="Logic\StockInteractionType.cs" />
     <Compile Include="Logic\StyleTypeIngredient.cs" />
     <Compile Include="Logic\Transaction\TransactionLogic.cs" />
     <Compile Include="Logic\Transaction\TransactionWrapper.cs" />
@@ -310,6 +313,30 @@
     <Compile Include="Migrations\202003281344574_AddTypeDeliverySetting.Designer.cs">
       <DependentUpon>202003281344574_AddTypeDeliverySetting.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202004021753547_AddOnlinePayInDeliverySetting.cs" />
+    <Compile Include="Migrations\202004021753547_AddOnlinePayInDeliverySetting.Designer.cs">
+      <DependentUpon>202004021753547_AddOnlinePayInDeliverySetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202004051002153_AddedFondyOnlinePayData.cs" />
+    <Compile Include="Migrations\202004051002153_AddedFondyOnlinePayData.Designer.cs">
+      <DependentUpon>202004051002153_AddedFondyOnlinePayData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202004101238140_AddedIsAcceptedOnlinePayCondition.cs" />
+    <Compile Include="Migrations\202004101238140_AddedIsAcceptedOnlinePayCondition.Designer.cs">
+      <DependentUpon>202004101238140_AddedIsAcceptedOnlinePayCondition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202004191818185_AddedCommentCauseCancelInOrderModel.cs" />
+    <Compile Include="Migrations\202004191818185_AddedCommentCauseCancelInOrderModel.Designer.cs">
+      <DependentUpon>202004191818185_AddedCommentCauseCancelInOrderModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202004222215089_AddedStockInteractionTypeInPromotionSetting.cs" />
+    <Compile Include="Migrations\202004222215089_AddedStockInteractionTypeInPromotionSetting.Designer.cs">
+      <DependentUpon>202004222215089_AddedStockInteractionTypeInPromotionSetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202004231125389_AddedStockExcludedProductsJSONInStockModel.cs" />
+    <Compile Include="Migrations\202004231125389_AddedStockExcludedProductsJSONInStockModel.Designer.cs">
+      <DependentUpon>202004231125389_AddedStockExcludedProductsJSONInStockModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -340,6 +367,8 @@
     <Compile Include="Models\JsonResultModel.cs" />
     <Compile Include="Models\LoginDataModel.cs" />
     <Compile Include="Models\Notification\OptionsNotificationNewOrderModel.cs" />
+    <Compile Include="Models\OnlinePay\Fondy\PaymentStatus.cs" />
+    <Compile Include="Models\OnlinePay\StatusResponse.cs" />
     <Compile Include="Models\OrderDetailConstructorProduct.cs" />
     <Compile Include="Models\OrderDetailProduct.cs" />
     <Compile Include="Models\OrderInfoParams.cs" />
@@ -377,15 +406,18 @@
     <Compile Include="Models\UserDataPhoneApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utils\FondyErrorCodeHelper.cs" />
     <Compile Include="Utils\CityHelper.cs" />
     <Compile Include="Utils\ConstructorProductHelper.cs" />
     <Compile Include="Utils\DateTimeHepler.cs" />
     <Compile Include="Utils\EnumHelper.cs" />
     <Compile Include="Utils\StringHelper.cs" />
+    <Compile Include="Utils\Utils.cs" />
     <Compile Include="Utils\WeeklyDayHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\admin-login.css" />
+    <Content Include="Content\admin-panel-additional.css" />
     <Content Include="Content\admin-panel.css" />
     <Content Include="Content\analytics.css" />
     <Content Include="Content\cropper.css" />
@@ -490,6 +522,7 @@
     <Content Include="Resource\EmailTemplateRestorePassword.html" />
     <Content Include="Resource\FCMTopicName.txt" />
     <Content Include="Scripts\admin-login.js" />
+    <Content Include="Scripts\admin-panel-additional.js" />
     <Content Include="Scripts\admin-panel.js" />
     <Content Include="Resource\City.json" />
     <Content Include="Content\fontawesome\webfonts\fa-brands-400.eot" />
@@ -513,6 +546,9 @@
     <Content Include="Resource\UserManual.pdf" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Resource\FCMAuthKey.json" />
+    <Content Include="Resource\fondy-error-code-ru.json" />
+    <Content Include="Resource\Condition.pdf" />
+    <Content Include="Resource\OnlinePaySettingHelper.pdf" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\analytics.js" />
     <Content Include="Scripts\compressor.js" />
@@ -612,6 +648,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202003281344574_AddTypeDeliverySetting.resx">
       <DependentUpon>202003281344574_AddTypeDeliverySetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004021753547_AddOnlinePayInDeliverySetting.resx">
+      <DependentUpon>202004021753547_AddOnlinePayInDeliverySetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004051002153_AddedFondyOnlinePayData.resx">
+      <DependentUpon>202004051002153_AddedFondyOnlinePayData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004101238140_AddedIsAcceptedOnlinePayCondition.resx">
+      <DependentUpon>202004101238140_AddedIsAcceptedOnlinePayCondition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004191818185_AddedCommentCauseCancelInOrderModel.resx">
+      <DependentUpon>202004191818185_AddedCommentCauseCancelInOrderModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004222215089_AddedStockInteractionTypeInPromotionSetting.resx">
+      <DependentUpon>202004222215089_AddedStockInteractionTypeInPromotionSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004231125389_AddedStockExcludedProductsJSONInStockModel.resx">
+      <DependentUpon>202004231125389_AddedStockExcludedProductsJSONInStockModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
