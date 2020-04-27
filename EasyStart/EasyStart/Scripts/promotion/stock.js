@@ -184,6 +184,8 @@ var StockManger = {
 
                 $('#stock-discount-val').val(data.DiscountValue)
                 $(`#discount-type`)[0].sumo.selectItem(data.DiscountType.toString())
+
+                $('#stock-products-count').val(data.CountBonusProducts)
                 break;
             case RewardType.Products:
                 $('#stock-type-products-container').show()
@@ -206,6 +208,10 @@ var StockManger = {
             case StockConditionTriggerType.SummOrder:
                 $('#stock-condition-summ-container').show()
                 $('#stock-condition-sum-count').val(data.ConditionOrderSum)
+
+                data.StockExcludedProducts.forEach(p => {
+                    $(`#stock-excluded-products-items`)[0].sumo.selectItem(p.toString())
+                })
                 break;
             case StockConditionTriggerType.ProductsOrder:
                 $('#stock-condition-products-container').show()
@@ -257,6 +263,15 @@ var StockManger = {
             return JSON.stringify(prodictIds)
         }
 
+        const getStockExcludedProductsJSON = () => {
+            const prodictIds = []
+            $('#stock-excluded-products-items option:selected').each(function () {
+                prodictIds.push(parseInt($(this).val()))
+            })
+
+            return JSON.stringify(prodictIds)
+        }
+
         const getConditionCountProductsJSON = () => {
             const dict = {} //key - productId, value - count
 
@@ -291,6 +306,7 @@ var StockManger = {
             discountType: parseInt($('#discount-type option:selected').val()),
             countBonusProducts: parseInt($('#stock-products-count').val()),
             allowedBonusProductsJSON: getAllowedBonusProductsJSON(),
+            stockExcludedProductsJSON: getStockExcludedProductsJSON(),
             conditionType: parseInt($('#stock-condition-type option:selected').val()),
             conditionDeliveryType: parseInt($('#stock-condition-delivery-type option:selected').val()),
             conditionOrderSum: getIntValue($('#stock-condition-sum-count').val()),
@@ -360,6 +376,7 @@ var StockManger = {
         $('#stock-discount-val').val('')
         $('#stock-products-count').val(1)
         $('#bonus-product-items')[0].sumo.reload()
+        $('#stock-excluded-products-items')[0].sumo.reload()
         if ($('#discount-type')[0].sumo) {
             $('#discount-type')[0].sumo.selectItem('1')
         }
@@ -642,6 +659,7 @@ var StockManger = {
                     break
                 case StockConditionTriggerType.SummOrder:
                     $('#stock-condition-summ-container').show(animationOption, '', 150)
+                    $('#stock-type-products-excluded-container').show(animationOption, '', 150)
                     break
                 case StockConditionTriggerType.ProductsOrder:
                     $('#stock-condition-products-container').show(

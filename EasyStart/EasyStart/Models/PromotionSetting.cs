@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasyStart.Logic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,5 +12,6 @@ namespace EasyStart.Models
         public int BranchId { get; set; }
         public bool IsShowStockBanner { get; set; } = true;
         public bool IsShowNewsBanner { get; set; } = true;
+        public StockInteractionType StockInteractionType { get; set; }
     }
 }

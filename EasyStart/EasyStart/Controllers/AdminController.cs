@@ -292,6 +292,8 @@ namespace EasyStart.Controllers
                         var converter = new ConverterBranchSetting();
                         var branchView = converter.GetBranchSettingViews(branch, setting, typeBranch);
 
+                        new PromotionDefaultSetting(newBranchId).SaveSettings();
+
                         result.Data = branchView;
                         result.Success = true;
                     }
@@ -1432,6 +1434,15 @@ namespace EasyStart.Controllers
             }
 
             return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public void CheerupServer()
+        {
+            //reg.ru засыпает через 5 минут простоя
+            //поэтому мы раз в 2 минуту сюда стучимся
+            //что бы он не уснусл когда страница открыта
         }
     }
 }

@@ -37,6 +37,23 @@ namespace EasyStart.Models
                 return null;
             }
         }
+
+        public string StockExcludedProductsJSON { get; set; }
+
+        [NotMapped]
+        public List<int> StockExcludedProducts
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(StockExcludedProductsJSON))
+                {
+                    return JsonConvert.DeserializeObject<List<int>>(StockExcludedProductsJSON);
+                }
+
+                return null;
+            }
+        }
+
         public StockConditionTriggerType ConditionType { get; set; }
         public StockConditionDeliveryType ConditionDeliveryType { get; set; }
         public int ConditionOrderSum { get; set; }

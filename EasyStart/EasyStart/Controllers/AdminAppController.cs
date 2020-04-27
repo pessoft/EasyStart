@@ -7,6 +7,8 @@ using EasyStart.Logic.Transaction;
 using EasyStart.Models;
 using EasyStart.Models.FCMNotification;
 using EasyStart.Models.Notification;
+using EasyStart.Models.OnlinePay;
+using EasyStart.Models.OnlinePay.Fondy;
 using EasyStart.Models.Transaction;
 using EasyStart.Utils;
 using Newtonsoft.Json;
@@ -16,10 +18,12 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using System.Web.Script.Serialization;
 
 namespace EasyStart
 {
@@ -88,6 +92,15 @@ namespace EasyStart
             return branchCityDict;
         }
 
+        private DeliverySettingModel GetDeliverySettingForAPI(int branchId)
+        {
+            var deliverySettings = DataWrapper.GetDeliverySetting(branchId);
+            deliverySettings.PaymentKey = "";
+            deliverySettings.CreditKey = "";
+
+            return deliverySettings;
+        }
+
         [HttpPost]
         public JsonResultModel GetMainData([FromBody] MainDataSignatureModel data)
         {
@@ -109,7 +122,7 @@ namespace EasyStart
                 var products = GetAllProducts(branchId);
                 var constructorCategories = GetConstructorCategories(branchId);
                 var ingredients = GetIngredients(constructorCategories.Keys);
-                var deliverySettings = DataWrapper.GetDeliverySetting(branchId);
+                var deliverySettings = GetDeliverySettingForAPI(branchId);
                 var organizationSettings = DataWrapper.GetSetting(branchId);
 
                 var promotionLogic = new PromotionLogic();
@@ -187,8 +200,13 @@ namespace EasyStart
             try
             {
                 var categories = DataWrapper.GetCategoriesVisible(branchId);
-                categories.ForEach(p => PreprocessorDataAPI.ChangeImagePath(p));
-
+                for (var i = 0; i < categories.Count; ++i)
+                {
+                    var category = categories[i];
+                    category.OrderNumber = i + 1;
+                    PreprocessorDataAPI.ChangeImagePath(category);
+                }
+                
                 return categories;
             }
             catch (Exception ex)
@@ -314,6 +332,105 @@ namespace EasyStart
         }
 
         [HttpPost]
+        public JsonResultModel CompleteOrderPay([FromBody]int orderId)
+        {
+            var result = new JsonResultModel();
+            OrderModel order = null;
+
+            try
+            {
+                var currentContext = System.Web.HttpContext.Current;
+                order = DataWrapper.GetOrder(orderId);
+
+                if (order == null)
+                    throw new Exception($"Заказ {orderId} не найден");
+
+                var deliverSetting = DataWrapper.GetDeliverySetting(order.BranchId);
+
+                Func<string> getSignature = () =>
+                {
+                    var currency = "RUB";
+                    var amount = Utils.Utils.ConvertRubToKopeks(order.AmountPayDiscountDelivery);
+                    var signatureStr = $"{deliverSetting.PaymentKey}|{deliverSetting.MerchantId}|{order.Id}";
+                    var signatureSHA = Utils.Utils.SHA1(signatureStr);
+                    return signatureSHA;
+                };
+
+                Func<Task<PaymentStatus>> checkPaymentStatus = async () =>
+               {
+                   string json = new JavaScriptSerializer().Serialize(new
+                   {
+                       request = new
+                       {
+                           order_id = order.Id,
+                           merchant_id = deliverSetting.MerchantId,
+                           signature = getSignature()
+                       }
+                   });
+
+                   var rContent = "";
+                   using (var client = new HttpClient())
+                   {
+                       var response = client.PostAsync(
+                           "https://api.fondy.eu/api/status/order_id",
+                            new StringContent(json, Encoding.UTF8, "application/json")).Result;
+                       rContent = await response.Content.ReadAsStringAsync();
+                   }
+
+                   var indexOpenBracket = rContent.LastIndexOf("{");
+                   var length = rContent.IndexOf("}") - indexOpenBracket + 1;
+                   var jsonResponse = rContent.Substring(indexOpenBracket, length);
+                   var payStatus = JsonConvert.DeserializeObject<PaymentStatus>(jsonResponse);
+
+                   return payStatus;
+               };
+
+                var paymentStatus = checkPaymentStatus().Result;
+
+                if (paymentStatus.ResponseStatus == StatusResponse.SUCCESS)
+                {
+                    if (order.OrderStatus == OrderStatus.PendingPay)
+                    {
+                        var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
+                        var dateUpdate = date;
+                        var updateOrderStatus = new UpdaterOrderStatus { DateUpdate = dateUpdate, OrderId = order.Id, Status = OrderStatus.Processing };
+
+                        DataWrapper.UpdateStatusOrder(updateOrderStatus);
+                        var updateOrder = DataWrapper.GetOrder(order.Id);
+
+                        if (updateOrder.OrderStatus == OrderStatus.Processing)
+                        {
+                            result.Success = true;
+                            result.Data = orderId;
+                            Task.Run(() => NotifyAboutNewOrder(currentContext, updateOrder, deliverSetting));
+                        }
+                        else
+                            throw new Exception("При обработке заказа что-то пошло не так");
+                    }
+                    else
+                    {
+                        result.ErrorMessage = "Закак уже был оплачен";
+                    }
+                }
+                else
+                {
+                    result.ErrorMessage = FondyErrorCodeHelper.GetErrorDescription(paymentStatus.ErrorCode);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.Success = false;
+                result.ErrorMessage = ex.Message;
+
+                if (order != null)
+                    CancelOrder(order.Id, order.BranchId);
+            }
+
+            return result;
+        }
+
+        [HttpPost]
         public JsonResultModel SendOrder([FromBody]OrderModel order)
         {
             var result = new JsonResultModel();
@@ -325,9 +442,23 @@ namespace EasyStart
 
                 var client = DataWrapper.GetClient(order.ClientId);
 
+                // to do fix in mobile app
+                #region hot fix 
+                if (client.BranchId < 1)
+                {
+                    var branchId = DataWrapper.GetBranchIdByCity(client.CityId);
+                    client.BranchId = branchId;
+                    client = DataWrapper.UpdateClient(client);
+                }
+                #endregion
                 if (order.BranchId != client.BranchId)
                 {
                     order.BranchId = client.BranchId;
+                }
+
+                if (order.OrderStatus != OrderStatus.PendingPay)
+                {
+                    order.OrderStatus = OrderStatus.Processing;
                 }
 
                 var deliverSetting = DataWrapper.GetDeliverySetting(order.BranchId);
@@ -386,8 +517,11 @@ namespace EasyStart
                     result.Data = numberOrder;
                     result.Success = true;
 
-                    var currentContext = System.Web.HttpContext.Current;
-                    Task.Run(() => NotifyAboutNewOrder(currentContext, order, deliverSetting));
+                    if (order.OrderStatus == OrderStatus.Processing)
+                    {
+                        var currentContext = System.Web.HttpContext.Current;
+                        Task.Run(() => NotifyAboutNewOrder(currentContext, order, deliverSetting));
+                    }
                 }
             }
             catch (Exception ex)
@@ -873,6 +1007,8 @@ namespace EasyStart
                 client.ParentReferralCode = oldClient.ParentReferralCode;
                 client.ReferralDiscount = oldClient.ReferralDiscount;
 
+                var branchId = DataWrapper.GetBranchIdByCity(client.CityId);
+                client.BranchId = branchId;
                 var newClient = DataWrapper.UpdateClient(client);
 
                 result.Data = new

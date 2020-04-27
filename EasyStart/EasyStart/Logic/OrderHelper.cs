@@ -163,11 +163,12 @@ namespace EasyStart.Logic
 
         private static void SetPrice(OrderIfnoModel orderInfo, OrderModel order)
         {
+            orderInfo.BuyType = order.BuyType;
             orderInfo.AmountPrice = $"{order.AmountPay} руб.";
             orderInfo.AmountPayCashBack = $"{order.AmountPayCashBack} руб.";
             orderInfo.DeliveryPrice = $"{order.DeliveryPrice} руб.";
             orderInfo.Discount = GetDiscountStr(order);
-            orderInfo.ButType = order.BuyType.GetDescription();
+            orderInfo.BuyTypeName = order.BuyType.GetDescription();
             orderInfo.CashBack = order.CashBack == 0 ? $"{order.CashBack} руб." : $"{order.CashBack} руб. ({Math.Round(order.CashBack - order.AmountPayDiscountDelivery, 2)} руб.)";
             orderInfo.AmountPayDiscountDelivery = $"{order.AmountPayDiscountDelivery} руб."; ;
         }
