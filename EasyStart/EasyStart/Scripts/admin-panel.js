@@ -806,7 +806,7 @@ function updateProduct() {
     let loader = new Loader($("#addProducDialog form"));
     loader.start();
 
-    let product = {
+    let updateProduct = {
         Id: $("#product-id").val(),
         CategoryId: SelectIdCategoryId,
         Name: $("#name-product").val(),
@@ -821,13 +821,11 @@ function updateProduct() {
     let successFunc = function (result, loader) {
         loader.stop();
         if (result.Success) {
-            var oldProduct = getProductById(product.Id);
-            oldProduct.Image = product.Image;
-            oldProduct.Name = product.Name;
-            oldProduct.AdditionInfo = product.AdditionInfo;
-            oldProduct.Price = product.Price;
-            oldProduct.Description = product.Description;
-            oldProduct.ProductType = product.ProductType;
+            const product = result.Data
+            const index = DataProduct.Products.findIndex(p => p.Id == product.Id)
+
+            if (index != -1)
+                DataProduct.Products[index] = result.Data
 
             let productItem = $(`[product-id=${product.Id}]`);
             productItem.find(".product-item-image img").attr("src", product.Image);
@@ -846,7 +844,7 @@ function updateProduct() {
         }
     }
 
-    $.post("/Admin/UpdateProduct", product, successCallBack(successFunc, loader)).catch(function () {
+    $.post("/Admin/UpdateProduct", updateProduct, successCallBack(successFunc, loader)).catch(function () {
         errorFunc()
     });
 }
