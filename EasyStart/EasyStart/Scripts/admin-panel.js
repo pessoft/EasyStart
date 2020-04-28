@@ -832,7 +832,9 @@ function updateProduct() {
             let productItem = $(`[product-id=${product.Id}]`);
             productItem.find(".product-item-image img").attr("src", product.Image);
             productItem.find(".product-item-name").html(product.Name);
-            productItem.find(".product-item-additional-info").html(product.AdditionInfo);
+
+            const additionalInfo = getProductAdditionalInfoTypeStr(product.AdditionInfo, product.ProductAdditionalInfoType)
+            productItem.find(".product-item-additional-info").html(additionalInfo);
             productItem.find(".product-item-price span").html(product.Price);
             productItem.find(".product-item-description").html(product.Description);
             productItem.find(".product-type-item").html(product.ProductType);
@@ -931,6 +933,12 @@ function updateProductConstructorToList(product) {
     }
 }
 
+function getProductAdditionalInfoTypeStr(additionInfo, productAdditionalInfoType) {
+    let str = `${additionInfo} ${ProductAdditionalInfoTypeShortName[productAdditionalInfoType]}`
+
+    return str.trim()
+}
+
 function addProductToList(product) {
     let templateCategoryItem = `
     <div class="product-item" category-id="${product.CategoryId}" product-id="${product.Id}">
@@ -944,7 +952,7 @@ function addProductToList(product) {
             <div class="product-item-raty">
             </div>
             <div class="product-item-additional-info">
-                ${product.AdditionInfo}
+                ${getProductAdditionalInfoTypeStr(product.AdditionInfo, product.ProductAdditionalInfoType)}
             </div>
             <div class="product-item-price">
                 <span>${product.Price}</span>
@@ -1002,7 +1010,7 @@ function editProduct(e, event) {
     let product = {
         Id: parent.attr("product-id"),
         Name: parent.find(".product-item-name").html().trim(),
-        AdditionInfo: parent.find(".product-item-additional-info").html().trim(),
+        AdditionInfo: parseFloat(parent.find(".product-item-additional-info").html().trim()),
         Price: parent.find(".product-item-price span").html().trim(),
         Description: parent.find(".product-item-description").html().trim(),
         Image: parent.find("img").attr("src"),
@@ -1012,13 +1020,13 @@ function editProduct(e, event) {
 
     dialog.find("#product-id").val(product.Id);
     dialog.find("#name-product").val(product.Name);
-    dialog.find("#product-additional-info").val(product.AdditionInfo); 
+    dialog.find("#product-additional-info").val(product.AdditionInfo);
 
     let productAdditionalInfoTypeSumo = dialog.find("#product-additional-info-type")[0].sumo
     productAdditionalInfoTypeSumo.unSelectAll()
     productAdditionalInfoTypeSumo.selectItem(product.ProductAdditionalInfoType);
 
-    dialog.find('#btn-function-product-additional-info').attr('disabled', product.ProductAdditionalInfoType == ProductAdditionalInfoType.Custom )
+    dialog.find('#btn-function-product-additional-info').attr('disabled', product.ProductAdditionalInfoType == ProductAdditionalInfoType.Custom)
     dialog.find("#product-price").val(product.Price);
     dialog.find("#description-product").val(product.Description);
     dialog.find("img").attr("src", product.Image);
@@ -2146,7 +2154,7 @@ var Dialog = {
         $dialog.find("option").removeAttr("selected");
         $dialog.find("select").val("0")
         $dialog.find('btn-function-product-additional-info').attr('disabled', true)
-
+        $dialog.find('#product-additional-info').attr('type', 'text')
         const $select = $dialog.find("select")
         $select.each(function () {
             const $e = $(this)
@@ -2724,11 +2732,11 @@ class OrderDetails {
             const $btn = $('#cause-comment-cancel-order-btn')
             $btn.unbind('click')
             $btn.click('click', () => actionConfirmCancel(orderStatus))
-       
+
             Dialog.showModal('#confirmOrderCancelDialog')
         }
 
-        
+
 
         const actionShowCauseCancelComment = () => {
             const $inputHistoryCommentCauseCancel = $('#history-cause-comment-cancel-order')
@@ -2753,7 +2761,7 @@ class OrderDetails {
 
             if (this.details.Status == OrderStatus.Cancellation)
                 $causeCancelComment.bind("click", actionShowCauseCancelComment)
-            else 
+            else
                 $causeCancelComment.attr("disabled", true);
         } else {
             $proccesed.removeAttr("disabled");
