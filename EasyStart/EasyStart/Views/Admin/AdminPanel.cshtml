@@ -1985,6 +1985,27 @@
         </div>
     </dialog>
 
+    <dialog id="functionAdditionalInfoDialog">
+        <div class="dialog-wrapper dialog-body-cause-cancel-wrapper">
+            <div class="dialog-header-title">
+                Настройка опциональных свойств
+            </div>
+            <button class="dialog-btn-close" onclick="Dialog.close('#functionAdditionalInfoDialog')">
+                <i class="fal fa-times"></i>
+            </button>
+            <div class="dialog-body dialog-body--cancel">
+                <div class="cause-comment-cancel-order-block">
+                    <textarea id="history-cause-comment-cancel-order" class="default-style-input" placeholder="Причина не указана" readonly></textarea>
+                </div>
+                <div class="cause-cancel-footer">
+                    <button class="simple-text-btn" id="history-cause-comment-cancel-order-btn">
+                        Закрыть
+                    </button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
     <template id="review-item-template">
         <div class="review-item">
             <div class="review-item-header">
