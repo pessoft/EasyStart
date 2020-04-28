@@ -1018,6 +1018,7 @@ function editProduct(e, event) {
     productAdditionalInfoTypeSumo.unSelectAll()
     productAdditionalInfoTypeSumo.selectItem(product.ProductAdditionalInfoType);
 
+    dialog.find('#btn-function-product-additional-info').attr('disabled', product.ProductAdditionalInfoType == ProductAdditionalInfoType.Custom )
     dialog.find("#product-price").val(product.Price);
     dialog.find("#description-product").val(product.Description);
     dialog.find("img").attr("src", product.Image);
@@ -2144,13 +2145,16 @@ var Dialog = {
         $dialog.find("img").not('.no-clean').addClass("hide");
         $dialog.find("option").removeAttr("selected");
         $dialog.find("select").val("0")
+        $dialog.find('btn-function-product-additional-info').attr('disabled', true)
 
         const $select = $dialog.find("select")
-
-        if ($select[0] && $select[0].sumo) {
-            $select[0].sumo.enable()
-            $select[0].sumo.reload()
-        }
+        $select.each(function () {
+            const $e = $(this)
+            if ($e[0].sumo) {
+                $e[0].sumo.enable()
+                $e[0].sumo.reload()
+            }
+        })
     }
 }
 

@@ -2673,15 +2673,15 @@ button {
 }
 
 .product-additional-info .bar {
-    width: 145px;
+    width: 130px;
 }
 
 .product-additional-info input {
-    min-width: 145px;
-    width: 145px;
+    min-width: 130px;
+    width: 130px;
     margin-right: 20px;
 }
 
     .product-additional-info input:focus ~ .bar:before {
-        width: 145px;
+        width: 130px;
     }
