@@ -197,7 +197,7 @@ dialog,
 
     .enter-dialog-data textarea {
         min-width: 320px;
-        min-height: 160px;
+        min-height: 120px;
         resize: none;
         margin-top: 2%;
         font-size: 1em;

@@ -1006,16 +1006,17 @@ function editProduct(e, event) {
 
     let dialog = $("#addProducDialog");
     let parent = $($(e).parents(".product-item"));
-
+    const productAdditionalInfoType = parseInt(parent.find(".product-additional-info-value").html().trim())
+    const additionalInfo = parent.find(".product-item-additional-info").html().trim() 
     let product = {
         Id: parent.attr("product-id"),
         Name: parent.find(".product-item-name").html().trim(),
-        AdditionInfo: parseFloat(parent.find(".product-item-additional-info").html().trim()),
+        AdditionInfo: ProductAdditionalInfoType.Custom == productAdditionalInfoType ? additionalInfo : parseFloat(additionalInfo),
         Price: parent.find(".product-item-price span").html().trim(),
         Description: parent.find(".product-item-description").html().trim(),
         Image: parent.find("img").attr("src"),
         ProductType: parseInt(parent.find(".product-type-item").html().trim()),
-        ProductAdditionalInfoType: parseInt(parent.find(".product-additional-info-value").html().trim())
+        ProductAdditionalInfoType: productAdditionalInfoType
     }
 
     dialog.find("#product-id").val(product.Id);
