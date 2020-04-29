@@ -857,7 +857,7 @@
                                 <option value="2">Миллилитры</option>
                                 <option value="3">Литры</option>
                             </select>
-                            <button id="btn-function-product-additional-info" class="simple-text-btn btn-function-product-additional-info">
+                            <button type="button" onclick="openFunctionAdditionalInfoDialog(event)" id="btn-function-product-additional-info" class="simple-text-btn btn-function-product-additional-info">
                                 <i class="fal fa-ellipsis-v-alt"></i>
                             </button>
                         </div>
@@ -872,7 +872,7 @@
                             <span class="bar"></span>
                             <label>Описание продукта</label>
                         </div>
-                        <button id="btn-product-options" class="simple-text-btn btn-product-options">
+                        <button type="button" onclick="openAdditionalOptionsDialog(event)" id="btn-product-options" class="simple-text-btn btn-product-options">
                             Настроить опции
                         </button>
                     </div>
@@ -1985,21 +1985,62 @@
         </div>
     </dialog>
 
+    <dialog id="productAdditionalOptionsDialog">
+        <div class="dialog-wrapper dialog-body-additional-options-wrapper">
+            <div class="dialog-header-title">
+                Настройка дополнительных опций
+            </div>
+            <button class="dialog-btn-close" onclick="Dialog.close('#productAdditionalOptionsDialog')">
+                <i class="fal fa-times"></i>
+            </button>
+            <div class="dialog-body dialog-body-additional-options">
+                <div class="additional-options-menu-header">
+                    <button class="simple-text-btn" id="btn-additional-options-add">
+                        <i class="fal fa-plus"></i>
+                        Добавить опцию
+                    </button>
+                    <button class="simple-text-btn" id="btn-additional-options-select" disabled>
+                        <i class="fal fa-list-ul"></i>
+                        Выбрать из существующих
+                    </button>
+                </div>
+                <div class="additional-options-list custom-scroll">
+                    <div class="empty-container">Добавте дополнительные опции</div>
+                </div>
+                <div class="additional-options-menu-footer">
+                    <button class="simple-text-btn" id="btn-additional-options-done">
+                        Готово
+                    </button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
     <dialog id="functionAdditionalInfoDialog">
-        <div class="dialog-wrapper dialog-body-cause-cancel-wrapper">
+        <div class="dialog-wrapper dialog-body-function-additional-wrapper">
             <div class="dialog-header-title">
                 Настройка опциональных свойств
             </div>
             <button class="dialog-btn-close" onclick="Dialog.close('#functionAdditionalInfoDialog')">
                 <i class="fal fa-times"></i>
             </button>
-            <div class="dialog-body dialog-body--cancel">
-                <div class="cause-comment-cancel-order-block">
-                    <textarea id="history-cause-comment-cancel-order" class="default-style-input" placeholder="Причина не указана" readonly></textarea>
+            <div class="dialog-body dialog-body-function-additional">
+                <div class="function-additional-menu-header">
+                    <button class="simple-text-btn" id="btn-function-additional-add">
+                        <i class="fal fa-plus"></i>
+                        Добавить свойство
+                    </button>
+                    <button class="simple-text-btn" id="btn-function-additional-select" disabled>
+                        <i class="fal fa-list-ul"></i>
+                        Выбрать из существующих
+                    </button>
                 </div>
-                <div class="cause-cancel-footer">
-                    <button class="simple-text-btn" id="history-cause-comment-cancel-order-btn">
-                        Закрыть
+                <div class="functions-additional custom-scroll">
+                    <div class="empty-container">Добавте опциональные свойства</div>
+                </div>
+                <div class="function-additional-menu-footer">
+                    <button class="simple-text-btn" id="btn-function-additional-done">
+                        Готово
                     </button>
                 </div>
             </div>

@@ -22,3 +22,15 @@ function onChangeProductAdditaonalInfoType(e) {
     $inputAdditionalInfo.attr('type', type)
     $btnFunctionAdditionnalInfo.attr('disabled', value == ProductAdditionalInfoType.Custom)
 }
+
+function openFunctionAdditionalInfoDialog(event) {
+    event.stopPropagation()
+
+    Dialog.showModal($('#functionAdditionalInfoDialog'))
+}
+
+function openAdditionalOptionsDialog(event) {
+    event.stopPropagation()
+
+    Dialog.showModal($('#productAdditionalOptionsDialog'))
+}

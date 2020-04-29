@@ -2404,7 +2404,8 @@ button.simple-text-btn:disabled:hover {
         font-size: 0.7em;
     }
 
-.area-delivery-empty {
+.area-delivery-empty,
+.empty-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -2656,15 +2657,15 @@ button {
 }
 
 .cause-comment-cancel-order-block {
-    display:flex;
-    justify-content:center;
+    display: flex;
+    justify-content: center;
     align-items: center;
 }
 
-.cause-comment-cancel-order-block textarea {
-    width: 95%;
-    height: 90px !important;
-}
+    .cause-comment-cancel-order-block textarea {
+        width: 95%;
+        height: 90px !important;
+    }
 
 .cause-cancel-footer {
     display: flex;
