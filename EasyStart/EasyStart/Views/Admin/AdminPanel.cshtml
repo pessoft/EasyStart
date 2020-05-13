@@ -2026,7 +2026,7 @@
             </button>
             <div class="dialog-body dialog-body-function-additional">
                 <div class="function-additional-menu-header">
-                    <button class="simple-text-btn" id="btn-function-additional-add">
+                    <button class="simple-text-btn" type="button" id="btn-function-additional-add" onclick="openCreateAdditionalOptionsDialog(event)">
                         <i class="fal fa-plus"></i>
                         Добавить свойство
                     </button>
@@ -2039,6 +2039,35 @@
                     <div class="empty-container">Добавте опциональные свойства</div>
                 </div>
                 <div class="function-additional-menu-footer">
+                    <button class="simple-text-btn" id="btn-function-additional-done">
+                        Готово
+                    </button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="createFunctionAdditionalInfoDialog">
+        <div class="dialog-wrapper dialog-body-create-function-additional-wrapper">
+            <div class="dialog-header-title">
+                Добавлние опционального свойства
+            </div>
+            <button class="dialog-btn-close" onclick="Dialog.close('#createFunctionAdditionalInfoDialog')">
+                <i class="fal fa-times"></i>
+            </button>
+            <div class="dialog-body dialog-body-create-function-additional">
+                <div class="create-function-additional-menu-header">
+                    <input id="function-additional-info-name-block" type="text" oninput="" class="default-color default-style-input"
+                           placeholder="Наиминование свойства (например: Размер)">
+                    <button class="simple-text-btn" id="btn-function-additional-add-item">
+                        <i class="fal fa-plus"></i>
+                        Добавить элемент
+                    </button>
+                </div>
+                <div class="create-functions-additional custom-scroll">
+                    <div class="empty-container">Добавте элементы свойства</div>
+                </div>
+                <div class="create-function-additional-menu-footer">
                     <button class="simple-text-btn" id="btn-function-additional-done">
                         Готово
                     </button>

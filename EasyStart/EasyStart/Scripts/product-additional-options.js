@@ -34,3 +34,9 @@ function openAdditionalOptionsDialog(event) {
 
     Dialog.showModal($('#productAdditionalOptionsDialog'))
 }
+
+function openCreateAdditionalOptionsDialog(event) {
+    event.stopPropagation()
+
+    Dialog.showModal($('#createFunctionAdditionalInfoDialog'))
+}
