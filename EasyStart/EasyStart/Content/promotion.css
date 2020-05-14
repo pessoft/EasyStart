@@ -1130,3 +1130,9 @@ button#push-image-btn-remove:hover {
 .promotion-stock-index-block {
     width: 310px;
 }
+
+.info-image-size-news {
+    font-size: 0.8em;
+    margin-top: 5px;
+    color: rgba(0,0,0,.54);
+}
