@@ -77,6 +77,10 @@ namespace EasyStart.Models
                 return null;
             }
         }
+
+        [NotMapped]
+        public bool OnlyShowNews { get; set; }
+
         public string Name { get; set; }
         public string Description { get; set; }
         public string Image { get; set; }
