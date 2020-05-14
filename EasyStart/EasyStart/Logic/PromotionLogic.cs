@@ -134,7 +134,8 @@ namespace EasyStart.Logic
                     {
                         excluded = stocksWithTriggerBirhday.Select(p => p.Id).ToList();
                     }
-                } else
+                }
+                else
                 {
                     excluded = stocksWithTriggerBirhday.Select(p => p.Id).ToList();
                 }
@@ -152,8 +153,14 @@ namespace EasyStart.Logic
                 return stocks;
             }
 
+            Action<StockModel, List<int>> onlyShowSetter = (p, blackList) =>
+            {
+                if (!p.OnlyShowNews)
+                    p.OnlyShowNews = blackList.Contains(p.Id);
+            };
+
             var excludedStocksWithBirthday = GetStockIdsWithTriggerBirthdayForExcluded(stocks, clientId);
-            stocks = stocks.Where(p => !excludedStocksWithBirthday.Contains(p.Id)).ToList();
+            stocks.ForEach(p => onlyShowSetter(p, excludedStocksWithBirthday));
 
             List<StockModel> stocksOneOff = stocks
                 .Where(p => p.StockTypePeriod == StockTypePeriod.OneOff)
@@ -179,9 +186,7 @@ namespace EasyStart.Logic
 
                 if (usedOneOffStockIds.Any())
                 {
-                    stocks = stocks
-                        .Where(p => !usedOneOffStockIds.Contains(p.Id))
-                        .ToList();
+                    stocks.ForEach(p => onlyShowSetter(p, usedOneOffStockIds));
                 }
             }
 
@@ -195,9 +200,7 @@ namespace EasyStart.Logic
 
             if (ferstStockIds != null && ferstStockIds.Any() && !DataWrapper.IsEmptyOrders(clientId))
             {
-                stocks = stocks
-                       .Where(p => !ferstStockIds.Contains(p.Id))
-                       .ToList();
+                stocks.ForEach(p => onlyShowSetter(p, ferstStockIds));
             }
 
             return stocks;
