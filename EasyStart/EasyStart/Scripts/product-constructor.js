@@ -327,7 +327,7 @@ class CategoryIngredient {
             <div class="product-ingredient-wrapper">
                 <span class="ingredient-row-name">${ingredient.Name}</span>
                 <span class="ingredient-row-small-text">${ingredient.AdditionalInfo}</span>
-                <span class="ingredient-row-small-text">${ingredient.Price} руб.</span>
+                <span class="ingredient-row-small-text">${ingredient.Price} lei</span>
                 <div class="ingredient-row-menu">
                     <i class="fal fa-edit" onclick="${editAction}"></i>
                     <i class="fal fa-trash-alt" onclick="${removeAction}"></i>

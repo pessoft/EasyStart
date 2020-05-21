@@ -19,7 +19,7 @@
         });
     }
 
-    $("#setting-phone-number,#setting-phone-number-additional").mask("+7(999)999-99-99")
+    $("#setting-phone-number,#setting-phone-number-additional").mask("+3(999)999-99-99")
 
     $(".menu-item").not(".logout").bind("click", function () {
         selectMenuItem(this)
@@ -940,8 +940,7 @@ function addProductToList(product) {
                 ${product.AdditionInfo}
             </div>
             <div class="product-item-price">
-                <span>${product.Price}</span>
-                <i class="fal fa-ruble-sign"></i>
+                <span>${product.Price} lei</span>
             </div>
             <div class="product-item-action">
                 <i onclick="editProduct(this, event);" class="fal fa-edit"></i>
@@ -2363,18 +2362,18 @@ class OrderDetailsData {
     }
 
     getDiscounText(order) {
-        const prefixRub = "руб.";
+        const prefixRub = "lei";
         const prefixPercent = "%"
         const percent = order.DiscountPercent == 0 ? `0${prefixPercent}` : `${order.DiscountPercent}${prefixPercent} (${xFormatPrice(order.AmountPay * order.DiscountPercent / 100)} ${prefixRub})`
 
-        const ruble = order.DiscountRuble > 0 ? `${order.DiscountRuble} руб.` : ''
+        const ruble = order.DiscountRuble > 0 ? `${order.DiscountRuble} lei` : ''
         let text = percent && ruble ? `${percent} и ${ruble}` : percent || ruble
 
         return text
     }
 
     convertAmountInfo(order) {
-        const prefixRub = "руб.";
+        const prefixRub = "lei";
         const prefixPercent = "%";
 
         this.AmountPay = `${xFormatPrice(order.AmountPay)} ${prefixRub}`;
@@ -2400,7 +2399,7 @@ class OrderDetailsData {
     }
 
     converеOrderListInfo(order) {
-        const prefixRub = "руб.";
+        const prefixRub = "lei";
         this.OrderList = [];
         this.OrderProductConstructorList = []
 
@@ -2449,7 +2448,7 @@ class OrderDetailsData {
     }
 
     getProductConstructorData(constructorItem, ingredients) {
-        const prefixRub = "руб."
+        const prefixRub = "lei"
         let price = 0
         let ingredientList = []
         for (let id in constructorItem) {
@@ -2800,8 +2799,8 @@ class AreaDeliverySetting {
     }
 
     renderItem(areaDelivery) {
-        const minPriceWithPrefix = `${areaDelivery.MinPrice} руб.`
-        const deliveryPriceWithPrefix = `${areaDelivery.DeliveryPrice} руб.`
+        const minPriceWithPrefix = `${areaDelivery.MinPrice} lei`
+        const deliveryPriceWithPrefix = `${areaDelivery.DeliveryPrice} lei`
         const actionEditClick = () => this.showEditDialog(areaDelivery.NameArea, areaDelivery.MinPrice, areaDelivery.DeliveryPrice, areaDelivery.UniqId)
         const actionRemoveClick = () => this.removeAreaDelivery(areaDelivery.UniqId)
         const template = `
