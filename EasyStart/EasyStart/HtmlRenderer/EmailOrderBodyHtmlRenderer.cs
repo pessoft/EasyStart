@@ -83,7 +83,7 @@ namespace EasyStart.HtmlRenderer
 
             foreach (var product in orderInfo.Products)
             {
-                prodcutsInfo.Append($"<tr style='height: 25px;'><td style='min-width: 110px;'>{product.ProductName}</td><td style='text-align: right; min-width: 100px;'>{product.ProductCount} х {product.ProductPrice} руб.</td></tr>");
+                prodcutsInfo.Append($"<tr style='height: 25px;'><td style='min-width: 110px;'>{product.ProductName}</td><td style='text-align: right; min-width: 100px;'>{product.ProductCount} х {product.ProductPrice} lei</td></tr>");
 
             }
 
@@ -96,7 +96,7 @@ namespace EasyStart.HtmlRenderer
 
             foreach (var product in orderInfo.BonusProducts)
             {
-                prodcutsInfo.Append($"<tr style='height: 25px; color: #FF5722;'><td style='min-width: 110px;'>{product.ProductName}</td><td style='text-align: right; min-width: 100px;'>{product.ProductCount} х 0 руб.</td></tr>");
+                prodcutsInfo.Append($"<tr style='height: 25px; color: #FF5722;'><td style='min-width: 110px;'>{product.ProductName}</td><td style='text-align: right; min-width: 100px;'>{product.ProductCount} х 0 lei</td></tr>");
             }
 
             return prodcutsInfo.ToString();
@@ -108,11 +108,11 @@ namespace EasyStart.HtmlRenderer
 
             foreach (var product in orderInfo.ConstructorProducts)
             {
-                prodcutsInfo.Append($"<tr style='height: 25px;'><td style='min-width: 110px;'>{product.ProductName}</td><td style='text-align: right; min-width: 100px;'>{product.ProductCount} х {product.ProductPrice} руб.</td></tr>");
+                prodcutsInfo.Append($"<tr style='height: 25px;'><td style='min-width: 110px;'>{product.ProductName}</td><td style='text-align: right; min-width: 100px;'>{product.ProductCount} х {product.ProductPrice} lei</td></tr>");
 
                 foreach (var ingredient in product.Ingredients)
                 {
-                    prodcutsInfo.Append($"<tr style='height: 25px; font-size: 0.85em'><td style='min-width: 110px; padding-left: 12px; color: #6d758a;'>{ingredient.Name}</td><td style='text-align: right; color: #6d758a; min-width: 100px;'>{ingredient.Count} х {ingredient.Price} руб.</td></tr>");
+                    prodcutsInfo.Append($"<tr style='height: 25px; font-size: 0.85em'><td style='min-width: 110px; padding-left: 12px; color: #6d758a;'>{ingredient.Name}</td><td style='text-align: right; color: #6d758a; min-width: 100px;'>{ingredient.Count} х {ingredient.Price} lei</td></tr>");
                 }
             }
 

@@ -164,19 +164,19 @@ namespace EasyStart.Logic
         private static void SetPrice(OrderIfnoModel orderInfo, OrderModel order)
         {
             orderInfo.BuyType = order.BuyType;
-            orderInfo.AmountPrice = $"{order.AmountPay} руб.";
-            orderInfo.AmountPayCashBack = $"{order.AmountPayCashBack} руб.";
-            orderInfo.DeliveryPrice = $"{order.DeliveryPrice} руб.";
+            orderInfo.AmountPrice = $"{order.AmountPay} lei";
+            orderInfo.AmountPayCashBack = $"{order.AmountPayCashBack} lei";
+            orderInfo.DeliveryPrice = $"{order.DeliveryPrice} lei";
             orderInfo.Discount = GetDiscountStr(order);
             orderInfo.BuyTypeName = order.BuyType.GetDescription();
-            orderInfo.CashBack = order.CashBack == 0 ? $"{order.CashBack} руб." : $"{order.CashBack} руб. ({Math.Round(order.CashBack - order.AmountPayDiscountDelivery, 2)} руб.)";
-            orderInfo.AmountPayDiscountDelivery = $"{order.AmountPayDiscountDelivery} руб."; ;
+            orderInfo.CashBack = order.CashBack == 0 ? $"{order.CashBack} lei" : $"{order.CashBack} lei ({Math.Round(order.CashBack - order.AmountPayDiscountDelivery, 2)} lei)";
+            orderInfo.AmountPayDiscountDelivery = $"{order.AmountPayDiscountDelivery} lei"; ;
         }
 
         private static string GetDiscountStr(OrderModel order)
         {
-            var discountPercent = order.DiscountPercent == 0 ? $"{order.DiscountPercent}%" : $"{order.DiscountPercent}% ({Math.Round(order.AmountPay * order.DiscountPercent / 100, 2)} руб.)"; ;
-            var discountRuble = order.DiscountRuble > 0 ? $"{Math.Round(order.DiscountRuble, 2) } руб." : "";
+            var discountPercent = order.DiscountPercent == 0 ? $"{order.DiscountPercent}%" : $"{order.DiscountPercent}% ({Math.Round(order.AmountPay * order.DiscountPercent / 100, 2)} lei)"; ;
+            var discountRuble = order.DiscountRuble > 0 ? $"{Math.Round(order.DiscountRuble, 2) } lei" : "";
             var discount = "";
 
             if (!string.IsNullOrEmpty(discountPercent)
