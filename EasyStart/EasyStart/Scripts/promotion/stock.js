@@ -209,9 +209,11 @@ var StockManger = {
                 $('#stock-condition-summ-container').show()
                 $('#stock-condition-sum-count').val(data.ConditionOrderSum)
 
-                data.StockExcludedProducts.forEach(p => {
-                    $(`#stock-excluded-products-items`)[0].sumo.selectItem(p.toString())
-                })
+                if (data.StockExcludedProducts) {
+                    data.StockExcludedProducts.forEach(p => {
+                        $(`#stock-excluded-products-items`)[0].sumo.selectItem(p.toString())
+                    })
+                }
                 break;
             case StockConditionTriggerType.ProductsOrder:
                 $('#stock-condition-products-container').show()
@@ -382,7 +384,7 @@ var StockManger = {
         }
         $('#stock-condition-sum-count').val('')
         $('#condition-product-items')[0].sumo.reload()
-
+        $('#stock-condition-products-count-container .stock-setting-condition-count-products').html('')
         $(".promotion-stock-next").attr('disabled', true)
 
         let datePicker = $("#stock-type-calendar-period").data("datepicker");

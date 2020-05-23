@@ -85,7 +85,7 @@ namespace EasyStart.Logic.FCM
             }
         }
 
-        public void SendMulticastMessage(FCMMessage message)
+        public async void SendMulticastMessage(FCMMessage message)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace EasyStart.Logic.FCM
 
                 AndroidConfig androidConfig = new AndroidConfig { Notification = new AndroidNotification { Sound = "default" } };
                 ApnsConfig apnsConfig = new ApnsConfig { Aps = new Aps { Sound = "default", Alert = new ApsAlert { LaunchImage = message.ImageUrl } } };
-                var sleepTimeMs = 100;
+                var sleepTimeMs = 500;
 
                 var countRepeatSendMsg =Convert.ToInt32(Math.Ceiling((double)tokens.Count / LIMIT_TOKENS));
 
@@ -110,18 +110,23 @@ namespace EasyStart.Logic.FCM
                     var packageTokens = tokens.Skip((i - 1) * LIMIT_TOKENS)
                         .Take(LIMIT_TOKENS)
                         .ToList();
-                    var fcmMessage = new MulticastMessage()
+
+                    if(packageTokens.Count > 0)
                     {
-                        Notification = notification,
-                        Data = message.Data,
-                        Tokens = packageTokens,
-                        Android = androidConfig,
-                        Apns = apnsConfig
-                    };
+                        var fcmMessage = new MulticastMessage()
+                        {
+                            Notification = notification,
+                            Data = message.Data,
+                            Tokens = packageTokens,
+                            Android = androidConfig,
+                            Apns = apnsConfig
+                        };
 
-                    FirebaseMessaging.DefaultInstance.SendMulticastAsync(fcmMessage);
-
-                    Thread.Sleep(sleepTimeMs);
+                        var response =  await FirebaseMessaging.DefaultInstance.SendMulticastAsync(fcmMessage);
+                        Logger.Log.Info($"Suscess count: {response.SuccessCount}\n Failure count: {response.FailureCount}\n");
+                        Thread.Sleep(sleepTimeMs);
+                    }
+                    
                 }
             }
             catch (Exception ex)
