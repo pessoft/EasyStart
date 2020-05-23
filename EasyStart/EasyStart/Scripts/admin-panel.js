@@ -19,7 +19,7 @@
         });
     }
 
-    $("#setting-phone-number,#setting-phone-number-additional").mask("+3(999)999-99-99")
+    $("#setting-phone-number,#setting-phone-number-additional").mask("+373(999)9-99-99")
 
     $(".menu-item").not(".logout").bind("click", function () {
         selectMenuItem(this)
