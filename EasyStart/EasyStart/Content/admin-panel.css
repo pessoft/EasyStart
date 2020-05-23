@@ -2201,7 +2201,6 @@ button.simple-text-btn:disabled:hover {
 .order-details-comment-value {
     padding: 10px 5px 5px 20px;
     overflow: auto;
-    color: #b1b1b1;
 }
 
     .order-details-comment-value i {

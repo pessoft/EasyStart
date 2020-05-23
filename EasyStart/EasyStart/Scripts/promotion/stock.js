@@ -384,7 +384,7 @@ var StockManger = {
         }
         $('#stock-condition-sum-count').val('')
         $('#condition-product-items')[0].sumo.reload()
-
+        $('#stock-condition-products-count-container .stock-setting-condition-count-products').html('')
         $(".promotion-stock-next").attr('disabled', true)
 
         let datePicker = $("#stock-type-calendar-period").data("datepicker");
