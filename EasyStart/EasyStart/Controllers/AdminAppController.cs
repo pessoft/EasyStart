@@ -1006,6 +1006,7 @@ namespace EasyStart
                 client.ParentReferralClientId = oldClient.ParentReferralClientId;
                 client.ParentReferralCode = oldClient.ParentReferralCode;
                 client.ReferralDiscount = oldClient.ReferralDiscount;
+                client.VirtualMoney = oldClient.VirtualMoney;
 
                 var branchId = DataWrapper.GetBranchIdByCity(client.CityId);
                 client.BranchId = branchId;
