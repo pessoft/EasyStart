@@ -509,10 +509,6 @@
     <Content Include="Images\loader.gif" />
     <Content Include="Images\loader_old.gif" />
     <Content Include="Images\logo.png" />
-    <Content Include="Images\Products\combo.jpg" />
-    <Content Include="Images\Products\first-order.jpg" />
-    <Content Include="Images\Products\mors.jpg" />
-    <Content Include="Images\Products\take.jpg" />
     <Content Include="Images\rating\cancel-off.png" />
     <Content Include="Images\rating\cancel-on.png" />
     <Content Include="Images\rating\star-half.png" />
@@ -607,6 +603,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Images\Products\" />
     <Folder Include="Logs\" />
     <Folder Include="Views\Analytics\" />
   </ItemGroup>
