@@ -16,11 +16,13 @@ function onChangeProductAdditaonalInfoType(e) {
     const $e = $(e)
     const value = parseInt($e.val())
     const $btnFunctionAdditionnalInfo = $('#btn-function-product-additional-info')
+    const $btnFunctioOptionsInfo = $('#btn-product-options')
     const $inputAdditionalInfo = $('#product-additional-info')
     const type = value == ProductAdditionalInfoType.Custom ? 'text' : 'number'
 
     $inputAdditionalInfo.attr('type', type)
     $btnFunctionAdditionnalInfo.attr('disabled', value == ProductAdditionalInfoType.Custom)
+    $btnFunctioOptionsInfo.attr('disabled', value == ProductAdditionalInfoType.Custom)
 }
 
 function openFunctionAdditionalInfoDialog(event) {
