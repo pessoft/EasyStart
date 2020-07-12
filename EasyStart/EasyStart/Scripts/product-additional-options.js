@@ -42,3 +42,35 @@ function openCreateAdditionalOptionsDialog(event) {
 
     Dialog.showModal($('#createFunctionAdditionalInfoDialog'))
 }
+
+function addRowAdditionalOptionsInDialog(event) {
+    event.stopPropagation()
+
+    const dialogId = 'createFunctionAdditionalInfoDialog'
+    const $contanerProps = $(`#${dialogId} .create-functions-additional`)
+    const productAdditionalInfoTypeSelected = parseInt($('#product-additional-info-type option:selected').val())
+    const tmpId = generateRandomString() 
+    const templateRow = `
+        <div class="additional-option-item" id="${tmpId}">
+            <div class="additional-option-value">
+                <input type="number" min="0">
+                <span>${ProductAdditionalInfoTypeShortName[productAdditionalInfoTypeSelected]}</span>
+            </div>
+            
+            <div class="additional-option-price">
+                <input type="number" min="0">
+                <span>руб.</span>
+            </div>
+            
+            <div class="additional-option-default-check">
+                <input id="${tmpId}-default" type="radio" name="additional-option-default-check">
+                <label for="${tmpId}-default">По умлочанию</label>
+            </div>
+        </div>
+    `
+
+    if ($contanerProps.find('.empty-container').length != 0)
+        $contanerProps.html(templateRow)
+    else
+        $contanerProps.append(templateRow)
+}
