@@ -47,30 +47,57 @@ function addRowAdditionalOptionsInDialog(event) {
     event.stopPropagation()
 
     const dialogId = 'createFunctionAdditionalInfoDialog'
-    const $contanerProps = $(`#${dialogId} .create-functions-additional`)
+    const $containerProps = $(`#${dialogId} .create-functions-additional`)
     const productAdditionalInfoTypeSelected = parseInt($('#product-additional-info-type option:selected').val())
     const tmpId = generateRandomString() 
     const templateRow = `
         <div class="additional-option-item" id="${tmpId}">
             <div class="additional-option-value">
-                <input type="number" min="0">
+                <input type="number" min="0" class="default-color default-style-input">
                 <span>${ProductAdditionalInfoTypeShortName[productAdditionalInfoTypeSelected]}</span>
             </div>
             
             <div class="additional-option-price">
-                <input type="number" min="0">
+                <input type="number" min="0" class="default-color default-style-input">
                 <span>руб.</span>
             </div>
             
             <div class="additional-option-default-check">
                 <input id="${tmpId}-default" type="radio" name="additional-option-default-check">
-                <label for="${tmpId}-default">По умлочанию</label>
+                <label for="${tmpId}-default">по умлочанию</label>
             </div>
+            <button class="remove-options-btn" onclick="removeRowAdditionalOptionsFromDialog(event, this)">
+                <i class="fal fa-trash-alt"></i>
+            </button>
         </div>
     `
 
-    if ($contanerProps.find('.empty-container').length != 0)
-        $contanerProps.html(templateRow)
+    if ($containerProps.find('.empty-container').length != 0)
+        $containerProps.html(templateRow)
     else
-        $contanerProps.append(templateRow)
+        $containerProps.append(templateRow)
+}
+
+function removeRowAdditionalOptionsFromDialog(event, e) {
+    event.stopPropagation()
+
+    const $e = $(e)
+    const $row = $e.parents('.additional-option-item')
+
+    $row.remove()
+
+    const dialogId = 'createFunctionAdditionalInfoDialog'
+    const $containerProps = $(`#${dialogId} .create-functions-additional`)
+
+    if ($containerProps.children().length == 0)
+        renderEmptyInfoAdditionalOptionInDialog()
+}
+
+function renderEmptyInfoAdditionalOptionInDialog() {
+    const template = `<div class="empty-container">Добавте значения свойства</div>`
+
+    const dialogId = 'createFunctionAdditionalInfoDialog'
+    const $containerProps = $(`#${dialogId} .create-functions-additional`)
+
+    $containerProps.html(template);
 }
