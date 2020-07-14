@@ -169,28 +169,39 @@
 
 .additional-option-item {
     display: grid;
-    grid-template-columns: repeat(3, 1fr) 35px;
+    grid-template-columns: repeat(4, 1fr) 35px;
     padding:0px 10px;
     grid-template-rows: 35px;
     justify-content: center;
     column-gap: 10px
 }
 
+.additional-option-name,
 .additional-option-value,
 .additional-option-price {
     display: grid;
-    grid-template-columns: 90px 50px;
+    grid-template-columns: 50px 50px;
     align-items: center;
 }
 
+.additional-option-name {
+    grid-template-columns: 85px;
+}
+
+    .additional-option-name input,
     .additional-option-value input,
     .additional-option-price input {
-        width: 90px;
+        width: 50px;
         margin: 0;
         padding: 0;
         padding-left: 5px;
         border-top-right-radius: 0px;
         border-bottom-right-radius: 0px;
+    }
+
+    .additional-option-name input {
+        width: 85px;
+        border-radius: 2px;
     }
 
     .additional-option-value span,
@@ -208,7 +219,7 @@
 
 .additional-option-default-check {
     display: grid;
-    grid-template-columns: 30px 120px;
+    grid-template-columns: 30px 100px;
     align-items: center;
     font-size: 1.3em;
 }

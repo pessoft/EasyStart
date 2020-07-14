@@ -49,9 +49,14 @@ function addRowAdditionalOptionsInDialog(event) {
     const dialogId = 'createFunctionAdditionalInfoDialog'
     const $containerProps = $(`#${dialogId} .create-functions-additional`)
     const productAdditionalInfoTypeSelected = parseInt($('#product-additional-info-type option:selected').val())
-    const tmpId = generateRandomString() 
+    const tmpId = generateRandomString()
+    const isEmptyContainer = $containerProps.find('.empty-container').length != 0
     const templateRow = `
         <div class="additional-option-item" id="${tmpId}">
+            <div class="additional-option-name">
+                <input type="text" class="default-color default-style-input" placeholder="Название">
+            </div>
+
             <div class="additional-option-value">
                 <input type="number" min="0" class="default-color default-style-input">
                 <span>${ProductAdditionalInfoTypeShortName[productAdditionalInfoTypeSelected]}</span>
@@ -63,7 +68,7 @@ function addRowAdditionalOptionsInDialog(event) {
             </div>
             
             <div class="additional-option-default-check">
-                <input id="${tmpId}-default" type="radio" name="additional-option-default-check">
+                <input id="${tmpId}-default" type="radio" name="additional-option-default-check" ${isEmptyContainer ? 'checked' : ''}>
                 <label for="${tmpId}-default">по умлочанию</label>
             </div>
             <button class="remove-options-btn" onclick="removeRowAdditionalOptionsFromDialog(event, this)">
@@ -72,7 +77,7 @@ function addRowAdditionalOptionsInDialog(event) {
         </div>
     `
 
-    if ($containerProps.find('.empty-container').length != 0)
+    if (isEmptyContainer)
         $containerProps.html(templateRow)
     else
         $containerProps.append(templateRow)
@@ -91,6 +96,14 @@ function removeRowAdditionalOptionsFromDialog(event, e) {
 
     if ($containerProps.children().length == 0)
         renderEmptyInfoAdditionalOptionInDialog()
+    else {
+        const $radioDefOptions = $containerProps.find('.additional-option-item [name=additional-option-default-check]')
+        const checkedDefOption = $radioDefOptions.is(':checked')
+
+        if (!checkedDefOption) {
+            $($radioDefOptions[0]).attr('checked', true)
+        }
+    }
 }
 
 function renderEmptyInfoAdditionalOptionInDialog() {
