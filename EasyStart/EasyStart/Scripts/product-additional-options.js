@@ -39,6 +39,7 @@ function openAdditionalOptionsDialog(event) {
 
 function openCreateAdditionalOptionsDialog(event) {
     event.stopPropagation()
+    cleanAdditinOption()
 
     Dialog.showModal($('#createFunctionAdditionalInfoDialog'))
 }
@@ -113,4 +114,67 @@ function renderEmptyInfoAdditionalOptionInDialog() {
     const $containerProps = $(`#${dialogId} .create-functions-additional`)
 
     $containerProps.html(template);
+}
+
+function doneAdditionalOption() {
+    const dialogId = 'createFunctionAdditionalInfoDialog'
+    const optionName = $('#function-additional-info-name-block').val().trim()
+
+    if (!optionName) {
+        showInfoMessage('Укажите название свойства')
+
+        return
+    }
+
+    const $containerProps = $(`#${dialogId} .create-functions-additional`)
+    const isEmptyContainer = $containerProps.find('.empty-container').length != 0
+
+    if (isEmptyContainer) {
+        showInfoMessage('Добавте значения свойства')
+
+        return
+    }
+
+    /**
+     * 
+     * item = {
+     *  name: string,
+     *  additionalInfo: float
+     *  price: float,
+     *  isDefault: bool
+     * }
+     * */
+    let optionItems = []
+    $containerProps.find('.additional-option-item').each(function () {
+        const $e = $(this)
+        const name = $e.find('.additional-option-name input').val().trim()
+        const additionalInfo = parseFloat($e.find('.additional-option-value input').val())
+        const price = parseFloat($e.find('.additional-option-price input').val())
+        const isDefault = $e.find('.additional-option-default-check input').is(':checked')
+
+        if (!name ||
+            (Number.isNaN(additionalInfo) || additionalInfo < 0) ||
+            (Number.isNaN(price) || price < 0) ||
+            (isDefault == null || typeof (isDefault) === 'undefined')) {
+            showInfoMessage('Заполните все поля значений корректными данными')
+            optionItems = []
+
+            return
+        }
+
+        optionItems.push({ name, additionalInfo, price, isDefault })
+    })
+
+    closeAdditionalOption()
+}
+
+function closeAdditionalOption() {
+    cleanAdditinOption()
+    Dialog.close('#createFunctionAdditionalInfoDialog')
+}
+
+function cleanAdditinOption() {
+    $('#function-additional-info-name-block').val('')
+
+    renderEmptyInfoAdditionalOptionInDialog()
 }
