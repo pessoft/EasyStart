@@ -342,6 +342,18 @@
     <Compile Include="Migrations\202004272052481_AddedProductAdditionalInfoTypeInProductModel.Designer.cs">
       <DependentUpon>202004272052481_AddedProductAdditionalInfoTypeInProductModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007161815369_AddAdiitionalOptions.cs" />
+    <Compile Include="Migrations\202007161815369_AddAdiitionalOptions.Designer.cs">
+      <DependentUpon>202007161815369_AddAdiitionalOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007161819141_AddAdiitionOptionItems.cs" />
+    <Compile Include="Migrations\202007161819141_AddAdiitionOptionItems.Designer.cs">
+      <DependentUpon>202007161819141_AddAdiitionOptionItems.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007161828184_AddBranchIdInAdditionalOptions.cs" />
+    <Compile Include="Migrations\202007161828184_AddBranchIdInAdditionalOptions.Designer.cs">
+      <DependentUpon>202007161828184_AddBranchIdInAdditionalOptions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -384,6 +396,8 @@
     <Compile Include="Models\ProductConstructorOrderModel.cs" />
     <Compile Include="Models\ProductHistoryModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
+    <Compile Include="Models\ProductOption\AdditionalOption.cs" />
+    <Compile Include="Models\ProductOption\AdditionOptionItem.cs" />
     <Compile Include="Models\ProductReview.cs" />
     <Compile Include="Models\PromotionCashbackSetting.cs" />
     <Compile Include="Models\PromotionNewsModel.cs" />
@@ -673,6 +687,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202004272052481_AddedProductAdditionalInfoTypeInProductModel.resx">
       <DependentUpon>202004272052481_AddedProductAdditionalInfoTypeInProductModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007161815369_AddAdiitionalOptions.resx">
+      <DependentUpon>202007161815369_AddAdiitionalOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007161819141_AddAdiitionOptionItems.resx">
+      <DependentUpon>202007161819141_AddAdiitionOptionItems.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007161828184_AddBranchIdInAdditionalOptions.resx">
+      <DependentUpon>202007161828184_AddBranchIdInAdditionalOptions.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

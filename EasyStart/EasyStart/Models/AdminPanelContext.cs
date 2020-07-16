@@ -1,4 +1,5 @@
 ﻿using EasyStart.Models.FCMNotification;
+using EasyStart.Models.ProductOption;
 using EasyStart.Models.Transaction;
 using System;
 using System.Collections.Generic;
@@ -40,5 +41,7 @@ namespace EasyStart.Models
 
         public DbSet<FixBirthday> FixBirthdays { get; set; }
         public DbSet<PromotionNewsModel> PromotionNews { get; set; }
+        public DbSet<AdditionalOption> AdditionalOptions { get; set; }
+        public DbSet<AdditionOptionItem> AdditionOptionItems { get; set; }
     }
 }

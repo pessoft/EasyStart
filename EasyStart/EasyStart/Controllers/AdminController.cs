@@ -2,6 +2,7 @@
 using EasyStart.Logic.FCM;
 using EasyStart.Models;
 using EasyStart.Models.FCMNotification;
+using EasyStart.Models.ProductOption;
 using EasyStart.Utils;
 using Newtonsoft.Json;
 using System;
@@ -1443,6 +1444,28 @@ namespace EasyStart.Controllers
             //reg.ru засыпает через 5 минут простоя
             //поэтому мы раз в 2 минуту сюда стучимся
             //что бы он не уснусл когда страница открыта
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult SaveAdditionalOption(AdditionalOption additionalOption)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                additionalOption.BranchId = branchId;
+                result.Success = true;
+                result.Data = null;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = "При дополнительных опций что-то пошло не так";
+            }
+
+            return Json(result);
         }
     }
 }

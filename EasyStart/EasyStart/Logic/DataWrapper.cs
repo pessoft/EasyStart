@@ -1,5 +1,6 @@
 ﻿using EasyStart.Models;
 using EasyStart.Models.FCMNotification;
+using EasyStart.Models.ProductOption;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -3197,6 +3198,79 @@ namespace EasyStart.Logic
             }
 
             return news;
+        }
+
+        public static bool SaveAdditionalOption(AdditionalOption additionalOption)
+        {
+            var success = false;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    AdditionalOption value;
+                    if (additionalOption.Id > 0)
+                    {
+                        value = db.AdditionalOptions.FirstOrDefault(p => p.Id == additionalOption.Id);
+
+                        value.Name = additionalOption.Name;
+                        value.Items = additionalOption.Items;
+                    }
+                    else
+                        value = db.AdditionalOptions.Add(additionalOption);
+
+                    db.SaveChanges();
+                    success = true;
+
+
+
+                    additionalOption.Items.ForEach(p => p.AdditionOptionId = value.Id);
+                    var successSave = SaveAdditionOptionItems(additionalOption.Items);
+
+                    success = success && successSave;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return success;
+        }
+
+        public static bool SaveAdditionOptionItems(List<AdditionOptionItem> items)
+        {
+            var success = false;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    foreach (var option in items)
+                    {
+                        if (option.Id > 0)
+                        {
+                            var value = db.AdditionOptionItems.FirstOrDefault(p => p.Id == option.Id);
+
+                            value.Name = option.Name;
+                            value.AdditionalInfo = option.AdditionalInfo;
+                            value.Price = option.Price;
+                            value.IsDefault = option.IsDefault;
+                        }
+                        else
+                            db.AdditionOptionItems.Add(option);
+                    }
+                
+                    db.SaveChanges();
+                    success = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return success;
         }
     }
 }
