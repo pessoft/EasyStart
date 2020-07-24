@@ -354,6 +354,10 @@
     <Compile Include="Migrations\202007161828184_AddBranchIdInAdditionalOptions.Designer.cs">
       <DependentUpon>202007161828184_AddBranchIdInAdditionalOptions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007241804308_AddedBranchIdInAdditionOptionItem.cs" />
+    <Compile Include="Migrations\202007241804308_AddedBranchIdInAdditionOptionItem.Designer.cs">
+      <DependentUpon>202007241804308_AddedBranchIdInAdditionOptionItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -696,6 +700,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007161828184_AddBranchIdInAdditionalOptions.resx">
       <DependentUpon>202007161828184_AddBranchIdInAdditionalOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007241804308_AddedBranchIdInAdditionOptionItem.resx">
+      <DependentUpon>202007241804308_AddedBranchIdInAdditionOptionItem.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -380,15 +380,16 @@ namespace EasyStart.Controllers
 
         [HttpPost]
         [Authorize]
-        public JsonResult LoadCategoryList()
+        public JsonResult LoadMainProductData()
         {
             var result = new JsonResultModel();
             var branchId = DataWrapper.GetBranchId(User.Identity.Name);
             var categories = DataWrapper.GetCategories(branchId);
+            var additionalOptions = DataWrapper.GetAllProductAdditionalOptionByBranchId(branchId);
 
             if (categories != null)
             {
-                result.Data = categories;
+                result.Data = new { Categories = categories, AdditionalOptions = additionalOptions ?? new List<AdditionalOption>() };
                 result.Success = true;
             }
             else
@@ -914,7 +915,7 @@ namespace EasyStart.Controllers
                 }
 
                 var order = DataWrapper.GetOrder(data.OrderId);
-                if(order.OrderStatus != OrderStatus.Processing)
+                if (order.OrderStatus != OrderStatus.Processing)
                 {
                     return;
                 }
@@ -1448,21 +1449,37 @@ namespace EasyStart.Controllers
 
         [HttpPost]
         [Authorize]
-        public JsonResult SaveAdditionalOption(AdditionalOption additionalOption)
+        public JsonResult SaveProductAdditionalOption(AdditionalOption additionalOption)
         {
             var result = new JsonResultModel();
 
             try
             {
+                if (additionalOption == null
+                    || additionalOption.Items == null
+                    || !additionalOption.Items.Any())
+                    throw new Exception("Пустные значение не допустимы");
+
                 var branchId = DataWrapper.GetBranchId(User.Identity.Name);
                 additionalOption.BranchId = branchId;
-                result.Success = true;
-                result.Data = null;
+
+                var savedAdditionalOption = DataWrapper.SaveProductAdditionalOption(additionalOption);
+
+                if (savedAdditionalOption != null
+                    && savedAdditionalOption.Items != null
+                    && savedAdditionalOption.Items.Any())
+                {
+                    result.Success = true;
+                    result.Data = savedAdditionalOption;
+                }
+                else
+                    throw new Exception("Ошибка сохранения дополнительных опций");
+
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result.ErrorMessage = "При дополнительных опций что-то пошло не так";
+                result.ErrorMessage = "При сохранении дополнительных опций что-то пошло не так";
             }
 
             return Json(result);

@@ -113,14 +113,15 @@ function renderEmptyInfoAdditionalOptionInDialog() {
     const dialogId = 'createFunctionAdditionalInfoDialog'
     const $containerProps = $(`#${dialogId} .create-functions-additional`)
 
-    $containerProps.html(template);
+    $containerProps.html(template)
 }
 
 function doneAdditionalOption() {
     const dialogId = 'createFunctionAdditionalInfoDialog'
-    const optionName = $('#function-additional-info-name-block').val().trim()
+    const additionalOptionName = $('#function-additional-info-name-block').val().trim()
+    const additionalOptionId = $(`#${dialogId}`).attr('additional-option-id')
 
-    if (!optionName) {
+    if (!additionalOptionName) {
         showInfoMessage('Укажите название свойства')
 
         return
@@ -144,7 +145,7 @@ function doneAdditionalOption() {
      *  isDefault: bool
      * }
      * */
-    let optionItems = []
+    let additionOptionItems = []
     $containerProps.find('.additional-option-item').each(function () {
         const $e = $(this)
         const name = $e.find('.additional-option-name input').val().trim()
@@ -157,15 +158,21 @@ function doneAdditionalOption() {
             (Number.isNaN(price) || price < 0) ||
             (isDefault == null || typeof (isDefault) === 'undefined')) {
             showInfoMessage('Заполните все поля значений корректными данными')
-            optionItems = []
+            additionOptionItems = []
 
             return
         }
 
-        optionItems.push({ name, additionalInfo, price, isDefault })
+        additionOptionItems.push({ name, additionalInfo, price, isDefault })
     })
 
-    closeAdditionalOption()
+    let additionalOption = {
+        id: additionalOptionId,
+        name: additionalOptionName,
+        items: additionOptionItems
+    }
+
+    saveAdditionalOption(additionalOption, closeAdditionalOption)
 }
 
 function closeAdditionalOption() {
@@ -175,6 +182,25 @@ function closeAdditionalOption() {
 
 function cleanAdditinOption() {
     $('#function-additional-info-name-block').val('')
-
+    $('#createFunctionAdditionalInfoDialog').attr('additional-option-id', 0)
     renderEmptyInfoAdditionalOptionInDialog()
+}
+
+function saveAdditionalOption(additionalOption, callbackAfterSave) {
+    const loader = new Loader($("#createFunctionAdditionalInfoDialog"))
+    loader.start()
+
+    let callback = (data, loader) => {
+        if (data.Success) {
+            DataProduct.AdditionalOptions[data.Data.Id] = data.Data
+            callbackAfterSave()
+        } else
+            loader.stop()
+    }
+
+    $.post("/Admin/SaveProductAdditionalOption",
+        additionalOption,
+        successCallBack(callback, loader)).catch(function () {
+            loader.stop()
+        })
 }

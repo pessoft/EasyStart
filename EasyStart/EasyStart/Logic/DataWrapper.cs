@@ -3200,9 +3200,9 @@ namespace EasyStart.Logic
             return news;
         }
 
-        public static bool SaveAdditionalOption(AdditionalOption additionalOption)
+        public static AdditionalOption SaveProductAdditionalOption(AdditionalOption additionalOption)
         {
-            var success = false;
+            AdditionalOption result = null;
 
             try
             {
@@ -3220,27 +3220,29 @@ namespace EasyStart.Logic
                         value = db.AdditionalOptions.Add(additionalOption);
 
                     db.SaveChanges();
-                    success = true;
+                    result = value;
 
-
-
-                    additionalOption.Items.ForEach(p => p.AdditionOptionId = value.Id);
-                    var successSave = SaveAdditionOptionItems(additionalOption.Items);
-
-                    success = success && successSave;
+                    additionalOption.Items.ForEach(p =>
+                    {
+                        p.AdditionOptionId = value.Id;
+                        p.BranchId = value.BranchId;
+                    });
+                    List<AdditionOptionItem> additionOptionItems = SaveProductAdditionOptionItems(additionalOption.Items);
+                    result.Items = additionOptionItems;
                 }
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
+                result = null;
             }
 
-            return success;
+            return result;
         }
 
-        public static bool SaveAdditionOptionItems(List<AdditionOptionItem> items)
+        public static List<AdditionOptionItem> SaveProductAdditionOptionItems(List<AdditionOptionItem> items)
         {
-            var success = false;
+            var result = new List<AdditionOptionItem>();
 
             try
             {
@@ -3248,29 +3250,87 @@ namespace EasyStart.Logic
                 {
                     foreach (var option in items)
                     {
+                        AdditionOptionItem additionOptionItem;
                         if (option.Id > 0)
                         {
-                            var value = db.AdditionOptionItems.FirstOrDefault(p => p.Id == option.Id);
+                            additionOptionItem = db.AdditionOptionItems.FirstOrDefault(p => p.Id == option.Id);
 
-                            value.Name = option.Name;
-                            value.AdditionalInfo = option.AdditionalInfo;
-                            value.Price = option.Price;
-                            value.IsDefault = option.IsDefault;
+                            additionOptionItem.Name = option.Name;
+                            additionOptionItem.AdditionalInfo = option.AdditionalInfo;
+                            additionOptionItem.Price = option.Price;
+                            additionOptionItem.IsDefault = option.IsDefault;
                         }
                         else
-                            db.AdditionOptionItems.Add(option);
+                            additionOptionItem = db.AdditionOptionItems.Add(option);
+
+                        result.Add(additionOptionItem);
                     }
-                
+
                     db.SaveChanges();
-                    success = true;
                 }
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
+                result = null;
             }
 
-            return success;
+            return result;
+        }
+
+        public static List<AdditionalOption> GetAllProductAdditionalOptionByBranchId(int branchId)
+        {
+            List<AdditionalOption> additionalOptions = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var additionOptionItemDict = GetAllProductAdditionOptionItemByBranchId(branchId);
+                    var options = db.AdditionalOptions.Where(p => p.BranchId == branchId);
+
+                    if (options != null && additionOptionItemDict != null)
+                    {
+                        additionalOptions = new List<AdditionalOption>();
+
+                        foreach (var option in options)
+                        {
+                            option.Items = additionOptionItemDict[option.Id];
+
+                            additionalOptions.Add(option);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                additionalOptions = null;
+            }
+
+            return additionalOptions;
+        }
+
+        public static Dictionary<int, List<AdditionOptionItem>> GetAllProductAdditionOptionItemByBranchId(int branchId)
+        {
+            Dictionary<int, List<AdditionOptionItem>> additionOptionItemDict = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    additionOptionItemDict = db.AdditionOptionItems.Where(p => p.BranchId == branchId)
+                        .GroupBy(p => p.AdditionOptionId)
+                        .ToDictionary(p => p.Key, p => p.ToList());
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                additionOptionItemDict = null;
+            }
+
+            return additionOptionItemDict;
         }
     }
 }

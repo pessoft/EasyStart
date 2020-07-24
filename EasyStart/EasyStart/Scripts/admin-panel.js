@@ -336,7 +336,8 @@ function calcOrderNumbers(typeItem) {
 
 var DataProduct = {
     Categories: [],
-    Products: []
+    Products: [],
+    AdditionalOptions: {},
 }
 
 var TypeOperation = {
@@ -731,7 +732,7 @@ function sortByOrderNumber(data) {
     return newData;
 }
 
-function loadCategoryList() {
+function loadMainProductData() {
     SelectIdCategoryId = -1;
     clearCategoryList();
 
@@ -741,10 +742,13 @@ function loadCategoryList() {
     let successFunc = function (result, loader) {
         loader.stop();
         if (result.Success) {
-            if (!result.Data || result.Data.length == 0) {
+            if (!result.Data
+                || !result.Data.Categories
+                || result.Data.Categories.length == 0) {
                 setEmptyCategoryInfo();
             } else {
-                DataProduct.Categories = sortByOrderNumber(result.Data);
+                DataProduct.Categories = sortByOrderNumber(result.Data.Categories);
+                DataProduct.AdditionalOptions = convertAdditionalOptionsToDictionary(result.Data.AdditionalOptions);
 
                 for (let category of DataProduct.Categories) {
                     addCategoryToList(category);
@@ -759,7 +763,18 @@ function loadCategoryList() {
     }
     loader.start();
 
-    $.post("/Admin/LoadCategoryList", null, successCallBack(successFunc, loader));
+    $.post("/Admin/LoadMainProductData", null, successCallBack(successFunc, loader));
+}
+
+function convertAdditionalOptionsToDictionary(additionalOptions) {
+    let AdditionalOptionsDict = {}
+
+    if (additionalOptions && additionalOptions.length != 0) {
+        for (const option of additionalOptions)
+            AdditionalOptionsDict[option.Id] = option
+    }
+       
+    return AdditionalOptionsDict
 }
 
 function loadProducts() {
@@ -767,7 +782,7 @@ function loadProducts() {
     clearProductList();
     setEmptyProductInfo();
 
-    loadCategoryList();
+    loadMainProductData();
 }
 
 function addProduct() {
@@ -1005,7 +1020,7 @@ function editProduct(e, event) {
     let dialog = $("#addProducDialog");
     let parent = $($(e).parents(".product-item"));
     const productAdditionalInfoType = parseInt(parent.find(".product-additional-info-value").html().trim())
-    const additionalInfo = parent.find(".product-item-additional-info").html().trim() 
+    const additionalInfo = parent.find(".product-item-additional-info").html().trim()
     let product = {
         Id: parent.attr("product-id"),
         Name: parent.find(".product-item-name").html().trim(),

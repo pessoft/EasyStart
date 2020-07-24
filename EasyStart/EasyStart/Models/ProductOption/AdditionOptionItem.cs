@@ -8,6 +8,7 @@ namespace EasyStart.Models.ProductOption
     public class AdditionOptionItem
     {
         public int Id { get; set; }
+        public int BranchId { get; set; }
         public int AdditionOptionId { get; set; }
         public string Name { get; set; }
         public double AdditionalInfo { get; set; }
