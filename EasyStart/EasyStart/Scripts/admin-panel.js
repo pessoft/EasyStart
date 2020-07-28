@@ -785,6 +785,7 @@ function loadProducts() {
     loadMainProductData();
 }
 
+var ProductAdditionalOptions = []
 function addProduct() {
     let loader = new Loader($("#addProducDialog  form"));
     loader.start();
@@ -1031,6 +1032,9 @@ function editProduct(e, event) {
         ProductType: parseInt(parent.find(".product-type-item").html().trim()),
         ProductAdditionalInfoType: productAdditionalInfoType
     }
+
+    let productFromData = DataProduct.Products.find(p => p.Id == product.Id)
+    ProductAdditionalOptions = productFromData.ProductAdditionalOptionIds
 
     dialog.find("#product-id").val(product.Id);
     dialog.find("#name-product").val(product.Name);

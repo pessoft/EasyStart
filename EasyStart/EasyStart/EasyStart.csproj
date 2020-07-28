@@ -358,6 +358,10 @@
     <Compile Include="Migrations\202007241804308_AddedBranchIdInAdditionOptionItem.Designer.cs">
       <DependentUpon>202007241804308_AddedBranchIdInAdditionOptionItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007280902000_AddedProductAdditionalOptions.cs" />
+    <Compile Include="Migrations\202007280902000_AddedProductAdditionalOptions.Designer.cs">
+      <DependentUpon>202007280902000_AddedProductAdditionalOptions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -396,6 +400,7 @@
     <Compile Include="Models\OrderModel.cs" />
     <Compile Include="Models\OrderStockApply.cs" />
     <Compile Include="Models\PagingPushMessageHistory.cs" />
+    <Compile Include="Models\ProductOption\ProductAdditionalOptionModal.cs" />
     <Compile Include="Models\ProductConstructorIngredientModel.cs" />
     <Compile Include="Models\ProductConstructorOrderModel.cs" />
     <Compile Include="Models\ProductHistoryModel.cs" />
@@ -703,6 +708,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007241804308_AddedBranchIdInAdditionOptionItem.resx">
       <DependentUpon>202007241804308_AddedBranchIdInAdditionOptionItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007280902000_AddedProductAdditionalOptions.resx">
+      <DependentUpon>202007280902000_AddedProductAdditionalOptions.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -43,5 +43,6 @@ namespace EasyStart.Models
         public DbSet<PromotionNewsModel> PromotionNews { get; set; }
         public DbSet<AdditionalOption> AdditionalOptions { get; set; }
         public DbSet<AdditionOptionItem> AdditionOptionItems { get; set; }
+        public DbSet<ProductAdditionalOptionModal> ProductAdditionalOptions { get; set; }
     }
 }

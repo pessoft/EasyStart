@@ -28,6 +28,7 @@ function onChangeProductAdditaonalInfoType(e) {
 function openFunctionAdditionalInfoDialog(event) {
     event.stopPropagation()
 
+    renderAdditionalOptionFromProduct()
     Dialog.showModal($('#functionAdditionalInfoDialog'))
 }
 
@@ -172,7 +173,12 @@ function doneAdditionalOption() {
         items: additionOptionItems
     }
 
-    saveAdditionalOption(additionalOption, closeAdditionalOption)
+    const callbackAfterSaveAdditionalOption = () => {
+        closeAdditionalOption()
+        renderAdditionalOptionFromProduct()
+    }
+
+    saveAdditionalOption(additionalOption, callbackAfterSaveAdditionalOption)
 }
 
 function closeAdditionalOption() {
@@ -192,10 +198,12 @@ function saveAdditionalOption(additionalOption, callbackAfterSave) {
 
     let callback = (data, loader) => {
         if (data.Success) {
+            ProductAdditionalOptions.push(data.Data.Id)
             DataProduct.AdditionalOptions[data.Data.Id] = data.Data
             callbackAfterSave()
-        } else
-            loader.stop()
+        }
+
+        loader.stop()
     }
 
     $.post("/Admin/SaveProductAdditionalOption",
@@ -204,3 +212,33 @@ function saveAdditionalOption(additionalOption, callbackAfterSave) {
             loader.stop()
         })
 }
+
+function renderAdditionalOptionFromProduct() {
+    const templateOption = []
+    const $containerForOptions = $('#functionAdditionalInfoDialog .functions-additional')
+    const emptyTemplate = '<div class="empty-container">Добавте дополнительные опции</div>'
+
+    for (const additionalOptionId of ProductAdditionalOptions) {
+        const option = DataProduct.AdditionalOptions[additionalOptionId]
+        const template = `
+            <div class="funcitons-additional-item" id="${option.Id}">
+                <div>${option.Name}</div>
+                <div>
+                    <button class="edit-option-setting-btn">
+                        <i class="fal fa-edit"></i>
+                    </button>
+                </div>
+                <div>
+                    <button class="remove-option-setting-btn">
+                        <i class="fal fa-trash-alt"></i>
+                    </button>
+                </div>
+            </div>
+        `
+
+        templateOption.push(template)
+    }
+
+    $containerForOptions.html(templateOption.length ? templateOption : emptyTemplate)
+}
+

@@ -3,6 +3,7 @@ using EasyStart.Logic.AdditionalOptions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -27,5 +28,8 @@ namespace EasyStart.Models
         public bool Visible { get; set; } = true;
         public bool IsDeleted { get; set; }
         public ProductAdditionalInfoType ProductAdditionalInfoType { get; set; }
+
+        [NotMapped]
+        public List<int> ProductAdditionalOptionIds { get; set; }
     }
 }
