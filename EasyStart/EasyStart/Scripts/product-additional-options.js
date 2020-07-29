@@ -307,3 +307,14 @@ function removeAdditionalOptionFromProduct(event, additionalOptionId) {
         renderAdditionalOptionFromProduct()
     }
 }
+
+function changeOrderProductAdditionalOption() {
+    let newProductAdditionalOptions = []
+    $('#functionAdditionalInfoDialog .functions-additional .funcitons-additional-item').each(function () {
+        const id = parseInt($(this).attr('id'))
+
+        newProductAdditionalOptions.push(id)
+    })
+
+    ProductAdditionalOptions = newProductAdditionalOptions
+}

@@ -293,7 +293,12 @@ function bindDragula() {
         revertOnSpill: true
     }).on("drop", function () {
         calcOrderNumbers(TypeItem.Products);
-    });;
+        });
+    dragula([$('#functionAdditionalInfoDialog .functions-additional')[0]], {
+        revertOnSpill: true
+    }).on("drop", function () {
+        changeOrderProductAdditionalOption()
+    });
 }
 
 function calcOrderNumbers(typeItem) {
