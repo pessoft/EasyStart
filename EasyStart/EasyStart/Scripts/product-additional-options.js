@@ -45,6 +45,57 @@ function openCreateAdditionalOptionsDialog(event) {
     Dialog.showModal($('#createFunctionAdditionalInfoDialog'))
 }
 
+function editCreateAdditionalOptionsDialog(event, additionalOptionId) {
+    event.stopPropagation()
+    cleanAdditinOption()
+    addDataAdditionalOptionsInDialog(DataProduct.AdditionalOptions[additionalOptionId])
+
+    Dialog.showModal($('#createFunctionAdditionalInfoDialog'))
+}
+
+function addDataAdditionalOptionsInDialog(additionalOption) {
+    const dialogId = 'createFunctionAdditionalInfoDialog'
+    const $containerProps = $(`#${dialogId} .create-functions-additional`)
+    const productAdditionalInfoTypeSelected = parseInt($('#product-additional-info-type option:selected').val())
+    const templateRows = []
+
+    $('#function-additional-info-name-block').val(additionalOption.Name)
+    $(`#${dialogId}`).attr('additional-option-id', additionalOption.Id)
+
+    for (const row of additionalOption.Items) {
+        
+        const templateRow = `
+        <div class="additional-option-item" id="${row.Id}">
+            <div class="additional-option-name">
+                <input type="text" class="default-color default-style-input" placeholder="Название" value="${row.Name}">
+            </div>
+
+            <div class="additional-option-value">
+                <input type="number" min="0" class="default-color default-style-input" value="${row.AdditionalInfo}">
+                <span>${ProductAdditionalInfoTypeShortName[productAdditionalInfoTypeSelected]}</span>
+            </div>
+            
+            <div class="additional-option-price">
+                <input type="number" min="0" class="default-color default-style-input" value="${row.Price}">
+                <span>руб.</span>
+            </div>
+            
+            <div class="additional-option-default-check">
+                <input id="${row.Id}-default" type="radio" name="additional-option-default-check" ${row.IsDefault ? 'checked' : ''}>
+                <label for="${row.Id}-default">по умлочанию</label>
+            </div>
+            <button class="remove-options-btn" onclick="removeRowAdditionalOptionsFromDialog(event, this)">
+                <i class="fal fa-trash-alt"></i>
+            </button>
+        </div>
+    `
+
+        templateRows.push(templateRow)
+    }
+
+    $containerProps.html(templateRows)
+}
+
 function addRowAdditionalOptionsInDialog(event) {
     event.stopPropagation()
 
@@ -198,8 +249,11 @@ function saveAdditionalOption(additionalOption, callbackAfterSave) {
 
     let callback = (data, loader) => {
         if (data.Success) {
-            ProductAdditionalOptions.push(data.Data.Id)
+            if (ProductAdditionalOptions.findIndex(p => p == data.Data.Id) == -1)
+                ProductAdditionalOptions.push(data.Data.Id)
+
             DataProduct.AdditionalOptions[data.Data.Id] = data.Data
+
             callbackAfterSave()
         }
 
@@ -224,12 +278,12 @@ function renderAdditionalOptionFromProduct() {
             <div class="funcitons-additional-item" id="${option.Id}">
                 <div>${option.Name}</div>
                 <div>
-                    <button class="edit-option-setting-btn">
+                    <button class="edit-option-setting-btn" onclick="editCreateAdditionalOptionsDialog(event, ${option.Id})">
                         <i class="fal fa-edit"></i>
                     </button>
                 </div>
                 <div>
-                    <button class="remove-option-setting-btn">
+                    <button class="remove-option-setting-btn" onclick="removeAdditionalOptionFromProduct(event, ${option.Id})">
                         <i class="fal fa-trash-alt"></i>
                     </button>
                 </div>
@@ -242,3 +296,14 @@ function renderAdditionalOptionFromProduct() {
     $containerForOptions.html(templateOption.length ? templateOption : emptyTemplate)
 }
 
+function removeAdditionalOptionFromProduct(event, additionalOptionId) {
+    event.stopPropagation()
+
+    const i = ProductAdditionalOptions.findIndex(p => p == additionalOptionId)
+
+    if (i != -1) {
+        ProductAdditionalOptions.splice(i, 1)
+
+        renderAdditionalOptionFromProduct()
+    }
+}
