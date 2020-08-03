@@ -2032,7 +2032,7 @@
                         <i class="fal fa-plus"></i>
                         Добавить свойство
                     </button>
-                    <button class="simple-text-btn" id="btn-function-additional-select" disabled>
+                    <button class="simple-text-btn" id="btn-function-additional-select" onclick="openFnuctionAdditionalExistingOptionDialog(event)" disabled>
                         <i class="fal fa-list-ul"></i>
                         Выбрать из существующих
                     </button>
@@ -2041,7 +2041,7 @@
                     <div class="empty-container">Добавте опциональные свойства</div>
                 </div>
                 <div class="function-additional-menu-footer">
-                    <button class="simple-text-btn" id="btn-function-additional-done">
+                    <button class="simple-text-btn" id="btn-function-additional-done" onclick="Dialog.close('#functionAdditionalInfoDialog')">
                         Готово
                     </button>
                 </div>
@@ -2071,6 +2071,26 @@
                 </div>
                 <div class="create-function-additional-menu-footer">
                     <button class="simple-text-btn" id="btn-function-additional-done" onclick="doneAdditionalOption()">
+                        Готово
+                    </button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="functionAdditionalExistingOptionsDialog">
+        <div class="dialog-wrapper dialog-body-function-additional-wrapper">
+            <div class="dialog-header-title">
+                Опциональные свойства
+            </div>
+            <button class="dialog-btn-close" onclick="Dialog.close('#functionAdditionalExistingOptionsDialog')">
+                <i class="fal fa-times"></i>
+            </button>
+            <div class="dialog-body dialog-body-function-additional-existing">
+                <div class="functions-additional custom-scroll">
+                </div>
+                <div class="function-additional-menu-footer">
+                    <button class="simple-text-btn" id="btn-function-additional-done" onclick="Dialog.close('#functionAdditionalExistingOptionsDialog')">
                         Готово
                     </button>
                 </div>

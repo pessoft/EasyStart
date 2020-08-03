@@ -29,7 +29,15 @@ function openFunctionAdditionalInfoDialog(event) {
     event.stopPropagation()
 
     renderAdditionalOptionFromProduct()
+
+    $('#btn-function-additional-select').attr('disabled', Object.keys(DataProduct.AdditionalOptions) == 0)
     Dialog.showModal($('#functionAdditionalInfoDialog'))
+}
+
+function openFnuctionAdditionalExistingOptionDialog(event) {
+    event.stopPropagation()
+    
+    Dialog.showModal($('#functionAdditionalExistingOptionsDialog'))
 }
 
 function openAdditionalOptionsDialog(event) {
@@ -239,6 +247,7 @@ function closeAdditionalOption() {
 
 function cleanAdditinOption() {
     $('#function-additional-info-name-block').val('')
+    $('#btn-function-additional-select').attr('disabled', true)
     $('#createFunctionAdditionalInfoDialog').attr('additional-option-id', 0)
     renderEmptyInfoAdditionalOptionInDialog()
 }

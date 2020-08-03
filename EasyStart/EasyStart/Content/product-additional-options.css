@@ -23,19 +23,24 @@
     grid-template-rows: 30px 265px;
 }
 
-.dialog-body-function-additional {
+.dialog-body-function-additional,
+.dialog-body-function-additional-existing {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 80px 1fr 20px;
     grid-row-gap: 10px;
 }
 
-.function-additional-menu-header {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.dialog-body-function-additional-existing {
+    grid-template-rows: 1fr 20px;
 }
+
+    .function-additional-menu-header {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
 
 #btn-function-additional-select {
     margin-top: 10px;
