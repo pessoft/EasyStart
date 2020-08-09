@@ -36,7 +36,9 @@ function openFunctionAdditionalInfoDialog(event) {
 
 function openFnuctionAdditionalExistingOptionDialog(event) {
     event.stopPropagation()
-    
+
+    renderAdditionalExistingOptions()
+
     Dialog.showModal($('#functionAdditionalExistingOptionsDialog'))
 }
 
@@ -326,4 +328,50 @@ function changeOrderProductAdditionalOption() {
     })
 
     ProductAdditionalOptions = newProductAdditionalOptions
+}
+
+function renderAdditionalExistingOptions() {
+    const options = []
+    for (const optionId in DataProduct.AdditionalOptions) {
+        const additionOption = DataProduct.AdditionalOptions[optionId]
+        const isSelecetedCurrentOption = ProductAdditionalOptions.includes(additionOption.Id)
+        const optionItemTemplate = getAdditionalOptionExistTempalte(additionOption, isSelecetedCurrentOption)
+
+        options.push(optionItemTemplate)
+    }
+
+    $('#functionAdditionalExistingOptionsDialog .functions-additional').html(options)
+}
+
+function getAdditionalOptionExistTempalte(option, isSelecetedOption) {
+    return `
+        <div class="funcitons-additional-item-exist">
+            <div class="checkbox-item checkbox-item-left">
+                <input type="checkbox" value="${option.Id}" ${isSelecetedOption ? 'checked' : ''}/>
+            </div>
+            <div>${option.Name}</div>
+            <div>
+                <button class="edit-option-setting-btn" onclick="">
+                    <i class="fal fa-edit"></i>
+                </button>
+            </div>
+            <div>
+                <button class="remove-option-setting-btn" onclick="">
+                    <i class="fal fa-trash-alt"></i>
+                </button>
+            </div>
+        </div>
+    `
+}
+
+function complitedSelectionExistingOptions() {
+    ProductAdditionalOptions = []
+
+    $('#functionAdditionalExistingOptionsDialog .functions-additional input[type=checkbox]:checked').each(function () {
+        const id = parseInt($(this).val())
+        ProductAdditionalOptions.push(id)
+    })
+
+    renderAdditionalOptionFromProduct()
+    Dialog.close('#functionAdditionalExistingOptionsDialog')
 }

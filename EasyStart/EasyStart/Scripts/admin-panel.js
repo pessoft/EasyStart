@@ -26,9 +26,13 @@
     });
 
     let setOperationAdd = () => CurrentOperation = TypeOperation.Add
+    const additionFunForAddNewProduct = () => {
+        ProductAdditionalOptions = []
+        setOperationAdd()
+    } 
 
     bindShowModal("add-category", "addCategoryDialog", setOperationAdd)
-    bindShowModal("add-product", "addProducDialog", setOperationAdd, productCondition)
+    bindShowModal("add-product", "addProducDialog", additionFunForAddNewProduct, productCondition)
     bindShowModal("add-product-constructor", "addSubCategoryConstructorDialog", initNewCategoryConstructor, productConstructorCondition)
     bindShowModal("add-branch", "addBranchDialog", addNewBranchLoginData)
 

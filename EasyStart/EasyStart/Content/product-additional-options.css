@@ -263,3 +263,14 @@
     border-radius: 2px;
     margin-bottom: 8px;
 }
+
+.funcitons-additional-item-exist {
+    display: grid;
+    grid-template-columns: 35px 1fr 35px 35px;
+    grid-template-rows: 35px;
+    border: 1px solid #bdbdbd35;
+    align-items: center;
+    padding-left: 5px;
+    border-radius: 2px;
+    margin-bottom: 8px;
+}
