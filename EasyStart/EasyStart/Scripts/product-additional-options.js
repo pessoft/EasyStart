@@ -30,8 +30,12 @@ function openFunctionAdditionalInfoDialog(event) {
 
     renderAdditionalOptionFromProduct()
 
-    $('#btn-function-additional-select').attr('disabled', Object.keys(DataProduct.AdditionalOptions) == 0)
+    toggleDisabledExistAdditionalOptionBtn()
     Dialog.showModal($('#functionAdditionalInfoDialog'))
+}
+
+function toggleDisabledExistAdditionalOptionBtn() {
+    $('#btn-function-additional-select').attr('disabled', Object.keys(DataProduct.AdditionalOptions) == 0)
 }
 
 function openFnuctionAdditionalExistingOptionDialog(event) {
@@ -236,6 +240,7 @@ function doneAdditionalOption() {
 
     const callbackAfterSaveAdditionalOption = () => {
         closeAdditionalOption()
+        toggleDisabledExistAdditionalOptionBtn()
         renderAdditionalOptionFromProduct()
     }
 
@@ -351,12 +356,12 @@ function getAdditionalOptionExistTempalte(option, isSelecetedOption) {
             </div>
             <div>${option.Name}</div>
             <div>
-                <button class="edit-option-setting-btn" onclick="">
+                <button class="edit-option-setting-btn" onclick="editCreateAdditionalOptionsDialog(event, ${option.Id})">
                     <i class="fal fa-edit"></i>
                 </button>
             </div>
             <div>
-                <button class="remove-option-setting-btn" onclick="">
+                <button class="remove-option-setting-btn" onclick="removeExistingOption(event, ${option.Id})">
                     <i class="fal fa-trash-alt"></i>
                 </button>
             </div>
@@ -374,4 +379,37 @@ function complitedSelectionExistingOptions() {
 
     renderAdditionalOptionFromProduct()
     Dialog.close('#functionAdditionalExistingOptionsDialog')
+}
+
+function removeExistingOption(event, id) {
+    event.stopPropagation();
+
+    let callback = function () {
+        const loader = new Loader('#functionAdditionalExistingOptionsDialog .dialog-body-function-additional-wrapper');
+        loader.start();
+        let successFunc = function (result, loader) {
+            loader.stop();
+            if (result.Success) {
+                delete (DataProduct.AdditionalOptions[id])
+                renderAdditionalExistingOptions()
+
+                const i = ProductAdditionalOptions.findIndex(p => p == id)
+                if (i != -1) {
+                    ProductAdditionalOptions.splice(i, 1)
+                    
+                    renderAdditionalOptionFromProduct()
+                }
+
+                if (!Object.keys(DataProduct.AdditionalOptions).length) {
+                    Dialog.close('#functionAdditionalExistingOptionsDialog')
+                    toggleDisabledExistAdditionalOptionBtn()
+                }
+            } else {
+                showErrorMessage(result.ErrorMessage);
+            }
+        }
+        $.post("/Admin/RemoveProductAdditionalOption", { id: id }, successCallBack(successFunc, loader));
+    }
+
+    deleteConfirmation(callback);
 }

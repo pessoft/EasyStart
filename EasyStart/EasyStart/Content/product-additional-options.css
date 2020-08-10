@@ -19,6 +19,7 @@
 }
 
 .dialog-body-function-additional-wrapper {
+    position:relative;
     grid-template-columns: 420px;
     grid-template-rows: 30px 265px;
 }

@@ -1484,5 +1484,35 @@ namespace EasyStart.Controllers
 
             return Json(result);
         }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult RemoveProductAdditionalOption(int id)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                if (id < 1)
+                    throw new Exception("Не корректный идентификатор");
+
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var succesRemove = DataWrapper.RemoveProductAdditionalOptionById(id);
+
+                if (succesRemove)
+                {
+                    result.Success = true;
+                }
+                else
+                    throw new Exception("Ошибка удаления дополнительных опций");
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = "При удалении дополнительных опций что-то пошло не так";
+            }
+
+            return Json(result);
+        }
     }
 }

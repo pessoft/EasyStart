@@ -3325,6 +3325,57 @@ namespace EasyStart.Logic
             return news;
         }
 
+        public static bool RemoveProductAdditionalOptionById(int id)
+        {
+            var success = false;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    if (id > 0)
+                    {
+                        var value = db.AdditionalOptions.FirstOrDefault(p => p.Id == id);
+                        value.IsDeleted = true;
+                        
+                        success = RemoveProductAdditionOptionItemsByOptionId(id);
+                        if(success)
+                            db.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return success;
+        }
+
+        public static bool RemoveProductAdditionOptionItemsByOptionId(int id)
+        {
+            var success = false;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    if (id > 0)
+                    {
+                        var value = db.AdditionOptionItems.Where(p => p.AdditionOptionId == id).ToList();
+                        value.ForEach(p => p.IsDeleted = true);
+
+                        db.SaveChanges();
+                        success = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return success;
+        }
+
         public static AdditionalOption SaveProductAdditionalOption(AdditionalOption additionalOption)
         {
             AdditionalOption result = null;
@@ -3412,7 +3463,7 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     var additionOptionItemDict = GetAllProductAdditionOptionItemByBranchId(branchId);
-                    var options = db.AdditionalOptions.Where(p => p.BranchId == branchId);
+                    var options = db.AdditionalOptions.Where(p => p.BranchId == branchId && !p.IsDeleted);
 
                     if (options != null && additionOptionItemDict != null)
                     {
@@ -3444,7 +3495,7 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    additionOptionItemDict = db.AdditionOptionItems.Where(p => p.BranchId == branchId)
+                    additionOptionItemDict = db.AdditionOptionItems.Where(p => p.BranchId == branchId && !p.IsDeleted)
                         .GroupBy(p => p.AdditionOptionId)
                         .ToDictionary(p => p.Key, p => p.ToList());
                 }
