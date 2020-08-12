@@ -1997,7 +1997,7 @@
             </button>
             <div class="dialog-body dialog-body-additional-options">
                 <div class="additional-options-menu-header">
-                    <button class="simple-text-btn" id="btn-additional-options-add">
+                    <button class="simple-text-btn" id="btn-additional-options-add" onclick="showEditAdditionalFillingDialog(event)">
                         <i class="fal fa-plus"></i>
                         Добавить опцию
                     </button>
@@ -2011,6 +2011,33 @@
                 </div>
                 <div class="additional-options-menu-footer">
                     <button class="simple-text-btn" id="btn-additional-options-done">
+                        Готово
+                    </button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="addProductAdditionalFillingDialog">
+        <div class="dialog-wrapper dialog-body-additional-fillings-wrapper">
+            <div class="dialog-header-title">
+                Дополнительная опция
+            </div>
+            <button class="dialog-btn-close" onclick="Dialog.close('#addProductAdditionalFillingDialog')">
+                <i class="fal fa-times"></i>
+            </button>
+            <div class="dialog-body dialog-body-additional-filling">
+                <div class="additional-filling-inputs">
+                    <div class="additional-option-name">
+                        <input type="text" class="default-color default-style-input" placeholder="Название">
+                    </div>
+                    <div class="additional-option-price">
+                        <input type="number" min="0" class="default-color default-style-input">
+                        <span>руб.</span>
+                    </div>
+                </div>
+                <div class="additional-options-menu-footer">
+                    <button class="simple-text-btn" id="btn-additional-filling-done">
                         Готово
                     </button>
                 </div>
@@ -2089,7 +2116,7 @@
             <div class="dialog-body dialog-body-function-additional-existing">
                 <div class="functions-additional custom-scroll">
                     <div class="funcitons-additional-item-exist">
-                        
+
                     </div>
                 </div>
                 <div class="function-additional-menu-footer">

@@ -413,3 +413,20 @@ function removeExistingOption(event, id) {
 
     deleteConfirmation(callback);
 }
+
+function showEditAdditionalFillingDialog(event, id = -1) {
+    cleanAdditionalFillingInputs()
+
+    if (id != -1)
+        editAdditionalFilling(id)
+
+    Dialog.showModal($('#addProductAdditionalFillingDialog'))
+}
+
+function cleanAdditionalFillingInputs() {
+
+}
+
+function editAdditionalFilling(id) {
+
+}
