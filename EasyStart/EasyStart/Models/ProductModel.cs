@@ -31,5 +31,7 @@ namespace EasyStart.Models
 
         [NotMapped]
         public List<int> ProductAdditionalOptionIds { get; set; }
+        [NotMapped]
+        public List<int> ProductAdditionalFillingIds { get; set; }
     }
 }
