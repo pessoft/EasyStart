@@ -1514,5 +1514,70 @@ namespace EasyStart.Controllers
 
             return Json(result);
         }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult SaveAdditionalFilling(AdditionalFilling additionalFilling)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                if (additionalFilling == null
+                    || string.IsNullOrEmpty(additionalFilling.Name))
+                    throw new Exception("Пустные значение не допустимы");
+
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                additionalFilling.BranchId = branchId;
+
+                var savedAdditionalFilling = DataWrapper.SaveAdditionalFilling(additionalFilling);
+
+                if (savedAdditionalFilling != null)
+                {
+                    result.Success = true;
+                    result.Data = savedAdditionalFilling;
+                }
+                else
+                    throw new Exception("Ошибка сохранения дополнительных опций");
+
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = "При сохранении дополнительных опций что-то пошло не так";
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult RemoveAdditionalFilling(int id)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                if (id < 1)
+                    throw new Exception("Не корректный идентификатор");
+
+                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
+                var succesRemove = DataWrapper.RemoveAdditionalFilling(id);
+
+                if (succesRemove)
+                {
+                    result.Success = true;
+                }
+                else
+                    throw new Exception("Ошибка удаления дополнительных опций");
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = "При удалении дополнительных опций что-то пошло не так";
+            }
+
+            return Json(result);
+        }
     }
 }

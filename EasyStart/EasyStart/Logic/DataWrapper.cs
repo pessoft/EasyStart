@@ -971,11 +971,16 @@ namespace EasyStart.Logic
 
                     if (result.Any())
                     {
-                        var optionDict = GetProductAdditionalOptions(result.Select(p => p.Id).ToList());
+                        var productIds = result.Select(p => p.Id).ToList();
+                        var optionDict = GetProductAdditionalOptions(productIds);
                         if (optionDict != null && optionDict.Any())
                         {
                             result.ForEach(p => p.ProductAdditionalOptionIds = optionDict[p.Id]);
                         }
+
+                        var additionalFillingsDict = GetProductAdditionalFillings(productIds);
+                        if (additionalFillingsDict != null && additionalFillingsDict.Any())
+                            result.ForEach(p => p.ProductAdditionalFillingIds = additionalFillingsDict[p.Id]);
                     }
                 }
             }
@@ -1001,11 +1006,16 @@ namespace EasyStart.Logic
 
                     if (result.Any())
                     {
-                        var optionDict = GetProductAdditionalOptions(result.Select(p => p.Id).ToList());
+                        var productIds = result.Select(p => p.Id).ToList();
+                        var optionDict = GetProductAdditionalOptions(productIds);
                         if (optionDict != null && optionDict.Any())
                         {
                             result.ForEach(p => p.ProductAdditionalOptionIds = optionDict[p.Id]);
                         }
+
+                        var additionalFillingsDict = GetProductAdditionalFillings(productIds);
+                        if (additionalFillingsDict != null && additionalFillingsDict.Any())
+                            result.ForEach(p => p.ProductAdditionalFillingIds = additionalFillingsDict[p.Id]);
                     }
                 }
             }
@@ -1085,11 +1095,16 @@ namespace EasyStart.Logic
 
                     if (result != null)
                     {
-                        var optionDict = GetProductAdditionalOptions(new List<int> { result.Id });
+                        var productIds = new List<int> { result.Id };
+                        var optionDict = GetProductAdditionalOptions(productIds);
                         if (optionDict != null && optionDict.Any())
                         {
                             result.ProductAdditionalOptionIds = optionDict[result.Id];
                         }
+
+                        var additionalFillingsDict = GetProductAdditionalFillings(productIds);
+                        if (additionalFillingsDict != null && additionalFillingsDict.Any())
+                            result.ProductAdditionalFillingIds = additionalFillingsDict[result.Id];
                     }
                 }
             }
@@ -1115,11 +1130,16 @@ namespace EasyStart.Logic
 
                     if (result.Any())
                     {
-                        var optionDict = GetProductAdditionalOptions(result.Select(p => p.Id).ToList());
+                        var pIds = result.Select(p => p.Id).ToList();
+                        var optionDict = GetProductAdditionalOptions(pIds);
                         if (optionDict != null && optionDict.Any())
                         {
                             result.ForEach(p => p.ProductAdditionalOptionIds = optionDict[p.Id]);
                         }
+
+                        var additionalFillingsDict = GetProductAdditionalFillings(pIds);
+                        if (additionalFillingsDict != null && additionalFillingsDict.Any())
+                            result.ForEach(p => p.ProductAdditionalFillingIds = additionalFillingsDict[p.Id]);
                     }
                 }
             }
@@ -1145,11 +1165,16 @@ namespace EasyStart.Logic
 
                     if (result.Any())
                     {
-                        var optionDict = GetProductAdditionalOptions(result.Select(p => p.Id).ToList());
+                        var productIds = result.Select(p => p.Id).ToList();
+                        var optionDict = GetProductAdditionalOptions(productIds);
                         if (optionDict != null && optionDict.Any())
                         {
                             result.ForEach(p => p.ProductAdditionalOptionIds = optionDict[p.Id]);
                         }
+
+                        var additionalFillingsDict = GetProductAdditionalFillings(productIds);
+                        if (additionalFillingsDict != null && additionalFillingsDict.Any())
+                            result.ForEach(p => p.ProductAdditionalFillingIds = additionalFillingsDict[p.Id]);
                     }
                 }
             }
@@ -1175,11 +1200,16 @@ namespace EasyStart.Logic
 
                     if (products.Any())
                     {
-                        var optionDict = GetProductAdditionalOptions(products.Select(p => p.Id).ToList());
+                        var productIds = products.Select(p => p.Id).ToList();
+                        var optionDict = GetProductAdditionalOptions(productIds);
                         if (optionDict != null && optionDict.Any())
                         {
                             products.ForEach(p => p.ProductAdditionalOptionIds = optionDict[p.Id]);
                         }
+
+                        var additionalFillingsDict = GetProductAdditionalFillings(productIds);
+                        if (additionalFillingsDict != null && additionalFillingsDict.Any())
+                            products.ForEach(p => p.ProductAdditionalFillingIds = additionalFillingsDict[p.Id]);
                     }
 
                     if (products != null && products.Any())
@@ -1212,11 +1242,16 @@ namespace EasyStart.Logic
 
                     if (result.Any())
                     {
-                        var optionDict = GetProductAdditionalOptions(result.Select(p => p.Id).ToList());
+                        var productIds = result.Select(p => p.Id).ToList();
+                        var optionDict = GetProductAdditionalOptions(productIds);
                         if (optionDict != null && optionDict.Any())
                         {
                             result.ForEach(p => p.ProductAdditionalOptionIds = optionDict[p.Id]);
                         }
+
+                        var additionalFillingsDict = GetProductAdditionalFillings(productIds);
+                        if (additionalFillingsDict != null && additionalFillingsDict.Any())
+                            result.ForEach(p => p.ProductAdditionalFillingIds = additionalFillingsDict[p.Id]);
                     }
                 }
             }
@@ -3769,6 +3804,44 @@ namespace EasyStart.Logic
             }
 
             return success;
+        }
+
+        public static Dictionary<int, List<int>> GetProductAdditionalFillings(List<int> productIds)
+        {
+            var productAdditionFillingsDict = new Dictionary<int, List<int>>();
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    productAdditionFillingsDict = db.ProductAdditionalFillings.Where(p => productIds.Contains(p.ProductId) && !p.IsDeleted)
+                        .GroupBy(p => p.ProductId)
+                        .ToDictionary(
+                        p => p.Key,
+                        p => p.OrderBy(x => x.OrderNumber)
+                        .Select(x => x.AdditionalFillingId)
+                        .ToList());
+
+                    productIds.ForEach(p =>
+                    {
+                        List<int> additionalFillingIds = null;
+
+                        if (productAdditionFillingsDict.TryGetValue(p, out additionalFillingIds))
+                        {
+                            if (additionalFillingIds == null)
+                                productAdditionFillingsDict[p] = new List<int>();
+                        }
+                        else
+                            productAdditionFillingsDict.Add(p, new List<int>());
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return productAdditionFillingsDict;
         }
     }
 }
