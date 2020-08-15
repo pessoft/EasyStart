@@ -1987,30 +1987,30 @@
         </div>
     </dialog>
 
-    <dialog id="productAdditionalOptionsDialog">
+    <dialog id="productAdditionalFillingsDialog">
         <div class="dialog-wrapper dialog-body-additional-options-wrapper">
             <div class="dialog-header-title">
                 Настройка дополнительных опций
             </div>
-            <button class="dialog-btn-close" onclick="Dialog.close('#productAdditionalOptionsDialog')">
+            <button class="dialog-btn-close" onclick="Dialog.close('#productAdditionalFillingsDialog')">
                 <i class="fal fa-times"></i>
             </button>
             <div class="dialog-body dialog-body-additional-options">
                 <div class="additional-options-menu-header">
-                    <button class="simple-text-btn" id="btn-additional-options-add" onclick="showEditAdditionalFillingDialog(event)">
+                    <button class="simple-text-btn" onclick="showEditAdditionalFillingDialog(event)">
                         <i class="fal fa-plus"></i>
                         Добавить опцию
                     </button>
-                    <button class="simple-text-btn" id="btn-additional-options-select" disabled>
+                    <button class="simple-text-btn" id="btn-additional-fillings-select" onclick="openAdditionalFillingExistingOptionDialog(event)" disabled>
                         <i class="fal fa-list-ul"></i>
                         Выбрать из существующих
                     </button>
                 </div>
-                <div class="additional-options-list custom-scroll">
+                <div class="additional-filling-list custom-scroll">
                     <div class="empty-container">Добавте дополнительные опции</div>
                 </div>
                 <div class="additional-options-menu-footer">
-                    <button class="simple-text-btn" id="btn-additional-options-done">
+                    <button class="simple-text-btn" id="btn-additional-options-done" onclick="Dialog.close('#productAdditionalFillingsDialog')">
                         Готово
                     </button>
                 </div>
@@ -2028,16 +2028,17 @@
             </button>
             <div class="dialog-body dialog-body-additional-filling">
                 <div class="additional-filling-inputs">
+                    <input type="hidden" id="additional-filling-id" value="-1">
                     <div class="additional-option-name">
-                        <input type="text" class="default-color default-style-input" placeholder="Название">
+                        <input type="text" id="additional-filling-name" class="default-color default-style-input" placeholder="Название">
                     </div>
                     <div class="additional-option-price">
-                        <input type="number" min="0" class="default-color default-style-input">
+                        <input type="number" id="additional-filling-price" min="0" class="default-color default-style-input">
                         <span>руб.</span>
                     </div>
                 </div>
                 <div class="additional-options-menu-footer">
-                    <button class="simple-text-btn" id="btn-additional-filling-done">
+                    <button class="simple-text-btn" id="btn-additional-filling-done" onclick="doneEditAdditionalFilling(event)">
                         Готово
                     </button>
                 </div>
@@ -2115,12 +2116,29 @@
             </button>
             <div class="dialog-body dialog-body-function-additional-existing">
                 <div class="functions-additional custom-scroll">
-                    <div class="funcitons-additional-item-exist">
-
-                    </div>
                 </div>
                 <div class="function-additional-menu-footer">
                     <button class="simple-text-btn" id="btn-function-additional-done" onclick="complitedSelectionExistingOptions()">
+                        Готово
+                    </button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="additionalFillingsExistingOptionsDialog">
+        <div class="dialog-wrapper dialog-body-function-additional-wrapper">
+            <div class="dialog-header-title">
+                Дополнительные свойства
+            </div>
+            <button class="dialog-btn-close" onclick="Dialog.close('#additionalFillingsExistingOptionsDialog')">
+                <i class="fal fa-times"></i>
+            </button>
+            <div class="dialog-body dialog-body-function-additional-existing">
+                <div class="additional-filling-list custom-scroll">
+                </div>
+                <div class="function-additional-menu-footer">
+                    <button class="simple-text-btn" id="btn-function-additional-done" onclick="complitedSelectionExistingFillings()">
                         Готово
                     </button>
                 </div>

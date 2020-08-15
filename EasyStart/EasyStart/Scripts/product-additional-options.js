@@ -38,7 +38,7 @@ function toggleDisabledExistAdditionalOptionBtn() {
     $('#btn-function-additional-select').attr('disabled', Object.keys(DataProduct.AdditionalOptions) == 0)
 }
 
-function openFnuctionAdditionalExistingOptionDialog(event) {
+function openFunctionAdditionalExistingOptionDialog(event) {
     event.stopPropagation()
 
     renderAdditionalExistingOptions()
@@ -49,7 +49,8 @@ function openFnuctionAdditionalExistingOptionDialog(event) {
 function openAdditionalOptionsDialog(event) {
     event.stopPropagation()
 
-    Dialog.showModal($('#productAdditionalOptionsDialog'))
+    toggleDisabledExistAdditionalFillingBtn()
+    Dialog.showModal($('#productAdditionalFillingsDialog'))
 }
 
 function openCreateAdditionalOptionsDialog(event) {
@@ -382,13 +383,13 @@ function complitedSelectionExistingOptions() {
 }
 
 function removeExistingOption(event, id) {
-    event.stopPropagation();
+    event.stopPropagation()
 
     let callback = function () {
-        const loader = new Loader('#functionAdditionalExistingOptionsDialog .dialog-body-function-additional-wrapper');
-        loader.start();
+        const loader = new Loader('#functionAdditionalExistingOptionsDialog .dialog-body-function-additional-wrapper')
+        loader.start()
         let successFunc = function (result, loader) {
-            loader.stop();
+            loader.stop()
             if (result.Success) {
                 delete (DataProduct.AdditionalOptions[id])
                 renderAdditionalExistingOptions()
@@ -405,16 +406,17 @@ function removeExistingOption(event, id) {
                     toggleDisabledExistAdditionalOptionBtn()
                 }
             } else {
-                showErrorMessage(result.ErrorMessage);
+                showErrorMessage(result.ErrorMessage)
             }
         }
-        $.post("/Admin/RemoveProductAdditionalOption", { id: id }, successCallBack(successFunc, loader));
+        $.post("/Admin/RemoveProductAdditionalOption", { id: id }, successCallBack(successFunc, loader))
     }
 
-    deleteConfirmation(callback);
+    deleteConfirmation(callback)
 }
 
 function showEditAdditionalFillingDialog(event, id = -1) {
+    event.stopPropagation()
     cleanAdditionalFillingInputs()
 
     if (id != -1)
@@ -424,9 +426,203 @@ function showEditAdditionalFillingDialog(event, id = -1) {
 }
 
 function cleanAdditionalFillingInputs() {
-
+    $('#additional-filling-id').val(-1)
+    $('#additional-filling-name').val('')
+    $('#additional-filling-price').val('')
 }
 
 function editAdditionalFilling(id) {
+    const data = DataProduct.AdditionalFillings[id]
 
+    $('#additional-filling-id').val(data.Id)
+    $('#additional-filling-name').val(data.Name)
+    $('#additional-filling-price').val(data.Price)
+}
+
+function doneEditAdditionalFilling(event) {
+    event.stopPropagation()
+
+    const additionalFilling = {
+        Id: parseInt($('#additional-filling-id').val()),
+        Name: $('#additional-filling-name').val().trim(),
+        Price: parseFloat($('#additional-filling-price').val()),
+    }
+
+    if (!additionalFilling.Name ||
+        (Number.isNaN(additionalFilling.Price) || additionalFilling.Price < 0)) {
+        showInfoMessage('Заполните все поля корректными данными')
+
+        return
+    }
+
+    saveAdditionalFilling(additionalFilling)
+}
+
+function saveAdditionalFilling(additionalFilling) {
+    const loader = new Loader($('#addProductAdditionalFillingDialog'))
+    loader.start()
+
+    let callback = (data, loader) => {
+        loader.stop()
+
+        if (data.Success) {
+            if (ProductAdditionalFillings.findIndex(p => p == data.Data.Id) == -1)
+                ProductAdditionalFillings.push(data.Data.Id)
+
+            DataProduct.AdditionalFillings[data.Data.Id] = data.Data
+
+            Dialog.close('#addProductAdditionalFillingDialog')
+            toggleDisabledExistAdditionalFillingBtn()
+            renderAdditionalFillingFromProduct()
+        }
+    }
+
+    $.post("/Admin/SaveAdditionalFilling",
+        additionalFilling,
+        successCallBack(callback, loader)).catch(function () {
+            loader.stop()
+        })
+}
+
+function toggleDisabledExistAdditionalFillingBtn() {
+    $('#btn-additional-fillings-select').attr('disabled', Object.keys(DataProduct.AdditionalFillings) == 0)
+}
+
+function renderAdditionalFillingFromProduct() {
+    const templateOption = []
+    const $containerForOptions = $('#productAdditionalFillingsDialog .additional-filling-list')
+    const emptyTemplate = '<div class="empty-container">Добавте дополнительные опции</div>'
+
+    for (const additionalFillingId of ProductAdditionalFillings) {
+        const option = DataProduct.AdditionalFillings[additionalFillingId]
+        const template = `
+            <div class="funcitons-additional-item" id="${option.Id}">
+                <div>${option.Name}</div>
+                <div>
+                    <button class="edit-option-setting-btn" onclick="showEditAdditionalFillingDialog(event, ${option.Id})">
+                        <i class="fal fa-edit"></i>
+                    </button>
+                </div>
+                <div>
+                    <button class="remove-option-setting-btn" onclick="removeAdditionalFillingFromProduct(event, ${option.Id})">
+                        <i class="fal fa-trash-alt"></i>
+                    </button>
+                </div>
+            </div>
+        `
+
+        templateOption.push(template)
+    }
+
+    $containerForOptions.html(templateOption.length ? templateOption : emptyTemplate)
+}
+
+function removeAdditionalFillingFromProduct(event, additionalFillingId) {
+    event.stopPropagation()
+
+    const i = ProductAdditionalFillings.findIndex(p => p == additionalFillingId)
+
+    if (i != -1) {
+        ProductAdditionalFillings.splice(i, 1)
+
+        renderAdditionalFillingFromProduct()
+    }
+}
+
+function changeOrderProductAdditionalFilling() {
+    let newProductAdditionalFillings = []
+    $('#productAdditionalFillingsDialog .additional-filling-list .funcitons-additional-item').each(function () {
+        const id = parseInt($(this).attr('id'))
+
+        newProductAdditionalFillings.push(id)
+    })
+
+    ProductAdditionalFillings = newProductAdditionalFillings
+}
+
+function openAdditionalFillingExistingOptionDialog(event) {
+    event.stopPropagation()
+
+    renderAdditionalFillingExistingOptions()
+
+    Dialog.showModal($('#additionalFillingsExistingOptionsDialog'))
+}
+
+function renderAdditionalFillingExistingOptions() {
+    const options = []
+    for (const id in DataProduct.AdditionalFillings) {
+        const additionalFilling = DataProduct.AdditionalFillings[id]
+        const isSelecetedCurrentOption = ProductAdditionalFillings.includes(additionalFilling.Id)
+        const optionItemTemplate = getAdditionalFillingExistTempalte(additionalFilling, isSelecetedCurrentOption)
+
+        options.push(optionItemTemplate)
+    }
+
+    $('#additionalFillingsExistingOptionsDialog .additional-filling-list').html(options)
+}
+
+function getAdditionalFillingExistTempalte(option, isSelecetedOption) {
+    return `
+        <div class="funcitons-additional-item-exist">
+            <div class="checkbox-item checkbox-item-left">
+                <input type="checkbox" value="${option.Id}" ${isSelecetedOption ? 'checked' : ''}/>
+            </div>
+            <div>${option.Name}</div>
+            <div>
+                <button class="edit-option-setting-btn" onclick="showEditAdditionalFillingDialog(event, ${option.Id})">
+                    <i class="fal fa-edit"></i>
+                </button>
+            </div>
+            <div>
+                <button class="remove-option-setting-btn" onclick="removeExistingAdditionalFilling(event, ${option.Id})">
+                    <i class="fal fa-trash-alt"></i>
+                </button>
+            </div>
+        </div>
+    `
+}
+
+function complitedSelectionExistingFillings() {
+    ProductAdditionalFillings = []
+
+    $('#additionalFillingsExistingOptionsDialog .additional-filling-list input[type=checkbox]:checked').each(function () {
+        const id = parseInt($(this).val())
+        ProductAdditionalFillings.push(id)
+    })
+
+    renderAdditionalFillingFromProduct()
+    Dialog.close('#additionalFillingsExistingOptionsDialog')
+}
+
+function removeExistingAdditionalFilling(event, id) {
+    event.stopPropagation()
+
+    let callback = function () {
+        const loader = new Loader('#additionalFillingsExistingOptionsDialog .dialog-body-function-additional-wrapper')
+        loader.start()
+        let successFunc = function (result, loader) {
+            loader.stop()
+            if (result.Success) {
+                delete (DataProduct.AdditionalFillings[id])
+                renderAdditionalFillingExistingOptions()
+
+                const i = ProductAdditionalFillings.findIndex(p => p == id)
+                if (i != -1) {
+                    ProductAdditionalFillings.splice(i, 1)
+                    
+                    renderAdditionalFillingFromProduct()
+                }
+
+                if (!Object.keys(DataProduct.AdditionalFillings).length) {
+                    Dialog.close('#additionalFillingsExistingOptionsDialog')
+                    toggleDisabledExistAdditionalFillingBtn()
+                }
+            } else {
+                showErrorMessage(result.ErrorMessage)
+            }
+        }
+        $.post("/Admin/RemoveAdditionalFilling", { id: id }, successCallBack(successFunc, loader))
+    }
+
+    deleteConfirmation(callback)
 }

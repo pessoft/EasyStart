@@ -43,7 +43,8 @@
     align-items: center;
 }
 
-#btn-function-additional-select {
+#btn-function-additional-select,
+#btn-additional-fillings-select {
     margin-top: 10px;
     font-size: 0.8em;
 }
@@ -57,7 +58,8 @@
     justify-content: flex-end;
 }
 
-.functions-additional {
+.functions-additional,
+.additional-filling-list {
     border: 1px solid #bdbdbd35;
     position: relative;
     padding: 10px;

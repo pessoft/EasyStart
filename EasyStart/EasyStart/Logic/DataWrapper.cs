@@ -3843,5 +3843,26 @@ namespace EasyStart.Logic
 
             return productAdditionFillingsDict;
         }
+
+        public static List<AdditionalFilling> GetAllAdditionalFillingsByBranchId(int branchId)
+        {
+            List<AdditionalFilling> additionalfillings = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    additionalfillings = db.AdditionalFillings.Where(p => p.BranchId == branchId && !p.IsDeleted)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                additionalfillings = null;
+            }
+
+            return additionalfillings;
+        }
     }
 }

@@ -386,10 +386,18 @@ namespace EasyStart.Controllers
             var branchId = DataWrapper.GetBranchId(User.Identity.Name);
             var categories = DataWrapper.GetCategories(branchId);
             var additionalOptions = DataWrapper.GetAllProductAdditionalOptionByBranchId(branchId);
+            additionalOptions = additionalOptions ?? new List<AdditionalOption>();
+            var additionalFillings = DataWrapper.GetAllAdditionalFillingsByBranchId(branchId);
+            additionalFillings = additionalFillings ?? new List<AdditionalFilling>();
 
             if (categories != null)
             {
-                result.Data = new { Categories = categories, AdditionalOptions = additionalOptions ?? new List<AdditionalOption>() };
+                result.Data = new 
+                { 
+                    Categories = categories,
+                    AdditionalOptions = additionalOptions,
+                    AdditionalFillings = additionalFillings
+                };
                 result.Success = true;
             }
             else
