@@ -3501,6 +3501,8 @@ namespace EasyStart.Logic
                         p.AdditionOptionId = value.Id;
                         p.BranchId = value.BranchId;
                     });
+                    
+                    RemoveProductAdditionOptionItemsByOptionId(value.Id);
                     List<AdditionOptionItem> additionOptionItems = SaveProductAdditionOptionItems(additionalOption.Items);
                     result.Items = additionOptionItems;
                 }

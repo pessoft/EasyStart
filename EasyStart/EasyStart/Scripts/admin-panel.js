@@ -818,7 +818,9 @@ function addProduct() {
         Description: $("#description-product").val(),
         Image: $("#addProducDialog img").attr("src"),
         ProductType: getProductType($("#product-type option:selected")),
-        ProductAdditionalInfoType: $("#product-additional-info-type").val()
+        ProductAdditionalInfoType: $("#product-additional-info-type").val(),
+        ProductAdditionalOptionIds: ProductAdditionalOptions,
+        ProductAdditionalFillingIds: ProductAdditionalFillings,
     }
     let successFunc = function (result, loader) {
         loader.stop()
@@ -851,7 +853,9 @@ function updateProduct() {
         Description: $("#description-product").val(),
         Image: $("#addProducDialog img").attr("src"),
         ProductType: getProductType($("#product-type option:selected")),
-        ProductAdditionalInfoType: $("#product-additional-info-type").val()
+        ProductAdditionalInfoType: $("#product-additional-info-type").val(),
+        ProductAdditionalOptionIds: ProductAdditionalOptions,
+        ProductAdditionalFillingIds: ProductAdditionalFillings,
     }
 
     let successFunc = function (result, loader) {
@@ -867,7 +871,7 @@ function updateProduct() {
             productItem.find(".product-item-image img").attr("src", product.Image)
             productItem.find(".product-item-name").html(product.Name)
 
-            const additionalInfo = getProductAdditionalInfoTypeStr(product.AdditionInfo, product.ProductAdditionalInfoType)
+            const additionalInfo = getProductAdditionalInfoTypeStr(product)
             productItem.find(".product-item-additional-info").html(additionalInfo)
             productItem.find(".product-item-price span").html(product.Price)
             productItem.find(".product-item-description").html(product.Description)
@@ -967,10 +971,29 @@ function updateProductConstructorToList(product) {
     }
 }
 
-function getProductAdditionalInfoTypeStr(additionInfo, productAdditionalInfoType) {
-    let str = `${additionInfo} ${ProductAdditionalInfoTypeShortName[productAdditionalInfoType]}`
+function getProductAdditionalInfoTypeStr(product) {
+    let additionInfo
 
-    return str.trim()
+    if (product.ProductAdditionalInfoType != ProductAdditionalInfoType.Custom) {
+        additionInfo = parseFloat(product.AdditionInfo)
+
+        if (product.ProductAdditionalOptionIds.length) {
+            for (const id of product.ProductAdditionalOptionIds) {
+                const option = DataProduct.AdditionalOptions[id]
+                const infoItem = option.Items.find(p => p.IsDefault)
+
+                additionInfo += infoItem.AdditionalInfo
+            }
+
+            additionInfo = xFormatPrice(additionInfo)
+        }
+
+    } else
+        additionInfo = product.AdditionInfo.trim()
+
+    const additionalInfoStr = `${additionInfo} ${ProductAdditionalInfoTypeShortName[product.ProductAdditionalInfoType]}`
+
+    return additionalInfoStr
 }
 
 function addProductToList(product) {
@@ -986,7 +1009,7 @@ function addProductToList(product) {
             <div class="product-item-raty">
             </div>
             <div class="product-item-additional-info">
-                ${getProductAdditionalInfoTypeStr(product.AdditionInfo, product.ProductAdditionalInfoType)}
+                ${getProductAdditionalInfoTypeStr(product)}
             </div>
             <div class="product-item-price">
                 <span>${product.Price}</span>
@@ -1040,22 +1063,11 @@ function editProduct(e, event) {
 
     let dialog = $("#addProducDialog")
     let parent = $($(e).parents(".product-item"))
-    const productAdditionalInfoType = parseInt(parent.find(".product-additional-info-value").html().trim())
-    const additionalInfo = parent.find(".product-item-additional-info").html().trim()
-    let product = {
-        Id: parent.attr("product-id"),
-        Name: parent.find(".product-item-name").html().trim(),
-        AdditionInfo: ProductAdditionalInfoType.Custom == productAdditionalInfoType ? additionalInfo : parseFloat(additionalInfo),
-        Price: parent.find(".product-item-price span").html().trim(),
-        Description: parent.find(".product-item-description").html().trim(),
-        Image: parent.find("img").attr("src"),
-        ProductType: parseInt(parent.find(".product-type-item").html().trim()),
-        ProductAdditionalInfoType: productAdditionalInfoType
-    }
+    const productId = parent.attr("product-id")
 
-    let productFromData = DataProduct.Products.find(p => p.Id == product.Id)
-    ProductAdditionalOptions = productFromData.ProductAdditionalOptionIds
-    ProductAdditionalFillings = productFromData.ProductAdditionalFillingIds
+    let product = DataProduct.Products.find(p => p.Id == productId)
+    ProductAdditionalOptions = product.ProductAdditionalOptionIds ? product.ProductAdditionalOptionIds : []
+    ProductAdditionalFillings = product.ProductAdditionalFillingIds ? product.ProductAdditionalFillingIds : []
 
     dialog.find("#product-id").val(product.Id)
     dialog.find("#name-product").val(product.Name)
@@ -1545,11 +1557,11 @@ function cleanProductUserCallbackDialog() {
 function num2str(n, text_forms) {
     n = Math.abs(n) % 100
     let n1 = n % 10
-    
+
     if (n > 10 && n < 20) { return text_forms[2] }
     if (n1 > 1 && n1 < 5) { return text_forms[1] }
     if (n1 == 1) { return text_forms[0] }
-    
+
     return text_forms[2]
 }
 
