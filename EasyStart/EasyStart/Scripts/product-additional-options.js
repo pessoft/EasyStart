@@ -255,8 +255,9 @@ function closeAdditionalOption() {
 
 function cleanAdditinOption() {
     $('#function-additional-info-name-block').val('')
-    $('#btn-function-additional-select').attr('disabled', true)
     $('#createFunctionAdditionalInfoDialog').attr('additional-option-id', 0)
+
+    toggleDisabledExistAdditionalOptionBtn()
     renderEmptyInfoAdditionalOptionInDialog()
 }
 
