@@ -30,8 +30,8 @@ namespace EasyStart.Models
         public ProductAdditionalInfoType ProductAdditionalInfoType { get; set; }
 
         [NotMapped]
-        public List<int> ProductAdditionalOptionIds { get; set; }
+        public List<int> ProductAdditionalOptionIds { get; set; } = new List<int>();
         [NotMapped]
-        public List<int> ProductAdditionalFillingIds { get; set; }
+        public List<int> ProductAdditionalFillingIds { get; set; } = new List<int>();
     }
 }

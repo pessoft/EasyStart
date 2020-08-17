@@ -872,8 +872,9 @@ function updateProduct() {
             productItem.find(".product-item-name").html(product.Name)
 
             const additionalInfo = getProductAdditionalInfoTypeStr(product)
+            const price = getProductGeneralPrice(product)
             productItem.find(".product-item-additional-info").html(additionalInfo)
-            productItem.find(".product-item-price span").html(product.Price)
+            productItem.find(".product-item-price span").html(price)
             productItem.find(".product-item-description").html(product.Description)
             productItem.find(".product-type-item").html(product.ProductType)
             productItem.find(".product-additional-info-value").html(product.ProductAdditionalInfoType)
@@ -996,6 +997,26 @@ function getProductAdditionalInfoTypeStr(product) {
     return additionalInfoStr
 }
 
+function getProductGeneralPrice(product) {
+    let price = product.Price
+
+    if (product.ProductAdditionalInfoType != ProductAdditionalInfoType.Custom) {
+        additionInfo = parseFloat(product.AdditionInfo)
+
+        if (product.ProductAdditionalOptionIds.length) {
+            for (const id of product.ProductAdditionalOptionIds) {
+                const option = DataProduct.AdditionalOptions[id]
+                const infoItem = option.Items.find(p => p.IsDefault)
+
+                price += infoItem.Price
+            }
+        }
+
+    }
+
+    return xFormatPrice(price)
+}
+
 function addProductToList(product) {
     let templateCategoryItem = `
     <div class="product-item" category-id="${product.CategoryId}" product-id="${product.Id}">
@@ -1012,7 +1033,7 @@ function addProductToList(product) {
                 ${getProductAdditionalInfoTypeStr(product)}
             </div>
             <div class="product-item-price">
-                <span>${product.Price}</span>
+                <span>${getProductGeneralPrice(product)}</span>
                 <i class="fal fa-ruble-sign"></i>
             </div>
             <div class="product-item-action">
@@ -1066,8 +1087,8 @@ function editProduct(e, event) {
     const productId = parent.attr("product-id")
 
     let product = DataProduct.Products.find(p => p.Id == productId)
-    ProductAdditionalOptions = product.ProductAdditionalOptionIds ? product.ProductAdditionalOptionIds : []
-    ProductAdditionalFillings = product.ProductAdditionalFillingIds ? product.ProductAdditionalFillingIds : []
+    ProductAdditionalOptions = product.ProductAdditionalOptionIds
+    ProductAdditionalFillings = product.ProductAdditionalFillingIds
 
     dialog.find("#product-id").val(product.Id)
     dialog.find("#name-product").val(product.Name)

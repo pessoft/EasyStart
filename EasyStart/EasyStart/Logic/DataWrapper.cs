@@ -3683,7 +3683,7 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
-                    var oldOptions = db.ProductAdditionalOptions.Where(p => p.Id == id && !p.IsDeleted);
+                    var oldOptions = db.ProductAdditionalOptions.Where(p => p.AdditionalOptionId == id && !p.IsDeleted);
                     foreach (var item in oldOptions)
                         item.IsDeleted = true;
 
