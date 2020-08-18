@@ -122,7 +122,7 @@ namespace EasyStart
             {
                 var categories = GetCategories(branchId);
                 var products = GetAllProducts(branchId);
-                var additionalOtions = GetAdditionalOptions(branchId);
+                var additionalOptions = GetAdditionalOptions(branchId);
                 var additionalFillings = GetAdditionalFillings(branchId);
                 var constructorCategories = GetConstructorCategories(branchId);
                 var ingredients = GetIngredients(constructorCategories.Keys);
@@ -144,7 +144,7 @@ namespace EasyStart
                 {
                     categories,
                     products,
-                    additionalOtions,
+                    additionalOptions,
                     additionalFillings,
                     constructorCategories,
                     ingredients,
