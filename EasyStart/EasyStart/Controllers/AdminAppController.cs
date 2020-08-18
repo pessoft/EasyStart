@@ -4,11 +4,13 @@ using EasyStart.Logic;
 using EasyStart.Logic.Notification;
 using EasyStart.Logic.Notification.EmailNotification;
 using EasyStart.Logic.Transaction;
+using EasyStart.Migrations;
 using EasyStart.Models;
 using EasyStart.Models.FCMNotification;
 using EasyStart.Models.Notification;
 using EasyStart.Models.OnlinePay;
 using EasyStart.Models.OnlinePay.Fondy;
+using EasyStart.Models.ProductOption;
 using EasyStart.Models.Transaction;
 using EasyStart.Utils;
 using Newtonsoft.Json;
@@ -120,6 +122,8 @@ namespace EasyStart
             {
                 var categories = GetCategories(branchId);
                 var products = GetAllProducts(branchId);
+                var additionalOtions = GetAdditionalOptions(branchId);
+                var additionalFillings = GetAdditionalFillings(branchId);
                 var constructorCategories = GetConstructorCategories(branchId);
                 var ingredients = GetIngredients(constructorCategories.Keys);
                 var deliverySettings = GetDeliverySettingForAPI(branchId);
@@ -140,6 +144,8 @@ namespace EasyStart
                 {
                     categories,
                     products,
+                    additionalOtions,
+                    additionalFillings,
                     constructorCategories,
                     ingredients,
                     deliverySettings,
@@ -253,6 +259,24 @@ namespace EasyStart
                 Logger.Log.Error(ex);
                 return null;
             }
+        }
+
+        public Dictionary<int, AdditionalOption> GetAdditionalOptions(int branchId)
+        {
+            var additionalOptions = DataWrapper.GetAllProductAdditionalOptionByBranchId(branchId);
+            additionalOptions = additionalOptions ?? new List<AdditionalOption>();
+
+            return additionalOptions.ToDictionary(p => p.Id);
+            //var additionalFillings = DataWrapper.GetAllAdditionalFillingsByBranchId(branchId);
+            //additionalFillings = additionalFillings ?? new List<AdditionalFilling>();
+        }
+
+        public Dictionary<int, Models.ProductOption.AdditionalFilling> GetAdditionalFillings(int branchId)
+        {
+            var additionalFillings = DataWrapper.GetAllAdditionalFillingsByBranchId(branchId);
+            additionalFillings = additionalFillings ?? new List<Models.ProductOption.AdditionalFilling>();
+
+            return additionalFillings.ToDictionary(p => p.Id);
         }
 
         /// <summary>
