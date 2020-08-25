@@ -72,8 +72,10 @@ namespace EasyStart.HtmlRenderer
             var defaultProducts = OrderDefaultProductsRender();
             var defaultBonusProducts = OrderDefaultBonusProductsRender();
             var constructorProducts = OrderConstructorProductsRender();
+            var productsWithOptions = OrderProductsWithOptionsRender();
+            var bonusProductsWithOptions = OrderBonusProductsWithOptionsRender();
 
-            body.Replace("{productsInfo}", $"{defaultProducts} {constructorProducts} {defaultBonusProducts}");
+            body.Replace("{productsInfo}", $"{defaultProducts} {productsWithOptions} {constructorProducts} {defaultBonusProducts} {bonusProductsWithOptions}");
         }
 
 
@@ -113,6 +115,50 @@ namespace EasyStart.HtmlRenderer
                 foreach (var ingredient in product.Ingredients)
                 {
                     prodcutsInfo.Append($"<tr style='height: 25px; font-size: 0.85em'><td style='min-width: 110px; padding-left: 12px; color: #6d758a;'>{ingredient.Name}</td><td style='text-align: right; color: #6d758a; min-width: 100px;'>{ingredient.Count} х {ingredient.Price} руб.</td></tr>");
+                }
+            }
+
+            return prodcutsInfo.ToString();
+        }
+
+        private string OrderProductsWithOptionsRender()
+        {
+            var prodcutsInfo = new StringBuilder();
+
+            foreach (var product in orderInfo.ProductsWithOptions)
+            {
+                prodcutsInfo.Append($"<tr style='height: 25px;'><td style='min-width: 110px;'>{product.ProductName}</td><td style='text-align: right; min-width: 100px;'>{product.ProductCount} х {product.ProductPrice} руб.</td></tr>");
+
+                foreach (var additionalOptionItem in product.AdditionalOptions.SelectMany(p => p.Items))
+                {
+                    prodcutsInfo.Append($"<tr style='height: 25px; font-size: 0.85em'><td style='min-width: 110px; padding-left: 12px; color: #6d758a;'>{additionalOptionItem.Name}</td><td style='text-align: right; color: #6d758a; min-width: 100px;'>{additionalOptionItem.Price} руб.</td></tr>");
+                }
+
+                foreach (var additionalFilling in product.AdditionalFillings)
+                {
+                    prodcutsInfo.Append($"<tr style='height: 25px; font-size: 0.85em'><td style='min-width: 110px; padding-left: 12px; color: #6d758a;'>{additionalFilling.Name}</td><td style='text-align: right; color: #6d758a; min-width: 100px;'>{additionalFilling.Price} руб.</td></tr>");
+                }
+            }
+
+            return prodcutsInfo.ToString();
+        }
+
+        private string OrderBonusProductsWithOptionsRender()
+        {
+            var prodcutsInfo = new StringBuilder();
+
+            foreach (var product in orderInfo.BonusProductsWithOptions)
+            {
+                prodcutsInfo.Append($"<tr style='height: 25px; color: #FF5722;'><td style='min-width: 110px;'>{product.ProductName}</td><td style='text-align: right; min-width: 100px;'>{product.ProductCount} х {product.ProductPrice} руб.</td></tr>");
+
+                foreach (var additionalOptionItem in product.AdditionalOptions.SelectMany(p => p.Items))
+                {
+                    prodcutsInfo.Append($"<tr style='height: 25px; font-size: 0.85em'><td style='min-width: 110px; padding-left: 12px; color: #6d758a;'>{additionalOptionItem.Name}</td><td style='text-align: right; color: #6d758a; min-width: 100px;'>{additionalOptionItem.Price} руб.</td></tr>");
+                }
+
+                foreach (var additionalFilling in product.AdditionalFillings)
+                {
+                    prodcutsInfo.Append($"<tr style='height: 25px; font-size: 0.85em'><td style='min-width: 110px; padding-left: 12px; color: #6d758a;'>{additionalFilling.Name}</td><td style='text-align: right; color: #6d758a; min-width: 100px;'>{additionalFilling.Price} руб.</td></tr>");
                 }
             }
 

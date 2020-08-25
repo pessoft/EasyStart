@@ -593,17 +593,33 @@ namespace EasyStart
                 var constructorIngredients = order.ProductConstructorCount != null ?
                 DataWrapper.GetIngredients(order.ProductConstructorCount.SelectMany(p => p.IngredientCount.Keys)) :
                 null;
-                var products = DataWrapper.GetOrderProducts(order.ProductCount.Keys.ToList());
-                var bonusProducts = order.ProductBonusCount != null ?
-                    DataWrapper.GetOrderProducts(order.ProductBonusCount.Keys.ToList()) :
+                var products = order.ProductCount != null ? 
+                    DataWrapper.GetOrderProducts(order.ProductCount.Keys) :
                     new List<ProductModel>();
+                var bonusProducts = order.ProductBonusCount != null ?
+                    DataWrapper.GetOrderProducts(order.ProductBonusCount.Keys) :
+                    new List<ProductModel>();
+                var productsWithOptions = order.ProductWithOptionsCount != null ?
+                    DataWrapper.GetOrderProducts(order.ProductWithOptionsCount.Select(p => p.ProductId)) :
+                    new List<ProductModel>();
+                var bonusProductsWithOptions = bonusProducts.Where(p => p.ProductAdditionalOptionIds.Count > 0).ToList();
+                bonusProducts.RemoveAll(p => p.ProductAdditionalOptionIds.Count > 0);
+
+
+                var additionalOptions = DataWrapper.GetAllProductAdditionalOptionByBranchId(order.BranchId)?.ToDictionary(p => p.Id) ?? new Dictionary<int, AdditionalOption>();
+                var additionalFillings = DataWrapper.GetAllAdditionalFillingsByBranchId(order.BranchId)?.ToDictionary(p => p.Id) ?? new Dictionary<int, Models.ProductOption.AdditionalFilling>();
+
                 var orderInfoParams = new OrderInfoParams
                 {
                     Setting = setting,
                     Products = products,
                     BonusProducts = bonusProducts,
+                    ProductsWithOptions = productsWithOptions,
+                    BonusProductsWithOptions = bonusProductsWithOptions,
                     CategoryConstructor = categoryConstructor,
-                    ConstructorIngredients = constructorIngredients
+                    ConstructorIngredients = constructorIngredients,
+                    AdditionalOptions = additionalOptions,
+                    AdditionalFillings = additionalFillings,
                 };
                 var optionsNotification = new OptionsNotificationNewOrderModel
                 {

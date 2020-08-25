@@ -211,6 +211,7 @@
     <Compile Include="HtmlRenderer\Models\IngredientOrderModel.cs" />
     <Compile Include="HtmlRenderer\Models\OrderIfnoModel.cs" />
     <Compile Include="HtmlRenderer\Models\ProductInfoModel.cs" />
+    <Compile Include="HtmlRenderer\Models\ProductWithOptionsInfoModel.cs" />
     <Compile Include="Hubs\NewOrderHub.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Logic\AdditionalOptions\ProductAdditionalInfoType.cs" />

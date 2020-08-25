@@ -993,7 +993,7 @@ namespace EasyStart.Logic
             return result;
         }
 
-        public static List<ProductModel> GetOrderProducts(List<int> ids)
+        public static List<ProductModel> GetOrderProducts(IEnumerable<int> ids)
         {
             List<ProductModel> result = new List<ProductModel>();
             try
