@@ -366,6 +366,10 @@
     <Compile Include="Migrations\202008132026221_AdditionalFilling.Designer.cs">
       <DependentUpon>202008132026221_AdditionalFilling.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202008241858358_AddedProductWithOptionsCountJSONInOrderModel.cs" />
+    <Compile Include="Migrations\202008241858358_AddedProductWithOptionsCountJSONInOrderModel.Designer.cs">
+      <DependentUpon>202008241858358_AddedProductWithOptionsCountJSONInOrderModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -414,6 +418,8 @@
     <Compile Include="Models\ProductOption\AdditionalOption.cs" />
     <Compile Include="Models\ProductOption\AdditionOptionItem.cs" />
     <Compile Include="Models\ProductReview.cs" />
+    <Compile Include="Models\ProductWithOptionsHistoryModel.cs" />
+    <Compile Include="Models\ProductWithOptionsOrderModel.cs" />
     <Compile Include="Models\PromotionCashbackSetting.cs" />
     <Compile Include="Models\PromotionNewsModel.cs" />
     <Compile Include="Models\PromotionPartnerSetting.cs" />
@@ -720,6 +726,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202008132026221_AdditionalFilling.resx">
       <DependentUpon>202008132026221_AdditionalFilling.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008241858358_AddedProductWithOptionsCountJSONInOrderModel.resx">
+      <DependentUpon>202008241858358_AddedProductWithOptionsCountJSONInOrderModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -212,7 +212,7 @@ namespace EasyStart
                     category.OrderNumber = i + 1;
                     PreprocessorDataAPI.ChangeImagePath(category);
                 }
-                
+
                 return categories;
             }
             catch (Exception ex)
@@ -356,7 +356,7 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public JsonResultModel CompleteOrderPay([FromBody]int orderId)
+        public JsonResultModel CompleteOrderPay([FromBody] int orderId)
         {
             var result = new JsonResultModel();
             OrderModel order = null;
@@ -455,7 +455,7 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public JsonResultModel SendOrder([FromBody]OrderModel order)
+        public JsonResultModel SendOrder([FromBody] OrderModel order)
         {
             var result = new JsonResultModel();
 
@@ -625,7 +625,7 @@ namespace EasyStart
 
 
         [HttpPost]
-        public JsonResultModel GetHistoryOrders([FromBody]DataHistoryForViewModel dataHistoryForLoad)
+        public JsonResultModel GetHistoryOrders([FromBody] DataHistoryForViewModel dataHistoryForLoad)
         {
             var result = new JsonResultModel();
 
@@ -646,7 +646,7 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public JsonResultModel GetProductsHistoryOrder([FromBody]int orderId)
+        public JsonResultModel GetProductsHistoryOrder([FromBody] int orderId)
         {
             var result = new JsonResultModel();
 
@@ -655,10 +655,11 @@ namespace EasyStart
                 var history = DataWrapper.GetOrder(orderId);
                 var productsHistory = new List<ProductHistoryModel>();
                 var constructorProductsHistory = new List<ConstructorProductHistoryModel>();
+                var productsWithOptionsHistory = new List<ProductWithOptionsHistoryModel>();
 
                 if (history.ProductCount != null && history.ProductCount.Any())
                 {
-                    var products = DataWrapper.GetProducts(history.ProductCount.Keys.ToList());
+                    var products = DataWrapper.GetProducts(history.ProductCount.Keys);
 
                     if (products != null)
                     {
@@ -728,8 +729,73 @@ namespace EasyStart
                     });
                 }
 
+                if (history.ProductWithOptionsCount != null && history.ProductWithOptionsCount.Any())
+                {
+                    var products = DataWrapper.GetProductDictionary(history.ProductWithOptionsCount.Select(p => p.ProductId));
 
-                result.Data = new { productsHistory, constructorProductsHistory };
+                    if (products != null)
+                    {
+                        Func<ProductWithOptionsOrderModel,
+                            ProductModel,
+                        Tuple<double,
+                        Dictionary<int,AdditionalOption>,
+                        Dictionary<int, Models.ProductOption.AdditionalFilling>>> getOptionsData = (pWoptions, product) =>
+                        {
+                            var additionalOptionsIds = pWoptions.AdditionalOptions?.Keys.ToList() ?? new List<int>();
+                            var additionalOptionsItemIds = pWoptions.AdditionalOptions?.Values.ToList() ?? new List<int>();
+                            var additionalOptions = DataWrapper.GetProductAdditionalOptionsByIds(additionalOptionsIds, additionalOptionsItemIds)
+                            ?? new Dictionary<int, AdditionalOption>();
+
+                            var additionalFillingIds = pWoptions.AdditionalFillings ?? new List<int>();
+                            var additionalFillings = DataWrapper.GetAdditionalFillingsByIds(additionalFillingIds)
+                            ?? new Dictionary<int, Models.ProductOption.AdditionalFilling>();
+
+                            var priceWithOptions = product.Price;
+
+                            foreach (var additionalOption in additionalOptions.Values)
+                            {
+                                if (additionalOption.Items != null)
+                                    priceWithOptions += additionalOption.Items.Sum(p => p.Price);
+                            }
+
+                            foreach (var additionalFilling in additionalFillings.Values)
+                            {
+                                priceWithOptions += additionalFilling.Price;
+                            }
+
+                            priceWithOptions *= pWoptions.Count;
+
+                            return Tuple.Create(priceWithOptions, additionalOptions, additionalFillings);
+                        };
+
+                        history.ProductWithOptionsCount.ForEach(p =>
+                        {
+                            if (products.TryGetValue(p.ProductId, out ProductModel product))
+                            {
+                                var optionsData = getOptionsData(p, product);
+                                var productHistory = new ProductWithOptionsHistoryModel
+                                {
+                                    Id = product.Id,
+                                    CategoryId = product.CategoryId,
+                                    AdditionInfo = product.AdditionInfo,
+                                    CategoryType = CategoryType.WithOptions,
+                                    Count = p.Count,
+                                    Image = product.Image,
+                                    IsDeleted = product.IsDeleted,
+                                    Name = product.Name,
+                                    Price = product.Price,
+                                    PriceWithOptions = optionsData.Item1,
+                                    AdditionalOptions = optionsData.Item2,
+                                    AdditionalFillings = optionsData.Item3
+                                };
+                                PreprocessorDataAPI.ChangeImagePath(productHistory);
+                                productsWithOptionsHistory.Add(productHistory);
+                            }
+                        });
+                    }
+                }
+
+                result.Data = new { productsHistory, constructorProductsHistory, productsWithOptionsHistory };
                 result.Success = true;
 
                 return result;
@@ -742,7 +808,7 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public JsonResultModel UpdateProductRating([FromBody]RatingProductUpdater ratingUp)
+        public JsonResultModel UpdateProductRating([FromBody] RatingProductUpdater ratingUp)
         {
             var result = new JsonResultModel();
 
@@ -780,7 +846,7 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public JsonResultModel SetProductReviews([FromBody]ProductReview review)
+        public JsonResultModel SetProductReviews([FromBody] ProductReview review)
         {
             var result = new JsonResultModel();
 
@@ -814,7 +880,7 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public JsonResultModel GetProductReviews([FromBody]int productId)
+        public JsonResultModel GetProductReviews([FromBody] int productId)
         {
             var result = new JsonResultModel();
             try
@@ -869,7 +935,7 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public JsonResultModel RegistrationClient([FromBody]Client client)
+        public JsonResultModel RegistrationClient([FromBody] Client client)
         {
             var result = new JsonResultModel();
 
@@ -923,7 +989,7 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public JsonResultModel UpdateParrentReferral([FromBody]ClientParentReferralCode clientParentReferralCode)
+        public JsonResultModel UpdateParrentReferral([FromBody] ClientParentReferralCode clientParentReferralCode)
         {
             var result = new JsonResultModel();
             try
@@ -1006,7 +1072,7 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public JsonResultModel UpdateClient([FromBody]Client client)
+        public JsonResultModel UpdateClient([FromBody] Client client)
         {
             var result = new JsonResultModel();
             try
@@ -1080,7 +1146,7 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public JsonResultModel RestorePasswordClient([FromBody]string email)
+        public JsonResultModel RestorePasswordClient([FromBody] string email)
         {
             var result = new JsonResultModel();
             try
@@ -1111,7 +1177,7 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public JsonResultModel Login([FromBody]UserDataPhoneApp userData)
+        public JsonResultModel Login([FromBody] UserDataPhoneApp userData)
         {
             var result = new JsonResultModel();
 
@@ -1170,7 +1236,7 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public JsonResultModel GetCoupun([FromBody]CouponParamsModel data)
+        public JsonResultModel GetCoupun([FromBody] CouponParamsModel data)
         {
             var result = new JsonResultModel { Success = true };
             CouponModel coupon = null;
@@ -1190,7 +1256,7 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public JsonResultModel GetPartnersTransaction([FromBody]int clientId)
+        public JsonResultModel GetPartnersTransaction([FromBody] int clientId)
         {
             var result = new JsonResultModel();
             List<PartnersTransactionView> transactions = null;
@@ -1216,7 +1282,7 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public JsonResultModel GetCashbackTransaction([FromBody]int clientId)
+        public JsonResultModel GetCashbackTransaction([FromBody] int clientId)
         {
             var result = new JsonResultModel();
             List<CashbackTransaction> transactions = null;
@@ -1242,7 +1308,7 @@ namespace EasyStart
         }
 
         [HttpPost]
-        public JsonResultModel RegisterDevice([FromBody]FCMDeviceModel device)
+        public JsonResultModel RegisterDevice([FromBody] FCMDeviceModel device)
         {
             var result = new JsonResultModel();
 

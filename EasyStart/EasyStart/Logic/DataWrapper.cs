@@ -4,6 +4,7 @@ using EasyStart.Models.ProductOption;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core;
 using System.Linq;
 using System.Web;
 
@@ -1151,6 +1152,43 @@ namespace EasyStart.Logic
             return result;
         }
 
+        public static Dictionary<int, ProductModel> GetProductDictionary(IEnumerable<int> productIds)
+        {
+            Dictionary<int, ProductModel> result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var products = db
+                        .Products
+                        .Where(p => productIds.Contains(p.Id))
+                        .ToList();
+
+                    if (products.Any())
+                    {
+                        var pIds = products.Select(p => p.Id).ToList();
+                        var optionDict = GetProductAdditionalOptions(pIds);
+                        if (optionDict != null && optionDict.Any())
+                        {
+                            products.ForEach(p => p.ProductAdditionalOptionIds = optionDict[p.Id]);
+                        }
+
+                        var additionalFillingsDict = GetProductAdditionalFillings(pIds);
+                        if (additionalFillingsDict != null && additionalFillingsDict.Any())
+                            products.ForEach(p => p.ProductAdditionalFillingIds = additionalFillingsDict[p.Id]);
+
+                        result = products.ToDictionary(p => p.Id);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
         public static List<ProductModel> GetAllProducts(int branchId)
         {
             List<ProductModel> result = new List<ProductModel>();
@@ -1678,6 +1716,9 @@ namespace EasyStart.Logic
                         p.BranchId == branchId &&
                         p.OrderStatus != OrderStatus.Deleted &&
                         p.OrderStatus != OrderStatus.PendingPay)
+                        .OrderByDescending(p => p.Date)
+                        .Take(50)
+                        .OrderBy(p => p.Date)
                         .ToList();
 
                     if (histroyOrders != null && histroyOrders.Any())
@@ -3501,7 +3542,7 @@ namespace EasyStart.Logic
                         p.AdditionOptionId = value.Id;
                         p.BranchId = value.BranchId;
                     });
-                    
+
                     RemoveProductAdditionOptionItemsByOptionId(value.Id);
                     List<AdditionOptionItem> additionOptionItems = SaveProductAdditionOptionItems(additionalOption.Items);
                     result.Items = additionOptionItems;
@@ -3609,6 +3650,28 @@ namespace EasyStart.Logic
             return additionOptionItemDict;
         }
 
+        public static Dictionary<int, List<AdditionOptionItem>> GetAdditionOptionItemByIds(List<int> itemIds)
+        {
+            Dictionary<int, List<AdditionOptionItem>> additionOptionItemDict = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    additionOptionItemDict = db.AdditionOptionItems.Where(p => itemIds.Contains(p.Id))
+                        .GroupBy(p => p.AdditionOptionId)
+                        .ToDictionary(p => p.Key, p => p.ToList());
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                additionOptionItemDict = null;
+            }
+
+            return additionOptionItemDict;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -3650,6 +3713,36 @@ namespace EasyStart.Logic
             }
 
             return productAdditionOptionsDict;
+        }
+
+        public static Dictionary<int, AdditionalOption> GetProductAdditionalOptionsByIds(List<int> additionalOptionIds, List<int> additionalOptionItemIds)
+        {
+            var additionOptionsDict = new Dictionary<int, AdditionalOption>();
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var additionalOptions = db.AdditionalOptions.Where(p => additionalOptionIds.Contains(p.Id));
+                    var additionOptionItemDict = GetAdditionOptionItemByIds(additionalOptionItemIds);
+
+                    if (additionalOptions != null && additionOptionItemDict != null)
+                    {
+                        foreach (var option in additionalOptions)
+                        {
+                            option.Items = additionOptionItemDict[option.Id];
+
+                            additionOptionsDict.Add(option.Id, option);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return additionOptionsDict;
         }
 
         public static void SaveProductAdditionalOptions(int productId, List<ProductAdditionalOptionModal> productAdditionalOptions)
@@ -3856,6 +3949,26 @@ namespace EasyStart.Logic
                 {
                     additionalfillings = db.AdditionalFillings.Where(p => p.BranchId == branchId && !p.IsDeleted)
                         .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                additionalfillings = null;
+            }
+
+            return additionalfillings;
+        }
+
+        public static Dictionary<int, AdditionalFilling> GetAdditionalFillingsByIds(List<int> ids)
+        {
+            Dictionary<int, AdditionalFilling> additionalfillings = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    additionalfillings = db.AdditionalFillings.Where(p => ids.Contains(p.Id)).ToDictionary(p => p.Id);
                 }
             }
             catch (Exception ex)
