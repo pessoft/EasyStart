@@ -43,6 +43,7 @@
 
     bindDragula()
 
+    loadMainProductData()
     if ($(".header-menu .menu-item-active").attr("target-id") == Pages.Order) {
         loadOrders()
     }
@@ -1818,6 +1819,7 @@ function processsingOrder(order) {
     order.ProductCount = JSON.parse(order.ProductCountJSON)
     order.ProductBonusCount = JSON.parse(order.ProductBonusCountJSON)
     order.ProductConstructorCount = JSON.parse(order.ProductConstructorCountJSON)
+    order.ProductWithOptionsCount = JSON.parse(order.ProductWithOptionsCountJSON)
 
     return order
 }
@@ -1883,6 +1885,10 @@ function getItemsIdsForLoad(order) {
         for (let productConstructorOrder of order.ProductConstructorCount) {
             constructorCategoryIds.push(productConstructorOrder.CategoryId)
         }
+    }
+
+    for (let productWithOptions of order.ProductWithOptionsCount) {
+        productIds.push(productWithOptions.ProductId)
     }
 
     return { productIds, constructorCategoryIds }
@@ -2505,7 +2511,10 @@ class OrderDetailsData {
     converеOrderListInfo(order) {
         const prefixRub = "руб."
         this.OrderList = []
+        this.OrderWithOptionsList = []
         this.OrderProductConstructorList = []
+
+
 
         if (order.ProductCount && Object.keys(order.ProductCount).length > 0) {
             for (let productId in order.ProductCount) {
@@ -2524,14 +2533,36 @@ class OrderDetailsData {
         if (order.ProductBonusCount && Object.keys(order.ProductBonusCount).length > 0) {
             for (let productId in order.ProductBonusCount) {
                 const product = OrderProducts[productId]
-                const obj = {
-                    Image: product.Image,
-                    Name: product.Name,
-                    Price: `${order.ProductBonusCount[productId]} x 0 ${prefixRub}`
-                }
+                let obj = {}
 
-                const view = this.convertOrderProducrToView(obj, true)
-                this.OrderList.push(view)
+                if (product.ProductAdditionalOptionIds.length > 0) {
+                    const options = []
+                    for (const id of product.ProductAdditionalOptionIds) {
+                        const additionalOption = DataProduct.AdditionalOptions[id]
+                        const additoinalOptionItem = additionalOption.Items.find(p => p.IsDefault)
+
+                        options.push({ name: additoinalOptionItem.Name, priceStr: `0 ${prefixRub}` })
+                    }
+
+                    obj = {
+                        Image: product.Image,
+                        Name: product.Name,
+                        Price: `${order.ProductBonusCount[productId]} x 0 ${prefixRub}`,
+                        Options: options
+                    }
+
+                    const view = this.convertOrderProductWithOptionsToView(obj, true)
+                    this.OrderWithOptionsList.push(view)
+                } else {
+                    obj = {
+                        Image: product.Image,
+                        Name: product.Name,
+                        Price: `${order.ProductBonusCount[productId]} x 0 ${prefixRub}`
+                    }
+
+                    const view = this.convertOrderProducrToView(obj, true)
+                    this.OrderList.push(view)
+                }
             }
         }
 
@@ -2547,6 +2578,49 @@ class OrderDetailsData {
                 }
                 const view = this.convertOrderConstructorProducrToView(constructorToView)
                 this.OrderProductConstructorList.push(view)
+            }
+        }
+
+        if (order.ProductWithOptionsCount && order.ProductWithOptionsCount.length > 0) {
+            const getProductWithOptionsData = (product, orderProductWithOptions) => {
+                let price = product.Price
+                const options = []
+
+                if (Object.keys(orderProductWithOptions.AdditionalOptions).length) {
+                    for (const id in orderProductWithOptions.AdditionalOptions) {
+                        const additionalOption = DataProduct.AdditionalOptions[id]
+                        const additionalOptionItemId = orderProductWithOptions.AdditionalOptions[id]
+                        const additoinalOptionItem = additionalOption.Items.find(p => p.Id == additionalOptionItemId)
+
+                        price += additoinalOptionItem.Price
+                        options.push({ name: additoinalOptionItem.Name, priceStr: `${additoinalOptionItem.Price} ${prefixRub}` })
+                    }
+                }
+
+                if (orderProductWithOptions.AdditionalFillings.length > 0) {
+                    for (const id of orderProductWithOptions.AdditionalFillings) {
+                        const additionalFilling = DataProduct.AdditionalFillings[id]
+
+                        price += additionalFilling.Price
+                        options.push({ name: additionalFilling.Name, priceStr: `${additionalFilling.Price} ${prefixRub}` })
+                    }
+                }
+
+                return { price, options }
+            }
+
+            for (let orderProductWithOptions of order.ProductWithOptionsCount) {
+                const product = OrderProducts[orderProductWithOptions.ProductId]
+                const productOptionsData = getProductWithOptionsData(product, orderProductWithOptions)
+                const obj = {
+                    Image: product.Image,
+                    Name: product.Name,
+                    Price: `${orderProductWithOptions.Count} x ${productOptionsData.price} ${prefixRub}`,
+                    Options: productOptionsData.options
+                }
+
+                const view = this.convertOrderProductWithOptionsToView(obj)
+                this.OrderWithOptionsList.push(view)
             }
         }
     }
@@ -2601,6 +2675,48 @@ class OrderDetailsData {
                 </div>
                 <div class="order-details-constructor-product-ingredients border-bottom">
                     ${this.getIngredientViews(constructor.Ingredients)}
+                </div>
+             </div>
+        `
+    }
+
+    convertOrderProductWithOptionsToView(constructor, isBonusProduct = false) {
+        const cssClassBonusProduct = isBonusProduct ? 'order-details-product-bonus' : ''
+
+        return `
+            <div class="order-details-constructor-product-item">
+                <div class="order-details-constructor-product-header">
+                    <div class="order-details-constructor-product-img">
+                        <img src="${constructor.Image}">
+                    </div>
+                    <div class="order-details-constructor-product-name-price ${cssClassBonusProduct}">
+                        <span>${constructor.Name}</span>
+                        <span class="font-weight-bold grid-justify-self-flex-end">${constructor.Price}</span>
+                    </div>
+                </div>
+                <div class="order-details-constructor-product-ingredients border-bottom">
+                    ${this.getOptionViews(constructor.Options)}
+                </div>
+             </div>
+        `
+    }
+
+    getOptionViews(options) {
+        let views = ''
+
+        for (let option of options) {
+            views += this.getOptionView(option)
+        }
+
+        return views
+    }
+
+    getOptionView(option) {
+        return `
+            <div class="order-product-option-header">
+                <div class="order-details-constructor-product-name-price">
+                    <span>${option.name}</span>
+                    <span class="font-weight-bold grid-justify-self-flex-end">${option.priceStr}</span>
                 </div>
              </div>
         `
@@ -2777,6 +2893,7 @@ class OrderDetails {
 
     setOrderListInfo() {
         this.setValue(OrderDetailsQSelector.OrderList, this.details.OrderList)
+        this.appendValue(OrderDetailsQSelector.OrderList, this.details.OrderWithOptionsList)
         this.appendValue(OrderDetailsQSelector.OrderList, this.details.OrderProductConstructorList)
     }
 

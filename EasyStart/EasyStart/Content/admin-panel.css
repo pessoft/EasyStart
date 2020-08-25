@@ -2684,3 +2684,12 @@ button {
     .product-additional-info input:focus ~ .bar:before {
         width: 130px;
     }
+
+.order-product-option-header {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 30px;
+    align-items: center;
+    grid-column-gap: 8px;
+    font-size: 0.9em;
+}
