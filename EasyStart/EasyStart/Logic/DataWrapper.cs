@@ -1,8 +1,10 @@
 ﻿using EasyStart.Models;
 using EasyStart.Models.FCMNotification;
+using EasyStart.Models.ProductOption;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core;
 using System.Linq;
 using System.Web;
 
@@ -286,6 +288,11 @@ namespace EasyStart.Logic
                     var clietns = db.Clients.Where(p => p.BranchId == id).ToList();
                     var categories = db.Categories.Where(p => p.BranchId == id).ToList();
                     var products = db.Products.Where(p => p.BranchId == id).ToList();
+                    var additionalOptions = db.AdditionalOptions.Where(p => p.BranchId == id && !p.IsDeleted).ToList();
+                    var aditionOptionItems = db.AdditionOptionItems.Where(p => p.BranchId == id && !p.IsDeleted).ToList();
+                    var productAdditionalOptions = db.ProductAdditionalOptions.Where(p => p.BranchId == id && !p.IsDeleted).ToList();
+                    var additionalFillgs = db.AdditionalFillings.Where(p => p.BranchId == id && !p.IsDeleted).ToList();
+                    var productAdditionalFillings = db.ProductAdditionalFillings.Where(p => p.BranchId == id && !p.IsDeleted).ToList();
                     var constructoCategories = db.ConstructorCategories.Where(p => p.BranchId == id).ToList();
                     var categoryIds = categories.Select(p => p.Id).ToList();
                     var ingredients = db.Ingredients.Where(p => categoryIds.Contains(p.CategoryId)).ToList();
@@ -293,6 +300,12 @@ namespace EasyStart.Logic
                     clietns.ForEach(p => { p.BranchId = -1; p.CityId = -1; });
                     categories.ForEach(p => p.IsDeleted = true);
                     products.ForEach(p => p.IsDeleted = true);
+                    additionalOptions.ForEach(p => p.IsDeleted = true);
+                    aditionOptionItems.ForEach(p => p.IsDeleted = true);
+                    productAdditionalOptions.ForEach(p => p.IsDeleted = true);
+                    additionalFillgs.ForEach(p => p.IsDeleted = true);
+                    productAdditionalFillings.ForEach(p => p.IsDeleted = true);
+
                     constructoCategories.ForEach(p => p.IsDeleted = true);
                     ingredients.ForEach(p => p.IsDeleted = true);
 
@@ -847,6 +860,41 @@ namespace EasyStart.Logic
                     product.OrderNumber = orderNumber;
                     result = db.Products.Add(product);
                     db.SaveChanges();
+
+                    if (result != null && product.ProductAdditionalOptionIds != null && product.ProductAdditionalOptionIds.Any())
+                    {
+                        var additionalOptionOrderNamber = 1;
+                        var additionalOptions = product.ProductAdditionalOptionIds
+                            .Select(p => new ProductAdditionalOptionModal
+                            {
+                                AdditionalOptionId = p,
+                                BranchId = product.BranchId,
+                                OrderNumber = additionalOptionOrderNamber++,
+                                ProductId = result.Id
+                            }).ToList();
+
+                        SaveProductAdditionalOptions(result.Id, additionalOptions);
+                        result.ProductAdditionalOptionIds = product.ProductAdditionalOptionIds;
+                    }
+
+
+
+                    if (result != null && result.ProductAdditionalFillingIds != null && product.ProductAdditionalFillingIds.Any())
+                    {
+                        var additionalFillingOrderNumber = 1;
+                        var additionalFillings = product.ProductAdditionalFillingIds
+                            .Select(p => new ProductAdditionalFillingModal
+                            {
+                                AdditionalFillingId = p,
+                                BranchId = product.BranchId,
+                                OrderNumber = additionalFillingOrderNumber,
+                                ProductId = result.Id
+                            })
+                            .ToList();
+
+                        SaveProductAdditionalFilling(result.Id, additionalFillings);
+                        result.ProductAdditionalFillingIds = product.ProductAdditionalFillingIds;
+                    }
                 }
             }
             catch (Exception ex)
@@ -859,13 +907,53 @@ namespace EasyStart.Logic
 
         public static void SaveProductsWihoutChangeOrderNumber(List<ProductModel> products)
         {
-            ProductModel result = null;
             try
             {
                 using (var db = new AdminPanelContext())
                 {
-                    db.Products.AddRange(products);
+                    var result = db.Products.AddRange(products).ToList();
                     db.SaveChanges();
+
+                    if (result != null)
+                    {
+                        for (var i = 0; i < result.Count; ++i)
+                        {
+                            var productAdditionalOptionIds = products[i].ProductAdditionalOptionIds;
+                            var product = result[i];
+
+                            if (productAdditionalOptionIds != null && productAdditionalOptionIds.Any())
+                            {
+                                var additionalOprionOrderNamber = 1;
+                                var additionalOptions = productAdditionalOptionIds
+                                    .Select(p => new ProductAdditionalOptionModal
+                                    {
+                                        AdditionalOptionId = p,
+                                        BranchId = product.BranchId,
+                                        OrderNumber = additionalOprionOrderNamber++,
+                                        ProductId = product.Id
+                                    }).ToList();
+
+                                SaveProductAdditionalOptions(product.Id, additionalOptions);
+                            }
+
+                            var productAdditionalFillingIds = products[i].ProductAdditionalFillingIds;
+                            if (productAdditionalFillingIds != null && productAdditionalFillingIds.Any())
+                            {
+                                var additionalFillingOrderNumber = 1;
+                                var additionalFillings = productAdditionalFillingIds
+                                    .Select(p => new ProductAdditionalFillingModal
+                                    {
+                                        AdditionalFillingId = p,
+                                        BranchId = product.BranchId,
+                                        OrderNumber = additionalFillingOrderNumber,
+                                        ProductId = product.Id
+                                    })
+                                    .ToList();
+
+                                SaveProductAdditionalFilling(product.Id, additionalFillings);
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -885,6 +973,20 @@ namespace EasyStart.Logic
                         .Products
                         .Where(p => p.CategoryId == idCategory && !p.IsDeleted)
                         .ToList();
+
+                    if (result.Any())
+                    {
+                        var productIds = result.Select(p => p.Id).ToList();
+                        var optionDict = GetProductAdditionalOptions(productIds);
+                        if (optionDict != null && optionDict.Any())
+                        {
+                            result.ForEach(p => p.ProductAdditionalOptionIds = optionDict[p.Id]);
+                        }
+
+                        var additionalFillingsDict = GetProductAdditionalFillings(productIds);
+                        if (additionalFillingsDict != null && additionalFillingsDict.Any())
+                            result.ForEach(p => p.ProductAdditionalFillingIds = additionalFillingsDict[p.Id]);
+                    }
                 }
             }
             catch (Exception ex)
@@ -895,7 +997,7 @@ namespace EasyStart.Logic
             return result;
         }
 
-        public static List<ProductModel> GetOrderProducts(List<int> ids)
+        public static List<ProductModel> GetOrderProducts(IEnumerable<int> ids)
         {
             List<ProductModel> result = new List<ProductModel>();
             try
@@ -906,6 +1008,20 @@ namespace EasyStart.Logic
                         .Products
                         .Where(p => ids.Contains(p.Id))
                         .ToList();
+
+                    if (result.Any())
+                    {
+                        var productIds = result.Select(p => p.Id).ToList();
+                        var optionDict = GetProductAdditionalOptions(productIds);
+                        if (optionDict != null && optionDict.Any())
+                        {
+                            result.ForEach(p => p.ProductAdditionalOptionIds = optionDict[p.Id]);
+                        }
+
+                        var additionalFillingsDict = GetProductAdditionalFillings(productIds);
+                        if (additionalFillingsDict != null && additionalFillingsDict.Any())
+                            result.ForEach(p => p.ProductAdditionalFillingIds = additionalFillingsDict[p.Id]);
+                    }
                 }
             }
             catch (Exception ex)
@@ -982,6 +1098,19 @@ namespace EasyStart.Logic
                         .Products
                         .FirstOrDefault(p => p.Id == productId);
 
+                    if (result != null)
+                    {
+                        var productIds = new List<int> { result.Id };
+                        var optionDict = GetProductAdditionalOptions(productIds);
+                        if (optionDict != null && optionDict.Any())
+                        {
+                            result.ProductAdditionalOptionIds = optionDict[result.Id];
+                        }
+
+                        var additionalFillingsDict = GetProductAdditionalFillings(productIds);
+                        if (additionalFillingsDict != null && additionalFillingsDict.Any())
+                            result.ProductAdditionalFillingIds = additionalFillingsDict[result.Id];
+                    }
                 }
             }
             catch (Exception ex)
@@ -1002,7 +1131,58 @@ namespace EasyStart.Logic
                     result = db
                         .Products
                         .Where(p => productIds.Contains(p.Id))
-                        .ToList(); ;
+                        .ToList();
+
+                    if (result.Any())
+                    {
+                        var pIds = result.Select(p => p.Id).ToList();
+                        var optionDict = GetProductAdditionalOptions(pIds);
+                        if (optionDict != null && optionDict.Any())
+                        {
+                            result.ForEach(p => p.ProductAdditionalOptionIds = optionDict[p.Id]);
+                        }
+
+                        var additionalFillingsDict = GetProductAdditionalFillings(pIds);
+                        if (additionalFillingsDict != null && additionalFillingsDict.Any())
+                            result.ForEach(p => p.ProductAdditionalFillingIds = additionalFillingsDict[p.Id]);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return result;
+        }
+
+        public static Dictionary<int, ProductModel> GetProductDictionary(IEnumerable<int> productIds)
+        {
+            Dictionary<int, ProductModel> result = null;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var products = db
+                        .Products
+                        .Where(p => productIds.Contains(p.Id))
+                        .ToList();
+
+                    if (products.Any())
+                    {
+                        var pIds = products.Select(p => p.Id).ToList();
+                        var optionDict = GetProductAdditionalOptions(pIds);
+                        if (optionDict != null && optionDict.Any())
+                        {
+                            products.ForEach(p => p.ProductAdditionalOptionIds = optionDict[p.Id]);
+                        }
+
+                        var additionalFillingsDict = GetProductAdditionalFillings(pIds);
+                        if (additionalFillingsDict != null && additionalFillingsDict.Any())
+                            products.ForEach(p => p.ProductAdditionalFillingIds = additionalFillingsDict[p.Id]);
+
+                        result = products.ToDictionary(p => p.Id);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1024,6 +1204,20 @@ namespace EasyStart.Logic
                         .Products
                         .Where(p => p.BranchId == branchId && !p.IsDeleted)
                         .ToList();
+
+                    if (result.Any())
+                    {
+                        var productIds = result.Select(p => p.Id).ToList();
+                        var optionDict = GetProductAdditionalOptions(productIds);
+                        if (optionDict != null && optionDict.Any())
+                        {
+                            result.ForEach(p => p.ProductAdditionalOptionIds = optionDict[p.Id]);
+                        }
+
+                        var additionalFillingsDict = GetProductAdditionalFillings(productIds);
+                        if (additionalFillingsDict != null && additionalFillingsDict.Any())
+                            result.ForEach(p => p.ProductAdditionalFillingIds = additionalFillingsDict[p.Id]);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1045,6 +1239,20 @@ namespace EasyStart.Logic
                         .Products
                         .Where(p => p.BranchId == branchId && p.Visible && !p.IsDeleted)
                         .ToList();
+
+                    if (products.Any())
+                    {
+                        var productIds = products.Select(p => p.Id).ToList();
+                        var optionDict = GetProductAdditionalOptions(productIds);
+                        if (optionDict != null && optionDict.Any())
+                        {
+                            products.ForEach(p => p.ProductAdditionalOptionIds = optionDict[p.Id]);
+                        }
+
+                        var additionalFillingsDict = GetProductAdditionalFillings(productIds);
+                        if (additionalFillingsDict != null && additionalFillingsDict.Any())
+                            products.ForEach(p => p.ProductAdditionalFillingIds = additionalFillingsDict[p.Id]);
+                    }
 
                     if (products != null && products.Any())
                     {
@@ -1073,6 +1281,20 @@ namespace EasyStart.Logic
                         .Products
                         .Where(p => p.BranchId == branchId && p.Visible && !p.IsDeleted)
                         .ToList();
+
+                    if (result.Any())
+                    {
+                        var productIds = result.Select(p => p.Id).ToList();
+                        var optionDict = GetProductAdditionalOptions(productIds);
+                        if (optionDict != null && optionDict.Any())
+                        {
+                            result.ForEach(p => p.ProductAdditionalOptionIds = optionDict[p.Id]);
+                        }
+
+                        var additionalFillingsDict = GetProductAdditionalFillings(productIds);
+                        if (additionalFillingsDict != null && additionalFillingsDict.Any())
+                            result.ForEach(p => p.ProductAdditionalFillingIds = additionalFillingsDict[p.Id]);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1098,8 +1320,40 @@ namespace EasyStart.Logic
                     result.Price = product.Price;
                     result.AdditionInfo = product.AdditionInfo;
                     result.ProductType = product.ProductType;
+                    result.ProductAdditionalInfoType = product.ProductAdditionalInfoType;
+                    result.ProductAdditionalOptionIds = product.ProductAdditionalOptionIds;
+                    result.ProductAdditionalFillingIds = product.ProductAdditionalFillingIds;
+
                     db.SaveChanges();
 
+                    if (result != null)
+                    {
+                        var additionalOprionOrderNamber = 1;
+                        var additionalOptions = product.ProductAdditionalOptionIds == null ? null : product.ProductAdditionalOptionIds
+                            .Select(p => new ProductAdditionalOptionModal
+                            {
+                                AdditionalOptionId = p,
+                                BranchId = product.BranchId,
+                                OrderNumber = additionalOprionOrderNamber++,
+                                ProductId = result.Id
+                            }).ToList();
+
+                        SaveProductAdditionalOptions(result.Id, additionalOptions);
+
+
+                        var additionalFillingOrderNumber = 1;
+                        var additionalFillings = product.ProductAdditionalFillingIds == null ? null : product.ProductAdditionalFillingIds
+                            .Select(p => new ProductAdditionalFillingModal
+                            {
+                                AdditionalFillingId = p,
+                                BranchId = product.BranchId,
+                                OrderNumber = additionalFillingOrderNumber,
+                                ProductId = result.Id
+                            })
+                            .ToList();
+
+                        SaveProductAdditionalFilling(result.Id, additionalFillings);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1150,6 +1404,9 @@ namespace EasyStart.Logic
                         db.SaveChanges();
 
                         RecalcProductsOrderNumber(removeProduct.CategoryId);
+                        SaveProductAdditionalOptions(removeProduct.Id, null);
+                        SaveProductAdditionalFilling(removeProduct.Id, null);
+
                         success = true;
                     }
                 }
@@ -1173,7 +1430,12 @@ namespace EasyStart.Logic
 
                     if (removeProducts != null)
                     {
-                        removeProducts.ForEach(p => p.IsDeleted = true);
+                        removeProducts.ForEach(p =>
+                        {
+                            p.IsDeleted = true;
+                            SaveProductAdditionalOptions(p.Id, null);
+                            SaveProductAdditionalFilling(p.Id, null);
+                        });
                         db.SaveChanges();
 
                         RecalcProductsOrderNumber(categoryId);
@@ -1458,6 +1720,9 @@ namespace EasyStart.Logic
                         p.BranchId == branchId &&
                         p.OrderStatus != OrderStatus.Deleted &&
                         p.OrderStatus != OrderStatus.PendingPay)
+                        .OrderByDescending(p => p.Date)
+                        .Take(50)
+                        .OrderBy(p => p.Date)
                         .ToList();
 
                     if (histroyOrders != null && histroyOrders.Any())
@@ -3196,6 +3461,527 @@ namespace EasyStart.Logic
             }
 
             return news;
+        }
+
+        public static bool RemoveProductAdditionalOptionById(int id)
+        {
+            var success = false;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    if (id > 0)
+                    {
+                        var value = db.AdditionalOptions.FirstOrDefault(p => p.Id == id);
+                        value.IsDeleted = true;
+
+                        success = RemoveProductAdditionOptionItemsByOptionId(id);
+                        if (success)
+                            db.SaveChanges();
+
+                        RemoveProductAdditionalOptionByOptionId(id);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return success;
+        }
+
+        public static bool RemoveProductAdditionOptionItemsByOptionId(int id)
+        {
+            var success = false;
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    if (id > 0)
+                    {
+                        var oldItems = db.AdditionOptionItems.Where(p => p.AdditionOptionId == id);
+                        foreach (var item in oldItems)
+                            item.IsDeleted = true;
+
+                        if (oldItems.Count() > 0)
+                            db.SaveChanges();
+
+                        success = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return success;
+        }
+
+        public static AdditionalOption SaveProductAdditionalOption(AdditionalOption additionalOption)
+        {
+            AdditionalOption result = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    AdditionalOption value;
+                    if (additionalOption.Id > 0)
+                    {
+                        value = db.AdditionalOptions.FirstOrDefault(p => p.Id == additionalOption.Id);
+
+                        value.Name = additionalOption.Name;
+                        value.Items = additionalOption.Items;
+                    }
+                    else
+                        value = db.AdditionalOptions.Add(additionalOption);
+
+                    db.SaveChanges();
+                    result = value;
+
+                    additionalOption.Items.ForEach(p =>
+                    {
+                        p.AdditionOptionId = value.Id;
+                        p.BranchId = value.BranchId;
+                    });
+
+                    RemoveProductAdditionOptionItemsByOptionId(value.Id);
+                    List<AdditionOptionItem> additionOptionItems = SaveProductAdditionOptionItems(additionalOption.Items);
+                    result.Items = additionOptionItems;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result = null;
+            }
+
+            return result;
+        }
+
+        public static List<AdditionOptionItem> SaveProductAdditionOptionItems(List<AdditionOptionItem> items)
+        {
+            var result = new List<AdditionOptionItem>();
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    foreach (var option in items)
+                    {
+                        AdditionOptionItem additionOptionItem;
+                        if (option.Id > 0)
+                        {
+                            additionOptionItem = db.AdditionOptionItems.FirstOrDefault(p => p.Id == option.Id);
+
+                            additionOptionItem.Name = option.Name;
+                            additionOptionItem.AdditionalInfo = option.AdditionalInfo;
+                            additionOptionItem.Price = option.Price;
+                            additionOptionItem.IsDefault = option.IsDefault;
+                        }
+                        else
+                            additionOptionItem = db.AdditionOptionItems.Add(option);
+
+                        result.Add(additionOptionItem);
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result = null;
+            }
+
+            return result;
+        }
+
+        public static List<AdditionalOption> GetAllProductAdditionalOptionByBranchId(int branchId)
+        {
+            List<AdditionalOption> additionalOptions = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var additionOptionItemDict = GetAllProductAdditionOptionItemByBranchId(branchId);
+                    var options = db.AdditionalOptions.Where(p => p.BranchId == branchId && !p.IsDeleted);
+
+                    if (options != null && additionOptionItemDict != null)
+                    {
+                        additionalOptions = new List<AdditionalOption>();
+
+                        foreach (var option in options)
+                        {
+                            option.Items = additionOptionItemDict[option.Id];
+
+                            additionalOptions.Add(option);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                additionalOptions = null;
+            }
+
+            return additionalOptions;
+        }
+
+        public static Dictionary<int, List<AdditionOptionItem>> GetAllProductAdditionOptionItemByBranchId(int branchId)
+        {
+            Dictionary<int, List<AdditionOptionItem>> additionOptionItemDict = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    additionOptionItemDict = db.AdditionOptionItems.Where(p => p.BranchId == branchId && !p.IsDeleted)
+                        .GroupBy(p => p.AdditionOptionId)
+                        .ToDictionary(p => p.Key, p => p.ToList());
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                additionOptionItemDict = null;
+            }
+
+            return additionOptionItemDict;
+        }
+
+        public static Dictionary<int, List<AdditionOptionItem>> GetAdditionOptionItemByIds(List<int> itemIds)
+        {
+            Dictionary<int, List<AdditionOptionItem>> additionOptionItemDict = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    additionOptionItemDict = db.AdditionOptionItems.Where(p => itemIds.Contains(p.Id))
+                        .GroupBy(p => p.AdditionOptionId)
+                        .ToDictionary(p => p.Key, p => p.ToList());
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                additionOptionItemDict = null;
+            }
+
+            return additionOptionItemDict;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="productIds"></param>
+        /// <returns>key - procut id, value additional option id</returns>
+        public static Dictionary<int, List<int>> GetProductAdditionalOptions(List<int> productIds)
+        {
+            var productAdditionOptionsDict = new Dictionary<int, List<int>>();
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    productAdditionOptionsDict = db.ProductAdditionalOptions.Where(p => productIds.Contains(p.ProductId) && !p.IsDeleted)
+                        .GroupBy(p => p.ProductId)
+                        .ToDictionary(
+                        p => p.Key,
+                        p => p.OrderBy(x => x.OrderNumber)
+                        .Select(x => x.AdditionalOptionId)
+                        .ToList());
+
+                    productIds.ForEach(p =>
+                    {
+                        List<int> additionalOptionIds = null;
+
+                        if (productAdditionOptionsDict.TryGetValue(p, out additionalOptionIds))
+                        {
+                            if (additionalOptionIds == null)
+                                productAdditionOptionsDict[p] = new List<int>();
+                        }
+                        else
+                            productAdditionOptionsDict.Add(p, new List<int>());
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return productAdditionOptionsDict;
+        }
+
+        public static Dictionary<int, AdditionalOption> GetProductAdditionalOptionsByIds(List<int> additionalOptionIds, List<int> additionalOptionItemIds)
+        {
+            var additionOptionsDict = new Dictionary<int, AdditionalOption>();
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var additionalOptions = db.AdditionalOptions.Where(p => additionalOptionIds.Contains(p.Id));
+                    var additionOptionItemDict = GetAdditionOptionItemByIds(additionalOptionItemIds);
+
+                    if (additionalOptions != null && additionOptionItemDict != null)
+                    {
+                        foreach (var option in additionalOptions)
+                        {
+                            option.Items = additionOptionItemDict[option.Id];
+
+                            additionOptionsDict.Add(option.Id, option);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return additionOptionsDict;
+        }
+
+        public static void SaveProductAdditionalOptions(int productId, List<ProductAdditionalOptionModal> productAdditionalOptions)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var oldOptions = db.ProductAdditionalOptions.Where(p => p.ProductId == productId && !p.IsDeleted);
+                    foreach (var item in oldOptions)
+                        item.IsDeleted = true;
+
+                    db.SaveChanges();
+
+                    if (productAdditionalOptions != null && productAdditionalOptions.Any())
+                    {
+                        db.ProductAdditionalOptions.AddRange(productAdditionalOptions);
+                        db.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
+
+        public static void RemoveProductAdditionalOptionByOptionId(int id)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var oldOptions = db.ProductAdditionalOptions.Where(p => p.AdditionalOptionId == id && !p.IsDeleted);
+                    foreach (var item in oldOptions)
+                        item.IsDeleted = true;
+
+                    if (oldOptions.Count() > 0)
+                        db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
+
+        public static AdditionalFilling SaveAdditionalFilling(AdditionalFilling additionalFilling)
+        {
+            AdditionalFilling result = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    AdditionalFilling value;
+                    if (additionalFilling.Id > 0)
+                    {
+                        value = db.AdditionalFillings.FirstOrDefault(p => p.Id == additionalFilling.Id);
+
+                        value.Name = additionalFilling.Name;
+                        value.Price = additionalFilling.Price;
+                    }
+                    else
+                        value = db.AdditionalFillings.Add(additionalFilling);
+
+                    db.SaveChanges();
+                    result = value;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result = null;
+            }
+
+            return result;
+        }
+
+        public static void SaveProductAdditionalFilling(int productId, List<ProductAdditionalFillingModal> productAdditionalFillings)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var oldItems = db.ProductAdditionalFillings.Where(p => p.ProductId == productId && !p.IsDeleted);
+                    foreach (var item in oldItems)
+                        item.IsDeleted = true;
+
+                    if (oldItems.Count() > 0)
+                        db.SaveChanges();
+
+                    if (productAdditionalFillings != null && productAdditionalFillings.Any())
+                    {
+                        db.ProductAdditionalFillings.AddRange(productAdditionalFillings);
+                        db.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
+
+        public static bool RemoveAdditionalFilling(int id)
+        {
+            bool success;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    AdditionalFilling value = db.AdditionalFillings.FirstOrDefault(p => p.Id == id);
+                    value.IsDeleted = true;
+
+                    success = RemoveProductAdditionalFilling(id);
+
+                    if (success)
+                        db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                success = false;
+            }
+
+            return success;
+        }
+
+        public static bool RemoveProductAdditionalFilling(int id)
+        {
+            bool success;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var oldItems = db.ProductAdditionalFillings.Where(p => p.AdditionalFillingId == id);
+                    foreach (var item in oldItems)
+                        item.IsDeleted = true;
+
+                    if (oldItems.Count() > 0)
+                        db.SaveChanges();
+
+                    success = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                success = false;
+            }
+
+            return success;
+        }
+
+        public static Dictionary<int, List<int>> GetProductAdditionalFillings(List<int> productIds)
+        {
+            var productAdditionFillingsDict = new Dictionary<int, List<int>>();
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    productAdditionFillingsDict = db.ProductAdditionalFillings.Where(p => productIds.Contains(p.ProductId) && !p.IsDeleted)
+                        .GroupBy(p => p.ProductId)
+                        .ToDictionary(
+                        p => p.Key,
+                        p => p.OrderBy(x => x.OrderNumber)
+                        .Select(x => x.AdditionalFillingId)
+                        .ToList());
+
+                    productIds.ForEach(p =>
+                    {
+                        List<int> additionalFillingIds = null;
+
+                        if (productAdditionFillingsDict.TryGetValue(p, out additionalFillingIds))
+                        {
+                            if (additionalFillingIds == null)
+                                productAdditionFillingsDict[p] = new List<int>();
+                        }
+                        else
+                            productAdditionFillingsDict.Add(p, new List<int>());
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return productAdditionFillingsDict;
+        }
+
+        public static List<AdditionalFilling> GetAllAdditionalFillingsByBranchId(int branchId)
+        {
+            List<AdditionalFilling> additionalfillings = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    additionalfillings = db.AdditionalFillings.Where(p => p.BranchId == branchId && !p.IsDeleted)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                additionalfillings = null;
+            }
+
+            return additionalfillings;
+        }
+
+        public static Dictionary<int, AdditionalFilling> GetAdditionalFillingsByIds(List<int> ids)
+        {
+            Dictionary<int, AdditionalFilling> additionalfillings = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    additionalfillings = db.AdditionalFillings.Where(p => ids.Contains(p.Id)).ToDictionary(p => p.Id);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                additionalfillings = null;
+            }
+
+            return additionalfillings;
         }
     }
 }

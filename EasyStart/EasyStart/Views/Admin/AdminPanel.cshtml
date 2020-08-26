@@ -16,6 +16,7 @@
     @Styles.Render("~/datepicker/css")
     @Styles.Render("~/promotion/css")
     @Styles.Render("~/image-processing/css")
+    @Styles.Render("~/product-additional-options/css")
 </head>
 <body>
     <script>
@@ -844,10 +845,21 @@
                             <span class="bar"></span>
                             <label>Название продукта</label>
                         </div>
-                        <div class="group">
-                            <input required type="text" maxlength="20" id="product-additional-info" />
-                            <span class="bar"></span>
-                            <label>Информация о количестве, массе или объеме</label>
+                        <div class="row product-additional-info-block">
+                            <div class="group product-additional-info">
+                                <input required type="text" maxlength="20" id="product-additional-info" />
+                                <span class="bar"></span>
+                                <label>Информация о количестве</label>
+                            </div>
+                            <select id="product-additional-info-type" onchange="onChangeProductAdditaonalInfoType(this)">
+                                <option value="0">Произвольно</option>
+                                <option value="1">Граммы</option>
+                                <option value="2">Миллилитры</option>
+                                <option value="3">Литры</option>
+                            </select>
+                            <button disabled type="button" onclick="openFunctionAdditionalInfoDialog(event)" id="btn-function-product-additional-info" class="simple-text-btn btn-function-product-additional-info">
+                                <i class="fal fa-ellipsis-v-alt"></i>
+                            </button>
                         </div>
                         <div class="group">
                             <input type="number" required id="product-price" min="0" step="0.1" />
@@ -860,6 +872,9 @@
                             <span class="bar"></span>
                             <label>Описание продукта</label>
                         </div>
+                        <button disabled type="button" onclick="openAdditionalFillingsDialog(event)" id="btn-product-options" class="simple-text-btn btn-product-options">
+                            Настроить опции
+                        </button>
                     </div>
                     <div class="dialog-menu">
                         <button class="btn btn-submit" type="submit">Ок</button>
@@ -1972,6 +1987,165 @@
         </div>
     </dialog>
 
+    <dialog id="productAdditionalFillingsDialog">
+        <div class="dialog-wrapper dialog-body-additional-options-wrapper">
+            <div class="dialog-header-title">
+                Настройка дополнительных опций
+            </div>
+            <button class="dialog-btn-close" onclick="Dialog.close('#productAdditionalFillingsDialog')">
+                <i class="fal fa-times"></i>
+            </button>
+            <div class="dialog-body dialog-body-additional-options">
+                <div class="additional-options-menu-header">
+                    <button class="simple-text-btn" onclick="showEditAdditionalFillingDialog(event)">
+                        <i class="fal fa-plus"></i>
+                        Добавить опцию
+                    </button>
+                    <button class="simple-text-btn" id="btn-additional-fillings-select" onclick="openAdditionalFillingExistingOptionDialog(event)" disabled>
+                        <i class="fal fa-list-ul"></i>
+                        Выбрать из существующих
+                    </button>
+                </div>
+                <div class="additional-filling-list custom-scroll">
+                    <div class="empty-container">Добавте дополнительные опции</div>
+                </div>
+                <div class="additional-options-menu-footer">
+                    <button class="simple-text-btn" id="btn-additional-options-done" onclick="Dialog.close('#productAdditionalFillingsDialog')">
+                        Готово
+                    </button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="addProductAdditionalFillingDialog">
+        <div class="dialog-wrapper dialog-body-additional-fillings-wrapper">
+            <div class="dialog-header-title">
+                Дополнительная опция
+            </div>
+            <button class="dialog-btn-close" onclick="Dialog.close('#addProductAdditionalFillingDialog')">
+                <i class="fal fa-times"></i>
+            </button>
+            <div class="dialog-body dialog-body-additional-filling">
+                <div class="additional-filling-inputs">
+                    <input type="hidden" id="additional-filling-id" value="-1">
+                    <div class="additional-option-name">
+                        <input type="text" id="additional-filling-name" class="default-color default-style-input" placeholder="Название">
+                    </div>
+                    <div class="additional-option-price">
+                        <input type="number" id="additional-filling-price" min="0" class="default-color default-style-input">
+                        <span>руб.</span>
+                    </div>
+                </div>
+                <div class="additional-options-menu-footer">
+                    <button class="simple-text-btn" id="btn-additional-filling-done" onclick="doneEditAdditionalFilling(event)">
+                        Готово
+                    </button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="functionAdditionalInfoDialog">
+        <div class="dialog-wrapper dialog-body-function-additional-wrapper">
+            <div class="dialog-header-title">
+                Настройка опциональных свойств
+            </div>
+            <button class="dialog-btn-close" onclick="Dialog.close('#functionAdditionalInfoDialog')">
+                <i class="fal fa-times"></i>
+            </button>
+            <div class="dialog-body dialog-body-function-additional">
+                <div class="function-additional-menu-header">
+                    <button class="simple-text-btn" type="button" id="btn-function-additional-add" onclick="openCreateAdditionalOptionsDialog(event)">
+                        <i class="fal fa-plus"></i>
+                        Добавить свойство
+                    </button>
+                    <button class="simple-text-btn" id="btn-function-additional-select" onclick="openFunctionAdditionalExistingOptionDialog(event)" disabled>
+                        <i class="fal fa-list-ul"></i>
+                        Выбрать из существующих
+                    </button>
+                </div>
+                <div class="functions-additional custom-scroll">
+                    <div class="empty-container">Добавте опциональные свойства</div>
+                </div>
+                <div class="function-additional-menu-footer">
+                    <button class="simple-text-btn" id="btn-function-additional-done" onclick="Dialog.close('#functionAdditionalInfoDialog')">
+                        Готово
+                    </button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="createFunctionAdditionalInfoDialog">
+        <div class="dialog-wrapper dialog-body-create-function-additional-wrapper">
+            <div class="dialog-header-title">
+                Добавление опционального свойства
+            </div>
+            <button class="dialog-btn-close" onclick="Dialog.close('#createFunctionAdditionalInfoDialog')">
+                <i class="fal fa-times"></i>
+            </button>
+            <div class="dialog-body dialog-body-create-function-additional">
+                <div class="create-function-additional-menu-header">
+                    <input id="function-additional-info-name-block" type="text" oninput="" class="default-color default-style-input"
+                           placeholder="Наиминование свойства (например: Размер)">
+                    <button class="simple-text-btn" id="btn-function-additional-add-item" onclick="addRowAdditionalOptionsInDialog(event)">
+                        <i class="fal fa-plus"></i>
+                        Добавить значение
+                    </button>
+                </div>
+                <div class="create-functions-additional custom-scroll">
+                    <div class="empty-container">Добавте значения свойства</div>
+                </div>
+                <div class="create-function-additional-menu-footer">
+                    <button class="simple-text-btn" id="btn-function-additional-done" onclick="doneAdditionalOption()">
+                        Готово
+                    </button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="functionAdditionalExistingOptionsDialog">
+        <div class="dialog-wrapper dialog-body-function-additional-wrapper">
+            <div class="dialog-header-title">
+                Опциональные свойства
+            </div>
+            <button class="dialog-btn-close" onclick="Dialog.close('#functionAdditionalExistingOptionsDialog')">
+                <i class="fal fa-times"></i>
+            </button>
+            <div class="dialog-body dialog-body-function-additional-existing">
+                <div class="functions-additional custom-scroll">
+                </div>
+                <div class="function-additional-menu-footer">
+                    <button class="simple-text-btn" id="btn-function-additional-done" onclick="complitedSelectionExistingOptions()">
+                        Готово
+                    </button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="additionalFillingsExistingOptionsDialog">
+        <div class="dialog-wrapper dialog-body-function-additional-wrapper">
+            <div class="dialog-header-title">
+                Дополнительные свойства
+            </div>
+            <button class="dialog-btn-close" onclick="Dialog.close('#additionalFillingsExistingOptionsDialog')">
+                <i class="fal fa-times"></i>
+            </button>
+            <div class="dialog-body dialog-body-function-additional-existing">
+                <div class="additional-filling-list custom-scroll">
+                </div>
+                <div class="function-additional-menu-footer">
+                    <button class="simple-text-btn" id="btn-function-additional-done" onclick="complitedSelectionExistingFillings()">
+                        Готово
+                    </button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
     <template id="review-item-template">
         <div class="review-item">
             <div class="review-item-header">
@@ -2158,6 +2332,6 @@
     @Scripts.Render("~/bundles/darepicker")
     @Scripts.Render("~/bundles/promotion")
     @Scripts.Render("~/bundles/image-processing")
-
+    @Scripts.Render("~/bundles/product-additional-options")
 </body>
 </html>

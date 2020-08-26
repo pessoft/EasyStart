@@ -132,7 +132,6 @@ dialog form {
         cursor: pointer;
         color: #ce6a6b;
         transition: 100ms ease-in;
-        transform: scale(1.01);
     }
 
 .branch-header-add {
@@ -197,7 +196,7 @@ dialog,
 
     .enter-dialog-data textarea {
         min-width: 320px;
-        min-height: 160px;
+        min-height: 120px;
         resize: none;
         margin-top: 2%;
         font-size: 1em;
@@ -2403,7 +2402,8 @@ button.simple-text-btn:disabled:hover {
         font-size: 0.7em;
     }
 
-.area-delivery-empty {
+.area-delivery-empty,
+.empty-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -2655,18 +2655,41 @@ button {
 }
 
 .cause-comment-cancel-order-block {
-    display:flex;
-    justify-content:center;
+    display: flex;
+    justify-content: center;
     align-items: center;
 }
 
-.cause-comment-cancel-order-block textarea {
-    width: 95%;
-    height: 90px !important;
-}
+    .cause-comment-cancel-order-block textarea {
+        width: 95%;
+        height: 90px !important;
+    }
 
 .cause-cancel-footer {
     display: flex;
     justify-content: center;
     align-items: flex-end;
+}
+
+.product-additional-info .bar {
+    width: 130px;
+}
+
+.product-additional-info input {
+    min-width: 130px;
+    width: 130px;
+    margin-right: 20px;
+}
+
+    .product-additional-info input:focus ~ .bar:before {
+        width: 130px;
+    }
+
+.order-product-option-header {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 30px;
+    align-items: center;
+    grid-column-gap: 8px;
+    font-size: 0.9em;
 }

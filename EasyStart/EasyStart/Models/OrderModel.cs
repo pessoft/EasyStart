@@ -112,5 +112,20 @@ namespace EasyStart.Models
                     return null;
             }
         }
+
+        public string ProductWithOptionsCountJSON { get; set; }
+
+        [NotMapped]
+        [ScriptIgnore]
+        public List<ProductWithOptionsOrderModel> ProductWithOptionsCount
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(ProductWithOptionsCountJSON))
+                    return JsonConvert.DeserializeObject<List<ProductWithOptionsOrderModel>>(ProductWithOptionsCountJSON);
+                else
+                    return null;
+            }
+        }
     }
 }
