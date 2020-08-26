@@ -1887,8 +1887,10 @@ function getItemsIdsForLoad(order) {
         }
     }
 
-    for (let productWithOptions of order.ProductWithOptionsCount) {
-        productIds.push(productWithOptions.ProductId)
+    if (order.ProductWithOptionsCount && order.ProductWithOptionsCount.length > 0) {
+        for (let productWithOptions of order.ProductWithOptionsCount) {
+            productIds.push(productWithOptions.ProductId)
+        }
     }
 
     return { productIds, constructorCategoryIds }

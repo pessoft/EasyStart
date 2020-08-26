@@ -222,8 +222,8 @@ function doneAdditionalOption() {
         const isDefault = $e.find('.additional-option-default-check input').is(':checked')
 
         if (!name ||
-            (Number.isNaN(additionalInfo) || additionalInfo < 0) ||
-            (Number.isNaN(price) || price < 0) ||
+            (Number.isNaN(additionalInfo)) ||
+            (Number.isNaN(price)) ||
             (isDefault == null || typeof (isDefault) === 'undefined')) {
             showInfoMessage('Заполните все поля значений корректными данными')
             additionOptionItems = []
