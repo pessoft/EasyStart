@@ -216,7 +216,7 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Logic\AdditionalOptions\ProductAdditionalInfoType.cs" />
     <Compile Include="Logic\AnalyticsDataWrapper.cs" />
-    <Compile Include="Logic\BrachClone.cs" />
+    <Compile Include="Logic\BranchClone.cs" />
     <Compile Include="Logic\BuyType.cs" />
     <Compile Include="Logic\CategoryType.cs" />
     <Compile Include="Logic\FCM\FCMNotification.cs" />

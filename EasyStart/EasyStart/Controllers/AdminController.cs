@@ -287,7 +287,7 @@ namespace EasyStart.Controllers
 
                         DataWrapper.SaveSetting(setting);
 
-                        var baseBrachClone = new BrachClone(Server, branchId, newBranchId);
+                        var baseBrachClone = new BranchClone(Server, branchId, newBranchId);
                         baseBrachClone.Clone();
 
                         var converter = new ConverterBranchSetting();

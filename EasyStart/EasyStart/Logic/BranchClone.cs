@@ -9,7 +9,7 @@ using System.Web.Mvc;
 
 namespace EasyStart.Logic
 {
-    public class BrachClone
+    public class BranchClone
     {
         private int mainBrachId;
         private int newBrachId;
@@ -27,7 +27,7 @@ namespace EasyStart.Logic
         /// </summary>
         private Dictionary<int, int> additionalFillings;
 
-        public BrachClone(HttpServerUtilityBase server, int mainBrachId, int newBrachId)
+        public BranchClone(HttpServerUtilityBase server, int mainBrachId, int newBrachId)
         {
             this.server = server;
             this.mainBrachId = mainBrachId;
