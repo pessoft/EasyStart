@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using EasyStart.Utils;
+using EasyStart.Models.ProductOption;
 
 namespace EasyStart.Logic
 {
@@ -21,6 +22,8 @@ namespace EasyStart.Logic
             SetAddress(orderInfo, order, orderParams.Setting);
             SetProducts(orderInfo, order, orderParams.Products);
             SetBonusProducts(orderInfo, order, orderParams.BonusProducts);
+            SetProductsWithOptions(orderInfo, order, orderParams.ProductsWithOptions, orderParams.AdditionalOptions, orderParams.AdditionalFillings);
+            SetBonusProductsWithOptions(orderInfo, order, orderParams.BonusProductsWithOptions, orderParams.AdditionalOptions, orderParams.AdditionalFillings);
             SetConstructorProducts(orderInfo, order, orderParams.CategoryConstructor, orderParams.ConstructorIngredients);
             SetComment(orderInfo, order);
             SetPrice(orderInfo, order);
@@ -66,6 +69,138 @@ namespace EasyStart.Logic
                     ProductCount = order.ProductCount[product.Id],
                     ProductName = product.Name,
                     ProductPrice = product.Price,
+                });
+            }
+        }
+
+        private static Tuple<double,List<AdditionalOption>, List<AdditionalFilling>> getPrdouctOptionsData(
+            ProductModel product,
+            ProductWithOptionsOrderModel order,
+            Dictionary<int, AdditionalOption> additionalOptions,
+            Dictionary<int, AdditionalFilling> additionalFillings)
+        {
+            var price = product.Price;
+            var _additionalOptions = new List<AdditionalOption>();
+            var _additionalFilling = new List<AdditionalFilling>();
+
+            if (order.AdditionalOptions != null)
+            {
+                foreach (var additionalOptionId in order.AdditionalOptions.Keys)
+                {
+                    var additionalOption = additionalOptions[additionalOptionId];
+                    var additionalOptionItemId = order.AdditionalOptions[additionalOptionId];
+                    var additionalOptionItems = additionalOption.Items.Where(p => p.Id == additionalOptionItemId).ToList();
+
+                    price += additionalOptionItems.Sum(p => p.Price);
+                    _additionalOptions.Add(new AdditionalOption 
+                    {
+                        BranchId = additionalOption.BranchId,
+                        Id = additionalOption.Id,
+                        IsDeleted = additionalOption.IsDeleted,
+                        Items = additionalOptionItems,
+                        Name = additionalOption.Name
+                    });
+                }
+            }
+
+            if (order.AdditionalFillings != null)
+            {
+                _additionalFilling = additionalFillings.Where(p => order.AdditionalFillings.Contains(p.Key)).Select(p => p.Value).ToList();
+                price += _additionalFilling.Sum(p => p.Price);
+            }
+
+            return Tuple.Create(price, _additionalOptions, _additionalFilling);
+        }
+
+        private static Tuple<List<AdditionalOption>, List<AdditionalFilling>> getBonusPrdouctOptionsData(
+            ProductModel product,
+            Dictionary<int, AdditionalOption> additionalOptions,
+            Dictionary<int, AdditionalFilling> additionalFillings)
+        {
+            var _additionalOptions = new List<AdditionalOption>();
+            var _additionalFilling = new List<AdditionalFilling>();
+
+            if (product.ProductAdditionalOptionIds != null)
+            {
+                foreach (var additionalOptionId in product.ProductAdditionalOptionIds)
+                {
+                    var additionalOption = additionalOptions[additionalOptionId];
+                    var additionalOptionItems = additionalOption.Items.Where(p => p.IsDefault).Select(p => new AdditionOptionItem
+                    {
+                        AdditionalInfo = p.AdditionalInfo,
+                        AdditionOptionId = p.AdditionOptionId,
+                        BranchId = p.BranchId,
+                        Id = p.Id,
+                        IsDefault = p.IsDefault,
+                        IsDeleted = p.IsDeleted,
+                        Name = p.Name,
+                        Price = 0
+                    }).ToList();
+
+                    _additionalOptions.Add(new AdditionalOption
+                    {
+                        BranchId = additionalOption.BranchId,
+                        Id = additionalOption.Id,
+                        IsDeleted = additionalOption.IsDeleted,
+                        Items = additionalOptionItems,
+                        Name = additionalOption.Name
+                    });
+                }
+            }
+
+            return Tuple.Create(_additionalOptions, _additionalFilling);
+        }
+
+        private static void SetProductsWithOptions(
+            OrderIfnoModel orderInfo,
+            OrderModel order,
+            List<ProductModel> products,
+            Dictionary<int, AdditionalOption> additionalOptions,
+            Dictionary<int, AdditionalFilling> additionalFillings)
+        {
+            orderInfo.ProductsWithOptions = new List<ProductWithOptionsInfoModel>();
+
+            if (order.ProductWithOptionsCount == null)
+                return;
+
+            foreach (var orderWithOptions in order.ProductWithOptionsCount)
+            {
+                var product = products.FirstOrDefault(p => p.Id == orderWithOptions.ProductId);
+
+                if (product != null)
+                {
+                    var productOptionData = getPrdouctOptionsData(product, orderWithOptions, additionalOptions, additionalFillings);
+                    orderInfo.ProductsWithOptions.Add(new ProductWithOptionsInfoModel
+                    {
+                        ProductCount = orderWithOptions.Count,
+                        ProductName = product.Name,
+                        ProductPrice = productOptionData.Item1,
+                        AdditionalOptions = productOptionData.Item2,
+                        AdditionalFillings = productOptionData.Item3,
+                    });
+                }
+            }
+        }
+
+        private static void SetBonusProductsWithOptions(
+            OrderIfnoModel orderInfo,
+            OrderModel order,
+            List<ProductModel> products,
+            Dictionary<int, AdditionalOption> additionalOptions,
+            Dictionary<int, AdditionalFilling> additionalFillings)
+        {
+            orderInfo.BonusProductsWithOptions = new List<ProductWithOptionsInfoModel>();
+
+            foreach (var product in products)
+            {
+                var productOptionData = getBonusPrdouctOptionsData(product, additionalOptions, additionalFillings);
+                orderInfo.BonusProductsWithOptions.Add(new ProductWithOptionsInfoModel
+                {
+                    ProductCount = order.ProductBonusCount[product.Id],
+                    ProductName = product.Name,
+                    ProductPrice = product.Price,
+                    AdditionalOptions = productOptionData.Item1,
+                    AdditionalFillings = productOptionData.Item2,
                 });
             }
         }

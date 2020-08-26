@@ -39,6 +39,10 @@ namespace EasyStart.HtmlRenderer.Models
 
         public List<ProductInfoModel> Products { get; set; }
         public List<ProductInfoModel> BonusProducts { get; set; }
+
+        public List<ProductWithOptionsInfoModel> ProductsWithOptions { get; set; }
+        public List<ProductWithOptionsInfoModel> BonusProductsWithOptions { get; set; }
+        
         public List<ConstructorProductInfoModel> ConstructorProducts { get; set; }
     }
 }

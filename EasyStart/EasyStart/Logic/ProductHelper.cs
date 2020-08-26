@@ -25,7 +25,13 @@ namespace EasyStart.Logic
             };
         }
 
-        public static ProductModel Clone(this ProductModel product, int newBrachId, int newCategoryId, string newImageName)
+        public static ProductModel Clone(
+            this ProductModel product,
+            int newBrachId,
+            int newCategoryId,
+            string newImageName,
+            Dictionary<int,int> additionalOptionsConformityIds,
+            Dictionary<int, int> additionalFillingsConformityIds)
         {
             return new ProductModel
             {
@@ -43,7 +49,10 @@ namespace EasyStart.Logic
                 Visible = product.Visible,
                 VotesCount = product.VotesCount,
                 VotesSum = product.VotesSum,
-                IsDeleted = product.IsDeleted
+                IsDeleted = product.IsDeleted,
+                ProductAdditionalInfoType = product.ProductAdditionalInfoType,
+                ProductAdditionalOptionIds = product.ProductAdditionalOptionIds.Select(p => additionalOptionsConformityIds[p]).ToList(),
+                ProductAdditionalFillingIds = product.ProductAdditionalFillingIds.Select(p => additionalFillingsConformityIds[p]).ToList()
             };
         }
 

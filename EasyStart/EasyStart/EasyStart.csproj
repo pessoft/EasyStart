@@ -211,10 +211,12 @@
     <Compile Include="HtmlRenderer\Models\IngredientOrderModel.cs" />
     <Compile Include="HtmlRenderer\Models\OrderIfnoModel.cs" />
     <Compile Include="HtmlRenderer\Models\ProductInfoModel.cs" />
+    <Compile Include="HtmlRenderer\Models\ProductWithOptionsInfoModel.cs" />
     <Compile Include="Hubs\NewOrderHub.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="Logic\AdditionalOptions\ProductAdditionalInfoType.cs" />
     <Compile Include="Logic\AnalyticsDataWrapper.cs" />
-    <Compile Include="Logic\BrachClone.cs" />
+    <Compile Include="Logic\BranchClone.cs" />
     <Compile Include="Logic\BuyType.cs" />
     <Compile Include="Logic\CategoryType.cs" />
     <Compile Include="Logic\FCM\FCMNotification.cs" />
@@ -337,6 +339,38 @@
     <Compile Include="Migrations\202004231125389_AddedStockExcludedProductsJSONInStockModel.Designer.cs">
       <DependentUpon>202004231125389_AddedStockExcludedProductsJSONInStockModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202004272052481_AddedProductAdditionalInfoTypeInProductModel.cs" />
+    <Compile Include="Migrations\202004272052481_AddedProductAdditionalInfoTypeInProductModel.Designer.cs">
+      <DependentUpon>202004272052481_AddedProductAdditionalInfoTypeInProductModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007161815369_AddAdiitionalOptions.cs" />
+    <Compile Include="Migrations\202007161815369_AddAdiitionalOptions.Designer.cs">
+      <DependentUpon>202007161815369_AddAdiitionalOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007161819141_AddAdiitionOptionItems.cs" />
+    <Compile Include="Migrations\202007161819141_AddAdiitionOptionItems.Designer.cs">
+      <DependentUpon>202007161819141_AddAdiitionOptionItems.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007161828184_AddBranchIdInAdditionalOptions.cs" />
+    <Compile Include="Migrations\202007161828184_AddBranchIdInAdditionalOptions.Designer.cs">
+      <DependentUpon>202007161828184_AddBranchIdInAdditionalOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007241804308_AddedBranchIdInAdditionOptionItem.cs" />
+    <Compile Include="Migrations\202007241804308_AddedBranchIdInAdditionOptionItem.Designer.cs">
+      <DependentUpon>202007241804308_AddedBranchIdInAdditionOptionItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007280902000_AddedProductAdditionalOptions.cs" />
+    <Compile Include="Migrations\202007280902000_AddedProductAdditionalOptions.Designer.cs">
+      <DependentUpon>202007280902000_AddedProductAdditionalOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008132026221_AdditionalFilling.cs" />
+    <Compile Include="Migrations\202008132026221_AdditionalFilling.Designer.cs">
+      <DependentUpon>202008132026221_AdditionalFilling.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008241858358_AddedProductWithOptionsCountJSONInOrderModel.cs" />
+    <Compile Include="Migrations\202008241858358_AddedProductWithOptionsCountJSONInOrderModel.Designer.cs">
+      <DependentUpon>202008241858358_AddedProductWithOptionsCountJSONInOrderModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -375,11 +409,18 @@
     <Compile Include="Models\OrderModel.cs" />
     <Compile Include="Models\OrderStockApply.cs" />
     <Compile Include="Models\PagingPushMessageHistory.cs" />
+    <Compile Include="Models\ProductOption\AdditionalFilling.cs" />
+    <Compile Include="Models\ProductOption\ProductAdditionalFillingModal.cs" />
+    <Compile Include="Models\ProductOption\ProductAdditionalOptionModal.cs" />
     <Compile Include="Models\ProductConstructorIngredientModel.cs" />
     <Compile Include="Models\ProductConstructorOrderModel.cs" />
     <Compile Include="Models\ProductHistoryModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
+    <Compile Include="Models\ProductOption\AdditionalOption.cs" />
+    <Compile Include="Models\ProductOption\AdditionOptionItem.cs" />
     <Compile Include="Models\ProductReview.cs" />
+    <Compile Include="Models\ProductWithOptionsHistoryModel.cs" />
+    <Compile Include="Models\ProductWithOptionsOrderModel.cs" />
     <Compile Include="Models\PromotionCashbackSetting.cs" />
     <Compile Include="Models\PromotionNewsModel.cs" />
     <Compile Include="Models\PromotionPartnerSetting.cs" />
@@ -446,6 +487,7 @@
     <Content Include="Content\image-processing.css" />
     <Content Include="Content\material-input.css" />
     <Content Include="Content\odometer\odometer-theme-minimal.css" />
+    <Content Include="Content\product-additional-options.css" />
     <Content Include="Content\product-constructor.css" />
     <Content Include="Content\promotion.css" />
     <Content Include="Content\sounds\sound-new-order.mp3" />
@@ -577,6 +619,7 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\notify.js" />
     <Content Include="Scripts\odometer\odometer.js" />
+    <Content Include="Scripts\product-additional-options.js" />
     <Content Include="Scripts\product-constructor.js" />
     <Content Include="Scripts\promotion\cashback-partners.js" />
     <Content Include="Scripts\promotion\coupon.js" />
@@ -663,6 +706,30 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202004231125389_AddedStockExcludedProductsJSONInStockModel.resx">
       <DependentUpon>202004231125389_AddedStockExcludedProductsJSONInStockModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004272052481_AddedProductAdditionalInfoTypeInProductModel.resx">
+      <DependentUpon>202004272052481_AddedProductAdditionalInfoTypeInProductModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007161815369_AddAdiitionalOptions.resx">
+      <DependentUpon>202007161815369_AddAdiitionalOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007161819141_AddAdiitionOptionItems.resx">
+      <DependentUpon>202007161819141_AddAdiitionOptionItems.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007161828184_AddBranchIdInAdditionalOptions.resx">
+      <DependentUpon>202007161828184_AddBranchIdInAdditionalOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007241804308_AddedBranchIdInAdditionOptionItem.resx">
+      <DependentUpon>202007241804308_AddedBranchIdInAdditionOptionItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007280902000_AddedProductAdditionalOptions.resx">
+      <DependentUpon>202007280902000_AddedProductAdditionalOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008132026221_AdditionalFilling.resx">
+      <DependentUpon>202008132026221_AdditionalFilling.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008241858358_AddedProductWithOptionsCountJSONInOrderModel.resx">
+      <DependentUpon>202008241858358_AddedProductWithOptionsCountJSONInOrderModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

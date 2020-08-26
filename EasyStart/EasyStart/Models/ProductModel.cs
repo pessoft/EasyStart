@@ -1,7 +1,9 @@
 ﻿using EasyStart.Logic;
+using EasyStart.Logic.AdditionalOptions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -25,5 +27,11 @@ namespace EasyStart.Models
         public int OrderNumber { get; set; }
         public bool Visible { get; set; } = true;
         public bool IsDeleted { get; set; }
+        public ProductAdditionalInfoType ProductAdditionalInfoType { get; set; }
+
+        [NotMapped]
+        public List<int> ProductAdditionalOptionIds { get; set; } = new List<int>();
+        [NotMapped]
+        public List<int> ProductAdditionalFillingIds { get; set; } = new List<int>();
     }
 }
