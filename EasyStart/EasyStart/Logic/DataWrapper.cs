@@ -291,6 +291,8 @@ namespace EasyStart.Logic
                     var additionalOptions = db.AdditionalOptions.Where(p => p.BranchId == id && !p.IsDeleted).ToList();
                     var aditionOptionItems = db.AdditionOptionItems.Where(p => p.BranchId == id && !p.IsDeleted).ToList();
                     var productAdditionalOptions = db.ProductAdditionalOptions.Where(p => p.BranchId == id && !p.IsDeleted).ToList();
+                    var additionalFillgs = db.AdditionalFillings.Where(p => p.BranchId == id && !p.IsDeleted).ToList();
+                    var productAdditionalFillings = db.ProductAdditionalFillings.Where(p => p.BranchId == id && !p.IsDeleted).ToList();
                     var constructoCategories = db.ConstructorCategories.Where(p => p.BranchId == id).ToList();
                     var categoryIds = categories.Select(p => p.Id).ToList();
                     var ingredients = db.Ingredients.Where(p => categoryIds.Contains(p.CategoryId)).ToList();
@@ -301,6 +303,8 @@ namespace EasyStart.Logic
                     additionalOptions.ForEach(p => p.IsDeleted = true);
                     aditionOptionItems.ForEach(p => p.IsDeleted = true);
                     productAdditionalOptions.ForEach(p => p.IsDeleted = true);
+                    additionalFillgs.ForEach(p => p.IsDeleted = true);
+                    productAdditionalFillings.ForEach(p => p.IsDeleted = true);
 
                     constructoCategories.ForEach(p => p.IsDeleted = true);
                     ingredients.ForEach(p => p.IsDeleted = true);

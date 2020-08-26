@@ -1,4 +1,5 @@
 ﻿using EasyStart.Models;
+using EasyStart.Models.ProductOption;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,16 +14,32 @@ namespace EasyStart.Logic
         private int mainBrachId;
         private int newBrachId;
         private HttpServerUtilityBase server;
+        
+        /// <summary>
+        /// key - base id
+        /// value - new id
+        /// </summary>
+        private Dictionary<int, int> additionalOptions;
+
+        /// <summary>
+        /// key - base id
+        /// value - new id
+        /// </summary>
+        private Dictionary<int, int> additionalFillings;
 
         public BrachClone(HttpServerUtilityBase server, int mainBrachId, int newBrachId)
         {
             this.server = server;
             this.mainBrachId = mainBrachId;
             this.newBrachId = newBrachId;
+            additionalOptions = new Dictionary<int, int>();
+            additionalFillings = new Dictionary<int, int>();
         }
 
         public void Clone()
         {
+            CloneAdditionalOptions();
+            CloneAdditionalFillings();
             CloneCategories();
         }
 
@@ -49,6 +66,52 @@ namespace EasyStart.Logic
             }
         }
 
+        private void CloneAdditionalOptions()
+        {
+            var baseAdditionalOptions = DataWrapper.GetAllProductAdditionalOptionByBranchId(mainBrachId);
+
+            foreach (var additionalOption in baseAdditionalOptions)
+            {
+                var newAdditionalOption = new AdditionalOption
+                {
+                    BranchId = newBrachId,
+                    IsDeleted = false,
+                    Name = additionalOption.Name,
+                    Items = additionalOption.Items.Select(p => new AdditionOptionItem 
+                    {
+                        AdditionalInfo = p.AdditionalInfo,
+                        BranchId = newBrachId,
+                        IsDefault = p.IsDefault,
+                        IsDeleted = false,
+                        Name = p.Name,
+                        Price = p.Price
+                    }).ToList()
+                };
+
+                var newSavedAdditionalOption = DataWrapper.SaveProductAdditionalOption(newAdditionalOption);
+                additionalOptions.Add(additionalOption.Id, newSavedAdditionalOption.Id);
+            }
+        }
+
+        private void CloneAdditionalFillings()
+        {
+            var baseAdditionalFillings = DataWrapper.GetAllAdditionalFillingsByBranchId(mainBrachId);
+
+            foreach (var additionalFilling in baseAdditionalFillings)
+            {
+                var newAdditionalFilling = new AdditionalFilling
+                {
+                   BranchId = newBrachId,
+                   IsDeleted = false,
+                   Name = additionalFilling.Name,
+                   Price = additionalFilling.Price
+                };
+
+                var newSavedAdditionalFilling = DataWrapper.SaveAdditionalFilling(newAdditionalFilling);
+                additionalFillings.Add(additionalFilling.Id, newSavedAdditionalFilling.Id);
+            }
+        }
+
         private void CloneProducts(int baseCategoryId, int newCategoryId)
         {
             var baseProducts = DataWrapper.GetProducts(baseCategoryId);
@@ -57,7 +120,7 @@ namespace EasyStart.Logic
             foreach (var product in baseProducts)
             {
                 var newImageName = CloneImage(product.Image);
-                var newProduct = product.Clone(newBrachId, newCategoryId, newImageName);
+                var newProduct = product.Clone(newBrachId, newCategoryId, newImageName, additionalOptions, additionalFillings);
 
                 newProdcts.Add(newProduct);
             }

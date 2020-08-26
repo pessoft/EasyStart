@@ -46,10 +46,11 @@ function openFunctionAdditionalExistingOptionDialog(event) {
     Dialog.showModal($('#functionAdditionalExistingOptionsDialog'))
 }
 
-function openAdditionalOptionsDialog(event) {
+function openAdditionalFillingsDialog(event) {
     event.stopPropagation()
 
     toggleDisabledExistAdditionalFillingBtn()
+    renderAdditionalFillingFromProduct()
     Dialog.showModal($('#productAdditionalFillingsDialog'))
 }
 
