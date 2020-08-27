@@ -2069,7 +2069,29 @@
                     <div class="empty-container">Добавте опциональные свойства</div>
                 </div>
                 <div class="function-additional-menu-footer">
+                    <button class="simple-text-btn" id="btn-additional-combination-show" onclick="openSettingCombinationsAdditionalOptions()">
+                        Комбинации
+                    </button>
                     <button class="simple-text-btn" id="btn-function-additional-done" onclick="Dialog.close('#functionAdditionalInfoDialog')">
+                        Готово
+                    </button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="combinationsAdditionalOptionsDialog">
+        <div class="dialog-wrapper dialog-body-function-additional-wrapper">
+            <div class="dialog-header-title">
+                Настройка комбинаций
+            </div>
+            <button class="dialog-btn-close" onclick="Dialog.close('#combinationsAdditionalOptionsDialog')">
+                <i class="fal fa-times"></i>
+            </button>
+            <div class="dialog-body dialog-body-combinations-additional-options">
+                <div class="functions-additional custom-scroll"></div>
+                <div class="function-additional-menu-footer">
+                    <button class="simple-text-btn" id="btn-function-additional-done" onclick="closeSettingCombinationsAdditionalOptions()">
                         Готово
                     </button>
                 </div>
