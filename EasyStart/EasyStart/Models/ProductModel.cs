@@ -1,5 +1,6 @@
 ﻿using EasyStart.Logic;
 using EasyStart.Logic.AdditionalOptions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -33,5 +34,20 @@ namespace EasyStart.Models
         public List<int> ProductAdditionalOptionIds { get; set; } = new List<int>();
         [NotMapped]
         public List<int> ProductAdditionalFillingIds { get; set; } = new List<int>();
+
+        public string AllowCombinationsJSON { get; set; }
+
+        [NotMapped]
+        public List<List<int>> AllowCombinations
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(AllowCombinationsJSON))
+                    return JsonConvert.DeserializeObject<List<List<int>>>(AllowCombinationsJSON);
+                else
+                    return null;
+            }
+
+        }
     }
 }
