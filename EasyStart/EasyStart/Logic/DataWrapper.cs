@@ -3548,7 +3548,6 @@ namespace EasyStart.Logic
                         p.BranchId = value.BranchId;
                     });
 
-                    RemoveProductAdditionOptionItemsByOptionId(value.Id);
                     List<AdditionOptionItem> additionOptionItems = SaveProductAdditionOptionItems(additionalOption.Items);
                     result.Items = additionOptionItems;
                 }
@@ -3566,37 +3565,39 @@ namespace EasyStart.Logic
         {
             var result = new List<AdditionOptionItem>();
 
-            try
+            if (items != null)
             {
-                using (var db = new AdminPanelContext())
+                try
                 {
-                    foreach (var option in items)
+                    using (var db = new AdminPanelContext())
                     {
-                        AdditionOptionItem additionOptionItem;
-                        if (option.Id > 0)
+                        foreach (var option in items)
                         {
-                            additionOptionItem = db.AdditionOptionItems.FirstOrDefault(p => p.Id == option.Id);
+                            AdditionOptionItem additionOptionItem;
+                            if (option.Id > 0)
+                            {
+                                additionOptionItem = db.AdditionOptionItems.FirstOrDefault(p => p.Id == option.Id);
 
-                            additionOptionItem.Name = option.Name;
-                            additionOptionItem.AdditionalInfo = option.AdditionalInfo;
-                            additionOptionItem.Price = option.Price;
-                            additionOptionItem.IsDefault = option.IsDefault;
+                                additionOptionItem.Name = option.Name;
+                                additionOptionItem.AdditionalInfo = option.AdditionalInfo;
+                                additionOptionItem.Price = option.Price;
+                                additionOptionItem.IsDefault = option.IsDefault;
+                            }
+                            else
+                                additionOptionItem = db.AdditionOptionItems.Add(option);
+
+                            result.Add(additionOptionItem);
                         }
-                        else
-                            additionOptionItem = db.AdditionOptionItems.Add(option);
 
-                        result.Add(additionOptionItem);
+                        db.SaveChanges();
                     }
-
-                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log.Error(ex);
+                    result = null;
                 }
             }
-            catch (Exception ex)
-            {
-                Logger.Log.Error(ex);
-                result = null;
-            }
-
             return result;
         }
 
