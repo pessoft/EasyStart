@@ -3548,7 +3548,7 @@ namespace EasyStart.Logic
                         p.BranchId = value.BranchId;
                     });
 
-                    List<AdditionOptionItem> additionOptionItems = SaveProductAdditionOptionItems(additionalOption.Items);
+                    List<AdditionOptionItem> additionOptionItems = SaveProductAdditionOptionItemsAndRemoveOld(result.Id, additionalOption.Items);
                     result.Items = additionOptionItems;
                 }
             }
@@ -3558,6 +3558,54 @@ namespace EasyStart.Logic
                 result = null;
             }
 
+            return result;
+        }
+
+        public static List<AdditionOptionItem> SaveProductAdditionOptionItemsAndRemoveOld(int additionalOptionId, List<AdditionOptionItem> items)
+        {
+            var result = new List<AdditionOptionItem>();
+
+            if (items != null)
+            {
+                try
+                {
+                    using (var db = new AdminPanelContext())
+                    {
+
+                        var allItems = db.AdditionOptionItems.Where(p => p.AdditionOptionId == additionalOptionId).ToList();
+                        foreach (var item in allItems)
+                        {
+                            if (!items.Exists(p => p.Id == item.Id))
+                                item.IsDeleted = true;
+                        }
+
+                        foreach (var option in items)
+                        {
+                            AdditionOptionItem additionOptionItem;
+                            if (option.Id > 0)
+                            {
+                                additionOptionItem = db.AdditionOptionItems.FirstOrDefault(p => p.Id == option.Id);
+
+                                additionOptionItem.Name = option.Name;
+                                additionOptionItem.AdditionalInfo = option.AdditionalInfo;
+                                additionOptionItem.Price = option.Price;
+                                additionOptionItem.IsDefault = option.IsDefault;
+                            }
+                            else
+                                additionOptionItem = db.AdditionOptionItems.Add(option);
+
+                            result.Add(additionOptionItem);
+                        }
+
+                        db.SaveChanges();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log.Error(ex);
+                    result = null;
+                }
+            }
             return result;
         }
 
