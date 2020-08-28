@@ -473,8 +473,6 @@ namespace EasyStart.Controllers
                 result.ErrorMessage = "При загрузке изображения что-то пошло не так...";
             }
 
-
-
             return Json(result);
         }
 
