@@ -371,6 +371,10 @@
     <Compile Include="Migrations\202008241858358_AddedProductWithOptionsCountJSONInOrderModel.Designer.cs">
       <DependentUpon>202008241858358_AddedProductWithOptionsCountJSONInOrderModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202008271733318_AddedAllowCombinationsJSONInProductModel.cs" />
+    <Compile Include="Migrations\202008271733318_AddedAllowCombinationsJSONInProductModel.Designer.cs">
+      <DependentUpon>202008271733318_AddedAllowCombinationsJSONInProductModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -730,6 +734,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202008241858358_AddedProductWithOptionsCountJSONInOrderModel.resx">
       <DependentUpon>202008241858358_AddedProductWithOptionsCountJSONInOrderModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008271733318_AddedAllowCombinationsJSONInProductModel.resx">
+      <DependentUpon>202008271733318_AddedAllowCombinationsJSONInProductModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

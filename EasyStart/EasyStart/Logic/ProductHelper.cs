@@ -1,5 +1,6 @@
 ﻿using EasyStart.Models;
 using EasyStart.Utils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,9 +31,14 @@ namespace EasyStart.Logic
             int newBrachId,
             int newCategoryId,
             string newImageName,
-            Dictionary<int,int> additionalOptionsConformityIds,
-            Dictionary<int, int> additionalFillingsConformityIds)
+            Dictionary<int, int> additionalOptionsConformityIds,
+            Dictionary<int, int> additionalFillingsConformityIds,
+            Dictionary<int, int> additionalOptionItemsConformityIds)
         {
+            var allowCombinationsJSON = JsonConvert.SerializeObject(product.AllowCombinations?
+                .Select(p => p.Select(x => additionalOptionItemsConformityIds[x]))
+                ?? new List<List<int>>());
+
             return new ProductModel
             {
                 Id = -1,
@@ -52,7 +58,8 @@ namespace EasyStart.Logic
                 IsDeleted = product.IsDeleted,
                 ProductAdditionalInfoType = product.ProductAdditionalInfoType,
                 ProductAdditionalOptionIds = product.ProductAdditionalOptionIds.Select(p => additionalOptionsConformityIds[p]).ToList(),
-                ProductAdditionalFillingIds = product.ProductAdditionalFillingIds.Select(p => additionalFillingsConformityIds[p]).ToList()
+                ProductAdditionalFillingIds = product.ProductAdditionalFillingIds.Select(p => additionalFillingsConformityIds[p]).ToList(),
+                AllowCombinationsJSON = allowCombinationsJSON
             };
         }
 

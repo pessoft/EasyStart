@@ -28,6 +28,7 @@
     let setOperationAdd = () => CurrentOperation = TypeOperation.Add
     const additionFunForAddNewProduct = () => {
         ProductAdditionalOptions = []
+        ProductAllowCombinationsAdditionalOptions = []
         ProductAdditionalFillings = []
         setOperationAdd()
     }
@@ -806,6 +807,7 @@ function loadProducts() {
 }
 
 var ProductAdditionalOptions = []
+var ProductAllowCombinationsAdditionalOptions = []
 var ProductAdditionalFillings = []
 function addProduct() {
     let loader = new Loader($("#addProducDialog  form"))
@@ -821,6 +823,7 @@ function addProduct() {
         ProductType: getProductType($("#product-type option:selected")),
         ProductAdditionalInfoType: $("#product-additional-info-type").val(),
         ProductAdditionalOptionIds: ProductAdditionalOptions,
+        AllowCombinationsJSON: JSON.stringify(ProductAllowCombinationsAdditionalOptions),
         ProductAdditionalFillingIds: ProductAdditionalFillings,
     }
     let successFunc = function (result, loader) {
@@ -856,6 +859,7 @@ function updateProduct() {
         ProductType: getProductType($("#product-type option:selected")),
         ProductAdditionalInfoType: $("#product-additional-info-type").val(),
         ProductAdditionalOptionIds: ProductAdditionalOptions,
+        AllowCombinationsJSON: JSON.stringify(ProductAllowCombinationsAdditionalOptions),
         ProductAdditionalFillingIds: ProductAdditionalFillings,
     }
 
@@ -1089,6 +1093,7 @@ function editProduct(e, event) {
 
     let product = DataProduct.Products.find(p => p.Id == productId)
     ProductAdditionalOptions = product.ProductAdditionalOptionIds
+    ProductAllowCombinationsAdditionalOptions = product.AllowCombinations ? product.AllowCombinations : []
     ProductAdditionalFillings = product.ProductAdditionalFillingIds
 
     dialog.find("#product-id").val(product.Id)

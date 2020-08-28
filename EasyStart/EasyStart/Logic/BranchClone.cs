@@ -20,6 +20,7 @@ namespace EasyStart.Logic
         /// value - new id
         /// </summary>
         private Dictionary<int, int> additionalOptions;
+        private Dictionary<int, int> additionalOptionItems;
 
         /// <summary>
         /// key - base id
@@ -33,6 +34,7 @@ namespace EasyStart.Logic
             this.mainBrachId = mainBrachId;
             this.newBrachId = newBrachId;
             additionalOptions = new Dictionary<int, int>();
+            additionalOptionItems = new Dictionary<int, int>();
             additionalFillings = new Dictionary<int, int>();
         }
 
@@ -90,6 +92,14 @@ namespace EasyStart.Logic
 
                 var newSavedAdditionalOption = DataWrapper.SaveProductAdditionalOption(newAdditionalOption);
                 additionalOptions.Add(additionalOption.Id, newSavedAdditionalOption.Id);
+
+                for(var i = 0; i < newSavedAdditionalOption.Items.Count; ++i)
+                {
+                    var baseItem = additionalOption.Items[i];
+                    var newItem = newSavedAdditionalOption.Items[i];
+
+                    additionalOptionItems.Add(baseItem.Id, newItem.Id);
+                }
             }
         }
 
@@ -120,7 +130,7 @@ namespace EasyStart.Logic
             foreach (var product in baseProducts)
             {
                 var newImageName = CloneImage(product.Image);
-                var newProduct = product.Clone(newBrachId, newCategoryId, newImageName, additionalOptions, additionalFillings);
+                var newProduct = product.Clone(newBrachId, newCategoryId, newImageName, additionalOptions, additionalFillings, additionalOptionItems);
 
                 newProdcts.Add(newProduct);
             }
