@@ -1323,6 +1323,7 @@ namespace EasyStart.Logic
                     result.ProductAdditionalInfoType = product.ProductAdditionalInfoType;
                     result.ProductAdditionalOptionIds = product.ProductAdditionalOptionIds;
                     result.ProductAdditionalFillingIds = product.ProductAdditionalFillingIds;
+                    result.AllowCombinationsJSON = product.AllowCombinationsJSON;
 
                     db.SaveChanges();
 

@@ -25,11 +25,16 @@
 }
 
 .dialog-body-function-additional,
-.dialog-body-function-additional-existing {
+.dialog-body-function-additional-existing,
+.dialog-body-combinations-additional-options {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 80px 1fr 20px;
     grid-row-gap: 10px;
+}
+
+.dialog-body-combinations-additional-options {
+    grid-template-rows: 1fr 20px;
 }
 
 .dialog-body-function-additional-existing {
@@ -288,6 +293,7 @@
     padding-left: 5px;
     border-radius: 2px;
     margin-bottom: 8px;
+    cursor: default;
 }
 
 .additional-filling-inputs {
@@ -301,15 +307,38 @@
         grid-template-columns: 80px 50px;
     }
 
-.additional-filling-inputs .additional-option-name {
-    grid-template-columns: 220px;
-}
+    .additional-filling-inputs .additional-option-name {
+        grid-template-columns: 220px;
+    }
 
-.additional-filling-inputs .additional-option-price input {
-    width: 80px;
-}
+    .additional-filling-inputs .additional-option-price input {
+        width: 80px;
+    }
 
     .additional-filling-inputs .additional-option-name input {
         width: 215px;
         border-radius: 2px;
+    }
+
+.combination-additional-option-item {
+    display: grid;
+    grid-auto-rows: 30px;
+    grid-template-columns: 20px 1fr;
+    justify-content: center;
+    align-items: center;
+    column-gap: 5px;
+    border-radius: 2px;
+    border: 1px solid #bdbdbd35;
+    margin-bottom: 8px;
+    cursor:default;
+}
+
+    .combination-additional-option-item input {
+        width: auto;
+    }
+
+    .combination-additional-option-item span {
+        display: flex;
+        align-items: center;
+        font-size: 0.9em;
     }

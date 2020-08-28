@@ -29,13 +29,18 @@ function openFunctionAdditionalInfoDialog(event) {
     event.stopPropagation()
 
     renderAdditionalOptionFromProduct()
-
+    toggleDisabledCombinationsAdditionalOptionBtn()
     toggleDisabledExistAdditionalOptionBtn()
     Dialog.showModal($('#functionAdditionalInfoDialog'))
 }
 
 function toggleDisabledExistAdditionalOptionBtn() {
     $('#btn-function-additional-select').attr('disabled', Object.keys(DataProduct.AdditionalOptions) == 0)
+}
+
+
+function toggleDisabledCombinationsAdditionalOptionBtn() {
+    $('#btn-additional-combination-show').attr('disabled', ProductAdditionalOptions.length == 0)
 }
 
 function openFunctionAdditionalExistingOptionDialog(event) {
@@ -79,7 +84,7 @@ function addDataAdditionalOptionsInDialog(additionalOption) {
     $(`#${dialogId}`).attr('additional-option-id', additionalOption.Id)
 
     for (const row of additionalOption.Items) {
-        
+
         const templateRow = `
         <div class="additional-option-item" id="${row.Id}">
             <div class="additional-option-name">
@@ -243,6 +248,7 @@ function doneAdditionalOption() {
     const callbackAfterSaveAdditionalOption = () => {
         closeAdditionalOption()
         toggleDisabledExistAdditionalOptionBtn()
+        toggleDisabledCombinationsAdditionalOptionBtn()
         renderAdditionalOptionFromProduct()
     }
 
@@ -259,6 +265,7 @@ function cleanAdditinOption() {
     $('#createFunctionAdditionalInfoDialog').attr('additional-option-id', 0)
 
     toggleDisabledExistAdditionalOptionBtn()
+    toggleDisabledCombinationsAdditionalOptionBtn()
     renderEmptyInfoAdditionalOptionInDialog()
 }
 
@@ -268,8 +275,10 @@ function saveAdditionalOption(additionalOption, callbackAfterSave) {
 
     let callback = (data, loader) => {
         if (data.Success) {
-            if (ProductAdditionalOptions.findIndex(p => p == data.Data.Id) == -1)
+            if (ProductAdditionalOptions.findIndex(p => p == data.Data.Id) == -1) {
                 ProductAdditionalOptions.push(data.Data.Id)
+                ProductAllowCombinationsAdditionalOptions = []
+            }
 
             DataProduct.AdditionalOptions[data.Data.Id] = data.Data
 
@@ -322,9 +331,12 @@ function removeAdditionalOptionFromProduct(event, additionalOptionId) {
 
     if (i != -1) {
         ProductAdditionalOptions.splice(i, 1)
+        ProductAllowCombinationsAdditionalOptions = []
 
         renderAdditionalOptionFromProduct()
     }
+
+    toggleDisabledCombinationsAdditionalOptionBtn()
 }
 
 function changeOrderProductAdditionalOption() {
@@ -336,6 +348,7 @@ function changeOrderProductAdditionalOption() {
     })
 
     ProductAdditionalOptions = newProductAdditionalOptions
+    ProductAllowCombinationsAdditionalOptions = []
 }
 
 function renderAdditionalExistingOptions() {
@@ -353,7 +366,7 @@ function renderAdditionalExistingOptions() {
 
 function getAdditionalOptionExistTempalte(option, isSelecetedOption) {
     return `
-        <div class="funcitons-additional-item-exist">
+        <div class="funcitons-additional-item-exist" onclick="toggleCheckbox(event, this)">
             <div class="checkbox-item checkbox-item-left">
                 <input type="checkbox" value="${option.Id}" ${isSelecetedOption ? 'checked' : ''}/>
             </div>
@@ -378,9 +391,11 @@ function complitedSelectionExistingOptions() {
     $('#functionAdditionalExistingOptionsDialog .functions-additional input[type=checkbox]:checked').each(function () {
         const id = parseInt($(this).val())
         ProductAdditionalOptions.push(id)
+        ProductAllowCombinationsAdditionalOptions = []
     })
 
     renderAdditionalOptionFromProduct()
+    toggleDisabledCombinationsAdditionalOptionBtn()
     Dialog.close('#functionAdditionalExistingOptionsDialog')
 }
 
@@ -399,13 +414,14 @@ function removeExistingOption(event, id) {
                 const i = ProductAdditionalOptions.findIndex(p => p == id)
                 if (i != -1) {
                     ProductAdditionalOptions.splice(i, 1)
-                    
+                    ProductAllowCombinationsAdditionalOptions = []
                     renderAdditionalOptionFromProduct()
                 }
 
                 if (!Object.keys(DataProduct.AdditionalOptions).length) {
                     Dialog.close('#functionAdditionalExistingOptionsDialog')
                     toggleDisabledExistAdditionalOptionBtn()
+                    toggleDisabledCombinationsAdditionalOptionBtn()
                 }
             } else {
                 showErrorMessage(result.ErrorMessage)
@@ -611,7 +627,7 @@ function removeExistingAdditionalFilling(event, id) {
                 const i = ProductAdditionalFillings.findIndex(p => p == id)
                 if (i != -1) {
                     ProductAdditionalFillings.splice(i, 1)
-                    
+
                     renderAdditionalFillingFromProduct()
                 }
 
@@ -627,4 +643,106 @@ function removeExistingAdditionalFilling(event, id) {
     }
 
     deleteConfirmation(callback)
+}
+
+function openSettingCombinationsAdditionalOptions() {
+    renderCombinationsAdditonalOptions()
+    Dialog.showModal('#combinationsAdditionalOptionsDialog')
+}
+
+function closeSettingCombinationsAdditionalOptions() {
+    const dialogId = 'combinationsAdditionalOptionsDialog'
+    const $combinationItems = $(`#${dialogId}`).find('.combination-additional-option-item')
+    const $onlyCheckdCombinationItems = $combinationItems.find('input[type=checkbox]:checked')
+
+    ProductAllowCombinationsAdditionalOptions = []
+    if ($combinationItems.length != $onlyCheckdCombinationItems.length) {
+        $onlyCheckdCombinationItems.each(function () {
+            const allowCombination = JSON.parse($(this).val())
+
+            ProductAllowCombinationsAdditionalOptions.push(allowCombination)
+        })
+    }
+
+    Dialog.close(`#${dialogId}`)
+}
+
+function renderCombinationsAdditonalOptions() {
+    const dataCombinations = getDataCombinationsAdditionalOptions()
+    const templates = []
+
+    const defaultCombination = []
+    for (const additionalOptionId of ProductAdditionalOptions) {
+        const additionalOption = DataProduct.AdditionalOptions[additionalOptionId]
+        const additionalOptionItem = additionalOption.Items.find(p => p.IsDefault)
+
+        defaultCombination.push(additionalOptionItem.Id)
+    }
+    const defaultCombinationJson = JSON.stringify(defaultCombination)
+
+    for (const combination of dataCombinations) {
+        const template = getTepmlateCombinationAdditionalOption(combination, defaultCombinationJson)
+
+        templates.push(template)
+    }
+
+    $('#combinationsAdditionalOptionsDialog .functions-additional').html(templates)
+}
+
+function getTepmlateCombinationAdditionalOption(combination, defaultCombinationJson) {
+    const label = combination.map(p => p.Name).join(', ')
+    const ids = combination.map(p => p.Id)
+    const idsJson = JSON.stringify(ids)
+    let isChecked = ProductAllowCombinationsAdditionalOptions.length == 0 ? 'checked' : ''
+    const isDisabled = idsJson == defaultCombinationJson
+    const isDisabledInput = isDisabled ? 'disabled' : ''
+    const clickEvent = isDisabled ? '' : 'toggleCheckbox(event, this)'
+
+    if (ProductAllowCombinationsAdditionalOptions.length > 0) {
+        for (const allowCombination of ProductAllowCombinationsAdditionalOptions) {
+            const allowCombinationJson = JSON.stringify(allowCombination)
+
+            if (allowCombinationJson == idsJson) {
+                isChecked = 'checked'
+                break
+            }
+        }
+    }
+
+    const template = `
+        <div class="combination-additional-option-item" onclick="${clickEvent}">
+            <input type="checkbox" value="${idsJson}" ${isChecked} ${isDisabledInput}>
+            <span>${label}</span>
+        </div>`
+
+    return template
+}
+
+function toggleCheckbox(e, el) {
+    e.stopPropagation()
+    const $input = $(el).find('input[type=checkbox]')
+
+    if (e.target == $input[0])
+        return
+
+    const isChecked = $input.is(':checked')
+    $input.prop('checked', !isChecked)
+}
+
+function getDataCombinationsAdditionalOptions() {
+    const allAdditionalOptionsItems = []
+
+    for (const additionalOptionId of ProductAdditionalOptions) {
+        const additionalOption = DataProduct.AdditionalOptions[additionalOptionId]
+        const additionalOptionItems = additionalOption.Items
+
+        allAdditionalOptionsItems.push(additionalOptionItems)
+    }
+
+    const result = allAdditionalOptionsItems.reduce((a, b) => a.reduce((r, v) => r.concat(b.map(w => [].concat(v, w))), []))
+
+    if (allAdditionalOptionsItems.length == 1)
+        return result.map(p => [p])
+
+    return result
 }
