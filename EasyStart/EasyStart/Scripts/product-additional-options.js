@@ -581,7 +581,7 @@ function renderAdditionalFillingExistingOptions() {
 
 function getAdditionalFillingExistTempalte(option, isSelecetedOption) {
     return `
-        <div class="funcitons-additional-item-exist">
+        <div class="funcitons-additional-item-exist" onclick="toggleCheckbox(event, this)">
             <div class="checkbox-item checkbox-item-left">
                 <input type="checkbox" value="${option.Id}" ${isSelecetedOption ? 'checked' : ''}/>
             </div>
