@@ -18,7 +18,7 @@ namespace EasyStart.Logic.Report
         {
             ReportResult result = null;
             var data = GetData();
-            var topProducts= data
+            var topProducts = data
                 .Select(p => new { Product = p.Key, Count = p.Value })
                 .OrderByDescending(p => p.Count)
                 .Take(countTop);
@@ -46,7 +46,14 @@ namespace EasyStart.Logic.Report
         protected Dictionary<ProductModel, int> GetData()
         {
             var data = AnalyticsDataWrapper.GetOrders(filter.DateFrom, filter.DateTo, filter.BranchId);
-            var productIdsFromOrders = data.SelectMany(p => p.ProductCount.Keys.ToList()).Distinct();
+            var productIdsFromOrders = data.SelectMany(p => p.ProductCount?.Keys.ToList() ?? new List<int>()).Distinct();
+            var productIdsWithOptionsFromOrders = data.SelectMany(p => p.ProductWithOptionsCount
+            ?.Select(x => x.ProductId)
+            ?? new List<int>())
+            .Distinct();
+            productIdsFromOrders = productIdsWithOptionsFromOrders != null && productIdsWithOptionsFromOrders.Any()
+                ? productIdsFromOrders.Concat(productIdsWithOptionsFromOrders).Distinct()
+                : productIdsFromOrders;
             var productsFromOrders = DataWrapper.GetProducts(productIdsFromOrders);
             var productDictionary = productsFromOrders.ToDictionary(p => p.Id, p => p);
             var productCount = data
