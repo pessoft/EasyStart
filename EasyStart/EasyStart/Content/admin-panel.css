@@ -2693,3 +2693,7 @@ button {
     grid-column-gap: 8px;
     font-size: 0.9em;
 }
+
+.order-details-price-to-pay {
+    grid-template-columns: 1fr 1.5fr;
+}
