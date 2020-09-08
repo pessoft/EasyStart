@@ -47,19 +47,27 @@ namespace EasyStart.Logic.Report
         {
             var data = AnalyticsDataWrapper.GetOrders(filter.DateFrom, filter.DateTo, filter.BranchId);
             var productIdsFromOrders = data.SelectMany(p => p.ProductCount?.Keys.ToList() ?? new List<int>()).Distinct();
-            var productIdsWithOptionsFromOrders = data.SelectMany(p => p.ProductWithOptionsCount
-            ?.Select(x => x.ProductId)
-            ?? new List<int>())
-            .Distinct();
+            var productsWithOptions = data.SelectMany(p => p.ProductWithOptionsCount ?? new List<ProductWithOptionsOrderModel>()).ToList();
+            var productIdsWithOptionsFromOrders = productsWithOptions.Select(p => p.ProductId).Distinct();
             productIdsFromOrders = productIdsWithOptionsFromOrders != null && productIdsWithOptionsFromOrders.Any()
                 ? productIdsFromOrders.Concat(productIdsWithOptionsFromOrders).Distinct()
                 : productIdsFromOrders;
             var productsFromOrders = DataWrapper.GetProducts(productIdsFromOrders);
             var productDictionary = productsFromOrders.ToDictionary(p => p.Id, p => p);
             var productCount = data
-                .SelectMany(p => p.ProductCount.ToList())
+                .SelectMany(p => p.ProductCount?.ToList() ?? new List<KeyValuePair<int, int>>())
                 .GroupBy(p => p.Key)
                 .ToDictionary(p => productDictionary[p.Key], p => p.Sum(s => s.Value));
+
+            var productWithOptionsCount = data
+                .SelectMany(p => p.ProductWithOptionsCount ?? new List<ProductWithOptionsOrderModel>())
+                .GroupBy(p => p.ProductId)
+                .ToDictionary(p => productDictionary[p.Key], p => p.Sum(s => s.Count));
+
+            if (productWithOptionsCount.Any())
+            {
+                productCount = productCount.Concat(productWithOptionsCount).ToDictionary(p => p.Key, p=> p.Value);
+            }
 
             return productCount;
         }
