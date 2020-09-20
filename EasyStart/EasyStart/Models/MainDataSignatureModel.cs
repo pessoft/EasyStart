@@ -9,5 +9,6 @@ namespace EasyStart.Models
     {
         public int BranchId { get; set; }
         public int ClientId { get; set; }
+        public string AppPackageName { get; set; }
     }
 }
