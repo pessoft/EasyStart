@@ -16,6 +16,7 @@ using EasyStart.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -107,19 +108,27 @@ namespace EasyStart
         public JsonResultModel GetMainData([FromBody] MainDataSignatureModel data)
         {
             var result = new JsonResultModel();
-            var branchId = data.BranchId;
-            var clientid = data.ClientId;
-            result.Success = false;
-
-            if (branchId < 1 || data.ClientId < 1)
-            {
-                var mainBranch = DataWrapper.GetMainBranch();
-                branchId = mainBranch.Id;
-                clientid = -1;
-            }
 
             try
             {
+                var appPackageName = ConfigurationManager.AppSettings["AppPackageName"];
+                if (!string.IsNullOrEmpty(appPackageName))
+                {
+                    if (appPackageName != data.AppPackageName)
+                        throw new Exception($"Имя пакета приложения не совпадает. Excepted: {appPackageName}, actual: {data.AppPackageName ?? "null"}");
+                }
+
+                var branchId = data.BranchId;
+                var clientid = data.ClientId;
+                result.Success = false;
+
+                if (branchId < 1 || data.ClientId < 1)
+                {
+                    var mainBranch = DataWrapper.GetMainBranch();
+                    branchId = mainBranch.Id;
+                    clientid = -1;
+                }
+
                 var categories = GetCategories(branchId);
                 var products = GetAllProducts(branchId);
                 var additionalOptions = GetAdditionalOptions(branchId);
