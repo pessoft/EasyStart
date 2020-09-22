@@ -595,6 +595,10 @@ namespace EasyStart
         {
             try
             {
+                var useState = UseMethod.GetCurrentState();
+                if (!useState)
+                    return;
+
                 System.Web.HttpContext.Current = currentContext;
                 var emailTemplate = File.ReadAllText(currentContext.Server.MapPath("~/Resource/EmailTemplateOrderNotify.html"));
                 var setting = DataWrapper.GetSetting(order.BranchId);
