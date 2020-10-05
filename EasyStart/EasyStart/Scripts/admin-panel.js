@@ -21,7 +21,7 @@
 
     $("#setting-phone-number,#setting-phone-number-additional").mask("+7(999)999-99-99")
 
-    $(".menu-item").not(".logout").bind("click", function () {
+    $(".menu-item,.main-menu a").not(".logout").bind("click", function () {
         selectMenuItem(this)
     })
 
@@ -45,7 +45,7 @@
     bindDragula()
 
     loadMainProductData()
-    if ($(".header-menu .menu-item-active").attr("target-id") == Pages.Order) {
+    if ($(".main-menu a.menu-item-active").attr("target-id") == Pages.Order) {
         loadOrders()
     }
 
@@ -61,7 +61,7 @@
 
 function checkSettings() {
     if (!IsValidSetting || !IsValidDeliverySetting) {
-        $('.header-menu .menu-item').not('.logout').addClass('disabled-menu-item')
+        $('.main-menu li a').not('.logout').addClass('disabled-menu-item')
 
         if (!IsValidSetting && !IsValidDeliverySetting) {
             $('[target-id=setting], [target-id=delivery]').removeClass('disabled-menu-item')
@@ -74,7 +74,7 @@ function checkSettings() {
             selectMenuItem($('[target-id=delivery]'))
         }
     } else {
-        $('.header-menu .menu-item').removeClass('disabled-menu-item')
+        $('.main-menu li a').removeClass('disabled-menu-item')
     }
 }
 
@@ -443,7 +443,7 @@ function selectMenuItem(e) {
 
     prevChangedPage(targetId)
 
-    $(".menu-item").removeClass("menu-item-active")
+    $(".main-menu a").removeClass("menu-item-active")
     $e.addClass("menu-item-active")
     $(".section").addClass("hide")
     $(`#${targetId}`).removeClass("hide")

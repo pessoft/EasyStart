@@ -8,62 +8,59 @@
     overflow: hidden;
 }
 
-.header-menu {
-    width: 100%;
+.main-menu > ul {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 5%;
     min-height: 50px;
     background-color: #0f1e32;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    padding: 0;
+    margin: 0;
 }
 
-.logo-img {
-    width: 54px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-right: 10px;
+.main-menu li {
+    list-style-type: none;
+    margin: 0 10px;
+    padding: 0 5px;
+    color: #fff;
+    font-size:0.95em;
 }
 
-    .logo-img img {
-        width: 100%
+    .main-menu li a {
+        position: relative;
+        color: #fff;
+        font-size: 1.01em;
+        text-decoration: none;
+        transition: 200ms ease-in
     }
 
-.menu-item {
-    margin-left: 30px;
-    color: #ffffff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-    font-size: 0.95em;
-    position: relative;
-    user-select: none;
-}
+        .main-menu li a.menu-item-active {
+            color: #9ab0c7;
+        }
 
-    .menu-item i {
+        .main-menu li a.disabled-menu-item {
+            pointer-events: none;
+            color: gray;
+        }
+
+    .main-menu li i {
         margin-right: 6px;
-        font-size: 1.15em;
+        font-size: 1.05em;
     }
 
-    .menu-item:hover {
-        cursor: pointer;
-        color: #9ab0c7;
-        transition: 200ms ease-in;
+    .main-menu li.logo img{
+        width: 54px;
     }
 
-.disabled-menu-item {
-    pointer-events: none;
-    color: gray;
+.main-menu li a:hover {
+    cursor: pointer;
+    color: #9ab0c7;
+    transition: 200ms ease-in;
 }
 
 .hide {
     display: none !important;
-}
-
-.menu-item-active {
-    color: #9ab0c7;
 }
 
 .content {
@@ -780,10 +777,26 @@ div.product-item:hover {
         font-size: 0.85em;
     }
 
-    .menu-item {
-        font-size: 0.85em;
-        margin-left: 12px;
+    .main-menu li {
+        margin: 0 3px
     }
+
+    .main-menu li a {
+        font-size: 0.85em;
+    }
+
+        .main-menu li i {
+            margin-right: 4px;
+            font-size: 1em;
+        }
+
+        .main-menu li.logo {
+            margin-right: 15px
+        }
+
+        .main-menu li.logo img {
+            width: 48px;
+        }
 
     .category-item {
         width: 93%;

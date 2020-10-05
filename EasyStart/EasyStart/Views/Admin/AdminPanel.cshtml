@@ -33,48 +33,29 @@
             creditKey: '@(ViewBag.DeliverySetting != null ? ViewBag.DeliverySetting.CreditKey: "")'
         }
     </script>
-    <div class="header-menu">
-        <div class="logo-img menu-item" target-id="about-us">
-            <img src="~/Images/logo.png" alt="Logo" />
-        </div>
-        <div class="menu-item menu-item-active" target-id="order" onclick="loadOrders();">
-            <i class="fal fa-shopping-basket"></i>
-            Заказы
-            <div class="order-count hide"></div>
-        </div>
-        <div class="menu-item" target-id="history" onclick="loadHistoryOrders()">
-            <i class="fal fa-history"></i>
-            История заказов
-        </div>
-        <div class="menu-item" target-id="products" onclick="loadProducts();">
-            <i class="fal fa-cart-arrow-down"></i>
-            Товары
-        </div>
-        <div class="menu-item" target-id="promotion" onclick="activePromotion();">
-            <i class="fal fa-rocket"></i>
-            Продвижение
-        </div>
-        <div class="menu-item" target-id="branch" onclick="loadBranchList();">
-            <i class="fal fa-code-branch"></i>
-            Филиалы
-        </div>
-        <div class="menu-item" target-id="setting">
-            <i class="fal fa-map-marker-alt"></i>
-            Контакты
-        </div>
-        <div class="menu-item" target-id="delivery">
-            <i class="fal fa-truck-loading"></i>
-            Доставка
-        </div>
-        <div class="menu-item" target-id="analytics">
-            <i class="fal fa-analytics"></i>
-            Аналитика
-        </div>
-        <div class="menu-item logout" onclick="logout()">
-            <i class="fal fa-sign-out"></i>
-            Выйти
-        </div>
-    </div>
+
+    <header>
+        <nav class="main-menu">
+            <ul>
+                <li class="logo"><a href="#" target-id="about-us"><img src="~/Images/logo.png" alt="Logo" /></a></li>
+                <li>
+                    <a onclick="loadOrders();" target-id="order" class="menu-item-active">
+                        <i class="fal fa-shopping-basket"></i>
+                        Заказы
+                        <div class="order-count hide"></div>
+                    </a>
+                </li>
+                <li><a onclick="loadHistoryOrders()" target-id="history"><i class="fal fa-history"></i>История заказов</a></li>
+                <li><a onclick="loadProducts();" target-id="products"><i class="fal fa-cart-arrow-down"></i>Товары</a></li>
+                <li><a onclick="activePromotion();" target-id="promotion"><i class="fal fa-rocket"></i>Продвижение</a></li>
+                <li><a onclick="loadBranchList();" target-id="branch"><i class="fal fa-code-branch"></i>Филиалы</a></li>
+                <li><a target-id="setting"><i class="fal fa-map-marker-alt"></i>Контакты</a></li>
+                <li><a target-id="delivery"><i class="fal fa-truck-loading"></i>Доставка</a></li>
+                <li><a target-id="analytics"><i class="fal fa-analytics"></i>Аналитика</a></li>
+                <li><a onclick="logout()" class="logout"><i class="fal fa-sign-out"></i>Выйти</a></li>
+            </ul>
+        </nav>
+    </header>
     <input type="hidden" id="current-brnach" value="@ViewBag.CurrentBranch">
     <div class="content">
         <div class="section" id="order">
