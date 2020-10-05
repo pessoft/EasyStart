@@ -21,7 +21,7 @@
 
     $("#setting-phone-number,#setting-phone-number-additional").mask("+7(999)999-99-99")
 
-    $(".menu-item,.main-menu a").not(".logout").bind("click", function () {
+    $(".main-menu a").not(".logout").bind("click", function () {
         selectMenuItem(this)
     })
 
@@ -2051,7 +2051,7 @@ function showCountOrder(count) {
     let $orderCount = $(".order-count")
     if (count) {
         $orderCount.removeClass("hide")
-        $orderCount.html(count)
+        $orderCount.html(` (<span>+${count}</span>)`)
     } else {
         $orderCount.addClass("hide")
     }

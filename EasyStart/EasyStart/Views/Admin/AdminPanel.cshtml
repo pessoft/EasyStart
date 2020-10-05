@@ -42,10 +42,17 @@
                     <a onclick="loadOrders();" target-id="order" class="menu-item-active">
                         <i class="fal fa-shopping-basket"></i>
                         Заказы
-                        <div class="order-count hide"></div>
+                        <span class="order-count hide"></span>
                     </a>
+                    <ul>
+                        <li>
+                            <a onclick="loadHistoryOrders()" target-id="history">
+                            <i class="fal fa-history"></i>
+                                История заказов
+                            </a>
+                        </li>
+                    </ul>
                 </li>
-                <li><a onclick="loadHistoryOrders()" target-id="history"><i class="fal fa-history"></i>История заказов</a></li>
                 <li><a onclick="loadProducts();" target-id="products"><i class="fal fa-cart-arrow-down"></i>Товары</a></li>
                 <li><a onclick="activePromotion();" target-id="promotion"><i class="fal fa-rocket"></i>Продвижение</a></li>
                 <li><a onclick="loadBranchList();" target-id="branch"><i class="fal fa-code-branch"></i>Филиалы</a></li>
