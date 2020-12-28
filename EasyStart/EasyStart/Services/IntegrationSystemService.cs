@@ -20,8 +20,10 @@ namespace EasyStart.Services
         {
             IntegrationSystemModel result;
 
-            var oldSetting = Get(setting.BranchId);
-            if (oldSetting != null)
+            var oldSetting = setting.Id > 0 ? null : Get(setting.BranchId);
+            setting.Id = oldSetting?.Id ?? setting.Id;
+
+            if (setting.Id > 0)
             {
                 setting.Id = oldSetting.Id;
 
