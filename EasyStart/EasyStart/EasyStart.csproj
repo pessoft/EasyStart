@@ -376,6 +376,10 @@
     <Compile Include="Migrations\202008271733318_AddedAllowCombinationsJSONInProductModel.Designer.cs">
       <DependentUpon>202008271733318_AddedAllowCombinationsJSONInProductModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202012281832216_AddedIntegrationSystem.cs" />
+    <Compile Include="Migrations\202012281832216_AddedIntegrationSystem.Designer.cs">
+      <DependentUpon>202012281832216_AddedIntegrationSystem.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -452,6 +456,8 @@
     <Compile Include="Models\UseModel.cs" />
     <Compile Include="Models\UserDataPhoneApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\InegrationSystemRepository.cs" />
+    <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\FondyErrorCodeHelper.cs" />
     <Compile Include="Utils\CityHelper.cs" />
@@ -741,6 +747,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202008271733318_AddedAllowCombinationsJSONInProductModel.resx">
       <DependentUpon>202008271733318_AddedAllowCombinationsJSONInProductModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202012281832216_AddedIntegrationSystem.resx">
+      <DependentUpon>202012281832216_AddedIntegrationSystem.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
