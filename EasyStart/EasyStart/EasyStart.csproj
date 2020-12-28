@@ -222,6 +222,7 @@
     <Compile Include="Logic\FCM\FCMNotification.cs" />
     <Compile Include="Logic\FCM\NotificationActionType.cs" />
     <Compile Include="Logic\FCM\PlatformDevice.cs" />
+    <Compile Include="Logic\IntegrationSystemType.cs" />
     <Compile Include="Logic\Notification\EmailNotification\RestorePasswordNotification.cs" />
     <Compile Include="Logic\PreprocessorDataAPI.cs" />
     <Compile Include="Logic\PromotionLogic.cs" />
@@ -399,6 +400,7 @@
     <Compile Include="Models\IContainImage.cs" />
     <Compile Include="Models\IngredientHistoryModel.cs" />
     <Compile Include="Models\IngredientModel.cs" />
+    <Compile Include="Models\IntegrationSystemModal.cs" />
     <Compile Include="Models\MainDataSignatureModel.cs" />
     <Compile Include="Models\NewBranchModel.cs" />
     <Compile Include="Models\CategoryModel.cs" />
