@@ -95,13 +95,15 @@ function fetchSaveIntegraionSystemSetting(setting) {
     let callback = (data, loader) => {
         loader.stop()
 
-        if (data.Success) 
+        if (data.Success)
             showSuccessMessage('Настройки системы интегации сохранены')
-        else
+        else {
+            console.log(data.ErrorMessage)
             showErrorMessage('Во время сохранения насройки что-то пошло не так. Пожалуйста поробуйте еще раз.')
+        }
     }
 
-    $.post("/Admin/SaveIntegraionSystemSetting",
+    $.post("/IntegrationSystem/Save",
         setting,
         successCallBack(callback, loader)).catch(function () {
             loader.stop()
