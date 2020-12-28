@@ -1164,6 +1164,19 @@ div.product-item:hover {
     flex-direction: column;
 }
 
+#integration {
+    display:grid;
+}
+
+#integration .section-wrapper {
+    height: 90%;
+    display: grid;
+    justify-self:center;
+    grid-template-columns: 1fr;
+    grid-template-rows: 100px 1fr 35px;
+    grid-gap: 15px;
+}
+
 #delivery .section-wrapper {
     height: 90%;
     display: grid;
@@ -2732,4 +2745,23 @@ button {
 
 .order-details-price-to-pay {
     grid-template-columns: 1fr 1.5fr;
+}
+
+.form-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 1.3em;
+    font-weight: 600;
+    margin-bottom: 2%;
+}
+
+.form-content {
+    display: grid;
+    grid-row-gap: 10px;
+    justify-content: flex-start;
+}
+
+.fomt-content-center {
+    justify-content: center;
 }

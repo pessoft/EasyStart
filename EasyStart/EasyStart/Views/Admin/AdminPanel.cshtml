@@ -17,6 +17,8 @@
     @Styles.Render("~/promotion/css")
     @Styles.Render("~/image-processing/css")
     @Styles.Render("~/product-additional-options/css")
+    @Styles.Render("~/integration/css")
+
 </head>
 <body>
     <script>
@@ -58,7 +60,7 @@
                 <li><a onclick="loadBranchList();" target-id="branch"><i class="fal fa-code-branch"></i>Филиалы</a></li>
                 <li><a target-id="setting"><i class="fal fa-map-marker-alt"></i>Контакты</a></li>
                 <li><a target-id="delivery"><i class="fal fa-truck-loading"></i>Доставка</a></li>
-                <li><a target-id="delivery"><i class="fal fa-puzzle-piece"></i>Интеграция</a></li>
+                <li><a target-id="integration"><i class="fal fa-puzzle-piece"></i>Интеграция</a></li>
                 <li><a target-id="analytics"><i class="fal fa-analytics"></i>Аналитика</a></li>
                 <li><a onclick="logout()" class="logout"><i class="fal fa-sign-out"></i>Выйти</a></li>
             </ul>
@@ -736,11 +738,35 @@
                 </div>
             </div>
         </div>
+
+        <div class="section hide" id="integration">
+            <div class="section-wrapper">
+                <div class="integration-type-wrapper">
+                    <div class="form-header">
+                        Интеграционная система
+                    </div>
+                    <div class="form-content fomt-content-center">
+                        <select id="integration-type">
+                            <option value="0">Без интеграции</option>
+                            <option value="1">FrontPad</option>
+                            <option value="2">Iiko</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="integration-values-wrapper">
+                    <div class="empty-container">Выберите интеграционную систему</div>
+                </div>
+                <div class="integration-menu-wrapper">
+                    <button class="btn btn-submit" onclick="saveIntegrationSystemSetting()">Сохранить</button>
+                </div>
+            </div>
+        </div>
+
         <div class="section hide" id="analytics">
             <div class="analytics-wrapper" id="analytics-wrapper">
             </div>
         </div>
-
+       
         <div class="section hide" id="about-us">
             <div class="about-us-body">
                 <div class="about-header">
@@ -2344,5 +2370,6 @@
     @Scripts.Render("~/bundles/promotion")
     @Scripts.Render("~/bundles/image-processing")
     @Scripts.Render("~/bundles/product-additional-options")
+    @Scripts.Render("~/bundles/integration")
 </body>
 </html>

@@ -75,6 +75,9 @@ namespace EasyStart
             bundles.Add(new ScriptBundle("~/bundles/product-additional-options").Include(
                    "~/Scripts/product-additional-options.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/integration").Include(
+                                "~/Scripts/integration/base-integration.js"));
+
             bundles.Add(new StyleBundle("~/product-additional-options/css").Include(
                      "~/Content/product-additional-options.css"));
 
@@ -113,6 +116,9 @@ namespace EasyStart
             bundles.Add(new StyleBundle("~/image-processing/css").Include(
                 "~/Content/cropper.css",
                 "~/Content/image-processing.css"));
+
+            bundles.Add(new StyleBundle("~/integration/css").Include(
+                "~/Content/integration.css"));
         }
     }
 }

@@ -489,6 +489,7 @@
     <Content Include="Content\fontawesome\webfonts\fa-regular-400.svg" />
     <Content Include="Content\fontawesome\webfonts\fa-solid-900.svg" />
     <Content Include="Content\image-processing.css" />
+    <Content Include="Content\integration.css" />
     <Content Include="Content\material-input.css" />
     <Content Include="Content\odometer\odometer-theme-minimal.css" />
     <Content Include="Content\product-additional-options.css" />
@@ -598,6 +599,7 @@
     <Content Include="Scripts\datepicker.min.js" />
     <Content Include="Scripts\dragula.js" />
     <Content Include="Scripts\image-processing.js" />
+    <Content Include="Scripts\integration\base-integration.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />

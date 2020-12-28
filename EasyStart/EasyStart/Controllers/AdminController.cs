@@ -1585,5 +1585,24 @@ namespace EasyStart.Controllers
 
             return Json(result);
         }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult SaveIntegraionSystemSetting()
+        {
+            var result = new JsonResultModel();
+            
+            try
+            {
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = "При сохранении настроек интеграции что-то полшло не так";
+            }
+
+            return Json(result);
+        }
     }
 }
