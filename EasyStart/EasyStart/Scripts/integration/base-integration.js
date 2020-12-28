@@ -1,11 +1,12 @@
-$(document).ready(function() {
+$(document).ready(function () {
     bindChangedIntegragionSelector()
+    initInitIntegrationtSystemSetting()
 })
 
 const IntegrationSystemType = {
     withoutIntegration: 0,
     frontPad: 1,
-    iiko:2
+    iiko: 2
 }
 
 function bindChangedIntegragionSelector() {
@@ -17,7 +18,7 @@ function bindChangedIntegragionSelector() {
 function changeIntegrationSystemHandler() {
     const integrationSystemType = parseInt($('#integration-type option:selected').val())
 
-    switch(integrationSystemType) {
+    switch (integrationSystemType) {
         case IntegrationSystemType.withoutIntegration:
             initWithoutIntegration()
             break
@@ -38,74 +39,133 @@ function initWithoutIntegration() {
 }
 
 function initFrontPadIntegration() {
+    const secret = IntegerationSystemSetting && IntegerationSystemSetting.Type == IntegrationSystemType.frontPad ?
+        IntegerationSystemSetting.Secret : ''
     const $integrationWrapper = $('.integration-values-wrapper')
     const inputId = 'frontpad-integration'
-    const template = `
+    const $template = $(`
         <div class="group">
             <input required type="text" id="${inputId}" />
             <span class="bar"></span>
             <label>Секрет из FrontPad</label>
-        </div>`
+        </div>`)
 
-    $integrationWrapper.html(template)
+    $template.find(`#${inputId}`).val(secret)
+    $integrationWrapper.html($template)
 }
 
 function initIikoIntegration() {
+    const secret = IntegerationSystemSetting && IntegerationSystemSetting.Type == IntegrationSystemType.iiko ?
+        IntegerationSystemSetting.Secret : ''
     const $integrationWrapper = $('.integration-values-wrapper')
     const inputId = 'iiko-integration'
-    const template = `
+    const $template = $(`
         <div class="group">
             <input required type="text" id="${inputId}" />
             <span class="bar"></span>
             <label>Секрет из Iiko</label>
-        </div>`
+        </div>`)
 
-    $integrationWrapper.html(template)
+    $template.find(`#${inputId}`).val(secret)
+    $integrationWrapper.html($template)
 }
 
 function getIntegrationSystemSetting() {
-    const systemType = parseInt($('#integration-type option:selected').val())
+    const type = parseInt($('#integration-type option:selected').val())
     let secret = ''
 
-    switch(systemType) {
+    switch (type) {
         case IntegrationSystemType.frontPad:
-            secret = $('#frontpad-integration').val()
+            secret = $('#frontpad-integration').val().trim()
             break
         case IntegrationSystemType.iiko:
-            secret = $('#iiko-integration').val()
+            secret = $('#iiko-integration').val().trim()
             break
     }
 
+    if (!secret && type != IntegrationSystemType.withoutIntegration) {
+        const message = 'Не все поля заполненны'
+        showErrorMessage(message)
+        throw new Error(message)
+    }
+
     return {
-        systemType,
+        type,
         secret
     }
 }
 
 function saveIntegrationSystemSetting() {
-    const integrationSystemSetting = getIntegrationSystemSetting()
+    try {
+        const integrationSystemSetting = getIntegrationSystemSetting()
+        const loader = new Loader($('.integration-values-wrapper'))
+        loader.start()
 
-    fetchSaveIntegraionSystemSetting(integrationSystemSetting)
+        let callback = (result, loader) => {
+            loader.stop()
+
+            if (result.Success) {
+                IntegerationSystemSetting = result.Data
+                showSuccessMessage('Настройки системы интегации сохранены')
+            } else {
+                console.log(result.ErrorMessage)
+                showErrorMessage('Во время сохранения насройки что-то пошло не так. Пожалуйста поробуйте еще раз.')
+            }
+        }
+
+        $.post("/IntegrationSystem/Save",
+            integrationSystemSetting,
+            successCallBack(callback, loader)).catch(function () {
+                loader.stop()
+            })
+    } catch (ex) {
+        console.log(ex)
+    }
 }
 
-function fetchSaveIntegraionSystemSetting(setting) {
+var IntegerationSystemSetting = null
+function loadIntegraionSystemSetting(successAction) {
     const loader = new Loader($('.integration-values-wrapper'))
     loader.start()
 
-    let callback = (data, loader) => {
+    let callback = (result, loader) => {
         loader.stop()
 
-        if (data.Success)
-            showSuccessMessage('Настройки системы интегации сохранены')
-        else {
-            console.log(data.ErrorMessage)
-            showErrorMessage('Во время сохранения насройки что-то пошло не так. Пожалуйста поробуйте еще раз.')
+        if (result.Success) {
+            IntegerationSystemSetting = result.Data
+            successAction && successAction()
+        } else {
+            console.log(result.ErrorMessage)
         }
     }
 
-    $.post("/IntegrationSystem/Save",
-        setting,
+    $.get("/IntegrationSystem/Get",
+        null,
         successCallBack(callback, loader)).catch(function () {
             loader.stop()
         })
+}
+
+var isInitIntegrationtSystem = false
+function initInitIntegrationtSystemSetting() {
+    if (isInitIntegrationtSystem)
+        return
+
+    const callback = () => {
+        setIntegrationSystemSetting()
+        isInitIntegrationtSystem = true
+    }
+    loadIntegraionSystemSetting(callback)
+}
+
+function setIntegrationSystemSetting() {
+    if (!IntegerationSystemSetting)
+        return
+
+    setIntegrationType()
+    changeIntegrationSystemHandler()
+}
+
+function setIntegrationType() {
+    $('#integration-type').val(IntegerationSystemSetting.Type)
 }

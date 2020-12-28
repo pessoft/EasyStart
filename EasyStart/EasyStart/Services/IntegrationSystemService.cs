@@ -9,19 +9,22 @@ namespace EasyStart.Services
 {
     public class IntegrationSystemService
     {
-        private readonly IRepository<IntegrationSystemModal> repository;
+        private readonly IRepository<IntegrationSystemModel> repository;
         
-        public IntegrationSystemService(IRepository<IntegrationSystemModal> repository)
+        public IntegrationSystemService(IRepository<IntegrationSystemModel> repository)
         {
             this.repository = repository;
         }
 
-        public IntegrationSystemModal Save(IntegrationSystemModal setting) 
+        public IntegrationSystemModel Save(IntegrationSystemModel setting) 
         {
-            IntegrationSystemModal result;
+            IntegrationSystemModel result;
 
-            if (setting.Id > 0)
+            var oldSetting = Get(setting.BranchId);
+            if (oldSetting != null)
             {
+                setting.Id = oldSetting.Id;
+
                 repository.Update(setting);
                 result = repository.Get(setting.Id);
             }
@@ -33,7 +36,7 @@ namespace EasyStart.Services
             return result;
         }
 
-        public IntegrationSystemModal Get(int branchId)
+        public IntegrationSystemModel Get(int branchId)
         {
             var result = repository.Get(p => p.BranchId == branchId).FirstOrDefault();
 

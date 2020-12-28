@@ -49,6 +49,6 @@ namespace EasyStart.Models
         public DbSet<AdditionalFilling> AdditionalFillings { get; set; }
         public DbSet<ProductAdditionalFillingModal> ProductAdditionalFillings { get; set; }
 
-        public DbSet<IntegrationSystemModal> IntegrationSystems { get; set; }
+        public DbSet<IntegrationSystemModel> IntegrationSystems { get; set; }
     }
 }

@@ -45,12 +45,12 @@ namespace EasyStart.Controllers
                 result.ErrorMessage = "При получении натсройки интеграционной системы что-то пошло не так.";
             }
 
-            return Json(result);
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         [Authorize]
-        public JsonResult Save(IntegrationSystemModal setting)
+        public JsonResult Save(IntegrationSystemModel setting)
         {
             var result = new JsonResultModel();
 

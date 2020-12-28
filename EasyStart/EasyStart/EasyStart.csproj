@@ -381,9 +381,14 @@
     <Compile Include="Migrations\202012281832216_AddedIntegrationSystem.Designer.cs">
       <DependentUpon>202012281832216_AddedIntegrationSystem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202012282116531_RenamIntegrationSystemModel.cs" />
+    <Compile Include="Migrations\202012282116531_RenamIntegrationSystemModel.Designer.cs">
+      <DependentUpon>202012282116531_RenamIntegrationSystemModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
+    <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\BranchModel.cs" />
     <Compile Include="Models\BranchSettingViewModel.cs" />
     <Compile Include="Models\BranchSignal.cs" />
@@ -405,7 +410,7 @@
     <Compile Include="Models\IContainImage.cs" />
     <Compile Include="Models\IngredientHistoryModel.cs" />
     <Compile Include="Models\IngredientModel.cs" />
-    <Compile Include="Models\IntegrationSystemModal.cs" />
+    <Compile Include="Models\IntegrationSystemModel.cs" />
     <Compile Include="Models\MainDataSignatureModel.cs" />
     <Compile Include="Models\NewBranchModel.cs" />
     <Compile Include="Models\CategoryModel.cs" />
@@ -460,6 +465,7 @@
     <Compile Include="Repositories\BranchRepository.cs" />
     <Compile Include="Repositories\InegrationSystemRepository.cs" />
     <Compile Include="Repositories\IRepository.cs" />
+    <Compile Include="Repositories\BaseRepository.cs" />
     <Compile Include="Services\BranchService.cs" />
     <Compile Include="Services\IntegrationSystemService.cs" />
     <Compile Include="Startup.cs" />
@@ -754,6 +760,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202012281832216_AddedIntegrationSystem.resx">
       <DependentUpon>202012281832216_AddedIntegrationSystem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202012282116531_RenamIntegrationSystemModel.resx">
+      <DependentUpon>202012282116531_RenamIntegrationSystemModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
