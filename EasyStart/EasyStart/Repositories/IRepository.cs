@@ -10,7 +10,7 @@ namespace EasyStart.Repositories
         T Create(T item);
         IEnumerable<T> Get();
         IEnumerable<T> Get(Func<T, bool> predicate);
-        T Get(int Id);
+        T Get(int id);
 
         void Update(T item);
         void Remove(T item);       
