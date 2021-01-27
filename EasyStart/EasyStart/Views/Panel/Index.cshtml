@@ -16,7 +16,73 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.2.0/mdb.min.css" rel="stylesheet" />
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.2.0/mdb.min.js"></script>
 </head>
-<body>
-    
+<body class="bg-light">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+            <div class="container-fluid">
+                <a class="navbar-brand me-2 mb-1 d-flex align-items-center" href="#">
+                    <img height="25" src="~/Images/logo.png" alt="Logo" />
+                </a>
+                <button class="navbar-toggler"
+                        type="button"
+                        data-mdb-toggle="collapse"
+                        data-mdb-target="#mainNavbar"
+                        aria-controls="mainNavbar"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-center" id="mainNavbar">
+                    <ul class="navbar-nav mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page1" href="#section1">
+                                <span id="orderNumberNotification" class="badge rounded-pill badge-notification bg-danger" style="display:none;">0</span>
+                                <i class="fal fa-shopping-basket"></i>
+                                Заказы
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#section2">
+                                <i class="fal fa-history"></i>
+                                История заказов
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#page3">
+                                <i class="fal fa-cart-arrow-down"></i>
+                                Товары
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#page4">
+                                <i class="fal fa-rocket"></i>
+                                Продвижение
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#page5">
+                                <i class="fal fa-users"></i>
+                                Пользователи
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#page6">
+                                <i class="fal fa-cogs"></i>
+                                Настройки
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#page7">
+                                <i class="fal fa-sign-out"></i>
+                                Выйти
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <content></content>
 </body>
 </html>
