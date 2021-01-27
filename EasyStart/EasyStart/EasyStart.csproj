@@ -385,6 +385,10 @@
     <Compile Include="Migrations\202012282116531_RenamIntegrationSystemModel.Designer.cs">
       <DependentUpon>202012282116531_RenamIntegrationSystemModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202101271905422_AddedVendorCodeInProductModel.cs" />
+    <Compile Include="Migrations\202101271905422_AddedVendorCodeInProductModel.Designer.cs">
+      <DependentUpon>202101271905422_AddedVendorCodeInProductModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -763,6 +767,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202012282116531_RenamIntegrationSystemModel.resx">
       <DependentUpon>202012282116531_RenamIntegrationSystemModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101271905422_AddedVendorCodeInProductModel.resx">
+      <DependentUpon>202101271905422_AddedVendorCodeInProductModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

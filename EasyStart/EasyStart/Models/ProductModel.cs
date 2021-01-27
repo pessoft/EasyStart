@@ -28,6 +28,7 @@ namespace EasyStart.Models
         public int OrderNumber { get; set; }
         public bool Visible { get; set; } = true;
         public bool IsDeleted { get; set; }
+        public string VendorCode { get; set; }
         public ProductAdditionalInfoType ProductAdditionalInfoType { get; set; }
 
         [NotMapped]
