@@ -119,6 +119,9 @@ namespace EasyStart
 
             bundles.Add(new StyleBundle("~/integration/css").Include(
                 "~/Content/integration.css"));
+
+            bundles.Add(new StyleBundle("~/fontawesome/css").Include(
+                   "~/Content/fontawesome/css/all.css"));
         }
     }
 }
