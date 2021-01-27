@@ -31,6 +31,7 @@
         ProductAllowCombinationsAdditionalOptions = []
         ProductAdditionalFillings = []
         setOperationAdd()
+        toggleVendorCodeProductInput()
     }
 
     bindShowModal("add-category", "addCategoryDialog", setOperationAdd)
@@ -58,6 +59,15 @@
 
     checkSettings()
 })
+
+function toggleVendorCodeProductInput() {
+    const query = '#vendor-code-product-wrapper'
+    if (IntegerationSystemSetting.Type == IntegrationSystemType.withoutIntegration) {
+        $(query).hide()
+    } else {
+        $(query).show()
+    }
+}
 
 function checkSettings() {
     if (!IsValidSetting || !IsValidDeliverySetting) {
@@ -825,6 +835,7 @@ function addProduct() {
         ProductAdditionalOptionIds: ProductAdditionalOptions,
         AllowCombinationsJSON: JSON.stringify(ProductAllowCombinationsAdditionalOptions),
         ProductAdditionalFillingIds: ProductAdditionalFillings,
+        VendorCode: $('#vendor-code-product').val()
     }
     let successFunc = function (result, loader) {
         loader.stop()
@@ -861,6 +872,7 @@ function updateProduct() {
         ProductAdditionalOptionIds: ProductAdditionalOptions,
         AllowCombinationsJSON: JSON.stringify(ProductAllowCombinationsAdditionalOptions),
         ProductAdditionalFillingIds: ProductAdditionalFillings,
+        VendorCode: $('#vendor-code-product').val()
     }
 
     let successFunc = function (result, loader) {
@@ -1107,6 +1119,7 @@ function editProduct(e, event) {
     dialog.find('#btn-function-product-additional-info').attr('disabled', product.ProductAdditionalInfoType == ProductAdditionalInfoType.Custom)
     dialog.find('#btn-product-options').attr('disabled', product.ProductAdditionalInfoType == ProductAdditionalInfoType.Custom)
     dialog.find("#product-price").val(product.Price)
+    dialog.find("#vendor-code-product").val(product.VendorCode)
     dialog.find("#description-product").val(product.Description)
     dialog.find("img").attr("src", product.Image)
 
@@ -1115,6 +1128,7 @@ function editProduct(e, event) {
         dialog.find(".dialog-image-upload").addClass("hide")
     }
 
+    toggleVendorCodeProductInput()
     Dialog.showModal(dialog)
 
     setProductType(product.ProductType)//работает только если show, поэтому вызывается после покада диалогового окна

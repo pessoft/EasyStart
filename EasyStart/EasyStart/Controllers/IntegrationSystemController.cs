@@ -63,6 +63,7 @@ namespace EasyStart.Controllers
                 if (savedSetting == null)
                     throw new Exception("Настройка интеграционной системы не сохранена");
 
+                result.Data = savedSetting;
                 result.Success = true;
             }
             catch(Exception ex)
