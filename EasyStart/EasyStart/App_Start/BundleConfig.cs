@@ -78,6 +78,10 @@ namespace EasyStart
             bundles.Add(new ScriptBundle("~/bundles/integration").Include(
                                 "~/Scripts/integration/base-integration.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/panel").Include(
+                                "~/Scripts/panel/startup.js",
+                                "~/Scripts/panel/main.js"));
+
             bundles.Add(new StyleBundle("~/product-additional-options/css").Include(
                      "~/Content/product-additional-options.css"));
 
@@ -122,6 +126,9 @@ namespace EasyStart
 
             bundles.Add(new StyleBundle("~/fontawesome/css").Include(
                    "~/Content/fontawesome/css/all.css"));
+
+            bundles.Add(new StyleBundle("~/common/css").Include(
+                   "~/Content/Panel/common.css"));
         }
     }
 }
