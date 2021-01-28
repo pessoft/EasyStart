@@ -2765,3 +2765,10 @@ button {
 .fomt-content-center {
     justify-content: center;
 }
+
+.order-details-header-wrapper {
+    display:flex;
+    justify-content:space-between;
+    align-items: center;
+    
+}
