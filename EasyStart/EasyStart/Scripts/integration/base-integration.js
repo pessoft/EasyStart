@@ -169,3 +169,14 @@ function setIntegrationSystemSetting() {
 function setIntegrationType() {
     $('#integration-type').val(IntegerationSystemSetting.Type)
 }
+
+function sendOrderToIntegrationSystem(orderId) {
+    let callback = (result) => {
+        if (result.Success)
+            showSuccessMessage('Заказ отправлен')
+        else
+            showErrorMessage('Не отправлено')
+    }
+
+    $.post("/IntegrationSystem/SendOrder", { orderId }, successCallBack(callback))
+}

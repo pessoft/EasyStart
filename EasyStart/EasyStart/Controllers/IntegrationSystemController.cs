@@ -74,5 +74,23 @@ namespace EasyStart.Controllers
             
             return Json(result);
         }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult SendOrder(int orderId)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return Json(result);
+        }
     }
 }

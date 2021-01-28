@@ -2470,6 +2470,7 @@ class OrderDetailsData {
         this.convertAmountInfo(order)
         this.convertAddressInfo(order)
         this.converеOrderListInfo(order)
+        this.setPermissionsSendToIntegrationSystem(order)
     }
 
     convertBaseInfo(order) {
@@ -2766,6 +2767,37 @@ class OrderDetailsData {
              </div>
         `
     }
+
+    setPermissionsSendToIntegrationSystem(order) {
+        let allowedSendToIntegrationSystem = true
+
+        if (order.ProductCount && Object.keys(order.ProductCount).length > 0) {
+            for (let productId in order.ProductCount) {
+                const product = OrderProducts[productId]
+
+                if (!product.VendorCode) {
+                    allowedSendToIntegrationSystem = false
+                    break
+                }
+            }
+        }
+
+        if (allowedSendToIntegrationSystem && order.ProductBonusCount && Object.keys(order.ProductBonusCount).length > 0) {
+            for (let productId in order.ProductBonusCount) {
+                const product = OrderProducts[productId]
+
+                if (!product.VendorCode) {
+                    allowedSendToIntegrationSystem = false
+                    break
+                }
+            }
+        }
+
+        allowedSendToIntegrationSystem = allowedSendToIntegrationSystem && !(order.ProductConstructorCount && order.ProductConstructorCount.length > 0)
+        allowedSendToIntegrationSystem = allowedSendToIntegrationSystem && !(order.ProductWithOptionsCount && order.ProductWithOptionsCount.length > 0)
+
+        this.AllowedSendToIntegrationSystem = allowedSendToIntegrationSystem
+    }
 }
 
 var OrderDetailsQSelector = {
@@ -2795,7 +2827,8 @@ var OrderDetailsQSelector = {
     Comment: ".order-details-comment .value",
     ApplyBtn: ".order-details-menu .btn-details-apply",
     CancelBtn: ".order-details-menu .btn-details-cancel",
-    CauseCancelBtn: ".order-details-menu .btn-details-cause-comment"
+    CauseCancelBtn: ".order-details-menu .btn-details-cause-comment",
+    SendToIntegtationSystem: "#send-to-integration",
 }
 
 var StatusAtrr = {
@@ -2819,14 +2852,14 @@ class OrderDetails {
      * @param {OrderDetailsData} details
      */
     constructor(details, dialogId) {
-        const detailsDialogId = dialogId
-        this.$dialog = $(`#${detailsDialogId}`)
+        this.$dialog = $(`#${dialogId}`)
         this.details = details
     }
 
     show() {
         this.setValues()
         this.buttonsConfig()
+        this.toggleSendToIntegrationBtn()
         Dialog.showModal(this.$dialog)
     }
 
@@ -2922,10 +2955,20 @@ class OrderDetails {
         this.setValue(OrderDetailsQSelector.Comment, this.details.Comment)
     }
 
+    toggleSendToIntegrationBtn() {
+        const $sendToIntegrationBtn = $('#send-to-integration');
+
+        if (this.details.AllowedSendToIntegrationSystem === false)
+            $sendToIntegrationBtn.show()
+        else
+            $sendToIntegrationBtn.hide() 
+    }
+
     buttonsConfig() {
         const $proccesed = $(OrderDetailsQSelector.ApplyBtn)
         const $cancel = $(OrderDetailsQSelector.CancelBtn)
         const $causeCancelComment = $(OrderDetailsQSelector.CauseCancelBtn)
+        const $sendToIntegrationSystem = $(OrderDetailsQSelector.SendToIntegtationSystem)
 
         const actionOrder = (orderStatus) => () => {
             this.close()
@@ -2968,6 +3011,7 @@ class OrderDetails {
         $proccesed.unbind("click")
         $cancel.unbind("click")
         $causeCancelComment.unbind("click")
+        $sendToIntegrationSystem.unbind('click')
 
         if (getCurrentSectionId() == Pages.HistoryOrder) {
             $proccesed.attr("disabled", true)
@@ -2983,6 +3027,7 @@ class OrderDetails {
             $cancel.removeAttr("disabled")
             $proccesed.bind("click", actionOrder(OrderStatus.Processed))
             $cancel.bind("click", actionCancel(OrderStatus.Cancellation))
+            $sendToIntegrationSystem.bind('click', () => sendOrderToIntegrationSystem(this.details.OrderId))
         }
     }
 }
