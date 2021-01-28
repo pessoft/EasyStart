@@ -19,3 +19,8 @@
         height: 3rem;
         border-width: .2rem;
     }
+
+.navbar-brand-label {
+    font-family: Alphaville;
+    text-transform: uppercase;
+}

@@ -78,10 +78,13 @@ namespace EasyStart
             bundles.Add(new ScriptBundle("~/bundles/integration").Include(
                                 "~/Scripts/integration/base-integration.js"));
 
+            #region new logic
             bundles.Add(new ScriptBundle("~/bundles/panel").Include(
-                                "~/Scripts/panel/startup.js",
-                                "~/Scripts/panel/main.js"));
-
+                "~/Scripts/panel/notification/message-store.js",
+                "~/Scripts/panel/navigator.js",
+                "~/Scripts/panel/startup.js",
+                "~/Scripts/panel/main.js"));
+            #endregion
             bundles.Add(new StyleBundle("~/product-additional-options/css").Include(
                      "~/Content/product-additional-options.css"));
 

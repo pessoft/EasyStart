@@ -3,7 +3,7 @@
 async function main() {
     const startup = new Startup()
 
-    await startup.loadData()
+    await startup.configure()
     startup.run()
     hidePreloader()
 }

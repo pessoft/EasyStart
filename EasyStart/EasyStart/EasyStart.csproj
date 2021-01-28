@@ -611,6 +611,7 @@
     <Content Include="Images\rating\.DS_Store" />
     <Content Include="fonts\SFUIDisplay-Light.ttf" />
     <Content Include="Resource\UserManual.pdf" />
+    <Content Include="fonts\Alphaville.ttf" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Resource\FCMAuthKey.json" />
     <Content Include="Resource\fondy-error-code-ru.json" />
@@ -650,6 +651,8 @@
     <Content Include="Scripts\notify.js" />
     <Content Include="Scripts\odometer\odometer.js" />
     <Content Include="Scripts\Panel\main.js" />
+    <Content Include="Scripts\Panel\navigator.js" />
+    <Content Include="Scripts\Panel\notification\message-store.js" />
     <Content Include="Scripts\Panel\startup.js" />
     <Content Include="Scripts\product-additional-options.js" />
     <Content Include="Scripts\product-constructor.js" />

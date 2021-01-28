@@ -24,10 +24,11 @@
         </div>
     </div>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <nav id="navigator" class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
             <div class="container-fluid">
                 <a class="navbar-brand me-2 mb-1 d-flex align-items-center" role="button" target-page="aboutUs">
                     <img height="25" src="~/Images/logo.png" alt="Logo" />
+                    <span class="navbar-brand-label text-body">Easy Sart</span>
                 </a>
                 <button class="navbar-toggler"
                         type="button"
@@ -42,7 +43,7 @@
                 <div class="collapse navbar-collapse justify-content-center" id="mainNavbar">
                     <ul class="navbar-nav mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="orders" target-page="orders">
+                            <a class="nav-link" role="button" target-page="orders">
                                 <span id="orderNumberNotification" class="badge rounded-pill badge-notification bg-danger" style="display:none;">0</span>
                                 <i class="fal fa-shopping-basket"></i>
                                 Заказы
@@ -79,6 +80,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" role="button" target-page="tariffsAndPay">
+                                <i class="fal fa-coins"></i>
+                                Тарифы и оплата
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" role="button" target-page="exit">
                                 <i class="fal fa-sign-out"></i>
                                 Выйти
@@ -98,6 +105,7 @@
             <div id="promotion">promotion</div>
             <div id="users">users</div>
             <div id="settings">settings</div>
+            <div id="tariffsAndPay">tariffsAndPay</div>
         </div>
     </content>
 
