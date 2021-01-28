@@ -1,4 +1,4 @@
-﻿document.addEventListener('DOMContentLoaded', () => main())
+﻿document.addEventListener('DOMContentLoaded', main)
 
 async function main() {
     const startup = new Startup()
