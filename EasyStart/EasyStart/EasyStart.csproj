@@ -654,9 +654,15 @@
     <Content Include="Scripts\panel\navigator.js" />
     <Content Include="Scripts\panel\notification\message-store.js" />
     <Content Include="Scripts\panel\pages\base-page-view.js" />
+    <Content Include="Scripts\panel\pages\ordersHistory\logic\orders-history-page-logic.js" />
+    <Content Include="Scripts\panel\pages\ordersHistory\orders-history-page.js" />
+    <Content Include="Scripts\panel\pages\ordersHistory\view\orders-history-page-view.js" />
     <Content Include="Scripts\panel\pages\orders\logic\orders-page-logic.js" />
     <Content Include="Scripts\panel\pages\orders\orders-page.js" />
     <Content Include="Scripts\panel\pages\orders\view\orders-page-view.js" />
+    <Content Include="Scripts\panel\pages\products\logic\products-page-logic.js" />
+    <Content Include="Scripts\panel\pages\products\products-page.js" />
+    <Content Include="Scripts\panel\pages\products\view\products-page-view.js" />
     <Content Include="Scripts\panel\startup.js" />
     <Content Include="Scripts\product-additional-options.js" />
     <Content Include="Scripts\product-constructor.js" />
