@@ -650,10 +650,10 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\notify.js" />
     <Content Include="Scripts\odometer\odometer.js" />
-    <Content Include="Scripts\Panel\main.js" />
-    <Content Include="Scripts\Panel\navigator.js" />
-    <Content Include="Scripts\Panel\notification\message-store.js" />
-    <Content Include="Scripts\Panel\startup.js" />
+    <Content Include="Scripts\panel\main.js" />
+    <Content Include="Scripts\panel\navigator.js" />
+    <Content Include="Scripts\panel\notification\message-store.js" />
+    <Content Include="Scripts\panel\startup.js" />
     <Content Include="Scripts\product-additional-options.js" />
     <Content Include="Scripts\product-constructor.js" />
     <Content Include="Scripts\promotion\cashback-partners.js" />

@@ -1,7 +1,7 @@
 ﻿class Navigator {
     /**
      * 
-     * @param {object} routeConfig { key: pageId, value: Page}
+     * @param {object} routeConfig { key: pageId, value: function}
      * @param {string} defaultActivePage - default orders page
      */
     constructor(routeConfig, defaultActivePage) {
@@ -51,8 +51,8 @@
     }
 
     changeActivePage(pageId) {
-        const page = this.routeConfig[pageId]
-        page && page.init()
+        const rout = this.routeConfig[pageId]
+        rout && rout()
     }
 }
 
