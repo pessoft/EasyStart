@@ -14,6 +14,7 @@
 
     initNavigator() {
         const routeConfig = {}
+        routeConfig[Navigator.pageIds.aboutUs] = () => new AboutUsPage()
         routeConfig[Navigator.pageIds.orders] = () => new OrdersPage()
         routeConfig[Navigator.pageIds.ordersHistory] = () => new OrdersHistoryPage()
         routeConfig[Navigator.pageIds.products] = () => new ProductsPage()

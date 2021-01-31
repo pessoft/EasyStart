@@ -82,6 +82,10 @@ namespace EasyStart
             bundles.Add(new ScriptBundle("~/bundles/pages").Include(
                 "~/Scripts/panel/pages/base-page-view.js",
 
+                "~/Scripts/panel/pages/aboutUs/logic/about-us-page-logic.js",
+                "~/Scripts/panel/pages/aboutUs/view/about-us-page-view.js",
+                "~/Scripts/panel/pages/aboutUs/about-us-page.js",
+
                 "~/Scripts/panel/pages/orders/logic/orders-page-logic.js",
                 "~/Scripts/panel/pages/orders/view/orders-page-view.js",
                 "~/Scripts/panel/pages/orders/orders-page.js",
