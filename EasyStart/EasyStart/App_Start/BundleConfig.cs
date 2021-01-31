@@ -81,15 +81,22 @@ namespace EasyStart
             #region new logic
             bundles.Add(new ScriptBundle("~/bundles/pages").Include(
                 "~/Scripts/panel/pages/base-page-view.js",
+
                 "~/Scripts/panel/pages/orders/logic/orders-page-logic.js",
                 "~/Scripts/panel/pages/orders/view/orders-page-view.js",
                 "~/Scripts/panel/pages/orders/orders-page.js",
+
                 "~/Scripts/panel/pages/ordersHistory/logic/orders-history-page-logic.js",
                 "~/Scripts/panel/pages/ordersHistory/view/orders-history-page-view.js",
                 "~/Scripts/panel/pages/ordersHistory/orders-history-page.js",
+
                 "~/Scripts/panel/pages/products/logic/products-page-logic.js",
                 "~/Scripts/panel/pages/products/view/products-page-view.js",
-                "~/Scripts/panel/pages/products/products-page.js"));
+                "~/Scripts/panel/pages/products/products-page.js",
+
+                "~/Scripts/panel/pages/promotion/logic/promotion-page-logic.js",
+                "~/Scripts/panel/pages/promotion/view/promotion-page-view.js",
+                "~/Scripts/panel/pages/promotion/promotion-page.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/panel").Include(
                 "~/Scripts/panel/notification/message-store.js",
