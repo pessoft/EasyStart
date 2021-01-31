@@ -19,6 +19,7 @@
         routeConfig[Navigator.pageIds.products] = () => new ProductsPage()
         routeConfig[Navigator.pageIds.promotion] = () => new PromotionPage()
         routeConfig[Navigator.pageIds.users] = () => new UsersPage()
+        routeConfig[Navigator.pageIds.settings] = () => new SettingsPage()
 
         this.app.navigator = new Navigator(routeConfig)
 
