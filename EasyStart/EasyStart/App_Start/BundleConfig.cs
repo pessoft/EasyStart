@@ -104,7 +104,11 @@ namespace EasyStart
 
                 "~/Scripts/panel/pages/settings/logic/settings-page-logic.js",
                 "~/Scripts/panel/pages/settings/view/settings-page-view.js",
-                "~/Scripts/panel/pages/settings/settings-page.js"));
+                "~/Scripts/panel/pages/settings/settings-page.js",
+
+                "~/Scripts/panel/pages/tariffsAndPay/logic/tariffs-page-logic.js",
+                "~/Scripts/panel/pages/tariffsAndPay/view/tariffs-page-view.js",
+                "~/Scripts/panel/pages/tariffsAndPay/tariffs-page.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/panel").Include(
                 "~/Scripts/panel/notification/message-store.js",
