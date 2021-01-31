@@ -18,6 +18,7 @@
         routeConfig[Navigator.pageIds.ordersHistory] = () => new OrdersHistoryPage()
         routeConfig[Navigator.pageIds.products] = () => new ProductsPage()
         routeConfig[Navigator.pageIds.promotion] = () => new PromotionPage()
+        routeConfig[Navigator.pageIds.users] = () => new UsersPage()
 
         this.app.navigator = new Navigator(routeConfig)
 

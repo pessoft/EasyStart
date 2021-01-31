@@ -96,7 +96,11 @@ namespace EasyStart
 
                 "~/Scripts/panel/pages/promotion/logic/promotion-page-logic.js",
                 "~/Scripts/panel/pages/promotion/view/promotion-page-view.js",
-                "~/Scripts/panel/pages/promotion/promotion-page.js"));
+                "~/Scripts/panel/pages/promotion/promotion-page.js",
+
+                "~/Scripts/panel/pages/users/logic/users-page-logic.js",
+                "~/Scripts/panel/pages/users/view/users-page-view.js",
+                "~/Scripts/panel/pages/users/users-page.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/panel").Include(
                 "~/Scripts/panel/notification/message-store.js",
