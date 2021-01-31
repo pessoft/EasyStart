@@ -99,17 +99,18 @@
     </header>
     <content>
         <div class="content">
-            <div id="aboutUs">aboutUs</div>
-            <div id="orders">orders</div>
-            <div id="ordersHistory">ordersHistory</div>
-            <div id="products">products</div>
-            <div id="promotion">promotion</div>
-            <div id="users">users</div>
-            <div id="settings">settings</div>
-            <div id="tariffsAndPay">tariffsAndPay</div>
+            <div id="aboutUs" class="partial-page">aboutUs</div>
+            <div id="orders" class="partial-page">orders</div>
+            <div id="ordersHistory" class="partial-page">ordersHistory</div>
+            <div id="products" class="partial-page">products</div>
+            <div id="promotion" class="partial-page">promotion</div>
+            <div id="users" class="partial-page">users</div>
+            <div id="settings" class="partial-page">settings</div>
+            <div id="tariffsAndPay" class="partial-page">tariffsAndPay</div>
         </div>
     </content>
 
+    @Scripts.Render("~/bundles/pages")
     @Scripts.Render("~/bundles/panel")
 </body>
 </html>

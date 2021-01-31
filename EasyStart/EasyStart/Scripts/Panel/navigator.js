@@ -14,6 +14,9 @@
         this.currentPage = defaultActivePage || Navigator.pageIds.orders 
 
         this.bindEventChangeActiveItem()
+    }
+
+    initActivePage() {
         this.changeActive(this.currentPage)
     }
 
