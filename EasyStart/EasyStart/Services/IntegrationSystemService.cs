@@ -1,4 +1,5 @@
-﻿using EasyStart.Models;
+﻿using EasyStart.Logic.IntegrationSystem;
+using EasyStart.Models;
 using EasyStart.Repositories;
 using System;
 using System.Collections.Generic;
@@ -43,6 +44,15 @@ namespace EasyStart.Services
             var result = repository.Get(p => p.BranchId == branchId).FirstOrDefault();
 
             return result;
+        }
+
+        public bool SendOrder(OrderModel order, IIntegrationSystemFactory integrationSystemFactory)
+        {
+            var integrationSystemSetting = Get(order.BranchId);
+            var integrationSystem = integrationSystemFactory.GetIntegrationSystem(integrationSystemSetting);
+            var success = integrationSystem.SendOrder(order);
+
+            return success;
         }
     }
 }

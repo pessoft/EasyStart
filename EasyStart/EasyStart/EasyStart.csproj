@@ -224,6 +224,12 @@
     <Compile Include="Logic\FCM\NotificationActionType.cs" />
     <Compile Include="Logic\FCM\PlatformDevice.cs" />
     <Compile Include="Logic\IntegrationSystemType.cs" />
+    <Compile Include="Logic\IntegrationSystem\BaseIntegrationSystem.cs" />
+    <Compile Include="Logic\IntegrationSystem\FrontPad.cs" />
+    <Compile Include="Logic\IntegrationSystem\Iiko.cs" />
+    <Compile Include="Logic\IntegrationSystem\IIntegrationSystem.cs" />
+    <Compile Include="Logic\IntegrationSystem\IIntegrationSystemFactory.cs" />
+    <Compile Include="Logic\IntegrationSystem\IntegrationSystemFactory.cs" />
     <Compile Include="Logic\Notification\EmailNotification\RestorePasswordNotification.cs" />
     <Compile Include="Logic\PreprocessorDataAPI.cs" />
     <Compile Include="Logic\PromotionLogic.cs" />
@@ -466,11 +472,13 @@
     <Compile Include="Models\UseModel.cs" />
     <Compile Include="Models\UserDataPhoneApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\OrderRepository.cs" />
     <Compile Include="Repositories\BranchRepository.cs" />
     <Compile Include="Repositories\InegrationSystemRepository.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
     <Compile Include="Services\BranchService.cs" />
+    <Compile Include="Services\OrderService.cs" />
     <Compile Include="Services\IntegrationSystemService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\FondyErrorCodeHelper.cs" />
