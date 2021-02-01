@@ -1,4 +1,5 @@
-﻿using EasyStart.Models;
+﻿using EasyStart.Logic.IntegrationSystem;
+using EasyStart.Models;
 using EasyStart.Repositories;
 using EasyStart.Services;
 using System;
@@ -13,6 +14,7 @@ namespace EasyStart.Controllers
     {
         private readonly IntegrationSystemService integrationSystemService;
         private readonly BranchService branchService;
+        private readonly OrderService orderService;
 
         public IntegrationSystemController()
         {
@@ -23,6 +25,9 @@ namespace EasyStart.Controllers
 
             var branchRepository = new BranchRepository(context);
             branchService = new BranchService(branchRepository);
+
+            var orderRepository = new OrderRepository(context);
+            orderService = new OrderService(orderRepository);
         }
 
         [HttpGet]
@@ -83,7 +88,8 @@ namespace EasyStart.Controllers
 
             try
             {
-                result.Success = true;
+                var order = orderService.Get(orderId);
+                result.Success = integrationSystemService.SendOrder(order, new IntegrationSystemFactory());
             }
             catch (Exception ex)
             {
