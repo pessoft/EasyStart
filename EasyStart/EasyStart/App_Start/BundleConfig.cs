@@ -107,6 +107,7 @@ namespace EasyStart
                 "~/Scripts/panel/pages/users/users-page.js",
 
                 "~/Scripts/panel/pages/settings/logic/settings-page-logic.js",
+                "~/Scripts/panel/pages/settings/view/settings-contacts-view.js",
                 "~/Scripts/panel/pages/settings/view/settings-page-view.js",
                 "~/Scripts/panel/pages/settings/settings-page.js",
 

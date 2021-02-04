@@ -40,4 +40,10 @@ class BasePageView {
         const elements = document.querySelectorAll(query)
         elements.forEach(p => p.innerHTML += content)
     }
+
+    inputInit() {
+        document.querySelectorAll('.form-outline').forEach((formOutline) => {
+            new mdb.Input(formOutline).init();
+        });
+    }
 }

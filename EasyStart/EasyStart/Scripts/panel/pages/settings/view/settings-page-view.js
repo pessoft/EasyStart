@@ -1,6 +1,8 @@
 class SettingsPageView extends BasePageView {
     constructor() {
         super()
+
+        this.contancsView = new SettingsContactsView()
     }
 
     storeIds = {
@@ -10,6 +12,7 @@ class SettingsPageView extends BasePageView {
     render() {
         super.render()
         this.renderContent()
+        this.inputInit()
     }
 
     renderContent() {
@@ -23,18 +26,19 @@ class SettingsPageView extends BasePageView {
 
     tabsName = ['Адрес и контакты', 'Доставка', 'Уведомления', 'Интеграция', 'Филиалы']
     renderNavTabs() {
+        const tabs = [this.contancsView]
         let ul = `<ul class="nav nav-tabs card-header-tabs nav-fill" role="tablist">`
-        for (let i = 0; i < this.tabsName.length; ++i) {
-            const tabName = this.tabsName[i]
+        for (let i = 0; i < tabs.length; ++i) {
+            const info = tabs[i].getInfo()
             const activeClass = i == 0 ? 'active' : ''
             ul += `
                 <li class="nav-item" role="presentation">
                     <a
                       class="nav-link ${activeClass}"
                       data-mdb-toggle="tab"
-                      href="#"
+                      href="#${info.tabContentId}"
                       role="tab">
-                      ${tabName}
+                      ${info.tabName}
                     </a>
                 </li>`
         }
@@ -44,7 +48,10 @@ class SettingsPageView extends BasePageView {
     }
 
     renderContentTabs() {
-        return ``
+        const content = []
+        content.push(this.contancsView.render())
+
+        return content.join('')
     }
 
     renderCard(navTabs, contentTabs) {
