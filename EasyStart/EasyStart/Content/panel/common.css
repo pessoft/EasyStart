@@ -21,5 +21,18 @@
     }
 
 .es-nav-brand {
-    padding-top: .4rem !important;
+    padding-top: .3rem !important;
+}
+
+.navbar-nav a.nav-link {
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+.partial-page {
+    padding: .5rem;
+}
+
+.icon-order-notification {
+    font-size: 1rem;
 }

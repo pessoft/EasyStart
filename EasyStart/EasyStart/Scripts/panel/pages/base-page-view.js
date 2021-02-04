@@ -30,4 +30,14 @@ class BasePageView {
     render() {
         this.preparePage()
     }
+
+    insert(query, content) {
+        const elements = document.querySelectorAll(query)
+        elements.forEach(p => p.innerHTML = content)
+    }
+
+    append(query, content) {
+        const elements = document.querySelectorAll(query)
+        elements.forEach(p => p.innerHTML += content)
+    }
 }
