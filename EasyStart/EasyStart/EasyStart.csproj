@@ -679,6 +679,12 @@
     <Content Include="Scripts\panel\pages\promotion\view\promotion-page-view.js" />
     <Content Include="Scripts\panel\pages\settings\logic\settings-page-logic.js" />
     <Content Include="Scripts\panel\pages\settings\settings-page.js" />
+    <Content Include="Scripts\panel\pages\settings\view\settings-branch-view.js" />
+    <Content Include="Scripts\panel\pages\settings\view\settings-integration-view.js" />
+    <Content Include="Scripts\panel\pages\settings\view\settings-notification-view.js" />
+    <Content Include="Scripts\panel\pages\settings\view\settings-order-payment-view.js" />
+    <Content Include="Scripts\panel\pages\settings\view\settings-working-hours-view.js" />
+    <Content Include="Scripts\panel\pages\settings\view\settings-delivery-view.js" />
     <Content Include="Scripts\panel\pages\settings\view\settings-contacts-view.js" />
     <Content Include="Scripts\panel\pages\settings\view\settings-page-view.js" />
     <Content Include="Scripts\panel\pages\tariffsAndPay\logic\tariffs-page-logic.js" />

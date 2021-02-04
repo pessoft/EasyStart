@@ -3,6 +3,12 @@ class SettingsPageView extends BasePageView {
         super()
 
         this.contancsView = new SettingsContactsView()
+        this.deliveryView = new SettingsDeliveryView()
+        this.workingHoursView = new SettingsWorkingHoursView()
+        this.orderPaymentView = new SettingsOrderPaymentView()
+        this.notificationView = new SettingsNotificationView()
+        this.integrationView = new SettingsIntegrationView()
+        this.branchView = new SettingsBranchView()
     }
 
     storeIds = {
@@ -26,7 +32,13 @@ class SettingsPageView extends BasePageView {
 
     tabsName = ['Адрес и контакты', 'Доставка', 'Уведомления', 'Интеграция', 'Филиалы']
     renderNavTabs() {
-        const tabs = [this.contancsView]
+        const tabs = [
+            this.contancsView,
+            this.deliveryView,
+            this.workingHoursView,
+            this.notificationView,
+            this.integrationView,
+            this.branchView]
         let ul = `<ul class="nav nav-tabs card-header-tabs nav-fill" role="tablist">`
         for (let i = 0; i < tabs.length; ++i) {
             const info = tabs[i].getInfo()
