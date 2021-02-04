@@ -674,6 +674,9 @@
     <Content Include="Scripts\panel\pages\products\logic\products-page-logic.js" />
     <Content Include="Scripts\panel\pages\products\products-page.js" />
     <Content Include="Scripts\panel\pages\products\view\products-page-view.js" />
+    <Content Include="Scripts\panel\pages\analytics\logic\analytics-page-logic.js" />
+    <Content Include="Scripts\panel\pages\analytics\analytics-page.js" />
+    <Content Include="Scripts\panel\pages\analytics\view\analytics-page-view.js" />
     <Content Include="Scripts\panel\pages\promotion\logic\promotion-page-logic.js" />
     <Content Include="Scripts\panel\pages\promotion\promotion-page.js" />
     <Content Include="Scripts\panel\pages\promotion\view\promotion-page-view.js" />

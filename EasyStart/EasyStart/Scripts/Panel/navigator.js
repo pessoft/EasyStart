@@ -66,6 +66,7 @@ Navigator.pageIds = {
     products: 'products',
     promotion: 'promotion',
     users: 'users',
+    analytics: 'analytics',
     settings: 'settings',
     tariffsAndPay: 'tariffsAndPay'
 }
