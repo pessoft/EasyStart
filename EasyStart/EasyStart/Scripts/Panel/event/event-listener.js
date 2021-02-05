@@ -1,4 +1,4 @@
-﻿class Event {
+﻿class EventListener {
     constructor() {
         this.listeners = {}
     }

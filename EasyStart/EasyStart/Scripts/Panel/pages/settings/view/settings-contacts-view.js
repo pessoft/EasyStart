@@ -23,7 +23,7 @@
     renderAddress() {
         const template = `
             <div class="row">
-                <h5>Адрес</h5>  
+                <h5 class="mb-3">Адрес</h5>  
                 <div class="col-md-4  mb-4">
                     <div class="form-outline">
                       <input type="text" id="address-city" class="form-control" />
@@ -50,7 +50,7 @@
     renderContacts() {
         const template = `
             <div class="row">
-                <h5>Контакты</h5>
+                <h5 class="mb-3">Контакты</h5>
                 <div class="col-md-4 mb-4">
                     <div class="form-outline">
                       <input type="tel" id="contacts-phone-number-primary" class="form-control" />
@@ -77,7 +77,7 @@
     renerSocialNetworks() {
         const template = `
             <div class="row">
-                <h5>Соц.сети</h5>
+                <h5 class="mb-3">Соц.сети</h5>
                 <div class="col-md-4 mb-4">
                     <div class="form-outline">
                       <input type="url" id="contacts-social-vk" class="form-control" />
@@ -121,7 +121,7 @@
      */
     renderContent(content) {
         let template = `
-            <div class="tab-content" id="settings-contacts-content">
+            <div class="tab-content container" id="settings-contacts-content">
             <div
                 class="tab-pane fade show active"
                 id="${this.tabContentId}"
