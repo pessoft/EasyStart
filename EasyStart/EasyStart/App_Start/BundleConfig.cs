@@ -79,6 +79,10 @@ namespace EasyStart
                                 "~/Scripts/integration/base-integration.js"));
 
             #region new logic
+            bundles.Add(new ScriptBundle("~/bundles/event").Include(
+                "~/Scripts/panel/event/event-type.js",
+                "~/Scripts/panel/event/event.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/pages").Include(
                 "~/Scripts/panel/pages/base-page-view.js",
 
