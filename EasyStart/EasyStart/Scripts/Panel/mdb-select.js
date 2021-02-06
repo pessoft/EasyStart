@@ -11,11 +11,11 @@
     }
 
     init() {
-        this.wrapSelect()
+        this.initImitationSelect()
         this.initInput()
     }
 
-    wrapSelect() {
+    initImitationSelect() {
         this.select.outerHTML = this.getControlTemplate()
         this.cloneElement.classList.add(this.storeCssClass.initializedSelect)
         this.select = document.getElementById(this.id)
