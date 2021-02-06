@@ -79,6 +79,12 @@ namespace EasyStart
                                 "~/Scripts/integration/base-integration.js"));
 
             #region new logic
+            bundles.Add(new ScriptBundle("~/bundles/utils").Include(
+            "~/Scripts/panel/utils.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/mdb-select").Include(
+            "~/Scripts/panel/mdb-select.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/event").Include(
                 "~/Scripts/panel/event/event-type.js",
                 "~/Scripts/panel/event/event-listener.js.js"));
@@ -134,7 +140,18 @@ namespace EasyStart
                 "~/Scripts/panel/navigator.js",
                 "~/Scripts/panel/startup.js",
                 "~/Scripts/panel/main.js"));
+
+
+
+            bundles.Add(new StyleBundle("~/common/css").Include(
+                   "~/Content/panel/common.css"));
+
+            bundles.Add(new StyleBundle("~/mdb-select/css").Include(
+                      "~/Content/panel/mdb-select.css"));
+
             #endregion
+
+
             bundles.Add(new StyleBundle("~/product-additional-options/css").Include(
                      "~/Content/product-additional-options.css"));
 
@@ -179,9 +196,6 @@ namespace EasyStart
 
             bundles.Add(new StyleBundle("~/fontawesome/css").Include(
                    "~/Content/fontawesome/css/all.css"));
-
-            bundles.Add(new StyleBundle("~/common/css").Include(
-                   "~/Content/Panel/common.css"));
         }
     }
 }

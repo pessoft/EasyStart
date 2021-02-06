@@ -523,6 +523,7 @@
     <Content Include="Content\integration.css" />
     <Content Include="Content\material-input.css" />
     <Content Include="Content\odometer\odometer-theme-minimal.css" />
+    <Content Include="Content\panel\mdb-select.css" />
     <Content Include="Content\panel\common.css" />
     <Content Include="Content\product-additional-options.css" />
     <Content Include="Content\product-constructor.css" />
@@ -667,6 +668,7 @@
     <Content Include="Scripts\panel\pages\aboutUs\logic\about-us-page-logic.js" />
     <Content Include="Scripts\panel\pages\aboutUs\view\about-us-page-view.js" />
     <Content Include="Scripts\panel\pages\base-page-view.js" />
+    <Content Include="Scripts\panel\mdb-select.js" />
     <Content Include="Scripts\panel\pages\ordersHistory\logic\orders-history-page-logic.js" />
     <Content Include="Scripts\panel\pages\ordersHistory\orders-history-page.js" />
     <Content Include="Scripts\panel\pages\ordersHistory\view\orders-history-page-view.js" />
@@ -699,6 +701,7 @@
     <Content Include="Scripts\panel\pages\users\users-page.js" />
     <Content Include="Scripts\panel\pages\users\view\users-page-view.js" />
     <Content Include="Scripts\panel\startup.js" />
+    <Content Include="Scripts\panel\utils.js" />
     <Content Include="Scripts\product-additional-options.js" />
     <Content Include="Scripts\product-constructor.js" />
     <Content Include="Scripts\promotion\cashback-partners.js" />

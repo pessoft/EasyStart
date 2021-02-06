@@ -41,9 +41,20 @@ class BasePageView {
         elements.forEach(p => p.innerHTML += content)
     }
 
+    initControls() {
+        this.inputInit()
+        this.selectInit()
+    }
+
     inputInit() {
-        document.querySelectorAll('.form-outline').forEach((formOutline) => {
-            new mdb.Input(formOutline).init();
-        });
+        document.querySelectorAll(`#${this.storeIds.page} .form-outline`).forEach(formOutline => {
+            new mdb.Input(formOutline).init()
+        })
+    }
+
+    selectInit() {
+        document.querySelectorAll(`#${this.storeIds.page} select`).forEach(select => {
+            new MdbSelect(select).init()
+        })
     }
 }

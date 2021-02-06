@@ -25,21 +25,23 @@
             <div class="row">
                 <h5 class="mb-3">Адрес</h5>  
                 <div class="col-md-4  mb-4">
-                    <div class="form-outline">
-                      <input type="text" id="address-city" class="form-control" />
-                      <label class="form-label fs-7" for="address-city">Город</label>
-                    </div>
+                   <select label="Город" >
+                      <option>Москва</option>
+                      <option>Краснодар</option>
+                      <option>Нижний-Новгород</option>
+                    </select>
+
                 </div>
                 <div class="col-md-4  mb-4">
                     <div class="form-outline">
                       <input type="text" id="address-street" class="form-control" />
-                      <label class="form-label fs-7" for="address-street">Улица</label>
+                      <label class="form-label" for="address-street">Улица</label>
                     </div>
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="form-outline">
                       <input type="text" id="address-house-number" class="form-control" />
-                      <label class="form-label fs-7" for="address-house-number">Номер дома(офиса)</label>
+                      <label class="form-label" for="address-house-number">Номер дома(офиса)</label>
                     </div>
                 </div>
             </div>
@@ -54,19 +56,19 @@
                 <div class="col-md-4 mb-4">
                     <div class="form-outline">
                       <input type="tel" id="contacts-phone-number-primary" class="form-control" />
-                      <label class="form-label fs-7" for="contacts-phone-number-primary">Телефон 1</label>
+                      <label class="form-label" for="contacts-phone-number-primary">Телефон 1</label>
                     </div>
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="form-outline">
                       <input type="tel" id="contacts-phone-number-secondary" class="form-control" />
-                      <label class="form-label fs-7" for="contacts-phone-number-secondary">Телефон 2</label>
+                      <label class="form-label" for="contacts-phone-number-secondary">Телефон 2</label>
                     </div>
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="form-outline">
                       <input type="email" id="contacts-email" class="form-control" />
-                      <label class="form-label fs-7" for="contacts-email">Адрес эл.почты</label>
+                      <label class="form-label" for="contacts-email">Адрес эл.почты</label>
                     </div>
                 </div>
             </div>
@@ -81,19 +83,19 @@
                 <div class="col-md-4 mb-4">
                     <div class="form-outline">
                       <input type="url" id="contacts-social-vk" class="form-control" />
-                      <label class="form-label fs-7" for="contacts-social-vk">ВКонтакте</label>
+                      <label class="form-label" for="contacts-social-vk">ВКонтакте</label>
                     </div>
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="form-outline">
                       <input type="url" id="contacts-social-instagram" class="form-control" />
-                      <label class="form-label fs-7" for="contacts-social-instagram">Инстраграм</label>
+                      <label class="form-label" for="contacts-social-instagram">Инстраграм</label>
                     </div>
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="form-outline">
                       <input type="url" id="contacts-social-facebook" class="form-control" />
-                      <label class="form-label fs-7" for="contacts-social-facebook">Фейсбук</label>
+                      <label class="form-label" for="contacts-social-facebook">Фейсбук</label>
                     </div>
                 </div>
             </div>

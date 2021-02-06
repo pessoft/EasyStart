@@ -18,7 +18,7 @@ class SettingsPageView extends BasePageView {
     render() {
         super.render()
         this.renderContent()
-        this.inputInit()
+        this.initControls()
     }
 
     renderContent() {

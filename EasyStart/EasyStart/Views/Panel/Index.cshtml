@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width" />
     <link rel="shortcut icon" href="~/Images/favico.ico" type="image/x-icon">
     <title>Панель администратора</title>
+    @Styles.Render("~/mdb-select/css")
     @Styles.Render("~/fontawesome/css")
     @Styles.Render("~/common/css")
 
@@ -113,6 +114,9 @@
             <div id="tariffsAndPay" class="partial-page">tariffsAndPay</div>
         </div>
     </content>
+
+    @Scripts.Render("~/bundles/utils")
+    @Scripts.Render("~/bundles/mdb-select")
     @Scripts.Render("~/bundles/event")
     @Scripts.Render("~/bundles/pages")
     @Scripts.Render("~/bundles/panel")

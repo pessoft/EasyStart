@@ -1,0 +1,31 @@
+﻿select.mdb-select-initialized {
+    display: none !important;
+}
+
+div.mdb-select-wrapper {
+}
+
+.mdb-select-arrow {
+    color: #000;
+    text-align: center;
+    font-size: .8rem;
+    position: absolute;
+    right: 9px;
+    top: 9px;
+}
+
+.mdb-select-arrow::before {
+    content: "▼";
+}
+
+.mdb-select-input {
+    cursor: pointer;
+}
+
+.mdb-select-input:focus ~ .mdb-select-arrow {
+    color: #4285f4;
+}
+
+.mdb-select-input.form-control[readonly]:not([disabled]) {
+    background-color: transparent;
+}
