@@ -15,7 +15,7 @@ namespace EasyStart.Logic.IntegrationSystem
                 case IntegrationSystemType.FrontPad:
                     return new FrontPad(integrationSystemSetting);
                 case IntegrationSystemType.Iiko:
-                    return new FrontPad(integrationSystemSetting);
+                    return new Iiko(integrationSystemSetting);
                 default:
                     throw new Exception("Unknown integration system");
             }

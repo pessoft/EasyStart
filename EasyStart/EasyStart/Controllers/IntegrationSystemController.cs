@@ -1,5 +1,6 @@
 ﻿using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Models;
+using EasyStart.Models.Integration;
 using EasyStart.Repositories;
 using EasyStart.Services;
 using System;
@@ -10,11 +11,12 @@ using System.Web.Mvc;
 
 namespace EasyStart.Controllers
 {
-    public class IntegrationSystemController: Controller
+    public class IntegrationSystemController : Controller
     {
         private readonly IntegrationSystemService integrationSystemService;
         private readonly BranchService branchService;
         private readonly OrderService orderService;
+        private readonly ProductService productService;
 
         public IntegrationSystemController()
         {
@@ -28,6 +30,9 @@ namespace EasyStart.Controllers
 
             var orderRepository = new OrderRepository(context);
             orderService = new OrderService(orderRepository);
+
+            var productRepository = new ProductRepository(context);
+            productService = new ProductService(productRepository);
         }
 
         [HttpGet]
@@ -71,12 +76,12 @@ namespace EasyStart.Controllers
                 result.Data = savedSetting;
                 result.Success = true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Logger.Log.Error(ex);
                 result.ErrorMessage = "При сохранении натсройки интеграционной системы что-то пошло не так.";
             }
-            
+
             return Json(result);
         }
 
@@ -89,7 +94,9 @@ namespace EasyStart.Controllers
             try
             {
                 var order = orderService.Get(orderId);
-                result.Success = integrationSystemService.SendOrder(order, new IntegrationSystemFactory());
+                var products = productService.Get(order);
+                var orderDetails = new OrderDetails(order, products);
+                result.Success = integrationSystemService.SendOrder(orderDetails, new IntegrationSystemFactory());
             }
             catch (Exception ex)
             {

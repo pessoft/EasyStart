@@ -1,5 +1,6 @@
 ﻿using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Models;
+using EasyStart.Models.Integration;
 using EasyStart.Repositories;
 using System;
 using System.Collections.Generic;
@@ -46,11 +47,12 @@ namespace EasyStart.Services
             return result;
         }
 
-        public bool SendOrder(OrderModel order, IIntegrationSystemFactory integrationSystemFactory)
+        public bool SendOrder(IOrderDetails orderDetails, IIntegrationSystemFactory integrationSystemFactory)
         {
+            var order = orderDetails.GetOrder();
             var integrationSystemSetting = Get(order.BranchId);
             var integrationSystem = integrationSystemFactory.GetIntegrationSystem(integrationSystemSetting);
-            var success = integrationSystem.SendOrder(order);
+            var success = integrationSystem.SendOrder(orderDetails);
 
             return success;
         }
