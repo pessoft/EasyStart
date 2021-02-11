@@ -23,6 +23,11 @@ namespace EasyStart.Services
             return result;
         }
 
+        /// <summary>
+        /// Возвращает продукты на основе ProductCount и ProductBonusCount
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
         public List<ProductModel> Get(OrderModel order)
         {
             var productIds = new List<int>();
@@ -33,6 +38,7 @@ namespace EasyStart.Services
             if (order.ProductBonusCount != null)
                 productIds.AddRange(order.ProductBonusCount.Keys);
 
+            productIds = productIds.Distinct().ToList();
             var products = repository.Get(p => productIds.Contains(p.Id));
 
             return products.ToList();
