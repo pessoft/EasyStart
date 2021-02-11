@@ -1,5 +1,6 @@
 ﻿using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Models;
+using EasyStart.Models.Integration;
 using EasyStart.Repositories;
 using EasyStart.Services;
 using System;
@@ -89,7 +90,8 @@ namespace EasyStart.Controllers
             try
             {
                 var order = orderService.Get(orderId);
-                result.Success = integrationSystemService.SendOrder(order, new IntegrationSystemFactory());
+                var orderDetails = new OrderDetails(order, null);
+                result.Success = integrationSystemService.SendOrder(orderDetails, new IntegrationSystemFactory());
             }
             catch (Exception ex)
             {

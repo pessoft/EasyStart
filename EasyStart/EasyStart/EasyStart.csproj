@@ -421,6 +421,8 @@
     <Compile Include="Models\IngredientHistoryModel.cs" />
     <Compile Include="Models\IngredientModel.cs" />
     <Compile Include="Models\IntegrationSystemModel.cs" />
+    <Compile Include="Models\Integration\IOrderDetails.cs" />
+    <Compile Include="Models\Integration\OrderDetails.cs" />
     <Compile Include="Models\MainDataSignatureModel.cs" />
     <Compile Include="Models\NewBranchModel.cs" />
     <Compile Include="Models\CategoryModel.cs" />

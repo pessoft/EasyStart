@@ -1,4 +1,5 @@
 ﻿using EasyStart.Models;
+using EasyStart.Models.Integration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +9,13 @@ namespace EasyStart.Logic.IntegrationSystem
 {
     public abstract class BaseIntegrationSystem : IIntegrationSystem
     {
-        private readonly IntegrationSystemModel integrationSystemSetting;
+        protected readonly IntegrationSystemModel integrationSystemSetting;
 
         public BaseIntegrationSystem(IntegrationSystemModel integrationSystemSetting)
         {
             this.integrationSystemSetting = integrationSystemSetting;
         }
 
-        public abstract bool SendOrder(OrderModel order);
+        public abstract bool SendOrder(IOrderDetails orderDetails);
     }
 }
