@@ -93,8 +93,8 @@
             setTimeout(removeActionAfterAnimationClose, 500)
         }
 
-        document.body.removeEventListener('click', this[selectCloseHandlerName])
-        document.body.addEventListener('click', this[selectCloseHandlerName])
+        document.removeEventListener('click', this[selectCloseHandlerName])
+        document.addEventListener('click', this[selectCloseHandlerName])
     }
 
     selectOpenHandler = event => {
@@ -134,7 +134,7 @@
             top: ${coordinates.top}px;
             left: ${coordinates.left}px;`
         const optionsWrapper = `
-                <div tabindex="0" class="mdb-select-dropdown" id="${this.dropdownId}">
+                <div tabindex="0" class="mdb-select-dropdown rounded" id="${this.dropdownId}">
                     ${optionsTemplate}
                 </div>`
 
@@ -149,7 +149,7 @@
 
     getOptionsWrapper(height) {
         const optionsListTemplate = this.getOptionsList()
-        const template = `<div class="select-options-wrapper" style="max-height: ${height}px; height: ${height}px;">${optionsListTemplate}</div>`
+        const template = `<div class="mdb-select-options-wrapper" style="max-height: ${height}px; height: ${height}px;">${optionsListTemplate}</div>`
 
         return template
     }

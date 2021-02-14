@@ -31,14 +31,13 @@ div.mdb-select-wrapper {
 }
 
 .mdb-select-dropdown-container {
-    /*border: 1px solid red;*/
+    z-index: 1050;
 }
 
 .mdb-select-dropdown.open {
     -webkit-transform: scaleY(1);
     transform: scaleY(1);
     opacity: 1;
-    border: 1px solid red;
 }
 
 .mdb-select-dropdown {
@@ -54,4 +53,8 @@ div.mdb-select-wrapper {
     opacity: 0;
     -webkit-transition: all 5.2s;
     transition: all .2s;
+}
+
+.mdb-select-options-wrapper {
+    overflow-y: auto;
 }
