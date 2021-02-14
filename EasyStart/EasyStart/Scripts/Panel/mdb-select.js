@@ -1,8 +1,12 @@
 ﻿class MdbSelect {
-    constructor(element) {
+    constructor(element, options = {}) {
         this.cloneElement = element.cloneNode(true)
         this.select = element
         this.id = `${this.storeCssClass.wrapSelect}-${this.generateId(6)}`
+        this.options = {
+            height: 190, // max height
+            ...options
+        }
     }
 
     storeCssClass = {
@@ -13,6 +17,7 @@
     init() {
         this.initImitationSelect()
         this.initInput()
+        this.initEvents()
     }
 
     initImitationSelect() {
@@ -54,6 +59,64 @@
         document.querySelectorAll(`#${this.id} .form-outline`).forEach(formOutline => {
             new mdb.Input(formOutline).init()
         })
+    }
+
+    initEvents() {
+        this.initOpenEvent();
+    }
+
+    initOpenEvent() {
+        const select = document.getElementById(this.id)
+        select.removeEventListener('click', this.selectOpenHandler);
+        select.addEventListener('click', this.selectOpenHandler);
+    }
+
+    selectOpenHandler = event => {
+        const width = event.currentTarget.offsetWidth
+        const windowCoordinates = event.currentTarget.getBoundingClientRect()
+        const top = windowCoordinates.y + event.currentTarget.offsetHeight
+        const left = windowCoordinates.x
+        const coordinates = {
+            top,
+            left,
+            width,
+            height: this.options.height
+        }
+
+        this.showSelectDropdown(coordinates)
+    }
+
+    showSelectDropdown(coordinates) {
+        const dropdown = this.getSelectContainer(coordinates)
+        document.body.innerHTML += (dropdown)
+    }
+
+    getSelectContainer(coordinates) {
+        const optionsTemplate = this.getOptionsWrapper(coordinates.height)
+        const style = `style="
+            position: absolute;
+            width: ${coordinates.width}px;
+            top: ${coordinates.top}px;
+            left: ${coordinates.left}px;"`
+        const template = `
+            <div class="mdb-select-dropdown-container" ${style}>
+                <div tabindex="0" class="mdb-select-dropdown open">
+                    ${optionsTemplate}
+                </div>
+            </div>`
+
+        return template
+    }
+
+    getOptionsWrapper(height) {
+        const optionsListTemplate = this.getOptionsList()
+        const template = `<div class="select-options-wrapper" style="max-height: ${height}px; height: ${height}px;">${optionsListTemplate}</div>`
+
+        return template
+    }
+
+    getOptionsList() {
+        return ''
     }
 
     generateId(length) {
