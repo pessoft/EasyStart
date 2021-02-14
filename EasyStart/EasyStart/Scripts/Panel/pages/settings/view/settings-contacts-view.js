@@ -25,10 +25,14 @@
             <div class="row">
                 <h5 class="mb-3">Адрес</h5>  
                 <div class="col-md-4  mb-4">
-                   <select label="Город" >
-                      <option>Москва</option>
-                      <option>Краснодар</option>
-                      <option>Нижний-Новгород</option>
+                   <select label="Город" multiple>
+                        <option>Москва</option>
+                        <option>Краснодар</option>
+                        <option>Нижний-Новгород</option>
+                        <option>Белореченск</option>
+                        <option>Тюмрюк</option>
+                        <option>Перьм</option>
+                        <option>Питер</option>
                     </select>
 
                 </div>
