@@ -58,3 +58,44 @@ div.mdb-select-wrapper {
 .mdb-select-options-wrapper {
     overflow-y: auto;
 }
+
+.mdb-select-option.active,
+.mdb-select-option.selected.active,
+.mdb-select-option:hover:not(.disabled) {
+    background-color: #ddd;
+}
+
+.mdb-select-option.selected {
+    background-color: #eee;
+}
+
+.mdb-select-option {
+    width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    cursor: pointer;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    color: rgba(0,0,0,.87);
+    padding-left: 16px;
+    padding-right: 16px;
+    font-size: 1rem;
+    font-weight: 400;
+    background-color: transparent;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

@@ -149,13 +149,26 @@
 
     getOptionsWrapper(height) {
         const optionsListTemplate = this.getOptionsList()
-        const template = `<div class="mdb-select-options-wrapper" style="max-height: ${height}px; height: ${height}px;">${optionsListTemplate}</div>`
+        const template = `<div class="mdb-select-options-wrapper" style="max-height: ${height}px;">${optionsListTemplate}</div>`
 
         return template
     }
 
     getOptionsList() {
-        return ''
+        let optionsTemplate = ''
+        const options = this.cloneElement.options
+
+        for (let i = 0; i < options.length; ++i) {
+            const item = options.item(i)
+            const template = `
+                <div class="mdb-select-option" role="option"style="height: 38px;" selected="true">
+                    <span class="mdb-select-option-text">${item.text}</span>
+                </div>
+            `
+            optionsTemplate += template
+        }
+
+        return optionsTemplate
     }
 
     generateId(length) {
