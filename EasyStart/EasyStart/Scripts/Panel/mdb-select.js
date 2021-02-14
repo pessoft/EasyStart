@@ -3,6 +3,8 @@
         this.cloneElement = element.cloneNode(true)
         this.select = element
         this.id = `${this.storeCssClass.wrapSelect}-${this.generateId(6)}`
+        this.dropdownId = `dropdown-${this.id}`
+        this.dropdownContainerId = `dropdown-container-${this.id}`
         this.options = {
             height: 190, // max height
             ...options
@@ -12,6 +14,8 @@
     storeCssClass = {
         wrapSelect: 'mdb-select-wrapper',
         initializedSelect: 'mdb-select-initialized',
+        dropdownOpen: 'open',
+        dropDownContainer: 'mdb-select-dropdown-container'
     }
 
     init() {
@@ -38,7 +42,7 @@
             </div>`
     }
 
-    getImitationSelect () {
+    getImitationSelect() {
         const placeholder = this.cloneElement.getAttribute('placeholder') || ''
         const disabled = this.cloneElement.disabled ? 'disabled' : ''
         const inputTemplate = `<input ${disabled} type="text" readonly class="form-control mdb-select-input" placeholder="${placeholder}"/>`
@@ -48,7 +52,7 @@
 
     getLabel() {
         const label = this.cloneElement.getAttribute('label')
-        const labelTemplate = label ? 
+        const labelTemplate = label ?
             `<label class="form-label" for="address-street">${label}</label>` :
             ''
 
@@ -62,16 +66,40 @@
     }
 
     initEvents() {
-        this.initOpenEvent();
+        this.initOpenEvent()
+        this.initCloseEvent()
     }
 
     initOpenEvent() {
         const select = document.getElementById(this.id)
-        select.removeEventListener('click', this.selectOpenHandler);
-        select.addEventListener('click', this.selectOpenHandler);
+        select.removeEventListener('click', this.selectOpenHandler)
+        select.addEventListener('click', this.selectOpenHandler)
+    }
+
+    initCloseEvent() {
+        const selectCloseHandlerName = `selectCloseHandler${this.id}`
+        this[selectCloseHandlerName] = event => {
+            const select = document.getElementById(this.dropdownId)
+
+            if (!select)
+                return
+
+            select.classList.remove(this.storeCssClass.dropdownOpen)
+
+            const removeActionAfterAnimationClose = () => {
+                const selectContainer = document.getElementById(this.dropdownContainerId)
+                selectContainer.remove()
+            }
+            setTimeout(removeActionAfterAnimationClose, 500)
+        }
+
+        document.body.removeEventListener('click', this[selectCloseHandlerName])
+        document.body.addEventListener('click', this[selectCloseHandlerName])
     }
 
     selectOpenHandler = event => {
+        event.stopPropagation()
+
         const width = event.currentTarget.offsetWidth
         const windowCoordinates = event.currentTarget.getBoundingClientRect()
         const top = windowCoordinates.y + event.currentTarget.offsetHeight
@@ -88,24 +116,35 @@
 
     showSelectDropdown(coordinates) {
         const dropdown = this.getSelectContainer(coordinates)
-        document.body.innerHTML += (dropdown)
+        document.body.appendChild(dropdown)
+
+        setTimeout(this.openDropdown, 50)
+    }
+
+    openDropdown = () => {
+        const dropdownList = document.getElementById(this.dropdownId)
+        dropdownList.classList.add(this.storeCssClass.dropdownOpen)
     }
 
     getSelectContainer(coordinates) {
         const optionsTemplate = this.getOptionsWrapper(coordinates.height)
-        const style = `style="
+        const style = `
             position: absolute;
             width: ${coordinates.width}px;
             top: ${coordinates.top}px;
-            left: ${coordinates.left}px;"`
-        const template = `
-            <div class="mdb-select-dropdown-container" ${style}>
-                <div tabindex="0" class="mdb-select-dropdown open">
+            left: ${coordinates.left}px;`
+        const optionsWrapper = `
+                <div tabindex="0" class="mdb-select-dropdown" id="${this.dropdownId}">
                     ${optionsTemplate}
-                </div>
-            </div>`
+                </div>`
 
-        return template
+        const dropdown = document.createElement('div')
+        dropdown.classList.add(this.storeCssClass.dropDownContainer)
+        dropdown.style.cssText = style
+        dropdown.innerHTML = optionsWrapper
+        dropdown.id = this.dropdownContainerId
+
+        return dropdown
     }
 
     getOptionsWrapper(height) {
