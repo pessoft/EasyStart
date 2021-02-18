@@ -1,10 +1,12 @@
 ﻿using EasyStart.Logic.IntegrationSystem;
+using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
 using EasyStart.Models;
 using EasyStart.Models.Integration;
 using EasyStart.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace EasyStart.Services
@@ -47,14 +49,14 @@ namespace EasyStart.Services
             return result;
         }
 
-        public bool SendOrder(IOrderDetails orderDetails, IIntegrationSystemFactory integrationSystemFactory)
+        public INewOrderResult SendOrder(IOrderDetails orderDetails, IIntegrationSystemFactory integrationSystemFactory)
         {
             var order = orderDetails.GetOrder();
             var integrationSystemSetting = Get(order.BranchId);
             var integrationSystem = integrationSystemFactory.GetIntegrationSystem(integrationSystemSetting);
-            var success = integrationSystem.SendOrder(orderDetails);
+            var result = integrationSystem.SendOrder(orderDetails);
 
-            return success;
+            return result;
         }
     }
 }

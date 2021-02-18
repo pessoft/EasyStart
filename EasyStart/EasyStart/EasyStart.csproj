@@ -230,6 +230,10 @@
     <Compile Include="Logic\IntegrationSystem\IIntegrationSystem.cs" />
     <Compile Include="Logic\IntegrationSystem\IIntegrationSystemFactory.cs" />
     <Compile Include="Logic\IntegrationSystem\IntegrationSystemFactory.cs" />
+    <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\FrontPadNewOrderResult.cs" />
+    <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\IikoNewOrderResult.cs" />
+    <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\INewOrderResult.cs" />
+    <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\NewOrderResult.cs" />
     <Compile Include="Logic\Notification\EmailNotification\RestorePasswordNotification.cs" />
     <Compile Include="Logic\PreprocessorDataAPI.cs" />
     <Compile Include="Logic\PromotionLogic.cs" />
