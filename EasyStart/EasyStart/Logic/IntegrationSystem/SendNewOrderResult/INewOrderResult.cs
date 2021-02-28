@@ -10,6 +10,6 @@ namespace EasyStart.Logic.IntegrationSystem.SendNewOrderResult
     {
         bool Success { get; }
         string ErrorMessgae { get; }
-        int OrderNumber { get; }
+        long OrderNumber { get; }
     }
 }

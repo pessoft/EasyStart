@@ -22,6 +22,6 @@ namespace EasyStart.Logic.IntegrationSystem.SendNewOrderResult
         
         public bool Success { get; }
         public string ErrorMessgae { get; }
-        public  int OrderNumber { get; }
+        public  long OrderNumber { get; }
     }
 }

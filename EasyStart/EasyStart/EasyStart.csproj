@@ -399,6 +399,10 @@
     <Compile Include="Migrations\202101271905422_AddedVendorCodeInProductModel.Designer.cs">
       <DependentUpon>202101271905422_AddedVendorCodeInProductModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202102281021464_AddedInOrderModelIntegrationOrderNumber.cs" />
+    <Compile Include="Migrations\202102281021464_AddedInOrderModelIntegrationOrderNumber.Designer.cs">
+      <DependentUpon>202102281021464_AddedInOrderModelIntegrationOrderNumber.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -786,6 +790,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202101271905422_AddedVendorCodeInProductModel.resx">
       <DependentUpon>202101271905422_AddedVendorCodeInProductModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102281021464_AddedInOrderModelIntegrationOrderNumber.resx">
+      <DependentUpon>202102281021464_AddedInOrderModelIntegrationOrderNumber.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -98,7 +98,9 @@ namespace EasyStart.Controllers
                 var products = productService.Get(order);
                 var orderDetails = new OrderDetails(order, products);
                 var newOrderResult = integrationSystemService.SendOrder(orderDetails, new IntegrationSystemFactory());
-             
+
+                orderService.MarkOrderSendToIntegrationSystem(orderId, newOrderResult);
+
                 result.Success = newOrderResult.Success;
                 result.Data = newOrderResult.OrderNumber;
                 result.ErrorMessage = newOrderResult.ErrorMessgae;
