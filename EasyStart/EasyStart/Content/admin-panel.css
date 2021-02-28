@@ -2772,3 +2772,12 @@ button {
     align-items: center;
     
 }
+
+.send-to-integration-loader {
+    position:relative;
+    width: 250px;
+}
+
+.integration-order-number {
+    padding-right: 15px;
+}

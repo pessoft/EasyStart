@@ -2771,32 +2771,37 @@ class OrderDetailsData {
     setPermissionsSendToIntegrationSystem(order) {
         let allowedSendToIntegrationSystem = true
 
-        if (order.ProductCount && Object.keys(order.ProductCount).length > 0) {
-            for (let productId in order.ProductCount) {
-                const product = OrderProducts[productId]
+        if (!order.IsSendToIntegrationSystem) {
+            if (order.ProductCount && Object.keys(order.ProductCount).length > 0) {
+                for (let productId in order.ProductCount) {
+                    const product = OrderProducts[productId]
 
-                if (!product.VendorCode) {
-                    allowedSendToIntegrationSystem = false
-                    break
+                    if (!product.VendorCode) {
+                        allowedSendToIntegrationSystem = false
+                        break
+                    }
                 }
             }
-        }
 
-        if (allowedSendToIntegrationSystem && order.ProductBonusCount && Object.keys(order.ProductBonusCount).length > 0) {
-            for (let productId in order.ProductBonusCount) {
-                const product = OrderProducts[productId]
+            if (allowedSendToIntegrationSystem && order.ProductBonusCount && Object.keys(order.ProductBonusCount).length > 0) {
+                for (let productId in order.ProductBonusCount) {
+                    const product = OrderProducts[productId]
 
-                if (!product.VendorCode) {
-                    allowedSendToIntegrationSystem = false
-                    break
+                    if (!product.VendorCode) {
+                        allowedSendToIntegrationSystem = false
+                        break
+                    }
                 }
             }
-        }
 
-        allowedSendToIntegrationSystem = allowedSendToIntegrationSystem && !(order.ProductConstructorCount && order.ProductConstructorCount.length > 0)
-        allowedSendToIntegrationSystem = allowedSendToIntegrationSystem && !(order.ProductWithOptionsCount && order.ProductWithOptionsCount.length > 0)
+            allowedSendToIntegrationSystem = allowedSendToIntegrationSystem && !(order.ProductConstructorCount && order.ProductConstructorCount.length > 0)
+            allowedSendToIntegrationSystem = allowedSendToIntegrationSystem && !(order.ProductWithOptionsCount && order.ProductWithOptionsCount.length > 0)
+        } else
+            allowedSendToIntegrationSystem = false
 
         this.AllowedSendToIntegrationSystem = allowedSendToIntegrationSystem
+        this.IsSendToIntegrationSystem = order.IsSendToIntegrationSystem
+        this.IntegrationOrderNumber = `#${order.IntegrationOrderNumber}`
     }
 }
 
@@ -2829,6 +2834,8 @@ var OrderDetailsQSelector = {
     CancelBtn: ".order-details-menu .btn-details-cancel",
     CauseCancelBtn: ".order-details-menu .btn-details-cause-comment",
     SendToIntegtationSystem: "#send-to-integration",
+    IntegrationOrderNumber: '#integration-order-number',
+    SendToIntegtationSystemLoader: "#send-to-integration-loader",
 }
 
 var StatusAtrr = {
@@ -2860,6 +2867,8 @@ class OrderDetails {
         this.setValues()
         this.buttonsConfig()
         this.toggleSendToIntegrationBtn()
+        this.toggleOrderNumberInIntegrationSystem()
+
         Dialog.showModal(this.$dialog)
     }
 
@@ -2956,12 +2965,25 @@ class OrderDetails {
     }
 
     toggleSendToIntegrationBtn() {
-        const $sendToIntegrationBtn = $('#send-to-integration');
+        const $sendToIntegrationBtn = $(OrderDetailsQSelector.SendToIntegtationSystem);
 
-        if (this.details.AllowedSendToIntegrationSystem === false)
+        if (this.details.AllowedSendToIntegrationSystem === true)
             $sendToIntegrationBtn.show()
         else
-            $sendToIntegrationBtn.hide() 
+            $sendToIntegrationBtn.hide()
+    }
+
+    toggleOrderNumberInIntegrationSystem() {
+        const $integrationOrderNumber = $(OrderDetailsQSelector.IntegrationOrderNumber);
+
+        if (this.details.IsSendToIntegrationSystem === true) {
+            $integrationOrderNumber.show()
+            $integrationOrderNumber.html(this.details.IntegrationOrderNumber)
+        }
+        else {
+            $integrationOrderNumber.hide()
+            $integrationOrderNumber.empty()
+        }
     }
 
     buttonsConfig() {

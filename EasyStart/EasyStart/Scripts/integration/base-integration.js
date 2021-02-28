@@ -171,11 +171,33 @@ function setIntegrationType() {
 }
 
 function sendOrderToIntegrationSystem(orderId) {
+    const $loader = $(OrderDetailsQSelector.SendToIntegtationSystemLoader)
+    $loader.show()
+    const loader = new Loader($loader)
+    loader.start()
+
+    const $sendBtn = $(OrderDetailsQSelector.SendToIntegtationSystem)
+    $sendBtn.hide()
+
+    const $intergrationOrderNumber = $(OrderDetailsQSelector.IntegrationOrderNumber)
+    $intergrationOrderNumber.hide()
+
     let callback = (result) => {
-        if (result.Success)
+        loader.stop()
+        $loader.hide()
+
+        if (result.Success) {
             showSuccessMessage('Заказ отправлен')
-        else
+            $intergrationOrderNumber.html(`#${result.Data}`)
+            $intergrationOrderNumber.show()
+
+            const order = Orders.find(p => p.Id == orderId)
+            order.IntegrationOrderNumber = result.Data
+            order.IsSendToIntegrationSystem = true
+        } else {
             showErrorMessage('Не отправлено')
+            $sendBtn.show()
+        }
     }
 
     $.post("/IntegrationSystem/SendOrder", { orderId }, successCallBack(callback))
