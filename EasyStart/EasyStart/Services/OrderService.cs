@@ -31,6 +31,8 @@ namespace EasyStart.Services
 
             var order = Get(orderId);
             order.IntegrationOrderNumber = orderResult.OrderNumber;
+            order.IsSendToIntegrationSystem = true;
+
             repository.Update(order);
         }
     }
