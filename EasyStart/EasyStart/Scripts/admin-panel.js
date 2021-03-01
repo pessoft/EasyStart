@@ -2796,6 +2796,7 @@ class OrderDetailsData {
 
             allowedSendToIntegrationSystem = allowedSendToIntegrationSystem && !(order.ProductConstructorCount && order.ProductConstructorCount.length > 0)
             allowedSendToIntegrationSystem = allowedSendToIntegrationSystem && !(order.ProductWithOptionsCount && order.ProductWithOptionsCount.length > 0)
+            allowedSendToIntegrationSystem = allowedSendToIntegrationSystem && !(order.DiscountPercent != 0 && order.DiscountRuble !=0)
         } else
             allowedSendToIntegrationSystem = false
 
