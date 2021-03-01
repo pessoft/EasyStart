@@ -28,5 +28,23 @@ namespace EasyStart.Services
 
             return result;
         }
+
+        public void Block(int clientId)
+        {
+            this.ToggleBlock(clientId);
+        }
+
+        public void UnBlock(int clientId)
+        {
+            this.ToggleBlock(clientId, false);
+        }
+
+        private void ToggleBlock(int clientId, bool blocked = true)
+        {
+            var client = repository.Get(clientId);
+            client.Blocked = blocked;
+
+            repository.Update(client);
+        }
     }
 }
