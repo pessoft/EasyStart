@@ -17,9 +17,9 @@ namespace EasyStart.Services
             this.repository = repository;
         }
 
-        public List<Client> Get()
+        public List<Client> GetAll(int branchId)
         {
-            return repository.Get().ToList();
+            return repository.Get(p => p.BranchId == branchId).ToList();
         }
 
         public Client Get(int id)
