@@ -29,6 +29,19 @@ namespace EasyStart.Services
             return result;
         }
 
+        public double SetVirtualMoney(int clientId, double virtualMoney)
+        {
+            if (virtualMoney < 0)
+                throw new Exception("Value virtual money must be greater than zero");
+
+            var client = repository.Get(clientId);
+            client.VirtualMoney = virtualMoney;
+
+            repository.Update(client);
+
+            return virtualMoney;
+        }
+
         public void Block(int clientId)
         {
             this.ToggleBlock(clientId);
