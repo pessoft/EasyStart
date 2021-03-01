@@ -35,5 +35,12 @@ namespace EasyStart.Services
 
             repository.Update(order);
         }
+
+        public List<OrderModel> GetOrdersForClient(int clinetId)
+        {
+            var orders = repository.Get(p => p.ClientId == clinetId).ToList();
+
+            return orders;
+        }
     }
 }
