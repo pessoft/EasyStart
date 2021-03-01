@@ -1,4 +1,5 @@
-﻿using EasyStart.Models;
+﻿using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
+using EasyStart.Models;
 using EasyStart.Models.Integration;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,6 @@ namespace EasyStart.Logic.IntegrationSystem
 {
     public interface IIntegrationSystem
     {
-        bool SendOrder(IOrderDetails orderDetails);
+        INewOrderResult SendOrder(IOrderDetails orderDetails);
     }
 }

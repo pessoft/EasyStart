@@ -749,7 +749,7 @@
                         <select id="integration-type">
                             <option value="0">Без интеграции</option>
                             <option value="1">FrontPad</option>
-                            <option value="2">Iiko</option>
+                            <option value="2" disabled>Iiko</option>
                         </select>
                     </div>
                 </div>
@@ -1271,6 +1271,8 @@
                     <button id="send-to-integration" class="simple-text-btn" onclick="">
                         Отправить в интеграционную систему
                     </button>
+                    <span id="integration-order-number" class="integration-order-number font-weight-bold"></span>
+                    <div id="send-to-integration-loader" class="send-to-integration-loader" style="display: none;"></div>
                 </div>
                 <div class="order-details-product-list">
                 </div>

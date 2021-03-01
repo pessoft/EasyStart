@@ -70,6 +70,10 @@ namespace EasyStart.Models
 
         public string CommentCauseCancel { get; set; } 
 
+        public long IntegrationOrderNumber { get; set; }
+
+        public bool IsSendToIntegrationSystem { get; set; }
+
         [NotMapped]
         [ScriptIgnore]
         public Dictionary<int, int> ProductCount

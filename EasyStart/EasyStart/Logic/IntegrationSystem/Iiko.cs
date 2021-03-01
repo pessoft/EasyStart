@@ -1,8 +1,10 @@
-﻿using EasyStart.Models;
+﻿using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
+using EasyStart.Models;
 using EasyStart.Models.Integration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace EasyStart.Logic.IntegrationSystem
@@ -12,7 +14,7 @@ namespace EasyStart.Logic.IntegrationSystem
         public Iiko(IntegrationSystemModel integrationSystemSetting): base(integrationSystemSetting)
         { }
 
-        public override bool SendOrder(IOrderDetails orderDetails)
+        public override INewOrderResult SendOrder(IOrderDetails orderDetails)
         {
             throw new NotImplementedException();
         }

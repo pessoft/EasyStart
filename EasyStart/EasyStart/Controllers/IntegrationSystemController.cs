@@ -6,6 +6,7 @@ using EasyStart.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -96,7 +97,13 @@ namespace EasyStart.Controllers
                 var order = orderService.Get(orderId);
                 var products = productService.Get(order);
                 var orderDetails = new OrderDetails(order, products);
-                result.Success = integrationSystemService.SendOrder(orderDetails, new IntegrationSystemFactory());
+                var newOrderResult = integrationSystemService.SendOrder(orderDetails, new IntegrationSystemFactory());
+
+                orderService.MarkOrderSendToIntegrationSystem(orderId, newOrderResult);
+
+                result.Success = newOrderResult.Success;
+                result.Data = newOrderResult.OrderNumber;
+                result.ErrorMessage = newOrderResult.ErrorMessgae;
             }
             catch (Exception ex)
             {

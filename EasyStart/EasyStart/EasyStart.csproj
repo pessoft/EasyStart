@@ -231,6 +231,10 @@
     <Compile Include="Logic\IntegrationSystem\IIntegrationSystem.cs" />
     <Compile Include="Logic\IntegrationSystem\IIntegrationSystemFactory.cs" />
     <Compile Include="Logic\IntegrationSystem\IntegrationSystemFactory.cs" />
+    <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\FrontPadNewOrderResult.cs" />
+    <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\IikoNewOrderResult.cs" />
+    <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\INewOrderResult.cs" />
+    <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\NewOrderResult.cs" />
     <Compile Include="Logic\Notification\EmailNotification\RestorePasswordNotification.cs" />
     <Compile Include="Logic\PreprocessorDataAPI.cs" />
     <Compile Include="Logic\PromotionLogic.cs" />
@@ -395,6 +399,14 @@
     <Compile Include="Migrations\202101271905422_AddedVendorCodeInProductModel.cs" />
     <Compile Include="Migrations\202101271905422_AddedVendorCodeInProductModel.Designer.cs">
       <DependentUpon>202101271905422_AddedVendorCodeInProductModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102281021464_AddedInOrderModelIntegrationOrderNumber.cs" />
+    <Compile Include="Migrations\202102281021464_AddedInOrderModelIntegrationOrderNumber.Designer.cs">
+      <DependentUpon>202102281021464_AddedInOrderModelIntegrationOrderNumber.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102281029314_AddedInOrderModelPropsIsSendToIntegrationSystem.cs" />
+    <Compile Include="Migrations\202102281029314_AddedInOrderModelPropsIsSendToIntegrationSystem.Designer.cs">
+      <DependentUpon>202102281029314_AddedInOrderModelPropsIsSendToIntegrationSystem.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
@@ -830,6 +842,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202101271905422_AddedVendorCodeInProductModel.resx">
       <DependentUpon>202101271905422_AddedVendorCodeInProductModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102281021464_AddedInOrderModelIntegrationOrderNumber.resx">
+      <DependentUpon>202102281021464_AddedInOrderModelIntegrationOrderNumber.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102281029314_AddedInOrderModelPropsIsSendToIntegrationSystem.resx">
+      <DependentUpon>202102281029314_AddedInOrderModelPropsIsSendToIntegrationSystem.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

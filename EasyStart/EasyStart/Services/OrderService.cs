@@ -1,4 +1,5 @@
-﻿using EasyStart.Models;
+﻿using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
+using EasyStart.Models;
 using EasyStart.Repositories;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,18 @@ namespace EasyStart.Services
             var result = repository.Get(id);
 
             return result;
+        }
+
+        public void MarkOrderSendToIntegrationSystem(int orderId, INewOrderResult orderResult)
+        {
+            if (!orderResult.Success)
+                return;
+
+            var order = Get(orderId);
+            order.IntegrationOrderNumber = orderResult.OrderNumber;
+            order.IsSendToIntegrationSystem = true;
+
+            repository.Update(order);
         }
     }
 }
