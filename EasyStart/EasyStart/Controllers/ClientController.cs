@@ -58,5 +58,47 @@ namespace EasyStart.Controllers
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpGet]
+        [Authorize]
+        public JsonResult Block(int clientId)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                clientService.Block(clientId);
+
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = "При блокировки клиента что-то пошло не так.";
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public JsonResult UnBlock(int clientId)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                clientService.UnBlock(clientId);
+
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = "При разблокировки клиента что-то пошло не так.";
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
     }
 }
