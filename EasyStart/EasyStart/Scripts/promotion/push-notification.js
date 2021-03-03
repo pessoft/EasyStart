@@ -54,7 +54,7 @@ function setPushNotificationLimits(limits) {
 }
 
 function setDefaultPushNotification(withLoadLimits = false) {
-    let loader = new Loader($("#pormotion-push-notification"))
+    let loader = new Loader($("#promotion-push-notification"))
     loader.start()
 
     const callback = () => {
@@ -382,7 +382,7 @@ var PushDataHandler = {
 
     },
     sendNewPushMessage: function () {
-        let loader = new Loader($("#pormotion-push-notification"))
+        let loader = new Loader($("#promotion-push-notification"))
         loader.start()
         const errMessage = 'При отправки сообщения, что-то пошло не так...'
         const pushNotification = DataCollectorNewMessage.getData()

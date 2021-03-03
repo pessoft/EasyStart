@@ -437,7 +437,7 @@ textarea.default-style-input {
         overflow: hidden;
     }
 
-.pormotion-cashback-partners {
+.promotion-cashback-partners {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 230px 230px;
@@ -453,11 +453,11 @@ textarea.default-style-input {
     position: relative;
 }
 
-#pormotion-cashback-partners .checkbox-item {
+#promotion-cashback-partners .checkbox-item {
     margin-bottom: 15px;
 }
 
-    #pormotion-cashback-partners .checkbox-item label,
+    #promotion-cashback-partners .checkbox-item label,
     #promotion-settings .checkbox-item label,
     #split-block-coupon-count .checkbox-item label {
         position: relative;
@@ -466,7 +466,7 @@ textarea.default-style-input {
         font-size: 0.9em;
     }
 
-    #pormotion-cashback-partners .checkbox-item input[type=checkbox],
+    #promotion-cashback-partners .checkbox-item input[type=checkbox],
     #promotion-settings .checkbox-item input[type=checkbox],
     #split-block-coupon-count .checkbox-item input[type=checkbox] {
         width: 16px;
@@ -474,7 +474,7 @@ textarea.default-style-input {
         margin-left: 0;
     }
 
-#pormotion-cashback-partners .row .group:last-child {
+#promotion-cashback-partners .row .group:last-child {
     margin-left: 30px;
 }
 
@@ -484,9 +484,9 @@ textarea.default-style-input {
     padding: 5px 20px
 }
 
-#pormotion-cashback-partners .group input,
-#pormotion-cashback-partners .group .bar,
-#pormotion-cashback-partners .group input:focus ~ .bar:before {
+#promotion-cashback-partners .group input,
+#promotion-cashback-partners .group .bar,
+#promotion-cashback-partners .group input:focus ~ .bar:before {
     width: 185px;
 }
 

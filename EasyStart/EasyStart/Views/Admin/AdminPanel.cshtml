@@ -208,16 +208,17 @@
                 <div class="section-content promotion-section">
                     <div class="promotion-menu">
                         <ul>
-                            <li target-id="pormotion-stock" class="promotion-menu-active"><i class="fal fa-badge-percent"></i> Акции</li>
-                            <li target-id="pormotion-coupons"><i class="fal fa-gift-card"></i> Купоны</li>
-                            <li target-id="pormotion-cashback-partners"><i class="fal fa-hands-usd"></i> Кешбек и Партнерская программа</li>
-                            <li target-id="pormotion-push-notification"><i class="fal fa-paper-plane"></i> PUSH сообщения</li>
-                            <li target-id="pormotion-news"><i class="fal fa-newspaper"></i> Новости</li>
+                            <li target-id="promotion-stock" class="promotion-menu-active"><i class="fal fa-badge-percent"></i> Акции</li>
+                            <li target-id="promotion-coupons"><i class="fal fa-gift-card"></i> Купоны</li>
+                            <li target-id="promotion-cashback-partners"><i class="fal fa-hands-usd"></i> Кешбек и Партнерская программа</li>
+                            <li target-id="promotion-push-notification"><i class="fal fa-paper-plane"></i> PUSH сообщения</li>
+                            <li target-id="promotion-news"><i class="fal fa-newspaper"></i> Новости</li>
+                            <li target-id="promotion-clients"><i class="fal fa-users"></i> Клиенты</li>
                             <li target-id="promotion-settings"><i class="fal fa-sliders-v"></i> Настройка</li>
                         </ul>
                     </div>
                     <div class="promotion-content-wrapper">
-                        <div id="pormotion-stock" class="promotion-content promotion-some-settings">
+                        <div id="promotion-stock" class="promotion-content promotion-some-settings">
                             <div class="promotion-some-settings-header">
                                 <button id="btn-add-stock" class="promotion-btn-settings-add" onclick="StockManger.addNewStock()">
                                     <i class="fal fa-plus"></i>
@@ -231,7 +232,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="pormotion-coupons" class="promotion-content promotion-some-settings hide">
+                        <div id="promotion-coupons" class="promotion-content promotion-some-settings hide">
                             <div class="promotion-some-settings-header">
                                 <button id="btn-add-coupons" class="promotion-btn-settings-add" onclick="CouponManager.addNewCoupon()">
                                     <i class="fal fa-plus"></i>
@@ -245,7 +246,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="pormotion-cashback-partners" class="pormotion-cashback-partners promotion-content hide">
+                        <div id="promotion-cashback-partners" class="promotion-cashback-partners promotion-content hide">
                             <div class="cashback-partners-content" id="promotion-cashback-bonus">
                                 <h2>Кешбек</h2>
                                 <div class="cashback-partners-item">
@@ -306,7 +307,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="pormotion-push-notification" class="promotion-content promotion-push-notification hide">
+                        <div id="promotion-push-notification" class="promotion-content promotion-push-notification hide">
                             <div class="wizard-push-notification">
                                 <div class="max-container hide" id="container-collapse-edit-new-push-msg">
                                     <button id="show-edit-new-push-msg" class="simple-text-button push-background-color" onclick="HistoryNotification.showEditNewMessage()">
@@ -421,7 +422,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="pormotion-news" class="promotion-content promotion-some-settings hide">
+                        <div id="promotion-news" class="promotion-content promotion-some-settings hide">
                             <div class="promotion-some-settings-header">
                                 <button id="btn-add-stock" class="promotion-btn-settings-add" onclick="NewsManager.addNewNews()">
                                     <i class="fal fa-plus"></i>
@@ -434,6 +435,9 @@
                                     <span>Пока нет новостей</span>
                                 </div>
                             </div>
+                        </div>
+                        <div id="promotion-clients" class="promotion-content hide">
+                           clients
                         </div>
                         <div id="promotion-settings" class="promotion-content promotion-settings promotion-some-settings hide">
                             <div class="promotion-settings-wrapper">
