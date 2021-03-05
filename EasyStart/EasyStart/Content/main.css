@@ -25,3 +25,7 @@ body {
         width: 12%;
         filter: blur(1px);
     }
+
+.main-bg-color {
+    background-color: #f3f3f3;
+}

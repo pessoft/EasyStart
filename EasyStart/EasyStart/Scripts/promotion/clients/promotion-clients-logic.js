@@ -8,6 +8,8 @@
     async getClients() {
         if (!this.clients)
             this.clients = await this.fetch.getClients()
+
+        return this.clients
     }
 
     async getOrders(clientId) {

@@ -1138,17 +1138,19 @@ button#push-image-btn-remove:hover {
 }
 
 .promotion-clients {
+    position:relative;
     display: grid;
     grid-template-columns: 1fr 2fr;
     grid-column-gap: 10px;
-    padding: 1% 2%;
+    padding: 1vh 2%;
 }
 
 .promotion-client-list-wrapper {
     border-right: 1px solid #bdbdbd35;
     padding-right: 10px;
     display: grid;
-    grid-template-rows: 50px 1fr 50px;
+    grid-template-rows: 60px 1fr 50px;
+    max-height: 78vh;
 }
 
 .promotion-find-client {
@@ -1184,8 +1186,54 @@ button#push-image-btn-remove:hover {
 
 .promotions-client-list {
     position: relative;
+    padding: 15px 12px;
+    overflow-y: auto;
 }
 
 .empty-container-with-icon i {
     font-size: 2.3rem;
+}
+
+.promotion-client-item {
+    border-radius: 3px;
+    padding: 8px 10px;
+    margin-bottom: 5px;
+    position: relative;
+    box-shadow: 0px 0px 5px 0px #0f1e322b;
+    color: #163f75cf;
+    cursor: default;
+    background-color: #f9f9f9;
+    transition: 120ms;
+    display: grid;
+    grid-template-columns: 1fr 40px;
+}
+
+.promotion-client-item-short-info {
+    display: grid;
+    grid-template-rows:repeat(2, 1fr);
+    grid-row-gap: 5px;
+}
+
+.promotion-client-item-blocked-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.promotion-client-item i {
+    margin-right: 5px;
+    font-size: 1rem;
+}
+
+    div.promotion-client-item:hover {
+        transition: 100ms ease-in;
+        transform: scale(1.02);
+    }
+
+.promotion-client-item-name {
+    font-size: 0.75rem;
+}
+
+.promotion-client-item-phoneNumber {
+    font-size: 0.8rem;
 }

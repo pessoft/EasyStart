@@ -689,6 +689,7 @@
     <Content Include="Scripts\product-additional-options.js" />
     <Content Include="Scripts\product-constructor.js" />
     <Content Include="Scripts\promotion\cashback-partners.js" />
+    <Content Include="Scripts\promotion\clients\event-listener.js" />
     <Content Include="Scripts\promotion\clients\promotion-clients-view.js" />
     <Content Include="Scripts\promotion\clients\promotion-clients.js" />
     <Content Include="Scripts\promotion\clients\promotion-clients-logic.js" />

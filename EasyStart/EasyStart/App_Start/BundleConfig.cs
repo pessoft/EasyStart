@@ -80,6 +80,7 @@ namespace EasyStart
                 "~/Scripts/promotion/promotion-news.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/promotion-clients").Include(
+                        "~/Scripts/promotion/clients/event-listener.js",
                         "~/Scripts/promotion/clients/promotion-clients-logic.js",
                         "~/Scripts/promotion/clients/promotion-clients-view.js",
                         "~/Scripts/promotion/clients/promotion-clients.js"));
