@@ -58,6 +58,9 @@ function changedPromotionActiveMenu(targetId) {
         case 'promotion-push-notification':
             setDefaultPushNotification(true)
             break
+        case 'promotion-clients':
+            new PromotionClients()
+            break;
     }
 }
 

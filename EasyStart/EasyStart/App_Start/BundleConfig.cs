@@ -8,6 +8,13 @@ namespace EasyStart
         // Дополнительные сведения об объединении см. на странице https://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
+            bundles.Add(new ScriptBundle("~/bundles/fetch-helpers").Include(
+                        "~/Scripts/fetch-helpers/disposable.js",
+                        "~/Scripts/fetch-helpers/fetch-helper.js",
+                        "~/Scripts/fetch-helpers/base-fetch-helper.js",
+                        "~/Scripts/fetch-helpers/url-store.js",
+                        "~/Scripts/fetch-helpers/promotion-client-fetch-helper.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/odometer").Include(
                         "~/Scripts/odometer/odometer.js"));
 
@@ -71,6 +78,11 @@ namespace EasyStart
                 "~/Scripts/promotion/promotion-setting.js",
                 "~/Scripts/promotion/push-notification.js",
                 "~/Scripts/promotion/promotion-news.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/promotion-clients").Include(
+                        "~/Scripts/promotion/clients/promotion-clients-logic.js",
+                        "~/Scripts/promotion/clients/promotion-clients-view.js",
+                        "~/Scripts/promotion/clients/promotion-clients.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/product-additional-options").Include(
                    "~/Scripts/product-additional-options.js"));

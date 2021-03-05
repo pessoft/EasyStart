@@ -652,6 +652,11 @@
     <Content Include="Scripts\cropper.js" />
     <Content Include="Scripts\datepicker.min.js" />
     <Content Include="Scripts\dragula.js" />
+    <Content Include="Scripts\fetch-helpers\disposable.js" />
+    <Content Include="Scripts\fetch-helpers\promotion-client-fetch-helper.js" />
+    <Content Include="Scripts\fetch-helpers\url-store.js" />
+    <Content Include="Scripts\fetch-helpers\base-fetch-helper.js" />
+    <Content Include="Scripts\fetch-helpers\fetch-helper.js" />
     <Content Include="Scripts\image-processing.js" />
     <Content Include="Scripts\integration\base-integration.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -682,6 +687,9 @@
     <Content Include="Scripts\product-additional-options.js" />
     <Content Include="Scripts\product-constructor.js" />
     <Content Include="Scripts\promotion\cashback-partners.js" />
+    <Content Include="Scripts\promotion\clients\promotion-clients-view.js" />
+    <Content Include="Scripts\promotion\clients\promotion-clients.js" />
+    <Content Include="Scripts\promotion\clients\promotion-clients-logic.js" />
     <Content Include="Scripts\promotion\coupon.js" />
     <Content Include="Scripts\promotion\promotion-news.js" />
     <Content Include="Scripts\promotion\promotion-setting.js" />
