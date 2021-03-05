@@ -2,6 +2,13 @@
 
     constructor() {
         super()
+
+        this.clientPage = {
+            currentNumber: 1,
+            countPages: 1,
+            countItemsInPage: 50,
+        }
+        this.clients = []
     }
 
     storeIds = {
@@ -10,10 +17,32 @@
     }
 
     render(clients) {
-        if (clients && clients.length)
-            this.renderClinetItems(clients)
+        
+        if (clients && clients.length) {
+            this.clients = clients
+
+            this.initPagesSetting()
+            this.renderClinetItems()
+        }
         else
             this.renderEmptyClientItems()
+    }
+
+    initPagesSetting() {
+        if (this.clients.length) {
+            let countPage = 0
+
+            if (this.clients.length <= this.clientPage.countItemsInPage)
+                countPage = 1
+            else {
+                countPage = this.clients.length / this.clientPage.countItemsInPage
+
+                if (countPage * this.clientPage.countItemsInPage != this.clients.length)
+                    ++countPage
+            }
+
+            this.clientPage.countPages = countPage
+        }
     }
 
     renderEmptyClientItems() {
@@ -27,10 +56,10 @@
         $(`#${this.storeIds.clientList}`).html(template)
     }
 
-    renderClinetItems(clients) {
+    renderClinetItems(pageNumber = 1) {
         const items = []
 
-        for (const client of clients) {
+        for (const client of this.clients) {
             const item = this.renderClientItem(client)
             items.push(item)
         }
