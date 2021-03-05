@@ -216,6 +216,8 @@
     <Compile Include="HtmlRenderer\Models\ProductInfoModel.cs" />
     <Compile Include="HtmlRenderer\Models\ProductWithOptionsInfoModel.cs" />
     <Compile Include="Hubs\NewOrderHub.cs" />
+    <Compile Include="JsResult\JSResult.cs" />
+    <Compile Include="JsResult\JsResultHelper.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Logic\AdditionalOptions\ProductAdditionalInfoType.cs" />
     <Compile Include="Logic\AnalyticsDataWrapper.cs" />
