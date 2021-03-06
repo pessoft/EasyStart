@@ -1174,15 +1174,32 @@ button#push-image-btn-remove:hover {
     }
 
 .promotion-client-card-wrapper {
-    position:relative;
+    position: relative;
+    max-height: 78vh;
+    display: grid;
+    grid-template-rows: 200px 1fr;
+    grid-row-gap: 10px;
 }
 
-.empty-container-with-icon {
-    display:flex;
-    flex-direction:column;
-    grid-row-gap: 10px;
-    font-size: 1rem
+.promotion-client-card-info {
 }
+
+.promotion-client-card-orders {
+    display:grid;
+    grid-template-rows: 30px 1fr;
+}
+
+.promotion-client-card-order-list {
+    position: relative;
+    overflow-y: auto;
+}
+
+    .empty-container-with-icon {
+        display: flex;
+        flex-direction: column;
+        grid-row-gap: 10px;
+        font-size: 1rem
+    }
 
 .promotions-client-list {
     position: relative;

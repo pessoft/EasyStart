@@ -18,6 +18,7 @@
         pagination: 'promotion-clients-pagination',
         inputPhoneNumber: 'promotion-client-phone-number',
         goToClientBtn: 'promotion-find-client-action',
+        clientCardContainer: 'promotion-client-card-wrapper',
     }
 
     storeCssClass = {
@@ -28,7 +29,7 @@
 
     render(clients) {
         this.renderFindByPhoneBlock()
-
+        
         if (clients && clients.length) {
             this.clients = clients
 
@@ -37,6 +38,8 @@
         }
         else
             this.renderEmptyClientItems()
+
+        this.renderClientInfoDefault()
     }
 
     renderFindByPhoneBlock() {
@@ -226,7 +229,63 @@
     }
 
     renderClientInfo(client, orders) {
+        if (client)
+            this.renderClientInfoContent(client, orders)
+        else 
+            this.renderClientInfoDefault()
+    }
 
+    renderClientInfoContent(client, orders) {
+        this.renderClientCardInfo(client)
+        this.renderClientInfoOrders(orders)
+    }
+
+    renderClientInfoDefault() {
+        const template = `
+            <div class="empty-container empty-container-with-icon">
+                <i class="fal fa-address-card"></i>
+                <span>Карточка клиента</span>
+            </div>`
+
+        $(`#${this.storeIds.clientCardContainer}`).html(template)
+    }
+
+    renderClientCardInfo(client) {
+        const template = `
+            <div class="promotion-client-card-info"></div>
+        `
+        $(`#${this.storeIds.clientCardContainer}`).html(template)
+    }
+
+    renderClientInfoOrders(orders) {
+        if (orders && orders.length)
+            this.renderClientOrdersContent(orders)
+        else
+            this.renderClientInfoOrdersEmpty()
+    }
+
+    renderClientOrdersContent(orders) {
+        const template = `
+                <div class="promotion-client-card-orders"
+                    
+                </div>`
+
+        $(`#${this.storeIds.clientCardContainer}`).append(template)
+    }
+
+    renderClientInfoOrdersEmpty() {
+        const template = `
+                <div class="promotion-client-card-orders">
+                    <h2>Заказы клиенте</h2>
+                    <div class="promotion-client-card-order-list">
+                        <div class="empty-container empty-container-with-icon">
+                            <i class="fal fa-shopping-basket"></i>
+                            <span>Список заказов пуст</span>
+                        </div>
+                    </div>
+                </div>`
+
+        $(`#${this.storeIds.clientCardContainer}`).append(template)
     }
 
     showActivitiIndicatorPage() {

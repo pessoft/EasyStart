@@ -22,7 +22,7 @@
         if (!this.clients)
             return null
 
-        return this.clients.find(p => p.Id == id)
+        return this.clients.find(p => p.id == id)
     }
 
     getClientByPhoneNumber(phoneNumber) {

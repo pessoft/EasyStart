@@ -1,4 +1,5 @@
-﻿using EasyStart.Logic.IntegrationSystem;
+﻿using EasyStart.JsResult;
+using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Models;
 using EasyStart.Models.Integration;
 using EasyStart.Repositories;
@@ -55,7 +56,7 @@ namespace EasyStart.Controllers
                 result.ErrorMessage = "При получении списка заказов что-то пошло не так.";
             }
 
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return this.JsResult(result);
         }
     }
 }
