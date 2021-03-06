@@ -1170,7 +1170,7 @@ button#push-image-btn-remove:hover {
     }
 
     .promotion-find-client input {
-        width: 190px;
+        width: 180px;
     }
 
 .promotion-client-card-wrapper {
@@ -1262,4 +1262,9 @@ button#push-image-btn-remove:hover {
 
 .promotions-client-list::-webkit-scrollbar-thumb:hover {
     background-color: #163f75c9;
+}
+
+.promotion-active-client {
+    background-color: #0f1e32;
+    color: #f3f3f3;
 }

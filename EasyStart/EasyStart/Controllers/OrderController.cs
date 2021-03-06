@@ -36,7 +36,7 @@ namespace EasyStart.Controllers
             productService = new ProductService(productRepository);
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize]
         public JsonResult GetOrdersForClient(int clientId)
         {

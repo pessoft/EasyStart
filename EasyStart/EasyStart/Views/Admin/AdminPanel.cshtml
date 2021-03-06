@@ -440,7 +440,7 @@
                             <div class="promotion-client-list-wrapper">
                                 <div class="promotion-find-client">
                                     <input autocomplete="off" type="text" id="promotion-client-phone-number" class="default-color default-style-input" placeholder="Найти по номеру телефона">
-                                    <button id="promotion-find-client-action" class="btn btn-submit" onclick="">Найти</button>
+                                    <button id="promotion-find-client-action" class="btn btn-submit" disabled>Перейти</button>
                                 </div>
                                 <div id="promotions-client-list" class="promotions-client-list">
                                     <div class="empty-container empty-container-with-icon">
@@ -2408,5 +2408,7 @@
     @Scripts.Render("~/bundles/product-additional-options")
     @Scripts.Render("~/bundles/integration")
     @Scripts.Render("~/bundles/promotion-clients")
+
+    <script src="~/Scripts/promotion/clients/promotion-clients.js"></script>
 </body>
 </html>

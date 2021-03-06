@@ -9,21 +9,26 @@
             maxCountItemsInPage: 30,
         }
         this.clients = []
+        this.prefix = 'promotion-client'
     }
 
     storeIds = {
         clientsPage: 'promotion-clients',
         clientList: 'promotions-client-list',
-        pagination: 'promotion-clients-pagination'
+        pagination: 'promotion-clients-pagination',
+        inputPhoneNumber: 'promotion-client-phone-number',
+        goToClientBtn: 'promotion-find-client-action',
     }
 
     storeCssClass = {
         previusPageBtn: 'promotion-previus-clients-page',
         nextPageBtn: 'promotion-next-clients-page',
+        activeClient: 'promotion-active-client',
     }
 
     render(clients) {
-        
+        this.renderFindByPhoneBlock()
+
         if (clients && clients.length) {
             this.clients = clients
 
@@ -32,6 +37,66 @@
         }
         else
             this.renderEmptyClientItems()
+    }
+
+    renderFindByPhoneBlock() {
+        this.renderInputPhoneNumber()
+        this.renerGoToBtn()
+    }
+
+    renderInputPhoneNumber() {
+        const self = this
+        const mask = '+7(999)999-99-99'
+        const $inputPhoneNumber = $(`#${this.storeIds.inputPhoneNumber}`)
+        $inputPhoneNumber.val('')
+
+        $inputPhoneNumber.mask(mask, {
+            completed: function () {
+                self.dispatchEvent(
+                    CustomEventListener.events.promotionClients.FIND_BY_PHONE,
+                    { phoneNumber: $(this).val() }
+                )
+            }
+        })
+
+        $inputPhoneNumber.on('keydown', function () {
+            if (!$(this).val().match(/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/))
+                self.disabledGoToClientBtn()
+        })
+    }
+
+    renerGoToBtn() {
+        this.disabledGoToClientBtn()
+        this.bindGoToEvent()
+    }
+
+    bindGoToEvent() {
+        $(`#${this.storeIds.goToClientBtn}`).click(() => {
+            const phoneNumber = $(`#${this.storeIds.inputPhoneNumber}`).val()
+
+            this.dispatchEvent(
+                CustomEventListener.events.promotionClients.GO_TO_CLIENT,
+                { phoneNumber }
+            )
+        })
+    }
+
+    disabledGoToClientBtn() {
+        $(`#${this.storeIds.goToClientBtn}`).prop('disabled', true)
+    }
+
+    enebledGoToClientBtn() {
+        $(`#${this.storeIds.goToClientBtn}`).prop('disabled', false)
+    }
+
+    goToClient(clientId) {
+        const index = this.clients.findIndex(p => p.id == clientId)
+        const targetPageNumber = parseInt(index / this.clientPage.maxCountItemsInPage) + 1
+
+        if (this.clientPage.currentNumber != targetPageNumber)
+            this.renderClientsPage(targetPageNumber)
+
+        this.activeClient(clientId)
     }
 
     renderClientsPage(pageNumber = 1) {
@@ -88,9 +153,13 @@
         $(`#${this.storeIds.clientList}`).html(items)
     }
 
+    generateClientItemId(clientId) {
+        return `${this.prefix}${clientId}`
+    }
+
     getClientItem(client) {
-        const template = `
-            <div class="promotion-client-item">
+        const $template = $(`
+            <div class="promotion-client-item" id="${this.generateClientItemId(client.id)}">
                 <div class="promotion-client-item-short-info">
                     <span class="promotion-client-item-phoneNumber">
                         <i class="fal fa-mobile-alt"></i>
@@ -104,14 +173,16 @@
                 <div class="promotion-client-item-blocked-info">
                     ${client.blocked ? '<i class="fal fa-lock-alt"></i>' : '<i class="fal fa-lock-open-alt"></i>'}
                 </div>
-            </div>`
+            </div>`)
 
-        return template
+        $template.click(() => this.activeClient(client.id))
+
+        return $template
     }
 
     renderPagination() {
         const previusDisabled = this.clientPage.currentNumber <= 1 ? 'disabled' : ''
-        const nextDisabled = this.clientPage.currentNumber  ==  this.clientPage.countPages ? 'disabled' : ''
+        const nextDisabled = this.clientPage.currentNumber == this.clientPage.countPages ? 'disabled' : ''
 
         const $template = $(`
             <button ${previusDisabled} class="simple-text-btn main-bg-color ${this.storeCssClass.previusPageBtn}">
@@ -135,7 +206,26 @@
         })
     }
 
-    renderClientdInfo() {
+    markActiveClient(clientId) {
+        const id = this.generateClientItemId(clientId)
+
+        $(`#${this.storeIds.clientList} .${this.storeCssClass.activeClient}`).removeClass(this.storeCssClass.activeClient)
+        $(`#${id}`).addClass(this.storeCssClass.activeClient)
+    }
+
+    activeClient(clientId) {
+        this.markActiveClient(clientId)
+        this.onActiveClient(clientId)
+    }
+
+    onActiveClient(clientId) {
+        this.dispatchEvent(
+            CustomEventListener.events.promotionClients.ACTIVE_CLIENT,
+            { clientId }
+        )
+    }
+
+    renderClientInfo(client, orders) {
 
     }
 
@@ -152,7 +242,7 @@
      * 
      * @private
      */
-    showActivityIndicator(query, customClass='') {
+    showActivityIndicator(query, customClass = '') {
         const loader = new Loader(query)
         loader.start(customClass)
     }

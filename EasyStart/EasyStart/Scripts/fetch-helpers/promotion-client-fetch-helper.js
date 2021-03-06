@@ -10,5 +10,14 @@ class PromotionClientFetchHelper extends BaseFetchHelper {
       }
 
       return await this.fetch({}, props)
-  }
+    }
+
+    async getClientOrders(clientId) {
+        const props = {
+            url: UrlStore.getClientOrders,
+            method: FetchHelper.method.POST
+        }
+
+        return await this.fetch({ clientId }, props)
+    }
 }
