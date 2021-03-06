@@ -1190,6 +1190,14 @@ button#push-image-btn-remove:hover {
     overflow-y: auto;
 }
 
+.promotion-clients-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    grid-column-gap: 25px;
+    border-top: 1px solid #bdbdbd35;
+}
+
 .empty-container-with-icon i {
     font-size: 2.3rem;
 }
@@ -1236,4 +1244,22 @@ button#push-image-btn-remove:hover {
 
 .promotion-client-item-phoneNumber {
     font-size: 0.8rem;
+}
+
+.promotions-client-list::-webkit-scrollbar {
+    width: 0.45em;
+}
+
+.promotions-client-list::-webkit-scrollbar-thumb {
+    background-color: #163f752e;
+    border-radius: 2px;
+}
+
+.promotions-client-list::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgb(0 0 0 / 0%);
+    border-radius: 30px;
+}
+
+.promotions-client-list::-webkit-scrollbar-thumb:hover {
+    background-color: #163f75c9;
 }

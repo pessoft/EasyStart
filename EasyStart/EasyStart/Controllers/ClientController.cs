@@ -47,7 +47,7 @@ namespace EasyStart.Controllers
             {
                 var branch = branchService.Get(User.Identity.Name);
                 var clients = clientService.GetAll(branch.Id);
-                clients[2].Blocked = true;
+
                 result.Success = true;
                 result.Data = clients;
             }

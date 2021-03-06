@@ -3,6 +3,7 @@
         this.view = new PromotionClientsView()
         this.logic = new PromotionClientsLogic()
 
+        this.bindEvents()
         this.init()
     }
 
@@ -17,5 +18,14 @@
         } finally {
             this.view.hideActivitiIndicatorPage()
         }
+    }
+
+    bindEvents() {
+        this.view.addEventListener(CustomEventListener.events.promotionClients.CHANGE_CLIENTS_PAGE,
+            this.changeClientPageHandler)
+    }
+
+    changeClientPageHandler = ({ pageNumber }) => {
+        this.view.renderClientsPage(pageNumber)
     }
 }

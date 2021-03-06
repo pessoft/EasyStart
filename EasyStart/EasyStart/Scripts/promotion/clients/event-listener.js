@@ -36,6 +36,7 @@
 
 CustomEventListener.events = {
     promotionClients: {
-        FIND_BY_PHONE: 'FIND_BY_PHONE'
+        FIND_BY_PHONE: 'FIND_BY_PHONE',
+        CHANGE_CLIENTS_PAGE: 'CHANGE_CLIENTS_PAGE',
     }
 }

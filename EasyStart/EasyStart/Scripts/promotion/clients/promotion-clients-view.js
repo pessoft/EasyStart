@@ -4,9 +4,9 @@
         super()
 
         this.clientPage = {
-            currentNumber: 1,
-            countPages: 1,
-            countItemsInPage: 50,
+            currentNumber: 0,
+            countPages: 0,
+            maxCountItemsInPage: 30,
         }
         this.clients = []
     }
@@ -14,6 +14,12 @@
     storeIds = {
         clientsPage: 'promotion-clients',
         clientList: 'promotions-client-list',
+        pagination: 'promotion-clients-pagination'
+    }
+
+    storeCssClass = {
+        previusPageBtn: 'promotion-previus-clients-page',
+        nextPageBtn: 'promotion-next-clients-page',
     }
 
     render(clients) {
@@ -22,22 +28,29 @@
             this.clients = clients
 
             this.initPagesSetting()
-            this.renderClinetItems()
+            this.renderClientsPage()
         }
         else
             this.renderEmptyClientItems()
+    }
+
+    renderClientsPage(pageNumber = 1) {
+        this.clientPage.currentNumber = pageNumber
+
+        this.renderClinetItems(pageNumber)
+        this.renderPagination()
     }
 
     initPagesSetting() {
         if (this.clients.length) {
             let countPage = 0
 
-            if (this.clients.length <= this.clientPage.countItemsInPage)
+            if (this.clients.length <= this.clientPage.maxCountItemsInPage)
                 countPage = 1
             else {
-                countPage = this.clients.length / this.clientPage.countItemsInPage
+                countPage = this.clients.length / this.clientPage.maxCountItemsInPage
 
-                if (countPage * this.clientPage.countItemsInPage != this.clients.length)
+                if (countPage * this.clientPage.maxCountItemsInPage != this.clients.length)
                     ++countPage
             }
 
@@ -59,15 +72,23 @@
     renderClinetItems(pageNumber = 1) {
         const items = []
 
-        for (const client of this.clients) {
-            const item = this.renderClientItem(client)
+        let endIndex = pageNumber * this.clientPage.maxCountItemsInPage
+        let startIndex = endIndex - this.clientPage.maxCountItemsInPage
+
+        if (endIndex > this.clients.length) {
+            endIndex = this.clients.length
+            startIndex = 0
+        }
+
+        for (let i = startIndex; i < endIndex; ++i) {
+            const item = this.getClientItem(this.clients[i])
             items.push(item)
         }
 
         $(`#${this.storeIds.clientList}`).html(items)
     }
 
-    renderClientItem(client) {
+    getClientItem(client) {
         const template = `
             <div class="promotion-client-item">
                 <div class="promotion-client-item-short-info">
@@ -89,7 +110,29 @@
     }
 
     renderPagination() {
+        const previusDisabled = this.clientPage.currentNumber <= 1 ? 'disabled' : ''
+        const nextDisabled = this.clientPage.currentNumber  ==  this.clientPage.countPages ? 'disabled' : ''
 
+        const $template = $(`
+            <button ${previusDisabled} class="simple-text-btn main-bg-color ${this.storeCssClass.previusPageBtn}">
+                    « Назад
+            </button>
+            <button ${nextDisabled} class="simple-text-btn main-bg-color ${this.storeCssClass.nextPageBtn}">
+                Далее »
+            </button>
+        `)
+
+        const $paginationContainer = $(`#${this.storeIds.pagination}`)
+        $paginationContainer.html($template)
+
+        $paginationContainer.find(`.${this.storeCssClass.previusPageBtn}`).click(() => {
+            this.dispatchEvent(CustomEventListener.events.promotionClients.CHANGE_CLIENTS_PAGE,
+                { pageNumber: this.clientPage.currentNumber - 1 })
+        })
+        $paginationContainer.find(`.${this.storeCssClass.nextPageBtn}`).click(() => {
+            this.dispatchEvent(CustomEventListener.events.promotionClients.CHANGE_CLIENTS_PAGE,
+                { pageNumber: this.clientPage.currentNumber + 1 })
+        })
     }
 
     renderClientdInfo() {
