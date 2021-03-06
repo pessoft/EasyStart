@@ -1177,11 +1177,18 @@ button#push-image-btn-remove:hover {
     position: relative;
     max-height: 78vh;
     display: grid;
-    grid-template-rows: 200px 1fr;
+    grid-template-rows: 250px 1fr;
     grid-row-gap: 10px;
 }
 
 .promotion-client-card-info {
+    display: grid;
+    grid-template-rows: 50px repeat(5, 40px);
+    align-items: center;
+}
+
+.promotion-client-card-info > *:not(h2) {
+    padding-left: 20px;
 }
 
 .promotion-client-card-orders {

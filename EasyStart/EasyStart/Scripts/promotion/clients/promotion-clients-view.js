@@ -252,7 +252,14 @@
 
     renderClientCardInfo(client) {
         const template = `
-            <div class="promotion-client-card-info"></div>
+            <div class="promotion-client-card-info">
+                <h2>${client.userName}</h2>
+                <span><i class="fal fa-mobile-alt"></i> ${client.phoneNumber}</span>
+                <span><i class="fal fa-at"></i> ${client.email}</span>
+                <span><i class="fal fa-key"></i> ${client.password}</span>
+                <span><i class="fal fa-coins"></i> ${client.virtualMoney} руб.</span>
+                <span>${client.blocked ? '<i class="fal fa-lock-open-alt"></i> Разблокировать' : '<i class="fal fa-lock-alt"></i> Заблокировать'}</span>
+            </div>
         `
         $(`#${this.storeIds.clientCardContainer}`).html(template)
     }
