@@ -32,6 +32,12 @@
 
         this.view.addEventListener(CustomEventListener.events.promotionClients.ACTIVE_CLIENT,
             this.activeClientHandler)
+
+        this.view.addEventListener(CustomEventListener.events.promotionClients.BLOCK_CLIENT,
+            this.blockClientHandler)
+
+        this.view.addEventListener(CustomEventListener.events.promotionClients.UN_BLOCK_CLIENT,
+            this.unBlockClientHandler)
     }
 
     changeClientPageHandler = ({ pageNumber }) => {
@@ -54,9 +60,31 @@
     }
 
     activeClientHandler = async ({ clientId }) => {
+        this.view.showActivitiIndicatorClientCard()
         const client = this.logic.getClientById(clientId)
         const orders = await this.logic.getOrders(clientId)
 
         this.view.renderClientInfo(client, orders)
+        this.view.hideActivitiIndicatorClientCard()
+    }
+
+    blockClientHandler = async ({ clientId }) => {
+        await this.toggleBlockClient(clientId, true)
+    }
+
+    unBlockClientHandler = async ({ clientId }) => {
+        await this.toggleBlockClient(clientId, false)
+    }
+
+    toggleBlockClient = async (clientId, blocked) => {
+        if (blocked)
+            await this.logic.blockClient(clientId)
+        else
+            await this.logic.unBlockClient(clientId)
+
+        const clients = await this.logic.getClients()
+
+        this.view.render(clients)
+        this.view.goToClient(clientId)
     }
 }

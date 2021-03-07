@@ -60,7 +60,7 @@ namespace EasyStart.Controllers
             return this.JsResult(result, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize]
         public JsonResult Block(int clientId)
         {
@@ -78,10 +78,10 @@ namespace EasyStart.Controllers
                 result.ErrorMessage = "При блокировки клиента что-то пошло не так.";
             }
 
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return this.JsResult(result);
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize]
         public JsonResult UnBlock(int clientId)
         {
@@ -99,7 +99,7 @@ namespace EasyStart.Controllers
                 result.ErrorMessage = "При разблокировки клиента что-то пошло не так.";
             }
 
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return this.JsResult(result);
         }
     }
 }

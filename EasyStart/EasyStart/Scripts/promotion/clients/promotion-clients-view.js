@@ -19,6 +19,8 @@
         inputPhoneNumber: 'promotion-client-phone-number',
         goToClientBtn: 'promotion-find-client-action',
         clientCardContainer: 'promotion-client-card-wrapper',
+        blockBtn: 'promotion-client-block-action',
+        unBlockBtn:'promotion-client-unblock-action'
     }
 
     storeCssClass = {
@@ -29,7 +31,7 @@
 
     render(clients) {
         this.renderFindByPhoneBlock()
-        
+
         if (clients && clients.length) {
             this.clients = clients
 
@@ -231,7 +233,7 @@
     renderClientInfo(client, orders) {
         if (client)
             this.renderClientInfoContent(client, orders)
-        else 
+        else
             this.renderClientInfoDefault()
     }
 
@@ -251,17 +253,46 @@
     }
 
     renderClientCardInfo(client) {
-        const template = `
+        const blockToggleTemplate = client.blocked ?
+            `<button id="${this.storeIds.unBlockBtn}" class="btn btn-submit">
+                <i class="fal fa-lock-open-alt"></i>
+                Разблокировать
+            </button>` :
+            `<button id="${this.storeIds.blockBtn}" class="btn btn-submit">
+                <i class="fal fa-lock-alt"></i>
+                Заблокировать
+            </button>`
+
+        const $template = $(`
             <div class="promotion-client-card-info">
                 <h2>${client.userName}</h2>
                 <span><i class="fal fa-mobile-alt"></i> ${client.phoneNumber}</span>
                 <span><i class="fal fa-at"></i> ${client.email}</span>
                 <span><i class="fal fa-key"></i> ${client.password}</span>
-                <span><i class="fal fa-coins"></i> ${client.virtualMoney} руб.</span>
-                <span>${client.blocked ? '<i class="fal fa-lock-open-alt"></i> Разблокировать' : '<i class="fal fa-lock-alt"></i> Заблокировать'}</span>
+                <div>
+                    <button type="button" class="simple-text-btn main-bg-color">
+                        <i class="fal fa-coins"></i> ${client.virtualMoney} руб.
+                    </button>
+                </div>
+                <div>${blockToggleTemplate}</div>
             </div>
-        `
-        $(`#${this.storeIds.clientCardContainer}`).html(template)
+        `)
+
+        if (client.blocked) {
+            $template.find(`#${this.storeIds.unBlockBtn}`).click(() => {
+                this.dispatchEvent(
+                    CustomEventListener.events.promotionClients.UN_BLOCK_CLIENT,
+                    {clientId: client.id})
+            })
+        } else {
+            $template.find(`#${this.storeIds.blockBtn}`).click(() => {
+                this.dispatchEvent(
+                    CustomEventListener.events.promotionClients.BLOCK_CLIENT,
+                    { clientId: client.id })
+            })
+        }
+
+        $(`#${this.storeIds.clientCardContainer}`).html($template)
     }
 
     renderClientInfoOrders(orders) {
@@ -283,7 +314,7 @@
     renderClientInfoOrdersEmpty() {
         const template = `
                 <div class="promotion-client-card-orders">
-                    <h2>Заказы клиенте</h2>
+                    <h2>Заказы клиента</h2>
                     <div class="promotion-client-card-order-list">
                         <div class="empty-container empty-container-with-icon">
                             <i class="fal fa-shopping-basket"></i>
@@ -302,6 +333,15 @@
 
     hideActivitiIndicatorPage() {
         this.hideActivityIndicator(`#${this.storeIds.clientsPage}`)
+    }
+
+    showActivitiIndicatorClientCard() {
+        this.showActivityIndicator(`#${this.storeIds.clientCardContainer}`)
+    }
+
+
+    hideActivitiIndicatorClientCard() {
+        this.hideActivityIndicator(`#${this.storeIds.clientCardContainer}`)
     }
 
     /**

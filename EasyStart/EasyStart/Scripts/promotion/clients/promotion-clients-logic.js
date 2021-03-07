@@ -18,6 +18,18 @@
         return await this.fetch.getClientOrders(clientId)
     }
 
+    async blockClient(clientId) {
+        await this.fetch.blockClient(clientId)
+
+        this.toggleBlockClient(clientId, true)
+    }
+
+    async unBlockClient(clientId) {
+        await this.fetch.unBlockClient(clientId)
+
+        this.toggleBlockClient(clientId, false)
+    }
+
     getClientById(id) {
         if (!this.clients)
             return null
@@ -27,5 +39,14 @@
 
     getClientByPhoneNumber(phoneNumber) {
         return this.clientsDictByPhone[phoneNumber]
+    }
+
+    /**
+     * 
+     * @private
+     */
+    toggleBlockClient(clientId, blocked) {
+        const client = this.getClientById(clientId)
+        client.blocked = blocked
     }
 }

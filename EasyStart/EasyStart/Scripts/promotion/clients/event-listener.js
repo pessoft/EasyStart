@@ -40,5 +40,7 @@ CustomEventListener.events = {
         CHANGE_CLIENTS_PAGE: 'CHANGE_CLIENTS_PAGE',
         GO_TO_CLIENT: 'GO_TO_CLIENT',
         ACTIVE_CLIENT: 'ACTIVE_CLIENT',
+        BLOCK_CLIENT: 'BLOCK_CLIENT',
+        UN_BLOCK_CLIENT: 'UN_BLOCK_CLIENT',
     }
 }

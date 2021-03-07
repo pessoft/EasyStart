@@ -1187,6 +1187,15 @@ button#push-image-btn-remove:hover {
     align-items: center;
 }
 
+    .promotion-client-card-info button {
+        text-transform: inherit;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        grid-column-gap: 5px;
+    }
+
 .promotion-client-card-info > *:not(h2) {
     padding-left: 20px;
 }
