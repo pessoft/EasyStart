@@ -101,5 +101,26 @@ namespace EasyStart.Controllers
 
             return this.JsResult(result);
         }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult SetVirtualMoney(int clientId, double virtualMoney)
+        {
+            var result = new JsonResultModel();
+
+            try
+            {
+                clientService.SetVirtualMoney(clientId, virtualMoney);
+
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = "При обновлении бонусных средств что-то пошло не так.";
+            }
+
+            return this.JsResult(result);
+        }
     }
 }

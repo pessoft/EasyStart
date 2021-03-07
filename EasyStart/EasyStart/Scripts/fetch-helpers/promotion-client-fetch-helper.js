@@ -38,4 +38,13 @@ class PromotionClientFetchHelper extends BaseFetchHelper {
 
         return await this.fetch({ clientId }, props)
     }
+
+    async setVirtualMoney(clientId, virtualMoney) {
+        const props = {
+            url: UrlStore.promotionSetVirtualMoney,
+            method: FetchHelper.method.POST
+        }
+
+        return await this.fetch({ clientId, virtualMoney }, props)
+    }
 }

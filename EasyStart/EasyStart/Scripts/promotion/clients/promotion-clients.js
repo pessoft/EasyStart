@@ -87,4 +87,13 @@
         this.view.render(clients)
         this.view.goToClient(clientId)
     }
+
+    setClientVirtualMoney = async ({ clientId, virtualMoney }) => {
+        this.view.showActivitiIndicatorClientCard()
+
+        await this.logic.setClientVirtualMoney(clientId, virtualMoney)
+
+        this.view.render(clients)
+        this.view.goToClient(clientId)
+    }
 }

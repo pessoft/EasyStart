@@ -30,6 +30,13 @@
         this.toggleBlockClient(clientId, false)
     }
 
+    async setClientVirtualMoney(clientId, virtualMoney) {
+        await this.fetch.setVirtualMoney(clientId, virtualMoney)
+
+        const client = this.getClientById(clientId)
+        client.virtualMoney = virtualMoney
+    }
+
     getClientById(id) {
         if (!this.clients)
             return null
