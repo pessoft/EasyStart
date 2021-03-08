@@ -42,5 +42,6 @@ CustomEventListener.events = {
         ACTIVE_CLIENT: 'ACTIVE_CLIENT',
         BLOCK_CLIENT: 'BLOCK_CLIENT',
         UN_BLOCK_CLIENT: 'UN_BLOCK_CLIENT',
+        SET_CLIENT_VIRTUAL_MONEY: 'SET_CLIENT_VIRTUAL_MONEY',
     }
 }

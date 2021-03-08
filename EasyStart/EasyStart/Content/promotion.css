@@ -1301,3 +1301,25 @@ button#push-image-btn-remove:hover {
     background-color: #0f1e32;
     color: #f3f3f3;
 }
+
+.promotion-client-virtual-money-change-btn {
+    padding-left: 0;
+    font-size: 1rem;
+}
+
+.promotion-client-virtual-money-block {
+    display: flex;
+    align-items: center;
+    grid-column-gap: 5px;
+}
+
+.promotion-client-virtual-money-block input {
+    width: 100px;
+}
+
+.promotion-client-virtual-money-block button {
+    height: 28px;
+    display:flex;
+    justify-content:center;
+    align-items: center;
+}

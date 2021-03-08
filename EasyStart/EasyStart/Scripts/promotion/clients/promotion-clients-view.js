@@ -20,13 +20,20 @@
         goToClientBtn: 'promotion-find-client-action',
         clientCardContainer: 'promotion-client-card-wrapper',
         blockBtn: 'promotion-client-block-action',
-        unBlockBtn:'promotion-client-unblock-action'
+        unBlockBtn: 'promotion-client-unblock-action',
+        changeVirtualMoneyBlock: 'promotion-client--change-virtual-money-container',
+        virtualMoneyChangeBtn: 'promotion-client-virtual-money-change-btn',
+        virtualMoney: 'promotion-client-virtual-money',
+        saveVirtualMoney: 'promotion-client-virtual-money-save',
+        cancelVirtualMoney: 'promotion-client-virtual-money-cancel',
+
     }
 
     storeCssClass = {
         previusPageBtn: 'promotion-previus-clients-page',
         nextPageBtn: 'promotion-next-clients-page',
         activeClient: 'promotion-active-client',
+        hide: 'display-none',
     }
 
     render(clients) {
@@ -270,19 +277,65 @@
                 <span><i class="fal fa-at"></i> ${client.email}</span>
                 <span><i class="fal fa-key"></i> ${client.password}</span>
                 <div>
-                    <button type="button" class="simple-text-btn main-bg-color">
+                    <button id="${this.storeIds.virtualMoneyChangeBtn}" type="button" class="simple-text-btn main-bg-color promotion-client-virtual-money-change-btn">
                         <i class="fal fa-coins"></i> ${client.virtualMoney} руб.
                     </button>
+                    <div id="${this.storeIds.changeVirtualMoneyBlock}" class="${this.storeCssClass.hide} promotion-client-virtual-money-block">
+                        <i class="fal fa-coins"></i>
+                        <input autocomplete="off" type="text" id="${this.storeIds.virtualMoney}" class="default-color default-style-input" placeholder="0.00">
+                        <button id="${this.storeIds.saveVirtualMoney}" class="btn btn-submit">
+                            Сохранить
+                        </button>
+                        <button id="${this.storeIds.cancelVirtualMoney}" class="btn btn-cancel">
+                            Отмена
+                        </button>
+                    </div>
                 </div>
                 <div>${blockToggleTemplate}</div>
             </div>
         `)
+        
+        this.bindVitualMoneyEvent($template, client)
+        this.bindBlockEvent($template, client)
 
+        $(`#${this.storeIds.clientCardContainer}`).html($template)
+    }
+
+    bindVitualMoneyEvent($template, client) {
+        $template.find(`#${this.storeIds.virtualMoneyChangeBtn}`).click(event => {
+            $(event.currentTarget).addClass(this.storeCssClass.hide)
+            $template.find(`#${this.storeIds.virtualMoney}`).val(client.virtualMoney)
+            $template.find(`#${this.storeIds.changeVirtualMoneyBlock}`).removeClass(this.storeCssClass.hide)
+        })
+
+        $template.find(`#${this.storeIds.cancelVirtualMoney}`).click(event => {
+            $template.find(`#${this.storeIds.virtualMoneyChangeBtn}`).removeClass(this.storeCssClass.hide)
+            $template.find(`#${this.storeIds.changeVirtualMoneyBlock}`).addClass(this.storeCssClass.hide)
+        })
+
+        $template.find(`#${this.storeIds.virtualMoney}`).on('input', (event) => {
+            const value = parseFloat($(event.currentTarget).val())
+
+            const $saveBtn = $template.find(`#${this.storeIds.saveVirtualMoney}`)
+            const isDisabled = Number.isNaN(value) || value < 0
+            $saveBtn.prop('disabled', isDisabled)
+        })
+
+        $template.find(`#${this.storeIds.saveVirtualMoney}`).click(() => {
+            const virtualMoney = parseFloat($template.find(`#${this.storeIds.virtualMoney}`).val())
+
+            this.dispatchEvent(
+                CustomEventListener.events.promotionClients.SET_CLIENT_VIRTUAL_MONEY,
+                { clientId: client.id, virtualMoney }            )
+        })
+    }
+
+    bindBlockEvent($template, client) {
         if (client.blocked) {
             $template.find(`#${this.storeIds.unBlockBtn}`).click(() => {
                 this.dispatchEvent(
                     CustomEventListener.events.promotionClients.UN_BLOCK_CLIENT,
-                    {clientId: client.id})
+                    { clientId: client.id })
             })
         } else {
             $template.find(`#${this.storeIds.blockBtn}`).click(() => {
@@ -291,8 +344,6 @@
                     { clientId: client.id })
             })
         }
-
-        $(`#${this.storeIds.clientCardContainer}`).html($template)
     }
 
     renderClientInfoOrders(orders) {

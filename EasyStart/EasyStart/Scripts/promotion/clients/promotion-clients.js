@@ -38,6 +38,9 @@
 
         this.view.addEventListener(CustomEventListener.events.promotionClients.UN_BLOCK_CLIENT,
             this.unBlockClientHandler)
+
+        this.view.addEventListener(CustomEventListener.events.promotionClients.SET_CLIENT_VIRTUAL_MONEY,
+            this.setClientVirtualMoneyHandler)
     }
 
     changeClientPageHandler = ({ pageNumber }) => {
@@ -88,10 +91,11 @@
         this.view.goToClient(clientId)
     }
 
-    setClientVirtualMoney = async ({ clientId, virtualMoney }) => {
+    setClientVirtualMoneyHandler = async ({ clientId, virtualMoney }) => {
         this.view.showActivitiIndicatorClientCard()
 
         await this.logic.setClientVirtualMoney(clientId, virtualMoney)
+        const clients = await this.logic.getClients()
 
         this.view.render(clients)
         this.view.goToClient(clientId)

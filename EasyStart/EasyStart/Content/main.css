@@ -29,3 +29,7 @@ body {
 .main-bg-color {
     background-color: #f3f3f3 !important ;
 }
+
+.display-none {
+    display: none !important;
+}
