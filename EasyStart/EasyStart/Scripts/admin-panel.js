@@ -1844,6 +1844,7 @@ function processsingOrder(order) {
 }
 
 function toStringDateAndTime(date) {
+    date = new Date(date)
     let day = date.getDate().toString()
     day = day.length == 1 ? "0" + day : day
     let month = (date.getMonth() + 1).toString()
@@ -2182,6 +2183,49 @@ function convertIngredientsToDictionary(ingredients) {
     }
 
     return dict
+}
+
+function showOrderDetailsFromPromotionClient(order) {
+    const currentSectionId = getCurrentSectionId()
+    const dialogId = order.orderStatus == OrderStatus.Processing ? 'orderDetailsDialog' : 'historyOrderDetailsDialog'
+    const getOrderDetails = () => {
+        const orderDetailsData = new OrderDetailsData(order)
+
+        return new OrderDetails(orderDetailsData, dialogId)
+    }
+
+
+    let loader = new Loader($(`#${currentSectionId}`))
+    loader.start()
+
+    let callbackLoadProducts = function (data) {
+        if (data.Success) {
+            for (let categoryObj of data.Data.products) {
+
+                categoryObj.Products.forEach(product => OrderProducts[product.Id] = product)
+            }
+
+            for (let categoryObj of data.Data.constructor) {
+                categoryObj.Ingredients = convertIngredientsToDictionary(categoryObj.Ingredients)
+                OrderConstructorProducts[categoryObj.CategoryId] = categoryObj
+            }
+
+            loader.stop()
+            getOrderDetails().show()
+        } else {
+            loader.stop()
+            showErrorMessage(data.ErrorMessage)
+        }
+    }
+
+    let itemsIdsforLoad = getItemsIdsForLoad(order)
+
+    if (itemsIdsforLoad.productIds.length == 0 && itemsIdsforLoad.constructorCategoryIds.length == 0) {
+        loader.stop()
+        getOrderDetails().show()
+    } else {
+        loadItemForOrder(itemsIdsforLoad, callbackLoadProducts)
+    }
 }
 
 function showOrderDetails(orderId) {
@@ -3036,15 +3080,15 @@ class OrderDetails {
         $causeCancelComment.unbind("click")
         $sendToIntegrationSystem.unbind('click')
 
+        $causeCancelComment.removeAttr("disabled")
+        if (this.details.Status == OrderStatus.Cancellation)
+            $causeCancelComment.bind("click", actionShowCauseCancelComment)
+        else
+            $causeCancelComment.attr("disabled", true)
+
         if (getCurrentSectionId() == Pages.HistoryOrder) {
             $proccesed.attr("disabled", true)
             $cancel.attr("disabled", true)
-            $causeCancelComment.removeAttr("disabled")
-
-            if (this.details.Status == OrderStatus.Cancellation)
-                $causeCancelComment.bind("click", actionShowCauseCancelComment)
-            else
-                $causeCancelComment.attr("disabled", true)
         } else {
             $proccesed.removeAttr("disabled")
             $cancel.removeAttr("disabled")

@@ -41,6 +41,9 @@
 
         this.view.addEventListener(CustomEventListener.events.promotionClients.SET_CLIENT_VIRTUAL_MONEY,
             this.setClientVirtualMoneyHandler)
+
+        this.view.addEventListener(CustomEventListener.events.promotionClients.SHOW_ORDER_DETAILS,
+            this.showOrderDetailsHandler)
     }
 
     changeClientPageHandler = ({ pageNumber }) => {
@@ -99,5 +102,15 @@
 
         this.view.render(clients)
         this.view.goToClient(clientId)
+    }
+
+    showOrderDetailsHandler = ({ order }) => {
+        const orderWithUpCasePromNames = {}
+        for (let key in order) {
+            const propName = key.charAt(0).toUpperCase() + key.slice(1)
+            orderWithUpCasePromNames[propName] = order[key]
+        }
+            
+            showOrderDetailsFromPromotionClient(orderWithUpCasePromNames)
     }
 }

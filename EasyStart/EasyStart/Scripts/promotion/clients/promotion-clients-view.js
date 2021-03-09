@@ -34,6 +34,7 @@
         nextPageBtn: 'promotion-next-clients-page',
         activeClient: 'promotion-active-client',
         hide: 'display-none',
+        clientCardOrderList: 'promotion-client-card-order-list'
     }
 
     render(clients) {
@@ -354,25 +355,57 @@
     }
 
     renderClientOrdersContent(orders) {
-        const template = `
-                <div class="promotion-client-card-orders"
-                    
-                </div>`
+        const ordersTemplate = this.getClientCardOrdersTemplate(orders)
+        const $template = $(`
+            <h2>Заказы клиента</h2>
+            <div class="${this.storeCssClass.clientCardOrderList}"></div>
+            `)
 
-        $(`#${this.storeIds.clientCardContainer}`).append(template)
+        $(`#${this.storeIds.clientCardContainer}`).append($template)
+        $(`#${this.storeIds.clientCardContainer}`).find(`.${this.storeCssClass.clientCardOrderList}`).html(ordersTemplate)
+    }
+
+    getClientCardOrdersTemplate(orders) {
+        const ordersTemplate = []
+
+        for (const order of orders) {
+            let color = ''
+
+            if (order.orderStatus == OrderStatus.Processed) 
+                color = 'success-color'
+            else if (order.orderStatus == OrderStatus.Cancellation) 
+                color = 'fail-color'
+
+            const $template = $(`
+                <div class="promotion-client-card-order-item">
+                    <span class="${color}"># ${order.id}</span>
+                    <span><i class="fal fa-clock"></i> ${toStringDateAndTime(order.date)}</span>
+                    <span>${order.amountPay} руб.</span>
+                </div>
+            `)
+
+            $template.click(() => {
+                this.dispatchEvent(
+                    CustomEventListener.events.promotionClients.SHOW_ORDER_DETAILS,
+                    { order }
+                )
+            })
+
+            ordersTemplate.push($template)
+        }
+
+        return ordersTemplate
     }
 
     renderClientInfoOrdersEmpty() {
         const template = `
-                <div class="promotion-client-card-orders">
-                    <h2>Заказы клиента</h2>
-                    <div class="promotion-client-card-order-list">
-                        <div class="empty-container empty-container-with-icon">
-                            <i class="fal fa-shopping-basket"></i>
-                            <span>Список заказов пуст</span>
-                        </div>
-                    </div>
-                </div>`
+            <h2>Заказы клиента</h2>
+            <div class="${this.storeCssClass.clientCardOrderList}">
+                <div class="empty-container empty-container-with-icon">
+                    <i class="fal fa-shopping-basket"></i>
+                    <span>Список заказов пуст</span>
+                </div>
+            </div>`
 
         $(`#${this.storeIds.clientCardContainer}`).append(template)
     }
