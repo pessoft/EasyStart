@@ -208,16 +208,17 @@
                 <div class="section-content promotion-section">
                     <div class="promotion-menu">
                         <ul>
-                            <li target-id="pormotion-stock" class="promotion-menu-active"><i class="fal fa-badge-percent"></i> Акции</li>
-                            <li target-id="pormotion-coupons"><i class="fal fa-gift-card"></i> Купоны</li>
-                            <li target-id="pormotion-cashback-partners"><i class="fal fa-hands-usd"></i> Кешбек и Партнерская программа</li>
-                            <li target-id="pormotion-push-notification"><i class="fal fa-paper-plane"></i> PUSH сообщения</li>
-                            <li target-id="pormotion-news"><i class="fal fa-newspaper"></i> Новости</li>
+                            <li target-id="promotion-stock" class="promotion-menu-active"><i class="fal fa-badge-percent"></i> Акции</li>
+                            <li target-id="promotion-coupons"><i class="fal fa-gift-card"></i> Купоны</li>
+                            <li target-id="promotion-cashback-partners"><i class="fal fa-hands-usd"></i> Кешбек и Партнерская программа</li>
+                            <li target-id="promotion-push-notification"><i class="fal fa-paper-plane"></i> PUSH сообщения</li>
+                            <li target-id="promotion-news"><i class="fal fa-newspaper"></i> Новости</li>
+                            <li target-id="promotion-clients"><i class="fal fa-users"></i> Клиенты</li>
                             <li target-id="promotion-settings"><i class="fal fa-sliders-v"></i> Настройка</li>
                         </ul>
                     </div>
                     <div class="promotion-content-wrapper">
-                        <div id="pormotion-stock" class="promotion-content promotion-some-settings">
+                        <div id="promotion-stock" class="promotion-content promotion-some-settings">
                             <div class="promotion-some-settings-header">
                                 <button id="btn-add-stock" class="promotion-btn-settings-add" onclick="StockManger.addNewStock()">
                                     <i class="fal fa-plus"></i>
@@ -231,7 +232,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="pormotion-coupons" class="promotion-content promotion-some-settings hide">
+                        <div id="promotion-coupons" class="promotion-content promotion-some-settings hide">
                             <div class="promotion-some-settings-header">
                                 <button id="btn-add-coupons" class="promotion-btn-settings-add" onclick="CouponManager.addNewCoupon()">
                                     <i class="fal fa-plus"></i>
@@ -245,7 +246,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="pormotion-cashback-partners" class="pormotion-cashback-partners promotion-content hide">
+                        <div id="promotion-cashback-partners" class="promotion-cashback-partners promotion-content hide">
                             <div class="cashback-partners-content" id="promotion-cashback-bonus">
                                 <h2>Кешбек</h2>
                                 <div class="cashback-partners-item">
@@ -306,7 +307,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="pormotion-push-notification" class="promotion-content promotion-push-notification hide">
+                        <div id="promotion-push-notification" class="promotion-content promotion-push-notification hide">
                             <div class="wizard-push-notification">
                                 <div class="max-container hide" id="container-collapse-edit-new-push-msg">
                                     <button id="show-edit-new-push-msg" class="simple-text-button push-background-color" onclick="HistoryNotification.showEditNewMessage()">
@@ -421,7 +422,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="pormotion-news" class="promotion-content promotion-some-settings hide">
+                        <div id="promotion-news" class="promotion-content promotion-some-settings hide">
                             <div class="promotion-some-settings-header">
                                 <button id="btn-add-stock" class="promotion-btn-settings-add" onclick="NewsManager.addNewNews()">
                                     <i class="fal fa-plus"></i>
@@ -432,6 +433,29 @@
                                 <div class="empty-list">
                                     <i class="fal fa-smile-plus"></i>
                                     <span>Пока нет новостей</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="promotion-clients" class="promotion-content hide promotion-clients">
+                            <div class="promotion-client-list-wrapper">
+                                <div class="promotion-find-client">
+                                    <input autocomplete="off" type="text" id="promotion-client-phone-number" class="default-color default-style-input" placeholder="Найти по номеру телефона">
+                                    <button id="promotion-find-client-action" class="btn btn-submit" disabled>Перейти</button>
+                                </div>
+                                <div id="promotions-client-list" class="promotions-client-list">
+                                    <div class="empty-container empty-container-with-icon">
+                                        <i class="fal fa-users"></i>
+                                        <span>Список клиентов</span>
+                                    </div>
+                                </div>
+                                <div id="promotion-clients-pagination" class="promotion-clients-pagination">
+
+                                </div>
+                            </div>
+                            <div id="promotion-client-card-wrapper" class="promotion-client-card-wrapper">
+                                <div class="empty-container empty-container-with-icon">
+                                    <i class="fal fa-address-card"></i>
+                                    <span>Карточка клиента</span>
                                 </div>
                             </div>
                         </div>
@@ -766,7 +790,7 @@
             <div class="analytics-wrapper" id="analytics-wrapper">
             </div>
         </div>
-       
+
         <div class="section hide" id="about-us">
             <div class="about-us-body">
                 <div class="about-header">
@@ -811,6 +835,8 @@
                         <div class="checkbox-item number-appliances">
                             <input id="number-appliances" type="checkbox" />
                             <label for="number-appliances">Запрашивать количество приборов</label>
+                        </div>
+                        <div class="recommended-products-wrapper">
                         </div>
                     </div>
                     <div class="dialog-menu">
@@ -882,7 +908,7 @@
                             <label>Цена (в рублях)</label>
                         </div>
                         <div class="group" id="vendor-code-product-wrapper" style="display: none;">
-                            <input type="text" id="vendor-code-product"/>
+                            <input type="text" id="vendor-code-product" />
                             <span class="bar"></span>
                             <label>Артикул</label>
                         </div>
@@ -2364,6 +2390,7 @@
         </div>
     </template>
 
+    @Scripts.Render("~/bundles/fetch-helpers")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/signalr")
     @Scripts.Render("~/bundles/odometer")
@@ -2382,5 +2409,8 @@
     @Scripts.Render("~/bundles/image-processing")
     @Scripts.Render("~/bundles/product-additional-options")
     @Scripts.Render("~/bundles/integration")
+    @Scripts.Render("~/bundles/promotion-clients")
+
+    <script src="~/Scripts/promotion/clients/promotion-clients.js"></script>
 </body>
 </html>

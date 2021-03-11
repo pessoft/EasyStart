@@ -26,6 +26,12 @@
     })
 
     let setOperationAdd = () => CurrentOperation = TypeOperation.Add
+
+    const additionFunForAddNewCategory = () => {
+        setOperationAdd()
+        toggleRecommendedProductsForCategory()
+    }
+
     const additionFunForAddNewProduct = () => {
         ProductAdditionalOptions = []
         ProductAllowCombinationsAdditionalOptions = []
@@ -34,7 +40,7 @@
         toggleVendorCodeProductInput()
     }
 
-    bindShowModal("add-category", "addCategoryDialog", setOperationAdd)
+    bindShowModal("add-category", "addCategoryDialog", additionFunForAddNewCategory)
     bindShowModal("add-product", "addProducDialog", additionFunForAddNewProduct, productCondition)
     bindShowModal("add-product-constructor", "addSubCategoryConstructorDialog", initNewCategoryConstructor, productConstructorCondition)
     bindShowModal("add-branch", "addBranchDialog", addNewBranchLoginData)
@@ -59,6 +65,54 @@
 
     checkSettings()
 })
+
+function toggleRecommendedProductsForCategory(ignoreCategoryId = 0, selectedProducts) {
+    const containerQuery = `.recommended-products-wrapper`
+    $(`${containerQuery}`).empty()
+
+    if (ProductsForPromotion && Object.keys(ProductsForPromotion).length) {
+        const selectId = `recommended-products-list`
+        const $select = $(`<select id=${selectId} multiple></select>`)
+        const selectOptGroups = []
+
+        for (const categoryId in ProductsForPromotion) {
+            if (categoryId == ignoreCategoryId)
+                continue
+
+            const categoryName = CategoryDictionary[categoryId]
+            const $optGroup = $(`<optgroup label="${categoryName}"></<optgroup>`)
+            const options = []
+
+            for (const product of ProductsForPromotion[categoryId]) {
+                let selected = ''
+                if (selectedProducts && selectedProducts.length) {
+                    const isSelected = selectedProducts.findIndex(productId => productId == product.Id) != -1
+                    selected = isSelected ? 'selected' : ''
+                }
+
+                const option = `<option ${selected} value="${product.Id}">${product.Name}</option>`
+                options.push(option)
+            }
+
+            $optGroup.html(options)
+            selectOptGroups.push($optGroup)
+        }
+
+        $select.html(selectOptGroups)
+
+        const header = '<div class="product-type-header">Рекомендуемые товары для категории</div>'
+        $(containerQuery).html(header)
+        $(containerQuery).append($select)
+
+        const sumoSelectOptions = {
+            placeholder: 'Выберите рекомендуемые товары',
+            up: true,
+            search: true,
+            searchText:'Поиск по имени продукта...'
+        }
+        $(`${containerQuery} #${selectId}`).SumoSelect(sumoSelectOptions)
+    } 
+}
 
 function toggleVendorCodeProductInput() {
     const query = '#vendor-code-product-wrapper'
@@ -504,12 +558,17 @@ function updateCategory() {
         Id: $("#category-id").val(),
         Name: $("#name-category").val(),
         Image: $("#addCategoryDialog img").attr("src"),
-        NumberAppliances: $("#addCategoryDialog #number-appliances").is(':checked')
+        NumberAppliances: $("#addCategoryDialog #number-appliances").is(':checked'),
+        RecommendedProducts: getRecommendedProductsFromDialog($("#recommended-products-list option:selected"))
     }
 
     let successFunc = function (result, loader) {
         loader.stop()
         if (result.Success) {
+            const index = DataProduct.Categories.findIndex(p => p.Id == category.Id)
+
+            if (index != -1)
+                DataProduct.Categories[index] = result.Data
             let categoryItem = $(`[category-id=${category.Id}]`)
             categoryItem.find(".category-item-image img").attr("src", category.Image)
             categoryItem.find(".category-item-name").html(category.Name)
@@ -526,6 +585,16 @@ function updateCategory() {
     })
 }
 
+function getRecommendedProductsFromDialog($items) {
+    const itemsValue = []
+
+    $items.each(function () {
+        itemsValue.push(parseInt($(this).attr('value')))
+    })
+
+    return itemsValue
+}
+
 function addCategory() {
     let loader = new Loader($("#addCategoryDialog form"))
     loader.start()
@@ -534,7 +603,8 @@ function addCategory() {
         Name: $("#name-category").val(),
         CategoryType: parseInt($("#addCategoryDialog #category-type").val()),
         Image: $("#addCategoryDialog img").attr("src"),
-        NumberAppliances: $("#addCategoryDialog #number-appliances").is(':checked')
+        NumberAppliances: $("#addCategoryDialog #number-appliances").is(':checked'),
+        RecommendedProducts: getRecommendedProductsFromDialog($("#recommended-products-list option:selected"))
     }
 
     let successFunc = function (result, loader) {
@@ -584,13 +654,18 @@ function editCategory(e, event) {
     let dialog = $("#addCategoryDialog")
     let parent = $($(e).parents(".category-item"))
 
+    const categoryId = parent.attr("category-id")
+    const cotegoryFromData = DataProduct.Categories.find(p => p.Id == categoryId)
     let category = {
-        Id: parent.attr("category-id"),
+        Id: categoryId,
         CategoryType: parseInt(parent.attr("category-type")),
         Name: parent.find(".category-item-name").html().trim(),
         Image: parent.find("img").attr("src"),
-        NumberAppliances: !!parent.find(".number-appliances-data").val()
+        NumberAppliances: !!parent.find(".number-appliances-data").val(),
+        RecommendedProducts: cotegoryFromData.RecommendedProducts
     }
+
+    
 
     dialog.find("#category-id").val(category.Id)
     dialog.find("#name-category").val(category.Name)
@@ -604,6 +679,7 @@ function editCategory(e, event) {
     }
 
     Dialog.showModal(dialog)
+    toggleRecommendedProductsForCategory(category.Id, category.RecommendedProducts)
 
     const $select = $("#addCategoryDialog #category-type")
 
@@ -1844,6 +1920,7 @@ function processsingOrder(order) {
 }
 
 function toStringDateAndTime(date) {
+    date = new Date(date)
     let day = date.getDate().toString()
     day = day.length == 1 ? "0" + day : day
     let month = (date.getMonth() + 1).toString()
@@ -2182,6 +2259,49 @@ function convertIngredientsToDictionary(ingredients) {
     }
 
     return dict
+}
+
+function showOrderDetailsFromPromotionClient(order) {
+    const currentSectionId = getCurrentSectionId()
+    const dialogId = order.orderStatus == OrderStatus.Processing ? 'orderDetailsDialog' : 'historyOrderDetailsDialog'
+    const getOrderDetails = () => {
+        const orderDetailsData = new OrderDetailsData(order)
+
+        return new OrderDetails(orderDetailsData, dialogId)
+    }
+
+
+    let loader = new Loader($(`#${currentSectionId}`))
+    loader.start()
+
+    let callbackLoadProducts = function (data) {
+        if (data.Success) {
+            for (let categoryObj of data.Data.products) {
+
+                categoryObj.Products.forEach(product => OrderProducts[product.Id] = product)
+            }
+
+            for (let categoryObj of data.Data.constructor) {
+                categoryObj.Ingredients = convertIngredientsToDictionary(categoryObj.Ingredients)
+                OrderConstructorProducts[categoryObj.CategoryId] = categoryObj
+            }
+
+            loader.stop()
+            getOrderDetails().show()
+        } else {
+            loader.stop()
+            showErrorMessage(data.ErrorMessage)
+        }
+    }
+
+    let itemsIdsforLoad = getItemsIdsForLoad(order)
+
+    if (itemsIdsforLoad.productIds.length == 0 && itemsIdsforLoad.constructorCategoryIds.length == 0) {
+        loader.stop()
+        getOrderDetails().show()
+    } else {
+        loadItemForOrder(itemsIdsforLoad, callbackLoadProducts)
+    }
 }
 
 function showOrderDetails(orderId) {
@@ -3036,15 +3156,15 @@ class OrderDetails {
         $causeCancelComment.unbind("click")
         $sendToIntegrationSystem.unbind('click')
 
+        $causeCancelComment.removeAttr("disabled")
+        if (this.details.Status == OrderStatus.Cancellation)
+            $causeCancelComment.bind("click", actionShowCauseCancelComment)
+        else
+            $causeCancelComment.attr("disabled", true)
+
         if (getCurrentSectionId() == Pages.HistoryOrder) {
             $proccesed.attr("disabled", true)
             $cancel.attr("disabled", true)
-            $causeCancelComment.removeAttr("disabled")
-
-            if (this.details.Status == OrderStatus.Cancellation)
-                $causeCancelComment.bind("click", actionShowCauseCancelComment)
-            else
-                $causeCancelComment.attr("disabled", true)
         } else {
             $proccesed.removeAttr("disabled")
             $cancel.removeAttr("disabled")

@@ -276,7 +276,6 @@
 #stockDialog #stock-condition-birthday-container .group input,
 #stockDialog #stock-condition-birthday-container .group .bar,
 #stockDialog #stock-condition-birthday-container input:focus ~ .bar:before,
-
 .coupon-type-bonus-setting .group,
 #couponDialog .coupon-type-bonus-setting .group input,
 #couponDialog .coupon-type-bonus-setting .group .bar,
@@ -336,27 +335,31 @@
 
 .stock-setting-condition-count-products::-webkit-scrollbar,
 #promotion-stock-description::-webkit-scrollbar,
-.promotion-some-settings-content::-webkit-scrollbar {
+.promotion-some-settings-content::-webkit-scrollbar,
+.promotion-client-card-order-list::-webkit-scrollbar {
     width: 0.45em;
 }
 
 .stock-setting-condition-count-products::-webkit-scrollbar-track,
 #promotion-stock-description::-webkit-scrollbar-track,
-.promotion-some-settings-content::-webkit-scrollbar-track {
+.promotion-some-settings-content::-webkit-scrollbar-track,
+.promotion-client-card-order-list::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
     border-radius: 30px;
 }
 
 .stock-setting-condition-count-products::-webkit-scrollbar-thumb,
 #promotion-stock-description::-webkit-scrollbar-thumb,
-.promotion-some-settings-content::-webkit-scrollbar-thumb {
+.promotion-some-settings-content::-webkit-scrollbar-thumb,
+.promotion-client-card-order-list::-webkit-scrollbar-thumb {
     background-color: #163f752e;
     border-radius: 2px;
 }
 
     .stock-setting-condition-count-products::-webkit-scrollbar-thumb:hover,
     #promotion-stock-description::-webkit-scrollbar-thumb:hover,
-    .promotion-some-settings-content::-webkit-scrollbar-thumb:hover {
+    .promotion-some-settings-content::-webkit-scrollbar-thumb:hover,
+    .promotion-client-card-order-list::-webkit-scrollbar-thumb:hover {
         background-color: #163f75c9;
     }
 
@@ -437,7 +440,7 @@ textarea.default-style-input {
         overflow: hidden;
     }
 
-.pormotion-cashback-partners {
+.promotion-cashback-partners {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 230px 230px;
@@ -453,11 +456,11 @@ textarea.default-style-input {
     position: relative;
 }
 
-#pormotion-cashback-partners .checkbox-item {
+#promotion-cashback-partners .checkbox-item {
     margin-bottom: 15px;
 }
 
-    #pormotion-cashback-partners .checkbox-item label,
+    #promotion-cashback-partners .checkbox-item label,
     #promotion-settings .checkbox-item label,
     #split-block-coupon-count .checkbox-item label {
         position: relative;
@@ -466,7 +469,7 @@ textarea.default-style-input {
         font-size: 0.9em;
     }
 
-    #pormotion-cashback-partners .checkbox-item input[type=checkbox],
+    #promotion-cashback-partners .checkbox-item input[type=checkbox],
     #promotion-settings .checkbox-item input[type=checkbox],
     #split-block-coupon-count .checkbox-item input[type=checkbox] {
         width: 16px;
@@ -474,7 +477,7 @@ textarea.default-style-input {
         margin-left: 0;
     }
 
-#pormotion-cashback-partners .row .group:last-child {
+#promotion-cashback-partners .row .group:last-child {
     margin-left: 30px;
 }
 
@@ -484,9 +487,9 @@ textarea.default-style-input {
     padding: 5px 20px
 }
 
-#pormotion-cashback-partners .group input,
-#pormotion-cashback-partners .group .bar,
-#pormotion-cashback-partners .group input:focus ~ .bar:before {
+#promotion-cashback-partners .group input,
+#promotion-cashback-partners .group .bar,
+#promotion-cashback-partners .group input:focus ~ .bar:before {
     width: 185px;
 }
 
@@ -718,7 +721,7 @@ textarea.default-style-input {
 .push-image-menu span {
     font-size: 0.7em;
     margin-bottom: 5px;
-    text-align:center;
+    text-align: center;
 }
 
 .push-image-btn-download {
@@ -1023,7 +1026,7 @@ button#push-image-btn-remove:hover {
     grid-template-rows: 120px 50px 1fr 25px;
     margin-top: 25px;
     justify-items: center;
-    align-items:center;
+    align-items: center;
     grid-row-gap: 12px;
 }
 
@@ -1040,9 +1043,9 @@ button#push-image-btn-remove:hover {
         height: 120px;
     }
 
-    .promotion-news-index-block h4 {
-        margin-top: 0px;
-    }
+.promotion-news-index-block h4 {
+    margin-top: 0px;
+}
 
 .promotion-news-index-block textarea {
     height: 110px;
@@ -1051,6 +1054,7 @@ button#push-image-btn-remove:hover {
 .default-border {
     border: 1px solid #A4A4A4;
 }
+
 .banner-setting-container {
     display: grid;
     grid-template-columns: max-content;
@@ -1078,11 +1082,11 @@ button#push-image-btn-remove:hover {
         min-width: 320px;
     }
 
-    .stock-interaction-description {
-        border-radius: 3px;
-        border: 1px solid #bdbdbd35;
-        width: 290px;
-    }
+.stock-interaction-description {
+    border-radius: 3px;
+    border: 1px solid #bdbdbd35;
+    width: 290px;
+}
 
     .stock-interaction-description legend {
         font-weight: bold;
@@ -1090,11 +1094,11 @@ button#push-image-btn-remove:hover {
         color: #505050;
     }
 
-        .stock-interaction-description p {
-            font-size: 0.85em;
-            color: #505050;
-            line-height: 1.6em;
-        }
+    .stock-interaction-description p {
+        font-size: 0.85em;
+        color: #505050;
+        line-height: 1.6em;
+    }
 
 .promotion-setting-item {
     width: 370px;
@@ -1119,13 +1123,13 @@ button#push-image-btn-remove:hover {
     max-height: 185px;
 }
 
-    .stock-excluded-products-description-wrapper i {
-        font-size: 0.9em;
-    }
+.stock-excluded-products-description-wrapper i {
+    font-size: 0.9em;
+}
 
-    .stock-excluded-products-description {
-        font-size: 0.7em;
-    }
+.stock-excluded-products-description {
+    font-size: 0.7em;
+}
 
 .promotion-stock-index-block {
     width: 310px;
@@ -1135,4 +1139,215 @@ button#push-image-btn-remove:hover {
     font-size: 0.8em;
     margin-top: 5px;
     color: rgba(0,0,0,.54);
+}
+
+.promotion-clients {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-column-gap: 10px;
+    padding: 1vh 2%;
+}
+
+.promotion-client-list-wrapper {
+    border-right: 1px solid #bdbdbd35;
+    padding-right: 10px;
+    display: grid;
+    grid-template-rows: 60px 1fr 50px;
+    max-height: 78vh;
+}
+
+.promotion-find-client {
+    display: flex;
+    grid-column-gap: 10px;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #bdbdbd35;
+}
+
+    .promotion-find-client button {
+        height: 28px;
+        text-transform: initial;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .promotion-find-client input {
+        width: 180px;
+    }
+
+.promotion-client-card-wrapper {
+    position: relative;
+    max-height: 77vh;
+    display: grid;
+    grid-template-rows: 250px 40px 1fr;
+    grid-row-gap: 10px;
+}
+
+.promotion-client-card-info {
+    display: grid;
+    grid-template-rows: 50px repeat(5, 40px);
+    align-items: center;
+}
+
+    .promotion-client-card-info button {
+        text-transform: inherit;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        grid-column-gap: 5px;
+    }
+
+    .promotion-client-card-info > *:not(h2) {
+        padding-left: 20px;
+    }
+
+.promotion-client-card-orders {
+    display: grid;
+    grid-template-rows: 40px 1fr;
+    align-items: center;
+}
+
+.promotion-client-card-order-list {
+    position: relative;
+    overflow-y: auto;
+    padding: 15px 12px;
+}
+
+.empty-container-with-icon {
+    display: flex;
+    flex-direction: column;
+    grid-row-gap: 10px;
+    font-size: 1rem
+}
+
+.promotions-client-list {
+    position: relative;
+    padding: 15px 12px;
+    overflow-y: auto;
+}
+
+.promotion-clients-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    grid-column-gap: 25px;
+    border-top: 1px solid #bdbdbd35;
+}
+
+.empty-container-with-icon i {
+    font-size: 2.3rem;
+}
+
+.promotion-client-item {
+    border-radius: 3px;
+    padding: 8px 10px;
+    margin-bottom: 5px;
+    position: relative;
+    box-shadow: 0px 0px 5px 0px #0f1e322b;
+    color: #163f75cf;
+    cursor: default;
+    background-color: #f9f9f9;
+    transition: 120ms;
+    display: grid;
+    grid-template-columns: 1fr 40px;
+}
+
+.promotion-client-item-short-info {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    grid-row-gap: 5px;
+}
+
+.promotion-client-item-blocked-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.promotion-client-item i {
+    margin-right: 5px;
+    font-size: 1rem;
+}
+
+div.promotion-client-item:hover,
+div.promotion-client-card-order-item:hover {
+    transition: 100ms ease-in;
+    transform: scale(1.02);
+}
+
+.promotion-client-item-name {
+    font-size: 0.75rem;
+}
+
+.promotion-client-item-phoneNumber {
+    font-size: 0.8rem;
+}
+
+.promotions-client-list::-webkit-scrollbar {
+    width: 0.45em;
+}
+
+.promotions-client-list::-webkit-scrollbar-thumb {
+    background-color: #163f752e;
+    border-radius: 2px;
+}
+
+.promotions-client-list::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgb(0 0 0 / 0%);
+    border-radius: 30px;
+}
+
+.promotions-client-list::-webkit-scrollbar-thumb:hover {
+    background-color: #163f75c9;
+}
+
+.promotion-active-client {
+    background-color: #0f1e32;
+    color: #f3f3f3;
+}
+
+.promotion-client-virtual-money-change-btn {
+    padding-left: 0;
+    font-size: 1rem;
+}
+
+.promotion-client-virtual-money-block {
+    display: flex;
+    align-items: center;
+    grid-column-gap: 5px;
+}
+
+    .promotion-client-virtual-money-block input {
+        width: 100px;
+    }
+
+    .promotion-client-virtual-money-block button {
+        height: 28px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+.promotion-client-card-order-item {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
+    border-radius: 3px;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 8px;
+    box-shadow: 0px 0px 5px 0px #0f1e322b;
+    color: #163f75cf;
+    cursor: default;
+    background-color: #f9f9f9;
+    transition: 120ms;
+    padding: 8px 10px;
+    font-size: 0.9rem;
+}
+
+.promotion-client-card-order-item span:last-child {
+    justify-self: flex-end;
 }

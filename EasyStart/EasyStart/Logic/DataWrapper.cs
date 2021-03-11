@@ -489,6 +489,17 @@ namespace EasyStart.Logic
                     category.OrderNumber = orderNumber;
                     result = db.Categories.Add(category);
                     db.SaveChanges();
+
+                    List<RecommendedProductModel> recommendedProducts = category.RecommendedProducts?
+                        .Select(productId => new RecommendedProductModel
+                        {
+                            BranchId = result.BranchId,
+                            CategoryId = result.Id,
+                            ProductId = productId
+                        })
+                        .ToList();
+                    SaveRecommendedProductsForCategory(result.Id, recommendedProducts);
+                    result.RecommendedProducts = category.RecommendedProducts;
                 }
             }
             catch (Exception ex)
@@ -497,6 +508,66 @@ namespace EasyStart.Logic
             }
 
             return result;
+        }
+
+        public static void SaveRecommendedProductsForCategory(int categoryId, List<RecommendedProductModel> products)
+        {
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    var forRemove = db.RecommendedProducts.Where(p => p.CategoryId == categoryId);
+                    if (forRemove.Count() != 0)
+                        db.RecommendedProducts.RemoveRange(forRemove);
+
+                    if (products != null && products.Any())
+                    {
+                        db.RecommendedProducts.AddRange(products);
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
+
+        public static List<int> GetRecommendedProductsForCategory(int categoryId)
+        {
+            var productIds = new List<int>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    productIds = db.RecommendedProducts.Where(p => p.CategoryId == categoryId).Select(p => p.ProductId).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return productIds;
+        }
+
+        public static List<int> GetRecommendedProductsForCategoryByBranchId(int branchId)
+        {
+            var productIds = new List<int>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    productIds = db.RecommendedProducts.Where(p => p.BranchId == branchId).Select(p => p.ProductId).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return productIds;
         }
 
         public static ConstructorCategory AddOrUpdateConstructorCategory(ConstructorCategory category)
@@ -681,6 +752,17 @@ namespace EasyStart.Logic
                 {
                     result = db.Categories.Add(category);
                     db.SaveChanges();
+
+                    List<RecommendedProductModel> recommendedProducts = category.RecommendedProducts?
+                        .Select(productId => new RecommendedProductModel
+                        {
+                            BranchId = result.BranchId,
+                            CategoryId = result.Id,
+                            ProductId = productId
+                        })
+                        .ToList();
+                    SaveRecommendedProductsForCategory(result.Id, recommendedProducts);
+                    result.RecommendedProducts = category.RecommendedProducts;
                 }
             }
             catch (Exception ex)
@@ -720,6 +802,11 @@ namespace EasyStart.Logic
                     result = db.Categories
                         .Where(p => ids.Contains(p.Id))
                         .ToDictionary(p => p.Id, p => p);
+
+                    foreach(var categoryId in result.Keys)
+                    {
+                        result[categoryId].RecommendedProducts = GetRecommendedProductsForCategory(categoryId);
+                    }
                 }
             }
             catch (Exception ex)
@@ -738,6 +825,11 @@ namespace EasyStart.Logic
                 using (var db = new AdminPanelContext())
                 {
                     result = db.Categories.Where(p => p.BranchId == branchId && !p.IsDeleted).ToList();
+
+                    foreach (var category in result)
+                    {
+                        category.RecommendedProducts = GetRecommendedProductsForCategory(category.Id);
+                    }
                 }
             }
             catch (Exception ex)
@@ -759,6 +851,11 @@ namespace EasyStart.Logic
                         .Where(p => p.BranchId == brancId && p.Visible && !p.IsDeleted)
                         .OrderBy(p => p.OrderNumber)
                         .ToList();
+
+                    foreach (var category in result)
+                    {
+                        category.RecommendedProducts = GetRecommendedProductsForCategory(category.Id);
+                    }
                 }
             }
             catch (Exception ex)
@@ -782,6 +879,17 @@ namespace EasyStart.Logic
                     result.NumberAppliances = category.NumberAppliances;
 
                     db.SaveChanges();
+
+                    List<RecommendedProductModel> recommendedProducts = category.RecommendedProducts?
+                        .Select(productId => new RecommendedProductModel
+                        {
+                            BranchId = result.BranchId,
+                            CategoryId = result.Id,
+                            ProductId = productId
+                        })
+                        .ToList();
+                    SaveRecommendedProductsForCategory(result.Id, recommendedProducts);
+                    result.RecommendedProducts = category.RecommendedProducts;
                 }
             }
             catch (Exception ex)
@@ -835,6 +943,8 @@ namespace EasyStart.Logic
                         RemoveProductByCategoryId(id);
 
                         success = true;
+
+                        SaveRecommendedProductsForCategory(id, null);
                     }
                 }
             }
