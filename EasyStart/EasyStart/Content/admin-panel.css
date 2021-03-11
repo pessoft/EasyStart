@@ -2781,3 +2781,13 @@ button {
 .integration-order-number {
     padding-right: 15px;
 }
+
+.recommended-products-wrapper {
+    display: grid;
+    grid-template-rows: 20px 40px;
+    margin-top: 10px;
+}
+
+    .recommended-products-wrapper .SumoSelect.open > .optWrapper.up {
+        height: 225px;
+    }

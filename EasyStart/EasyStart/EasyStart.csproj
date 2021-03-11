@@ -415,6 +415,10 @@
     <Compile Include="Migrations\202103011741171_AddClientBlocked.Designer.cs">
       <DependentUpon>202103011741171_AddClientBlocked.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103110741026_AddedRecommendedProductsForCategory.cs" />
+    <Compile Include="Migrations\202103110741026_AddedRecommendedProductsForCategory.Designer.cs">
+      <DependentUpon>202103110741026_AddedRecommendedProductsForCategory.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -478,6 +482,7 @@
     <Compile Include="Models\RatingProduct.cs" />
     <Compile Include="Models\RatingProductMiddleware.cs" />
     <Compile Include="Models\RatingProductUpdater.cs" />
+    <Compile Include="Models\RecommendedProductModel.cs" />
     <Compile Include="Models\ReportFilter.cs" />
     <Compile Include="Models\ReportResult.cs" />
     <Compile Include="Models\SettingModel.cs" />
@@ -822,6 +827,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103011741171_AddClientBlocked.resx">
       <DependentUpon>202103011741171_AddClientBlocked.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103110741026_AddedRecommendedProductsForCategory.resx">
+      <DependentUpon>202103110741026_AddedRecommendedProductsForCategory.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

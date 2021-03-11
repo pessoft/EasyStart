@@ -26,6 +26,12 @@
     })
 
     let setOperationAdd = () => CurrentOperation = TypeOperation.Add
+
+    const additionFunForAddNewCategory = () => {
+        setOperationAdd()
+        toggleRecommendedProductsForCategory()
+    }
+
     const additionFunForAddNewProduct = () => {
         ProductAdditionalOptions = []
         ProductAllowCombinationsAdditionalOptions = []
@@ -34,7 +40,7 @@
         toggleVendorCodeProductInput()
     }
 
-    bindShowModal("add-category", "addCategoryDialog", setOperationAdd)
+    bindShowModal("add-category", "addCategoryDialog", additionFunForAddNewCategory)
     bindShowModal("add-product", "addProducDialog", additionFunForAddNewProduct, productCondition)
     bindShowModal("add-product-constructor", "addSubCategoryConstructorDialog", initNewCategoryConstructor, productConstructorCondition)
     bindShowModal("add-branch", "addBranchDialog", addNewBranchLoginData)
@@ -59,6 +65,48 @@
 
     checkSettings()
 })
+
+function toggleRecommendedProductsForCategory(ignoreCategoryId = 0) {
+    const containerQuery = `.recommended-products-wrapper`
+    $(`${containerQuery}`).empty()
+
+    if (ProductsForPromotion && Object.keys(ProductsForPromotion).length) {
+        const selectId = `recommended-products-list`
+        const $select = $(`<select id=${selectId} multiple></select>`)
+        const selectOptGroups = []
+
+        for (const categoryId in ProductsForPromotion) {
+            if (categoryId == ignoreCategoryId)
+                continue
+
+            const categoryName = CategoryDictionary[categoryId]
+            const $optGroup = $(`<optgroup label="${categoryName}"></<optgroup>`)
+            const options = []
+
+            for (const product of ProductsForPromotion[categoryId]) {
+                const option = `<option value="${product.Id}">${product.Name}</option>`
+                options.push(option)
+            }
+
+            $optGroup.html(options)
+            selectOptGroups.push($optGroup)
+        }
+
+        $select.html(selectOptGroups)
+
+        const header = '<div class="product-type-header">Рекомендуемые товары для категории</div>'
+        $(containerQuery).html(header)
+        $(containerQuery).append($select)
+
+        const sumoSelectOptions = {
+            placeholder: 'Выберите рекомендуемые товары',
+            up: true,
+            search: true,
+            searchText:'Поиск по имени продукта...'
+        }
+        $(`${containerQuery} #${selectId}`).SumoSelect(sumoSelectOptions)
+    } 
+}
 
 function toggleVendorCodeProductInput() {
     const query = '#vendor-code-product-wrapper'
@@ -592,6 +640,8 @@ function editCategory(e, event) {
         NumberAppliances: !!parent.find(".number-appliances-data").val()
     }
 
+    
+
     dialog.find("#category-id").val(category.Id)
     dialog.find("#name-category").val(category.Name)
     dialog.find("img").attr("src", category.Image)
@@ -604,6 +654,7 @@ function editCategory(e, event) {
     }
 
     Dialog.showModal(dialog)
+    toggleRecommendedProductsForCategory(category.Id)
 
     const $select = $("#addCategoryDialog #category-type")
 
