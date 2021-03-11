@@ -419,6 +419,10 @@
     <Compile Include="Migrations\202103110741026_AddedRecommendedProductsForCategory.Designer.cs">
       <DependentUpon>202103110741026_AddedRecommendedProductsForCategory.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103110801003_RenameTypoBrunchRecommendedProductsForCategory.cs" />
+    <Compile Include="Migrations\202103110801003_RenameTypoBrunchRecommendedProductsForCategory.Designer.cs">
+      <DependentUpon>202103110801003_RenameTypoBrunchRecommendedProductsForCategory.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -830,6 +834,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103110741026_AddedRecommendedProductsForCategory.resx">
       <DependentUpon>202103110741026_AddedRecommendedProductsForCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103110801003_RenameTypoBrunchRecommendedProductsForCategory.resx">
+      <DependentUpon>202103110801003_RenameTypoBrunchRecommendedProductsForCategory.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
