@@ -149,10 +149,13 @@ namespace EasyStart
                 var productIds = products.Values.SelectMany(p => p.Select(s => s.Id)).ToList();
                 var reviewsCount = DataWrapper.GetProductReviewsVisibleCount(productIds);
 
+                var recommendedProducts = DataWrapper.GetRecommendedProductsForCategoryByBranchId(branchId);
+
                 result.Data = new
                 {
                     categories,
                     products,
+                    recommendedProducts,
                     additionalOptions,
                     additionalFillings,
                     constructorCategories,

@@ -552,6 +552,24 @@ namespace EasyStart.Logic
             return productIds;
         }
 
+        public static List<int> GetRecommendedProductsForCategoryByBranchId(int branchId)
+        {
+            var productIds = new List<int>();
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    productIds = db.RecommendedProducts.Where(p => p.BranchId == branchId).Select(p => p.ProductId).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+
+            return productIds;
+        }
+
         public static ConstructorCategory AddOrUpdateConstructorCategory(ConstructorCategory category)
         {
             ConstructorCategory result = null;
