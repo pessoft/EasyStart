@@ -490,7 +490,7 @@ namespace EasyStart.Logic
                     result = db.Categories.Add(category);
                     db.SaveChanges();
 
-                    List<RecommendedProductModel> recomendedProducts = category.RecomenedProducts?
+                    List<RecommendedProductModel> recommendedProducts = category.RecommendedProducts?
                         .Select(productId => new RecommendedProductModel
                         {
                             BranchId = result.BranchId,
@@ -498,8 +498,8 @@ namespace EasyStart.Logic
                             ProductId = productId
                         })
                         .ToList();
-                    SaveRecomendedProductsForCategory(result.Id, recomendedProducts);
-                    result.RecomenedProducts = category.RecomenedProducts;
+                    SaveRecommendedProductsForCategory(result.Id, recommendedProducts);
+                    result.RecommendedProducts = category.RecommendedProducts;
                 }
             }
             catch (Exception ex)
@@ -510,7 +510,7 @@ namespace EasyStart.Logic
             return result;
         }
 
-        public static void SaveRecomendedProductsForCategory(int categoryId, List<RecommendedProductModel> products)
+        public static void SaveRecommendedProductsForCategory(int categoryId, List<RecommendedProductModel> products)
         {
             try
             {
@@ -534,7 +534,7 @@ namespace EasyStart.Logic
             }
         }
 
-        public static List<int> GetRecomendedProductsForCategory(int categoryId)
+        public static List<int> GetRecommendedProductsForCategory(int categoryId)
         {
             var productIds = new List<int>();
             try
@@ -735,7 +735,7 @@ namespace EasyStart.Logic
                     result = db.Categories.Add(category);
                     db.SaveChanges();
 
-                    List<RecommendedProductModel> recomendedProducts = category.RecomenedProducts?
+                    List<RecommendedProductModel> recommendedProducts = category.RecommendedProducts?
                         .Select(productId => new RecommendedProductModel
                         {
                             BranchId = result.BranchId,
@@ -743,8 +743,8 @@ namespace EasyStart.Logic
                             ProductId = productId
                         })
                         .ToList();
-                    SaveRecomendedProductsForCategory(result.Id, recomendedProducts);
-                    result.RecomenedProducts = category.RecomenedProducts;
+                    SaveRecommendedProductsForCategory(result.Id, recommendedProducts);
+                    result.RecommendedProducts = category.RecommendedProducts;
                 }
             }
             catch (Exception ex)
@@ -787,7 +787,7 @@ namespace EasyStart.Logic
 
                     foreach(var categoryId in result.Keys)
                     {
-                        result[categoryId].RecomenedProducts = GetRecomendedProductsForCategory(categoryId);
+                        result[categoryId].RecommendedProducts = GetRecommendedProductsForCategory(categoryId);
                     }
                 }
             }
@@ -810,7 +810,7 @@ namespace EasyStart.Logic
 
                     foreach (var category in result)
                     {
-                        category.RecomenedProducts = GetRecomendedProductsForCategory(category.Id);
+                        category.RecommendedProducts = GetRecommendedProductsForCategory(category.Id);
                     }
                 }
             }
@@ -836,7 +836,7 @@ namespace EasyStart.Logic
 
                     foreach (var category in result)
                     {
-                        category.RecomenedProducts = GetRecomendedProductsForCategory(category.Id);
+                        category.RecommendedProducts = GetRecommendedProductsForCategory(category.Id);
                     }
                 }
             }
@@ -862,7 +862,7 @@ namespace EasyStart.Logic
 
                     db.SaveChanges();
 
-                    List<RecommendedProductModel> recomendedProducts = category.RecomenedProducts?
+                    List<RecommendedProductModel> recommendedProducts = category.RecommendedProducts?
                         .Select(productId => new RecommendedProductModel
                         {
                             BranchId = result.BranchId,
@@ -870,8 +870,8 @@ namespace EasyStart.Logic
                             ProductId = productId
                         })
                         .ToList();
-                    SaveRecomendedProductsForCategory(result.Id, recomendedProducts);
-                    result.RecomenedProducts = category.RecomenedProducts;
+                    SaveRecommendedProductsForCategory(result.Id, recommendedProducts);
+                    result.RecommendedProducts = category.RecommendedProducts;
                 }
             }
             catch (Exception ex)
@@ -926,7 +926,7 @@ namespace EasyStart.Logic
 
                         success = true;
 
-                        SaveRecomendedProductsForCategory(id, null);
+                        SaveRecommendedProductsForCategory(id, null);
                     }
                 }
             }

@@ -66,7 +66,7 @@
     checkSettings()
 })
 
-function toggleRecommendedProductsForCategory(ignoreCategoryId = 0) {
+function toggleRecommendedProductsForCategory(ignoreCategoryId = 0, selectedProducts) {
     const containerQuery = `.recommended-products-wrapper`
     $(`${containerQuery}`).empty()
 
@@ -84,7 +84,13 @@ function toggleRecommendedProductsForCategory(ignoreCategoryId = 0) {
             const options = []
 
             for (const product of ProductsForPromotion[categoryId]) {
-                const option = `<option value="${product.Id}">${product.Name}</option>`
+                let selected = ''
+                if (selectedProducts && selectedProducts.length) {
+                    const isSelected = selectedProducts.findIndex(productId => productId == product.Id) != -1
+                    selected = isSelected ? 'selected' : ''
+                }
+
+                const option = `<option ${selected} value="${product.Id}">${product.Name}</option>`
                 options.push(option)
             }
 
@@ -552,12 +558,17 @@ function updateCategory() {
         Id: $("#category-id").val(),
         Name: $("#name-category").val(),
         Image: $("#addCategoryDialog img").attr("src"),
-        NumberAppliances: $("#addCategoryDialog #number-appliances").is(':checked')
+        NumberAppliances: $("#addCategoryDialog #number-appliances").is(':checked'),
+        RecommendedProducts: getRecommendedProductsFromDialog($("#recommended-products-list option:selected"))
     }
 
     let successFunc = function (result, loader) {
         loader.stop()
         if (result.Success) {
+            const index = DataProduct.Categories.findIndex(p => p.Id == category.Id)
+
+            if (index != -1)
+                DataProduct.Categories[index] = result.Data
             let categoryItem = $(`[category-id=${category.Id}]`)
             categoryItem.find(".category-item-image img").attr("src", category.Image)
             categoryItem.find(".category-item-name").html(category.Name)
@@ -574,6 +585,16 @@ function updateCategory() {
     })
 }
 
+function getRecommendedProductsFromDialog($items) {
+    const itemsValue = []
+
+    $items.each(function () {
+        itemsValue.push(parseInt($(this).attr('value')))
+    })
+
+    return itemsValue
+}
+
 function addCategory() {
     let loader = new Loader($("#addCategoryDialog form"))
     loader.start()
@@ -582,7 +603,8 @@ function addCategory() {
         Name: $("#name-category").val(),
         CategoryType: parseInt($("#addCategoryDialog #category-type").val()),
         Image: $("#addCategoryDialog img").attr("src"),
-        NumberAppliances: $("#addCategoryDialog #number-appliances").is(':checked')
+        NumberAppliances: $("#addCategoryDialog #number-appliances").is(':checked'),
+        RecommendedProducts: getRecommendedProductsFromDialog($("#recommended-products-list option:selected"))
     }
 
     let successFunc = function (result, loader) {
@@ -632,12 +654,15 @@ function editCategory(e, event) {
     let dialog = $("#addCategoryDialog")
     let parent = $($(e).parents(".category-item"))
 
+    const categoryId = parent.attr("category-id")
+    const cotegoryFromData = DataProduct.Categories.find(p => p.Id == categoryId)
     let category = {
-        Id: parent.attr("category-id"),
+        Id: categoryId,
         CategoryType: parseInt(parent.attr("category-type")),
         Name: parent.find(".category-item-name").html().trim(),
         Image: parent.find("img").attr("src"),
-        NumberAppliances: !!parent.find(".number-appliances-data").val()
+        NumberAppliances: !!parent.find(".number-appliances-data").val(),
+        RecommendedProducts: cotegoryFromData.RecommendedProducts
     }
 
     
@@ -654,7 +679,7 @@ function editCategory(e, event) {
     }
 
     Dialog.showModal(dialog)
-    toggleRecommendedProductsForCategory(category.Id)
+    toggleRecommendedProductsForCategory(category.Id, category.RecommendedProducts)
 
     const $select = $("#addCategoryDialog #category-type")
 

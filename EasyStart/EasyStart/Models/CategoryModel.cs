@@ -20,6 +20,6 @@ namespace EasyStart.Models
         public bool IsDeleted { get; set; }
 
         [NotMapped]
-        public List<int> RecomenedProducts { get; set; } = new List<int>();
+        public List<int> RecommendedProducts { get; set; } = new List<int>();
     }
 }
