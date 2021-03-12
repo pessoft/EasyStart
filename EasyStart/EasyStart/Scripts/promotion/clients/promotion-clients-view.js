@@ -368,7 +368,7 @@
     getClientCardOrdersTemplate(orders) {
         const ordersTemplate = []
 
-        for (const order of orders) {
+        for (const order of orders.sort((a,b) => new Date(a.date) < new Date(b.date) ? 1 : -1)) {
             let color = ''
 
             if (order.orderStatus == OrderStatus.Processed) 
