@@ -87,6 +87,7 @@ namespace EasyStart.Logic.IntegrationSystem
         {
             var order = orderDetails.GetOrder();
             var phoneNumber = new String(order.PhoneNumber.Where(p => Char.IsDigit(p)).ToArray());
+            var buyType = order.BuyType == BuyType.Cash ? BuyType.Cash : BuyType.Card;
 
             postData.Append($"&street={HttpUtility.UrlEncode(order.Street)}");
             postData.Append($"&home={HttpUtility.UrlEncode(order.HomeNumber)}");
@@ -94,6 +95,23 @@ namespace EasyStart.Logic.IntegrationSystem
             postData.Append($"&phone={HttpUtility.UrlEncode(phoneNumber)}");
             postData.Append($"&descr={HttpUtility.UrlEncode(order.Comment)}");
             postData.Append($"&name={HttpUtility.UrlEncode(order.Name)}");
+            postData.Append($"&score={HttpUtility.UrlEncode(order.AmountPayCashBack.ToString())}");
+            postData.Append($"&pay={HttpUtility.UrlEncode(((int)buyType).ToString())}");
+            postData.Append($"&person={HttpUtility.UrlEncode(order.NumberAppliances.ToString())}");
+
+            if (order.DateDelivery.HasValue)
+            {
+                postData.Append($"&datetime={HttpUtility.UrlEncode(order.DateDelivery.Value.ToString("yyyy-MM-dd HH:mm:ss"))}");
+            }
+
+            if (order.DiscountPercent != 0)
+            {
+                postData.Append($"&sale={HttpUtility.UrlEncode(order.DiscountPercent.ToString())}");
+            }
+            else if (order.DiscountRuble != 0)
+            {
+                postData.Append($"&sale_amount={HttpUtility.UrlEncode(order.DiscountRuble.ToString())}");
+            }
         }
     }
 }
