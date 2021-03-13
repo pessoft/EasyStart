@@ -91,6 +91,8 @@ namespace EasyStart.Logic.IntegrationSystem
 
             postData.Append($"&street={HttpUtility.UrlEncode(order.Street)}");
             postData.Append($"&home={HttpUtility.UrlEncode(order.HomeNumber)}");
+            postData.Append($"&pod={HttpUtility.UrlEncode(order.EntranceNumber)}");
+            postData.Append($"&et={HttpUtility.UrlEncode(order.Level)}");
             postData.Append($"&apart={HttpUtility.UrlEncode(order.ApartamentNumber)}");
             postData.Append($"&phone={HttpUtility.UrlEncode(phoneNumber)}");
             postData.Append($"&descr={HttpUtility.UrlEncode(order.Comment)}");

@@ -36,7 +36,7 @@ namespace EasyStart.Logic.IntegrationSystem
                 dataStream.Write(byteArray, 0, byteArray.Length);
             }
 
-            WebResponse response = await request.GetResponseAsync();
+            WebResponse response = request.GetResponse();
             string responseResult = null;
 
             using (Stream stream = response.GetResponseStream())
