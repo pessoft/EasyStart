@@ -4,6 +4,7 @@ using EasyStart.Models.Integration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -88,7 +89,11 @@ namespace EasyStart.Logic.IntegrationSystem
             var order = orderDetails.GetOrder();
             var phoneNumber = new String(order.PhoneNumber.Where(p => Char.IsDigit(p)).ToArray());
             var buyType = order.BuyType == BuyType.Cash ? BuyType.Cash : BuyType.Card;
-
+           
+            var nfi = new NumberFormatInfo();
+            nfi.NumberDecimalSeparator = ".";
+            var amountPayCashback = order.AmountPayCashBack.ToString(nfi);
+            
             postData.Append($"&street={HttpUtility.UrlEncode(order.Street)}");
             postData.Append($"&home={HttpUtility.UrlEncode(order.HomeNumber)}");
             postData.Append($"&pod={HttpUtility.UrlEncode(order.EntranceNumber)}");
@@ -97,7 +102,7 @@ namespace EasyStart.Logic.IntegrationSystem
             postData.Append($"&phone={HttpUtility.UrlEncode(phoneNumber)}");
             postData.Append($"&descr={HttpUtility.UrlEncode(order.Comment)}");
             postData.Append($"&name={HttpUtility.UrlEncode(order.Name)}");
-            postData.Append($"&score={HttpUtility.UrlEncode(order.AmountPayCashBack.ToString())}");
+            postData.Append($"&score={HttpUtility.UrlEncode(amountPayCashback)}");
             postData.Append($"&pay={HttpUtility.UrlEncode(((int)buyType).ToString())}");
             postData.Append($"&person={HttpUtility.UrlEncode(order.NumberAppliances.ToString())}");
 

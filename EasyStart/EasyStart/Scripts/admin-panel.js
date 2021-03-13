@@ -3086,7 +3086,7 @@ class OrderDetails {
     }
 
     toggleSendToIntegrationBtn() {
-        const $sendToIntegrationBtn = $(OrderDetailsQSelector.SendToIntegtationSystem);
+        const $sendToIntegrationBtn = this.$dialog.find(OrderDetailsQSelector.SendToIntegtationSystem);
 
         if (this.details.AllowedSendToIntegrationSystem === true)
             $sendToIntegrationBtn.show()
@@ -3095,7 +3095,7 @@ class OrderDetails {
     }
 
     toggleOrderNumberInIntegrationSystem() {
-        const $integrationOrderNumber = $(OrderDetailsQSelector.IntegrationOrderNumber);
+        const $integrationOrderNumber = this.$dialog.find(OrderDetailsQSelector.IntegrationOrderNumber);
 
         if (this.details.IsSendToIntegrationSystem === true) {
             $integrationOrderNumber.show()

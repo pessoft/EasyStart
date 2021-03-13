@@ -1461,7 +1461,14 @@
             </div>
 
             <div class="order-details-products order-details-block">
-                <span class="order-details-header">Состав заказа</span>
+                <div class="order-details-header-wrapper">
+                    <span class="order-details-header">Состав заказа</span>
+                    <button id="send-to-integration" class="simple-text-btn" onclick="">
+                        Отправить в интеграционную систему
+                    </button>
+                    <span id="integration-order-number" class="integration-order-number font-weight-bold"></span>
+                    <div id="send-to-integration-loader" class="send-to-integration-loader" style="display: none;"></div>
+                </div>
                 <div class="order-details-product-list">
                 </div>
             </div>
