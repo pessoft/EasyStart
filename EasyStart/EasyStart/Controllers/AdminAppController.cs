@@ -1238,6 +1238,11 @@ namespace EasyStart
                     result.ErrorMessage = "Неверный пароль";
                     return result;
                 }
+                else if(client.Blocked)
+                {
+                    result.ErrorMessage = "Учетная запись заблокирована";
+                    return result;
+                }
 
                 result.Success = true;
                 result.Data = new
