@@ -26,6 +26,8 @@
         virtualMoney: 'promotion-client-virtual-money',
         saveVirtualMoney: 'promotion-client-virtual-money-save',
         cancelVirtualMoney: 'promotion-client-virtual-money-cancel',
+        passwordShowBtn: 'promotion-client-password-show-btn',
+        passwordHideBtn: 'promotion-client-password-hide-btn',
 
     }
 
@@ -276,9 +278,16 @@
                 <h2>${client.userName}</h2>
                 <span><i class="fal fa-mobile-alt"></i> ${client.phoneNumber}</span>
                 <span><i class="fal fa-at"></i> ${client.email}</span>
-                <span><i class="fal fa-key"></i> ${client.password}</span>
+                <span>
+                    <button id="${this.storeIds.passwordShowBtn}" type="button" class="simple-text-btn main-bg-color promotion-client-btn">
+                        <i class="fal fa-key"></i> ${client.password.replace(/[\s\S]/g, '*')}
+                    </button>
+                    <button id="${this.storeIds.passwordHideBtn}" type="button" class="${this.storeCssClass.hide} simple-text-btn main-bg-color promotion-client-btn">
+                        <i class="fal fa-key"></i> ${client.password}
+                    </button>
+                </span>
                 <div>
-                    <button id="${this.storeIds.virtualMoneyChangeBtn}" type="button" class="simple-text-btn main-bg-color promotion-client-virtual-money-change-btn">
+                    <button id="${this.storeIds.virtualMoneyChangeBtn}" type="button" class="simple-text-btn main-bg-color promotion-client-btn">
                         <i class="fal fa-coins"></i> ${client.virtualMoney} руб.
                     </button>
                     <div id="${this.storeIds.changeVirtualMoneyBlock}" class="${this.storeCssClass.hide} promotion-client-virtual-money-block">
@@ -295,11 +304,23 @@
                 <div>${blockToggleTemplate}</div>
             </div>
         `)
-        
+
+        this.bindPasswordToggleEvent($template)
         this.bindVitualMoneyEvent($template, client)
         this.bindBlockEvent($template, client)
 
         $(`#${this.storeIds.clientCardContainer}`).html($template)
+    }
+
+    bindPasswordToggleEvent($template) {
+        $template.find(`#${this.storeIds.passwordShowBtn}`).click(() => {
+            $(`#${this.storeIds.passwordShowBtn}`).addClass(this.storeCssClass.hide)
+            $(`#${this.storeIds.passwordHideBtn}`).removeClass(this.storeCssClass.hide)
+        })
+        $template.find(`#${this.storeIds.passwordHideBtn}`).click(() => {
+            $(`#${this.storeIds.passwordHideBtn}`).addClass(this.storeCssClass.hide)
+            $(`#${this.storeIds.passwordShowBtn}`).removeClass(this.storeCssClass.hide)
+        })
     }
 
     bindVitualMoneyEvent($template, client) {
@@ -327,7 +348,7 @@
 
             this.dispatchEvent(
                 CustomEventListener.events.promotionClients.SET_CLIENT_VIRTUAL_MONEY,
-                { clientId: client.id, virtualMoney }            )
+                { clientId: client.id, virtualMoney })
         })
     }
 
@@ -368,12 +389,12 @@
     getClientCardOrdersTemplate(orders) {
         const ordersTemplate = []
 
-        for (const order of orders.sort((a,b) => new Date(a.date) < new Date(b.date) ? 1 : -1)) {
+        for (const order of orders.sort((a, b) => new Date(a.date) < new Date(b.date) ? 1 : -1)) {
             let color = ''
 
-            if (order.orderStatus == OrderStatus.Processed) 
+            if (order.orderStatus == OrderStatus.Processed)
                 color = 'success-color'
-            else if (order.orderStatus == OrderStatus.Cancellation) 
+            else if (order.orderStatus == OrderStatus.Cancellation)
                 color = 'fail-color'
 
             const $template = $(`
