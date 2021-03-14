@@ -71,28 +71,19 @@ function initIikoIntegration() {
 }
 
 function getIntegrationSystemSetting() {
-    const type = parseInt($('#integration-type option:selected').val())
-    let secret = ''
+    const type = getTypeIntegrationSystem()
+    let setting = getDefaultSetting()
 
     switch (type) {
         case IntegrationSystemType.frontPad:
-            secret = $('#frontpad-integration').val().trim()
+            setting = getFrontPadSetting()
             break
         case IntegrationSystemType.iiko:
-            secret = $('#iiko-integration').val().trim()
+            setting = getIikoSetting()
             break
     }
 
-    if (!secret && type != IntegrationSystemType.withoutIntegration) {
-        const message = 'Не все поля заполненны'
-        showErrorMessage(message)
-        throw new Error(message)
-    }
-
-    return {
-        type,
-        secret
-    }
+    return setting
 }
 
 function saveIntegrationSystemSetting() {
@@ -201,4 +192,50 @@ function sendOrderToIntegrationSystem(orderId) {
     }
 
     $.post("/IntegrationSystem/SendOrder", { orderId }, successCallBack(callback))
+}
+
+function getDefaultSetting() {
+    return {
+        type: IntegrationSystemType.withoutIntegration,
+        secret: '',
+        options: JSON.stringify('')
+    }
+}
+
+function getFrontPadSetting() {
+    const secret = $('#frontpad-integration').val().trim()
+    const options = ''
+
+    if (!secret) {
+        const message = 'Не все поля заполненны'
+        showErrorMessage(message)
+        throw new Error(message)
+    }
+
+    return {
+        type: IntegrationSystemType.frontPad,
+        secret,
+        options: JSON.stringify(options)
+    }
+}
+
+function getIikoSetting() {
+    const secret = $('#iiko-integration').val().trim()
+    const options = ''
+
+    if (!secret) {
+        const message = 'Не все поля заполненны'
+        showErrorMessage(message)
+        throw new Error(message)
+    }
+
+    return {
+        type: IntegrationSystemType.iiko,
+        secret,
+        options: JSON.stringify(options)
+    }
+}
+
+function getTypeIntegrationSystem() {
+    return parseInt($('#integration-type option:selected').val())
 }

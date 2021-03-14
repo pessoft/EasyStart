@@ -11,5 +11,10 @@ namespace EasyStart.Models
         public int BranchId { get; set; }
         public IntegrationSystemType Type { get; set; }
         public string Secret { get; set; }
+
+        /// <summary>
+        /// JSON string - different for integration systems 
+        /// </summary>
+        public string Options { get; set; }
     }
 }

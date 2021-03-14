@@ -428,6 +428,10 @@
     <Compile Include="Migrations\202103141925406_AddedOrderIdExternal.Designer.cs">
       <DependentUpon>202103141925406_AddedOrderIdExternal.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103141958028_AddedOptionInIntegrationSystem.cs" />
+    <Compile Include="Migrations\202103141958028_AddedOptionInIntegrationSystem.Designer.cs">
+      <DependentUpon>202103141958028_AddedOptionInIntegrationSystem.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -846,6 +850,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103141925406_AddedOrderIdExternal.resx">
       <DependentUpon>202103141925406_AddedOrderIdExternal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103141958028_AddedOptionInIntegrationSystem.resx">
+      <DependentUpon>202103141958028_AddedOptionInIntegrationSystem.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
