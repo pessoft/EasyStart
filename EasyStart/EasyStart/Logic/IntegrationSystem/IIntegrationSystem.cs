@@ -11,6 +11,6 @@ namespace EasyStart.Logic.IntegrationSystem
 {
     public interface IIntegrationSystem
     {
-        INewOrderResult SendOrder(IOrderDetails orderDetails);
+        INewOrderResult SendOrder(IOrderDetails orderDetails, string domainUrl);
     }
 }

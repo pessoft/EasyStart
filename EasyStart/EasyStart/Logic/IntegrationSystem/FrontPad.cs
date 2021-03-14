@@ -23,13 +23,14 @@ namespace EasyStart.Logic.IntegrationSystem
             frontPadOptions = JsonConvert.DeserializeObject<FrontPadOptions>(integrationSystemSetting.Options);
         }
 
-        public override INewOrderResult SendOrder(IOrderDetails orderDetails)
+        public override INewOrderResult SendOrder(IOrderDetails orderDetails, string domainUrl)
         {
             var postData = new StringBuilder();
 
             PrepareSecret(postData);
             PrepareProductData(orderDetails, postData);
             PrepareOrderData(orderDetails, postData);
+            PrepareHookUrlData(postData, domainUrl);
 
             var result = SendOrder(postData.ToString());
 
@@ -109,20 +110,6 @@ namespace EasyStart.Logic.IntegrationSystem
             postData.Append($"&pay={HttpUtility.UrlEncode(((int)buyType).ToString())}");
             postData.Append($"&person={HttpUtility.UrlEncode(order.NumberAppliances.ToString())}");
 
-            var hookStatus = "";
-            var hoolStatusList = new List<int> 
-            {
-                frontPadOptions.StatusProcessed,
-                frontPadOptions.StatusDelivery,
-                frontPadOptions.StatusCancel
-            };
-            for (var i = 0; i < hoolStatusList.Count; ++i)
-            {
-                hookStatus+= $"&hook_status[{i}]={hoolStatusList[i]}";
-            }
-            postData.Append(hookStatus);
-            postData.Append($"&hook_url={HttpUtility.UrlEncode("https://4e059e991909.ngrok.io/api/frontpad/changestatus")}");
-
             if (order.DateDelivery.HasValue)
             {
                 postData.Append($"&datetime={HttpUtility.UrlEncode(order.DateDelivery.Value.ToString("yyyy-MM-dd HH:mm:ss"))}");
@@ -136,6 +123,24 @@ namespace EasyStart.Logic.IntegrationSystem
             {
                 postData.Append($"&sale_amount={HttpUtility.UrlEncode(order.DiscountRuble.ToString())}");
             }
+        }
+
+        private void PrepareHookUrlData(StringBuilder postData, string domainUrl)
+        {
+            var hookStatus = "";
+            var hoolStatusList = new List<int>
+            {
+                frontPadOptions.StatusProcessed,
+                frontPadOptions.StatusDelivery,
+                frontPadOptions.StatusCancel
+            };
+            for (var i = 0; i < hoolStatusList.Count; ++i)
+            {
+                hookStatus += $"&hook_status[{i}]={hoolStatusList[i]}";
+            }
+            postData.Append(hookStatus);
+            postData.Append($"&hook_url={HttpUtility.UrlEncode($"{domainUrl}/api/frontpad/changestatus")}");
+
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using EasyStart.Logic.IntegrationSystem;
+﻿using EasyStart.Logic;
+using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Models;
 using EasyStart.Models.Integration;
 using EasyStart.Repositories;
@@ -97,7 +98,11 @@ namespace EasyStart.Controllers
                 var order = orderService.Get(orderId);
                 var products = productService.Get(order);
                 var orderDetails = new OrderDetails(order, products);
-                var newOrderResult = integrationSystemService.SendOrder(orderDetails, new IntegrationSystemFactory());
+                var domainUrl = Request.Url.GetBaseUrl();
+                var newOrderResult = integrationSystemService.SendOrder(
+                    orderDetails,
+                    new IntegrationSystemFactory(),
+                    domainUrl);
 
                 orderService.MarkOrderSendToIntegrationSystem(orderId, newOrderResult);
 

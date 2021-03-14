@@ -21,7 +21,7 @@ namespace EasyStart.Logic.IntegrationSystem
             this.integrationSystemSetting = integrationSystemSetting;
         }
 
-        public abstract INewOrderResult SendOrder(IOrderDetails orderDetails);
+        public abstract INewOrderResult SendOrder(IOrderDetails orderDetails, string domainUrl);
 
         protected async Task<string> SendOrder(string url, string postData)
         {

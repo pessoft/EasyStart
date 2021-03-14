@@ -14,7 +14,7 @@ namespace EasyStart.Logic.IntegrationSystem
         public Iiko(IntegrationSystemModel integrationSystemSetting): base(integrationSystemSetting)
         { }
 
-        public override INewOrderResult SendOrder(IOrderDetails orderDetails)
+        public override INewOrderResult SendOrder(IOrderDetails orderDetails, string domainUrl)
         {
             throw new NotImplementedException();
         }
