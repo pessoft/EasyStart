@@ -458,6 +458,7 @@
     <Compile Include="Models\IngredientHistoryModel.cs" />
     <Compile Include="Models\IngredientModel.cs" />
     <Compile Include="Models\IntegrationSystemModel.cs" />
+    <Compile Include="Models\Integration\FrontPadOptions.cs" />
     <Compile Include="Models\Integration\FrontPadOrderStatus.cs" />
     <Compile Include="Models\Integration\IOrderDetails.cs" />
     <Compile Include="Models\Integration\OrderDetails.cs" />

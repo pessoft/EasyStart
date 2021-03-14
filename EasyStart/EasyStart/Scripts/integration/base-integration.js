@@ -38,19 +38,47 @@ function initWithoutIntegration() {
     $integrationWrapper.html(template)
 }
 
+const frontPadIdsStore = {
+    secret: 'frontpad-integration',
+    statusProcessed: 'frontpad-integration-status-processed',
+    statusDelivery: 'frontpad-integration-status-delivery',
+    statusCancel: 'frontpad-integration-status-cancel',
+}
+
 function initFrontPadIntegration() {
-    const secret = IntegerationSystemSetting && IntegerationSystemSetting.Type == IntegrationSystemType.frontPad ?
-        IntegerationSystemSetting.Secret : ''
     const $integrationWrapper = $('.integration-values-wrapper')
-    const inputId = 'frontpad-integration'
+    
     const $template = $(`
         <div class="group">
-            <input required type="text" id="${inputId}" />
+            <input required type="text" id="${frontPadIdsStore.secret}" />
             <span class="bar"></span>
             <label>Секрет из FrontPad</label>
+        </div>
+        <div class="group">
+            <input required type="text" id="${frontPadIdsStore.statusProcessed}" />
+            <span class="bar"></span>
+            <label>Статус в производстве (код api)</label>
+        </div>
+        <div class="group">
+            <input required type="text" id="${frontPadIdsStore.statusDelivery}" />
+            <span class="bar"></span>
+            <label>Статус в пути (код api)</label>
+        </div>
+        <div class="group">
+            <input required type="text" id="${frontPadIdsStore.statusCancel}" />
+            <span class="bar"></span>
+            <label>Статус списан или отменен (код api)</label>
         </div>`)
 
-    $template.find(`#${inputId}`).val(secret)
+    if (IntegerationSystemSetting && IntegerationSystemSetting.Type == IntegrationSystemType.frontPad) {
+        $template.find(`#${frontPadIdsStore.secret}`).val(IntegerationSystemSetting.Secret)
+
+        const options = JSON.parse(IntegerationSystemSetting.Options)
+        $template.find(`#${frontPadIdsStore.statusProcessed}`).val(options.statusProcessed)
+        $template.find(`#${frontPadIdsStore.statusDelivery}`).val(options.statusDelivery)
+        $template.find(`#${frontPadIdsStore.statusCancel}`).val(options.statusCancel)
+    }
+    
     $integrationWrapper.html($template)
 }
 
@@ -203,11 +231,22 @@ function getDefaultSetting() {
 }
 
 function getFrontPadSetting() {
-    const secret = $('#frontpad-integration').val().trim()
-    const options = ''
+    const secret = $(`#${frontPadIdsStore.secret}`).val().trim()
+    const statusProcessed = $(`#${frontPadIdsStore.statusProcessed}`).val().trim()
+    const statusDelivery = $(`#${frontPadIdsStore.statusDelivery}`).val().trim()
+    const statusCancel = $(`#${frontPadIdsStore.statusCancel}`).val().trim()
 
-    if (!secret) {
-        const message = 'Не все поля заполненны'
+    const options = {
+        statusProcessed: parseInt(statusProcessed),
+        statusDelivery: parseInt(statusDelivery),
+        statusCancel: parseInt(statusCancel),
+    }
+
+    if (!secret
+        || options.statusProcessed === 0 || Number.isNaN(options.statusProcessed)
+        || options.statusDelivery === 0 || Number.isNaN(options.statusDelivery)
+        || options.statusCancel === 0 || Number.isNaN(options.statusCancel)) {
+        const message = 'Не все поля заполненны корректно'
         showErrorMessage(message)
         throw new Error(message)
     }

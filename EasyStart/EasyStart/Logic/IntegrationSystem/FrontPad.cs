@@ -17,8 +17,11 @@ namespace EasyStart.Logic.IntegrationSystem
     public class FrontPad : BaseIntegrationSystem
     {
         private const string newOrderUrl = "https://app.frontpad.ru/api/index.php?new_order";
+        private readonly FrontPadOptions frontPadOptions;
         public FrontPad(IntegrationSystemModel integrationSystemSetting): base(integrationSystemSetting)
-        { }
+        {
+            frontPadOptions = JsonConvert.DeserializeObject<FrontPadOptions>(integrationSystemSetting.Options);
+        }
 
         public override INewOrderResult SendOrder(IOrderDetails orderDetails)
         {
@@ -107,7 +110,12 @@ namespace EasyStart.Logic.IntegrationSystem
             postData.Append($"&person={HttpUtility.UrlEncode(order.NumberAppliances.ToString())}");
 
             var hookStatus = "";
-            var hoolStatusList = new List<int> { 3, 4 };
+            var hoolStatusList = new List<int> 
+            {
+                frontPadOptions.StatusProcessed,
+                frontPadOptions.StatusDelivery,
+                frontPadOptions.StatusCancel
+            };
             for (var i = 0; i < hoolStatusList.Count; ++i)
             {
                 hookStatus+= $"&hook_status[{i}]={hoolStatusList[i]}";
