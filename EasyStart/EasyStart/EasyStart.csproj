@@ -203,6 +203,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\IntegrationSystemController.cs" />
+    <Compile Include="Controllers\FrontPadController.cs" />
     <Compile Include="Controllers\UseController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -449,6 +450,7 @@
     <Compile Include="Models\IngredientHistoryModel.cs" />
     <Compile Include="Models\IngredientModel.cs" />
     <Compile Include="Models\IntegrationSystemModel.cs" />
+    <Compile Include="Models\Integration\FrontPadOrderStatus.cs" />
     <Compile Include="Models\Integration\IOrderDetails.cs" />
     <Compile Include="Models\Integration\OrderDetails.cs" />
     <Compile Include="Models\MainDataSignatureModel.cs" />
