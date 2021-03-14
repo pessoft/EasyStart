@@ -1,6 +1,7 @@
 ﻿using EasyStart.Logic;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -17,5 +18,8 @@ namespace EasyStart.Models
         public CategoryType CategoryType { get; set; } = CategoryType.Default;
         public bool NumberAppliances { get; set; }
         public bool IsDeleted { get; set; }
+
+        [NotMapped]
+        public List<int> RecommendedProducts { get; set; } = new List<int>();
     }
 }

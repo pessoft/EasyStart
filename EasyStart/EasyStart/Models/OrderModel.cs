@@ -9,9 +9,8 @@ using System.Web.Script.Serialization;
 
 namespace EasyStart.Models
 {
-    public class OrderModel
+    public class OrderModel: BaseEntity
     {
-        public int Id { get; set; }
         public int BranchId { get; set; }
         public int CityId { get; set; }
         public int ClientId { get; set; }
@@ -70,6 +69,15 @@ namespace EasyStart.Models
         public int CouponId { get; set; }
 
         public string CommentCauseCancel { get; set; } 
+
+        public long IntegrationOrderNumber { get; set; }
+
+        /// <summary>
+        /// Order id external 
+        /// </summary>
+        public long IntegrationOrderId { get; set; }
+
+        public bool IsSendToIntegrationSystem { get; set; }
 
         [NotMapped]
         [ScriptIgnore]

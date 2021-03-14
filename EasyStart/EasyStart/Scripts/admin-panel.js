@@ -21,19 +21,26 @@
 
     $("#setting-phone-number,#setting-phone-number-additional").mask("+7(999)999-99-99")
 
-    $(".menu-item").not(".logout").bind("click", function () {
+    $(".main-menu a").not(".logout").bind("click", function () {
         selectMenuItem(this)
     })
 
     let setOperationAdd = () => CurrentOperation = TypeOperation.Add
+
+    const additionFunForAddNewCategory = () => {
+        setOperationAdd()
+        toggleRecommendedProductsForCategory()
+    }
+
     const additionFunForAddNewProduct = () => {
         ProductAdditionalOptions = []
         ProductAllowCombinationsAdditionalOptions = []
         ProductAdditionalFillings = []
         setOperationAdd()
+        toggleVendorCodeProductInput()
     }
 
-    bindShowModal("add-category", "addCategoryDialog", setOperationAdd)
+    bindShowModal("add-category", "addCategoryDialog", additionFunForAddNewCategory)
     bindShowModal("add-product", "addProducDialog", additionFunForAddNewProduct, productCondition)
     bindShowModal("add-product-constructor", "addSubCategoryConstructorDialog", initNewCategoryConstructor, productConstructorCondition)
     bindShowModal("add-branch", "addBranchDialog", addNewBranchLoginData)
@@ -45,7 +52,7 @@
     bindDragula()
 
     loadMainProductData()
-    if ($(".header-menu .menu-item-active").attr("target-id") == Pages.Order) {
+    if ($(".main-menu a.menu-item-active").attr("target-id") == Pages.Order) {
         loadOrders()
     }
 
@@ -59,9 +66,79 @@
     checkSettings()
 })
 
+function toggleRecommendedProductsForCategory(ignoreCategoryId = 0, selectedProducts) {
+    const containerQuery = `.recommended-products-wrapper`
+    $(`${containerQuery}`).empty()
+
+    if (ProductsForPromotion && Object.keys(ProductsForPromotion).length) {
+        const selectId = `recommended-products-list`
+        const $select = $(`<select id=${selectId} multiple></select>`)
+        const selectOptGroups = []
+
+        for (const categoryId in ProductsForPromotion) {
+            if (categoryId == ignoreCategoryId)
+                continue
+
+            const categoryName = CategoryDictionary[categoryId]
+            const $optGroup = $(`<optgroup label="${categoryName}"></<optgroup>`)
+            const options = []
+
+            for (const product of ProductsForPromotion[categoryId]) {
+                let selected = ''
+                if (selectedProducts && selectedProducts.length) {
+                    const isSelected = selectedProducts.findIndex(productId => productId == product.Id) != -1
+                    selected = isSelected ? 'selected' : ''
+                }
+
+                const option = `<option ${selected} value="${product.Id}">${product.Name}</option>`
+                options.push(option)
+            }
+
+            $optGroup.html(options)
+            selectOptGroups.push($optGroup)
+        }
+
+        $select.html(selectOptGroups)
+
+        const header = '<div class="product-type-header">Рекомендуемые товары для категории</div>'
+        $(containerQuery).html(header)
+        $(containerQuery).append($select)
+
+        const sumoSelectOptions = {
+            placeholder: 'Выберите рекомендуемые товары',
+            up: true,
+            search: true,
+            searchText:'Поиск по имени продукта...'
+        }
+        $(`${containerQuery} #${selectId}`).SumoSelect(sumoSelectOptions)
+    } 
+}
+
+function generateVendorCode(event) {
+    event.stopPropagation()
+    const value = new Date().getTime()
+    $('#vendor-code-product').val(value)
+}
+
+function toggleVendorCodeProductInput() {
+    const query = '#vendor-code-product-wrapper'
+    const $generateBtn = $('#btn-product-generate-vendor-code')
+
+    if (IntegerationSystemSetting.Type == IntegrationSystemType.withoutIntegration) {
+        $(query).hide()
+        
+        $generateBtn.hide()
+        $generateBtn.prop('disabled', true)
+    } else {
+        $(query).show()
+        $generateBtn.show()
+        $generateBtn.prop('disabled', false)
+    }
+}
+
 function checkSettings() {
     if (!IsValidSetting || !IsValidDeliverySetting) {
-        $('.header-menu .menu-item').not('.logout').addClass('disabled-menu-item')
+        $('.main-menu li a').not('.logout').addClass('disabled-menu-item')
 
         if (!IsValidSetting && !IsValidDeliverySetting) {
             $('[target-id=setting], [target-id=delivery]').removeClass('disabled-menu-item')
@@ -74,7 +151,7 @@ function checkSettings() {
             selectMenuItem($('[target-id=delivery]'))
         }
     } else {
-        $('.header-menu .menu-item').removeClass('disabled-menu-item')
+        $('.main-menu li a').removeClass('disabled-menu-item')
     }
 }
 
@@ -443,7 +520,7 @@ function selectMenuItem(e) {
 
     prevChangedPage(targetId)
 
-    $(".menu-item").removeClass("menu-item-active")
+    $(".main-menu a").removeClass("menu-item-active")
     $e.addClass("menu-item-active")
     $(".section").addClass("hide")
     $(`#${targetId}`).removeClass("hide")
@@ -494,12 +571,17 @@ function updateCategory() {
         Id: $("#category-id").val(),
         Name: $("#name-category").val(),
         Image: $("#addCategoryDialog img").attr("src"),
-        NumberAppliances: $("#addCategoryDialog #number-appliances").is(':checked')
+        NumberAppliances: $("#addCategoryDialog #number-appliances").is(':checked'),
+        RecommendedProducts: getRecommendedProductsFromDialog($("#recommended-products-list option:selected"))
     }
 
     let successFunc = function (result, loader) {
         loader.stop()
         if (result.Success) {
+            const index = DataProduct.Categories.findIndex(p => p.Id == category.Id)
+
+            if (index != -1)
+                DataProduct.Categories[index] = result.Data
             let categoryItem = $(`[category-id=${category.Id}]`)
             categoryItem.find(".category-item-image img").attr("src", category.Image)
             categoryItem.find(".category-item-name").html(category.Name)
@@ -516,6 +598,16 @@ function updateCategory() {
     })
 }
 
+function getRecommendedProductsFromDialog($items) {
+    const itemsValue = []
+
+    $items.each(function () {
+        itemsValue.push(parseInt($(this).attr('value')))
+    })
+
+    return itemsValue
+}
+
 function addCategory() {
     let loader = new Loader($("#addCategoryDialog form"))
     loader.start()
@@ -524,7 +616,8 @@ function addCategory() {
         Name: $("#name-category").val(),
         CategoryType: parseInt($("#addCategoryDialog #category-type").val()),
         Image: $("#addCategoryDialog img").attr("src"),
-        NumberAppliances: $("#addCategoryDialog #number-appliances").is(':checked')
+        NumberAppliances: $("#addCategoryDialog #number-appliances").is(':checked'),
+        RecommendedProducts: getRecommendedProductsFromDialog($("#recommended-products-list option:selected"))
     }
 
     let successFunc = function (result, loader) {
@@ -574,13 +667,18 @@ function editCategory(e, event) {
     let dialog = $("#addCategoryDialog")
     let parent = $($(e).parents(".category-item"))
 
+    const categoryId = parent.attr("category-id")
+    const cotegoryFromData = DataProduct.Categories.find(p => p.Id == categoryId)
     let category = {
-        Id: parent.attr("category-id"),
+        Id: categoryId,
         CategoryType: parseInt(parent.attr("category-type")),
         Name: parent.find(".category-item-name").html().trim(),
         Image: parent.find("img").attr("src"),
-        NumberAppliances: !!parent.find(".number-appliances-data").val()
+        NumberAppliances: !!parent.find(".number-appliances-data").val(),
+        RecommendedProducts: cotegoryFromData.RecommendedProducts
     }
+
+    
 
     dialog.find("#category-id").val(category.Id)
     dialog.find("#name-category").val(category.Name)
@@ -594,6 +692,7 @@ function editCategory(e, event) {
     }
 
     Dialog.showModal(dialog)
+    toggleRecommendedProductsForCategory(category.Id, category.RecommendedProducts)
 
     const $select = $("#addCategoryDialog #category-type")
 
@@ -825,6 +924,7 @@ function addProduct() {
         ProductAdditionalOptionIds: ProductAdditionalOptions,
         AllowCombinationsJSON: JSON.stringify(ProductAllowCombinationsAdditionalOptions),
         ProductAdditionalFillingIds: ProductAdditionalFillings,
+        VendorCode: $('#vendor-code-product').val()
     }
     let successFunc = function (result, loader) {
         loader.stop()
@@ -861,6 +961,7 @@ function updateProduct() {
         ProductAdditionalOptionIds: ProductAdditionalOptions,
         AllowCombinationsJSON: JSON.stringify(ProductAllowCombinationsAdditionalOptions),
         ProductAdditionalFillingIds: ProductAdditionalFillings,
+        VendorCode: $('#vendor-code-product').val()
     }
 
     let successFunc = function (result, loader) {
@@ -1107,6 +1208,7 @@ function editProduct(e, event) {
     dialog.find('#btn-function-product-additional-info').attr('disabled', product.ProductAdditionalInfoType == ProductAdditionalInfoType.Custom)
     dialog.find('#btn-product-options').attr('disabled', product.ProductAdditionalInfoType == ProductAdditionalInfoType.Custom)
     dialog.find("#product-price").val(product.Price)
+    dialog.find("#vendor-code-product").val(product.VendorCode)
     dialog.find("#description-product").val(product.Description)
     dialog.find("img").attr("src", product.Image)
 
@@ -1115,6 +1217,7 @@ function editProduct(e, event) {
         dialog.find(".dialog-image-upload").addClass("hide")
     }
 
+    toggleVendorCodeProductInput()
     Dialog.showModal(dialog)
 
     setProductType(product.ProductType)//работает только если show, поэтому вызывается после покада диалогового окна
@@ -1830,6 +1933,7 @@ function processsingOrder(order) {
 }
 
 function toStringDateAndTime(date) {
+    date = new Date(date)
     let day = date.getDate().toString()
     day = day.length == 1 ? "0" + day : day
     let month = (date.getMonth() + 1).toString()
@@ -2051,7 +2155,7 @@ function showCountOrder(count) {
     let $orderCount = $(".order-count")
     if (count) {
         $orderCount.removeClass("hide")
-        $orderCount.html(count)
+        $orderCount.html(` (<span>+${count}</span>)`)
     } else {
         $orderCount.addClass("hide")
     }
@@ -2168,6 +2272,49 @@ function convertIngredientsToDictionary(ingredients) {
     }
 
     return dict
+}
+
+function showOrderDetailsFromPromotionClient(order) {
+    const currentSectionId = getCurrentSectionId()
+    const dialogId = order.orderStatus == OrderStatus.Processing ? 'orderDetailsDialog' : 'historyOrderDetailsDialog'
+    const getOrderDetails = () => {
+        const orderDetailsData = new OrderDetailsData(order)
+
+        return new OrderDetails(orderDetailsData, dialogId)
+    }
+
+
+    let loader = new Loader($(`#${currentSectionId}`))
+    loader.start()
+
+    let callbackLoadProducts = function (data) {
+        if (data.Success) {
+            for (let categoryObj of data.Data.products) {
+
+                categoryObj.Products.forEach(product => OrderProducts[product.Id] = product)
+            }
+
+            for (let categoryObj of data.Data.constructor) {
+                categoryObj.Ingredients = convertIngredientsToDictionary(categoryObj.Ingredients)
+                OrderConstructorProducts[categoryObj.CategoryId] = categoryObj
+            }
+
+            loader.stop()
+            getOrderDetails().show()
+        } else {
+            loader.stop()
+            showErrorMessage(data.ErrorMessage)
+        }
+    }
+
+    let itemsIdsforLoad = getItemsIdsForLoad(order)
+
+    if (itemsIdsforLoad.productIds.length == 0 && itemsIdsforLoad.constructorCategoryIds.length == 0) {
+        loader.stop()
+        getOrderDetails().show()
+    } else {
+        loadItemForOrder(itemsIdsforLoad, callbackLoadProducts)
+    }
 }
 
 function showOrderDetails(orderId) {
@@ -2456,6 +2603,7 @@ class OrderDetailsData {
         this.convertAmountInfo(order)
         this.convertAddressInfo(order)
         this.converеOrderListInfo(order)
+        this.setPermissionsSendToIntegrationSystem(order)
     }
 
     convertBaseInfo(order) {
@@ -2752,6 +2900,43 @@ class OrderDetailsData {
              </div>
         `
     }
+
+    setPermissionsSendToIntegrationSystem(order) {
+        let allowedSendToIntegrationSystem = true
+
+        if (!order.IsSendToIntegrationSystem) {
+            if (order.ProductCount && Object.keys(order.ProductCount).length > 0) {
+                for (let productId in order.ProductCount) {
+                    const product = OrderProducts[productId]
+
+                    if (!product.VendorCode) {
+                        allowedSendToIntegrationSystem = false
+                        break
+                    }
+                }
+            }
+
+            if (allowedSendToIntegrationSystem && order.ProductBonusCount && Object.keys(order.ProductBonusCount).length > 0) {
+                for (let productId in order.ProductBonusCount) {
+                    const product = OrderProducts[productId]
+
+                    if (!product.VendorCode) {
+                        allowedSendToIntegrationSystem = false
+                        break
+                    }
+                }
+            }
+
+            allowedSendToIntegrationSystem = allowedSendToIntegrationSystem && !(order.ProductConstructorCount && order.ProductConstructorCount.length > 0)
+            allowedSendToIntegrationSystem = allowedSendToIntegrationSystem && !(order.ProductWithOptionsCount && order.ProductWithOptionsCount.length > 0)
+            allowedSendToIntegrationSystem = allowedSendToIntegrationSystem && !(order.DiscountPercent != 0 && order.DiscountRuble !=0)
+        } else
+            allowedSendToIntegrationSystem = false
+
+        this.AllowedSendToIntegrationSystem = allowedSendToIntegrationSystem
+        this.IsSendToIntegrationSystem = order.IsSendToIntegrationSystem
+        this.IntegrationOrderNumber = `#${order.IntegrationOrderNumber}`
+    }
 }
 
 var OrderDetailsQSelector = {
@@ -2781,7 +2966,10 @@ var OrderDetailsQSelector = {
     Comment: ".order-details-comment .value",
     ApplyBtn: ".order-details-menu .btn-details-apply",
     CancelBtn: ".order-details-menu .btn-details-cancel",
-    CauseCancelBtn: ".order-details-menu .btn-details-cause-comment"
+    CauseCancelBtn: ".order-details-menu .btn-details-cause-comment",
+    SendToIntegtationSystem: "#send-to-integration",
+    IntegrationOrderNumber: '#integration-order-number',
+    SendToIntegtationSystemLoader: "#send-to-integration-loader",
 }
 
 var StatusAtrr = {
@@ -2805,14 +2993,16 @@ class OrderDetails {
      * @param {OrderDetailsData} details
      */
     constructor(details, dialogId) {
-        const detailsDialogId = dialogId
-        this.$dialog = $(`#${detailsDialogId}`)
+        this.$dialog = $(`#${dialogId}`)
         this.details = details
     }
 
     show() {
         this.setValues()
         this.buttonsConfig()
+        this.toggleSendToIntegrationBtn()
+        this.toggleOrderNumberInIntegrationSystem()
+
         Dialog.showModal(this.$dialog)
     }
 
@@ -2908,10 +3098,33 @@ class OrderDetails {
         this.setValue(OrderDetailsQSelector.Comment, this.details.Comment)
     }
 
+    toggleSendToIntegrationBtn() {
+        const $sendToIntegrationBtn = this.$dialog.find(OrderDetailsQSelector.SendToIntegtationSystem);
+
+        if (this.details.AllowedSendToIntegrationSystem === true)
+            $sendToIntegrationBtn.show()
+        else
+            $sendToIntegrationBtn.hide()
+    }
+
+    toggleOrderNumberInIntegrationSystem() {
+        const $integrationOrderNumber = this.$dialog.find(OrderDetailsQSelector.IntegrationOrderNumber);
+
+        if (this.details.IsSendToIntegrationSystem === true) {
+            $integrationOrderNumber.show()
+            $integrationOrderNumber.html(this.details.IntegrationOrderNumber)
+        }
+        else {
+            $integrationOrderNumber.hide()
+            $integrationOrderNumber.empty()
+        }
+    }
+
     buttonsConfig() {
         const $proccesed = $(OrderDetailsQSelector.ApplyBtn)
         const $cancel = $(OrderDetailsQSelector.CancelBtn)
         const $causeCancelComment = $(OrderDetailsQSelector.CauseCancelBtn)
+        const $sendToIntegrationSystem = $(OrderDetailsQSelector.SendToIntegtationSystem)
 
         const actionOrder = (orderStatus) => () => {
             this.close()
@@ -2954,21 +3167,23 @@ class OrderDetails {
         $proccesed.unbind("click")
         $cancel.unbind("click")
         $causeCancelComment.unbind("click")
+        $sendToIntegrationSystem.unbind('click')
+
+        $causeCancelComment.removeAttr("disabled")
+        if (this.details.Status == OrderStatus.Cancellation)
+            $causeCancelComment.bind("click", actionShowCauseCancelComment)
+        else
+            $causeCancelComment.attr("disabled", true)
 
         if (getCurrentSectionId() == Pages.HistoryOrder) {
             $proccesed.attr("disabled", true)
             $cancel.attr("disabled", true)
-            $causeCancelComment.removeAttr("disabled")
-
-            if (this.details.Status == OrderStatus.Cancellation)
-                $causeCancelComment.bind("click", actionShowCauseCancelComment)
-            else
-                $causeCancelComment.attr("disabled", true)
         } else {
             $proccesed.removeAttr("disabled")
             $cancel.removeAttr("disabled")
             $proccesed.bind("click", actionOrder(OrderStatus.Processed))
             $cancel.bind("click", actionCancel(OrderStatus.Cancellation))
+            $sendToIntegrationSystem.bind('click', () => sendOrderToIntegrationSystem(this.details.OrderId))
         }
     }
 }

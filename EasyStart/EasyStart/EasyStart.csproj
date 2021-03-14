@@ -199,7 +199,11 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AnalyticsController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ClientController.cs" />
+    <Compile Include="Controllers\IntegrationSystemController.cs" />
+    <Compile Include="Controllers\FrontPadController.cs" />
     <Compile Include="Controllers\UseController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -213,6 +217,8 @@
     <Compile Include="HtmlRenderer\Models\ProductInfoModel.cs" />
     <Compile Include="HtmlRenderer\Models\ProductWithOptionsInfoModel.cs" />
     <Compile Include="Hubs\NewOrderHub.cs" />
+    <Compile Include="JsResult\JSResult.cs" />
+    <Compile Include="JsResult\JsResultHelper.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Logic\AdditionalOptions\ProductAdditionalInfoType.cs" />
     <Compile Include="Logic\AnalyticsDataWrapper.cs" />
@@ -222,6 +228,17 @@
     <Compile Include="Logic\FCM\FCMNotification.cs" />
     <Compile Include="Logic\FCM\NotificationActionType.cs" />
     <Compile Include="Logic\FCM\PlatformDevice.cs" />
+    <Compile Include="Logic\IntegrationSystemType.cs" />
+    <Compile Include="Logic\IntegrationSystem\BaseIntegrationSystem.cs" />
+    <Compile Include="Logic\IntegrationSystem\FrontPad.cs" />
+    <Compile Include="Logic\IntegrationSystem\Iiko.cs" />
+    <Compile Include="Logic\IntegrationSystem\IIntegrationSystem.cs" />
+    <Compile Include="Logic\IntegrationSystem\IIntegrationSystemFactory.cs" />
+    <Compile Include="Logic\IntegrationSystem\IntegrationSystemFactory.cs" />
+    <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\FrontPadNewOrderResult.cs" />
+    <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\IikoNewOrderResult.cs" />
+    <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\INewOrderResult.cs" />
+    <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\NewOrderResult.cs" />
     <Compile Include="Logic\Notification\EmailNotification\RestorePasswordNotification.cs" />
     <Compile Include="Logic\PreprocessorDataAPI.cs" />
     <Compile Include="Logic\PromotionLogic.cs" />
@@ -375,9 +392,50 @@
     <Compile Include="Migrations\202008271733318_AddedAllowCombinationsJSONInProductModel.Designer.cs">
       <DependentUpon>202008271733318_AddedAllowCombinationsJSONInProductModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202012281832216_AddedIntegrationSystem.cs" />
+    <Compile Include="Migrations\202012281832216_AddedIntegrationSystem.Designer.cs">
+      <DependentUpon>202012281832216_AddedIntegrationSystem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202012282116531_RenamIntegrationSystemModel.cs" />
+    <Compile Include="Migrations\202012282116531_RenamIntegrationSystemModel.Designer.cs">
+      <DependentUpon>202012282116531_RenamIntegrationSystemModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202101271905422_AddedVendorCodeInProductModel.cs" />
+    <Compile Include="Migrations\202101271905422_AddedVendorCodeInProductModel.Designer.cs">
+      <DependentUpon>202101271905422_AddedVendorCodeInProductModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102281021464_AddedInOrderModelIntegrationOrderNumber.cs" />
+    <Compile Include="Migrations\202102281021464_AddedInOrderModelIntegrationOrderNumber.Designer.cs">
+      <DependentUpon>202102281021464_AddedInOrderModelIntegrationOrderNumber.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102281029314_AddedInOrderModelPropsIsSendToIntegrationSystem.cs" />
+    <Compile Include="Migrations\202102281029314_AddedInOrderModelPropsIsSendToIntegrationSystem.Designer.cs">
+      <DependentUpon>202102281029314_AddedInOrderModelPropsIsSendToIntegrationSystem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103011741171_AddClientBlocked.cs" />
+    <Compile Include="Migrations\202103011741171_AddClientBlocked.Designer.cs">
+      <DependentUpon>202103011741171_AddClientBlocked.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103110741026_AddedRecommendedProductsForCategory.cs" />
+    <Compile Include="Migrations\202103110741026_AddedRecommendedProductsForCategory.Designer.cs">
+      <DependentUpon>202103110741026_AddedRecommendedProductsForCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103110801003_RenameTypoBrunchRecommendedProductsForCategory.cs" />
+    <Compile Include="Migrations\202103110801003_RenameTypoBrunchRecommendedProductsForCategory.Designer.cs">
+      <DependentUpon>202103110801003_RenameTypoBrunchRecommendedProductsForCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103141925406_AddedOrderIdExternal.cs" />
+    <Compile Include="Migrations\202103141925406_AddedOrderIdExternal.Designer.cs">
+      <DependentUpon>202103141925406_AddedOrderIdExternal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103141958028_AddedOptionInIntegrationSystem.cs" />
+    <Compile Include="Migrations\202103141958028_AddedOptionInIntegrationSystem.Designer.cs">
+      <DependentUpon>202103141958028_AddedOptionInIntegrationSystem.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
+    <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\BranchModel.cs" />
     <Compile Include="Models\BranchSettingViewModel.cs" />
     <Compile Include="Models\BranchSignal.cs" />
@@ -399,6 +457,11 @@
     <Compile Include="Models\IContainImage.cs" />
     <Compile Include="Models\IngredientHistoryModel.cs" />
     <Compile Include="Models\IngredientModel.cs" />
+    <Compile Include="Models\IntegrationSystemModel.cs" />
+    <Compile Include="Models\Integration\FrontPadOptions.cs" />
+    <Compile Include="Models\Integration\FrontPadOrderStatus.cs" />
+    <Compile Include="Models\Integration\IOrderDetails.cs" />
+    <Compile Include="Models\Integration\OrderDetails.cs" />
     <Compile Include="Models\MainDataSignatureModel.cs" />
     <Compile Include="Models\NewBranchModel.cs" />
     <Compile Include="Models\CategoryModel.cs" />
@@ -434,6 +497,7 @@
     <Compile Include="Models\RatingProduct.cs" />
     <Compile Include="Models\RatingProductMiddleware.cs" />
     <Compile Include="Models\RatingProductUpdater.cs" />
+    <Compile Include="Models\RecommendedProductModel.cs" />
     <Compile Include="Models\ReportFilter.cs" />
     <Compile Include="Models\ReportResult.cs" />
     <Compile Include="Models\SettingModel.cs" />
@@ -450,6 +514,18 @@
     <Compile Include="Models\UseModel.cs" />
     <Compile Include="Models\UserDataPhoneApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\ClientRepository.cs" />
+    <Compile Include="Repositories\ProductRepository.cs" />
+    <Compile Include="Repositories\OrderRepository.cs" />
+    <Compile Include="Repositories\BranchRepository.cs" />
+    <Compile Include="Repositories\InegrationSystemRepository.cs" />
+    <Compile Include="Repositories\IRepository.cs" />
+    <Compile Include="Repositories\BaseRepository.cs" />
+    <Compile Include="Services\BranchService.cs" />
+    <Compile Include="Services\ClientService.cs" />
+    <Compile Include="Services\ProductService.cs" />
+    <Compile Include="Services\OrderService.cs" />
+    <Compile Include="Services\IntegrationSystemService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\FondyErrorCodeHelper.cs" />
     <Compile Include="Utils\CityHelper.cs" />
@@ -489,6 +565,7 @@
     <Content Include="Content\fontawesome\webfonts\fa-regular-400.svg" />
     <Content Include="Content\fontawesome\webfonts\fa-solid-900.svg" />
     <Content Include="Content\image-processing.css" />
+    <Content Include="Content\integration.css" />
     <Content Include="Content\material-input.css" />
     <Content Include="Content\odometer\odometer-theme-minimal.css" />
     <Content Include="Content\product-additional-options.css" />
@@ -597,7 +674,13 @@
     <Content Include="Scripts\cropper.js" />
     <Content Include="Scripts\datepicker.min.js" />
     <Content Include="Scripts\dragula.js" />
+    <Content Include="Scripts\fetch-helpers\disposable.js" />
+    <Content Include="Scripts\fetch-helpers\promotion-client-fetch-helper.js" />
+    <Content Include="Scripts\fetch-helpers\url-store.js" />
+    <Content Include="Scripts\fetch-helpers\base-fetch-helper.js" />
+    <Content Include="Scripts\fetch-helpers\fetch-helper.js" />
     <Content Include="Scripts\image-processing.js" />
+    <Content Include="Scripts\integration\base-integration.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -626,6 +709,10 @@
     <Content Include="Scripts\product-additional-options.js" />
     <Content Include="Scripts\product-constructor.js" />
     <Content Include="Scripts\promotion\cashback-partners.js" />
+    <Content Include="Scripts\promotion\clients\event-listener.js" />
+    <Content Include="Scripts\promotion\clients\promotion-clients-view.js" />
+    <Content Include="Scripts\promotion\clients\promotion-clients.js" />
+    <Content Include="Scripts\promotion\clients\promotion-clients-logic.js" />
     <Content Include="Scripts\promotion\coupon.js" />
     <Content Include="Scripts\promotion\promotion-news.js" />
     <Content Include="Scripts\promotion\promotion-setting.js" />
@@ -737,6 +824,36 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202008271733318_AddedAllowCombinationsJSONInProductModel.resx">
       <DependentUpon>202008271733318_AddedAllowCombinationsJSONInProductModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202012281832216_AddedIntegrationSystem.resx">
+      <DependentUpon>202012281832216_AddedIntegrationSystem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202012282116531_RenamIntegrationSystemModel.resx">
+      <DependentUpon>202012282116531_RenamIntegrationSystemModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101271905422_AddedVendorCodeInProductModel.resx">
+      <DependentUpon>202101271905422_AddedVendorCodeInProductModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102281021464_AddedInOrderModelIntegrationOrderNumber.resx">
+      <DependentUpon>202102281021464_AddedInOrderModelIntegrationOrderNumber.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102281029314_AddedInOrderModelPropsIsSendToIntegrationSystem.resx">
+      <DependentUpon>202102281029314_AddedInOrderModelPropsIsSendToIntegrationSystem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103011741171_AddClientBlocked.resx">
+      <DependentUpon>202103011741171_AddClientBlocked.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103110741026_AddedRecommendedProductsForCategory.resx">
+      <DependentUpon>202103110741026_AddedRecommendedProductsForCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103110801003_RenameTypoBrunchRecommendedProductsForCategory.resx">
+      <DependentUpon>202103110801003_RenameTypoBrunchRecommendedProductsForCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103141925406_AddedOrderIdExternal.resx">
+      <DependentUpon>202103141925406_AddedOrderIdExternal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103141958028_AddedOptionInIntegrationSystem.resx">
+      <DependentUpon>202103141958028_AddedOptionInIntegrationSystem.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

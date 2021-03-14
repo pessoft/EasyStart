@@ -2,7 +2,7 @@
     cashbackSetting: null,
     partnersSetting: null,
     loadCashbackPartnerSettings: function () {
-        let loader = new Loader($("#pormotion-cashback-partners"));
+        let loader = new Loader($("#promotion-cashback-partners"));
         const self = this
 
         loader.start();
