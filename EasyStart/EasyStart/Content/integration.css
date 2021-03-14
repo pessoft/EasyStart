@@ -1,0 +1,23 @@
+.integration-type-wrapper {
+    justify-self: center;
+}
+
+#integration select {
+    border-radius: 2px;
+    height: 30px;
+    color: #0f1e32de;
+    min-width: 250px;
+}
+
+.integration-values-wrapper {
+    position: relative;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.integration-menu-wrapper {
+    justify-self: center;
+}

@@ -149,10 +149,13 @@ namespace EasyStart
                 var productIds = products.Values.SelectMany(p => p.Select(s => s.Id)).ToList();
                 var reviewsCount = DataWrapper.GetProductReviewsVisibleCount(productIds);
 
+                var recommendedProducts = DataWrapper.GetRecommendedProductsForCategoryByBranchId(branchId);
+
                 result.Data = new
                 {
                     categories,
                     products,
+                    recommendedProducts,
                     additionalOptions,
                     additionalFillings,
                     constructorCategories,
@@ -595,6 +598,10 @@ namespace EasyStart
         {
             try
             {
+                var useState = UseMethod.GetCurrentState();
+                if (!useState)
+                    return;
+
                 System.Web.HttpContext.Current = currentContext;
                 var emailTemplate = File.ReadAllText(currentContext.Server.MapPath("~/Resource/EmailTemplateOrderNotify.html"));
                 var setting = DataWrapper.GetSetting(order.BranchId);
@@ -1229,6 +1236,11 @@ namespace EasyStart
                 if (client == null)
                 {
                     result.ErrorMessage = "Неверный пароль";
+                    return result;
+                }
+                else if(client.Blocked)
+                {
+                    result.ErrorMessage = "Учетная запись заблокирована";
                     return result;
                 }
 
