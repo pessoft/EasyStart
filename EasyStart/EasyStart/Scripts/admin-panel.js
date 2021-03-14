@@ -114,12 +114,25 @@ function toggleRecommendedProductsForCategory(ignoreCategoryId = 0, selectedProd
     } 
 }
 
+function generateVendorCode(event) {
+    event.stopPropagation()
+    const value = new Date().getTime()
+    $('#vendor-code-product').val(value)
+}
+
 function toggleVendorCodeProductInput() {
     const query = '#vendor-code-product-wrapper'
+    const $generateBtn = $('#btn-product-generate-vendor-code')
+
     if (IntegerationSystemSetting.Type == IntegrationSystemType.withoutIntegration) {
         $(query).hide()
+        
+        $generateBtn.hide()
+        $generateBtn.prop('disabled', true)
     } else {
         $(query).show()
+        $generateBtn.show()
+        $generateBtn.prop('disabled', false)
     }
 }
 
