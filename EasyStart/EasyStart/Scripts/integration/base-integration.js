@@ -47,7 +47,7 @@ const frontPadIdsStore = {
 
 function initFrontPadIntegration() {
     const $integrationWrapper = $('.integration-values-wrapper')
-    
+    const webHookUrl = `${window.location.origin}/api/frontpad/changestatus`
     const $template = $(`
         <div class="group">
             <input required type="text" id="${frontPadIdsStore.secret}" />
@@ -68,6 +68,11 @@ function initFrontPadIntegration() {
             <input required type="text" id="${frontPadIdsStore.statusCancel}" />
             <span class="bar"></span>
             <label>Статус списан или отменен (код api)</label>
+        </div>
+        <div class="group">
+            <input required readonly type="text" value="${webHookUrl}"/>
+            <span class="bar"></span>
+            <label>Webhook url</label>
         </div>`)
 
     if (IntegerationSystemSetting && IntegerationSystemSetting.Type == IntegrationSystemType.frontPad) {
