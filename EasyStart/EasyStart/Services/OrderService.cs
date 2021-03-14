@@ -24,12 +24,21 @@ namespace EasyStart.Services
             return result;
         }
 
+        public OrderModel GetByExternalId(int id)
+        {
+            var result = repository.Get(p => p.IntegrationOrderId == id && p.IntegrationOrderId != 0)
+                .FirstOrDefault();
+
+            return result;
+        }
+
         public void MarkOrderSendToIntegrationSystem(int orderId, INewOrderResult orderResult)
         {
             if (!orderResult.Success)
                 return;
 
             var order = Get(orderId);
+            order.IntegrationOrderId = orderResult.ExternalOrderId;
             order.IntegrationOrderNumber = orderResult.OrderNumber;
             order.IsSendToIntegrationSystem = true;
 

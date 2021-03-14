@@ -72,6 +72,11 @@ namespace EasyStart.Models
 
         public long IntegrationOrderNumber { get; set; }
 
+        /// <summary>
+        /// Order id external 
+        /// </summary>
+        public long IntegrationOrderId { get; set; }
+
         public bool IsSendToIntegrationSystem { get; set; }
 
         [NotMapped]
