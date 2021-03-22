@@ -1,4 +1,5 @@
 ﻿using EasyStart.Models;
+using EasyStart.Models.FCMNotification;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -7,9 +8,9 @@ using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public class PushNotificationRepository : BaseRepository<OrderModel>
+    public class FCMDeviceRepository : BaseRepository<FCMDeviceModel>
     {
-        public PushNotificationRepository(DbContext dbContext) : base(dbContext)
+        public FCMDeviceRepository(DbContext dbContext) : base(dbContext)
         { }
     }
 }

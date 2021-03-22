@@ -235,6 +235,7 @@
     <Compile Include="Logic\IntegrationSystem\IIntegrationSystem.cs" />
     <Compile Include="Logic\IntegrationSystem\IIntegrationSystemFactory.cs" />
     <Compile Include="Logic\IntegrationSystem\IntegrationSystemFactory.cs" />
+    <Compile Include="Logic\IntegrationSystem\IntegrationOrderStatus.cs" />
     <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\FrontPadNewOrderResult.cs" />
     <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\IikoNewOrderResult.cs" />
     <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\INewOrderResult.cs" />
@@ -515,7 +516,7 @@
     <Compile Include="Models\UserDataPhoneApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ClientRepository.cs" />
-    <Compile Include="Repositories\PushNotificationRepository.cs" />
+    <Compile Include="Repositories\FCMDeviceRepository.cs" />
     <Compile Include="Repositories\ProductRepository.cs" />
     <Compile Include="Repositories\OrderRepository.cs" />
     <Compile Include="Repositories\BranchRepository.cs" />
@@ -523,6 +524,7 @@
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
     <Compile Include="Services\BranchService.cs" />
+    <Compile Include="Services\PushNotificationService.cs" />
     <Compile Include="Services\ClientService.cs" />
     <Compile Include="Services\ProductService.cs" />
     <Compile Include="Services\OrderService.cs" />
