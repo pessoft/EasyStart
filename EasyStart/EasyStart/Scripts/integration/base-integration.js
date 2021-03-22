@@ -42,6 +42,7 @@ const frontPadIdsStore = {
     secret: 'frontpad-integration',
     statusProcessed: 'frontpad-integration-status-processed',
     statusDelivery: 'frontpad-integration-status-delivery',
+    statusDone: 'frontpad-integration-status-done',
     statusCancel: 'frontpad-integration-status-cancel',
 }
 
@@ -65,6 +66,11 @@ function initFrontPadIntegration() {
             <label>Статус в пути (код api)</label>
         </div>
         <div class="group">
+            <input required type="text" id="${frontPadIdsStore.statusDone}" />
+            <span class="bar"></span>
+            <label>Статус выполнен (код api)</label>
+        </div>
+        <div class="group">
             <input required type="text" id="${frontPadIdsStore.statusCancel}" />
             <span class="bar"></span>
             <label>Статус списан или отменен (код api)</label>
@@ -81,6 +87,7 @@ function initFrontPadIntegration() {
         const options = JSON.parse(IntegerationSystemSetting.Options)
         $template.find(`#${frontPadIdsStore.statusProcessed}`).val(options.statusProcessed)
         $template.find(`#${frontPadIdsStore.statusDelivery}`).val(options.statusDelivery)
+        $template.find(`#${frontPadIdsStore.statusDone}`).val(options.statusDone)
         $template.find(`#${frontPadIdsStore.statusCancel}`).val(options.statusCancel)
     }
     
@@ -239,11 +246,13 @@ function getFrontPadSetting() {
     const secret = $(`#${frontPadIdsStore.secret}`).val().trim()
     const statusProcessed = $(`#${frontPadIdsStore.statusProcessed}`).val().trim()
     const statusDelivery = $(`#${frontPadIdsStore.statusDelivery}`).val().trim()
+    const statusDone = $(`#${frontPadIdsStore.statusDone}`).val().trim()
     const statusCancel = $(`#${frontPadIdsStore.statusCancel}`).val().trim()
 
     const options = {
         statusProcessed: parseInt(statusProcessed),
         statusDelivery: parseInt(statusDelivery),
+        statusDone: parseInt(statusDone),
         statusCancel: parseInt(statusCancel),
     }
 

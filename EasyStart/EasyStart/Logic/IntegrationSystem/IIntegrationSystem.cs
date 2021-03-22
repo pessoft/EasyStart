@@ -12,5 +12,6 @@ namespace EasyStart.Logic.IntegrationSystem
     public interface IIntegrationSystem
     {
         INewOrderResult SendOrder(IOrderDetails orderDetails, string domainUrl);
+        IntegrationOrderStatus GetIntegrationOrderStatus(int externalOrderStatusId);
     }
 }

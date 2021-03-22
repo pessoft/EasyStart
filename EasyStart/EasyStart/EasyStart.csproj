@@ -433,6 +433,10 @@
     <Compile Include="Migrations\202103141958028_AddedOptionInIntegrationSystem.Designer.cs">
       <DependentUpon>202103141958028_AddedOptionInIntegrationSystem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103221236454_AddedIntegrationOrderStatusInOrderModel.cs" />
+    <Compile Include="Migrations\202103221236454_AddedIntegrationOrderStatusInOrderModel.Designer.cs">
+      <DependentUpon>202103221236454_AddedIntegrationOrderStatusInOrderModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -857,6 +861,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103141958028_AddedOptionInIntegrationSystem.resx">
       <DependentUpon>202103141958028_AddedOptionInIntegrationSystem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103221236454_AddedIntegrationOrderStatusInOrderModel.resx">
+      <DependentUpon>202103221236454_AddedIntegrationOrderStatusInOrderModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

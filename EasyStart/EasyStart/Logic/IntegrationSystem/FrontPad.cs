@@ -23,6 +23,22 @@ namespace EasyStart.Logic.IntegrationSystem
             frontPadOptions = JsonConvert.DeserializeObject<FrontPadOptions>(integrationSystemSetting.Options);
         }
 
+        public override IntegrationOrderStatus GetIntegrationOrderStatus(int externalOrderStatusId)
+        {
+            var status = IntegrationOrderStatus.Unknown;
+
+            if (externalOrderStatusId == this.frontPadOptions.StatusProcessed)
+                status = IntegrationOrderStatus.Preparing;
+            else if (externalOrderStatusId == this.frontPadOptions.StatusDelivery)
+                status = IntegrationOrderStatus.Deliverid;
+            else if (externalOrderStatusId == this.frontPadOptions.StatusCancel)
+                status = IntegrationOrderStatus.Canceled;
+            else if (externalOrderStatusId == this.frontPadOptions.StatusDone)
+                status = IntegrationOrderStatus.Done;
+
+            return status;
+        }
+
         public override INewOrderResult SendOrder(IOrderDetails orderDetails, string domainUrl)
         {
             var postData = new StringBuilder();
