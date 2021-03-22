@@ -148,12 +148,15 @@ namespace EasyStart.Logic.IntegrationSystem
             {
                 frontPadOptions.StatusProcessed,
                 frontPadOptions.StatusDelivery,
+                frontPadOptions.StatusDone,
                 frontPadOptions.StatusCancel
             };
+
             for (var i = 0; i < hoolStatusList.Count; ++i)
             {
                 hookStatus += $"&hook_status[{i}]={hoolStatusList[i]}";
             }
+
             postData.Append(hookStatus);
             postData.Append($"&hook_url={HttpUtility.UrlEncode($"{domainUrl}/api/frontpad/changestatus")}");
 
