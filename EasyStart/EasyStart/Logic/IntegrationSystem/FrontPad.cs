@@ -159,7 +159,6 @@ namespace EasyStart.Logic.IntegrationSystem
 
             postData.Append(hookStatus);
             postData.Append($"&hook_url={HttpUtility.UrlEncode($"{domainUrl}/api/frontpad/changestatus")}");
-
         }
     }
 }

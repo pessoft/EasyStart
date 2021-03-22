@@ -42,6 +42,9 @@ namespace EasyStart.Controllers
         [HttpPost]
         public FrontPadOrderStatus ChangeStatus([FromBody] FrontPadOrderStatus status)
         {
+            if (status.OrderId == 0)
+                return status;
+
             var order = this.orderService.GetByExternalId(status.OrderId);
             var integrationSetting = this.integrationSystemService.Get(order.BranchId);
 
@@ -52,7 +55,7 @@ namespace EasyStart.Controllers
             var orderStatus = integerationSystem.GetIntegrationOrderStatus(status.Status);
             
             this.orderService.ChangeIntegrationStatus(order.Id, orderStatus);
-            order = this.orderService.GetByExternalId(order.Id);
+            order = this.orderService.Get(order.Id);
 
             this.pushNotificationService.ChangeOrderStatus(orderStatus, order);
 
