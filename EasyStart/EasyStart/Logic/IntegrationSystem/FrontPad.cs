@@ -27,7 +27,9 @@ namespace EasyStart.Logic.IntegrationSystem
         {
             var status = IntegrationOrderStatus.Unknown;
 
-            if (externalOrderStatusId == this.frontPadOptions.StatusProcessed)
+            if (externalOrderStatusId == this.frontPadOptions.StatusNew)
+                status = IntegrationOrderStatus.New;
+            else if (externalOrderStatusId == this.frontPadOptions.StatusProcessed)
                 status = IntegrationOrderStatus.Preparing;
             else if (externalOrderStatusId == this.frontPadOptions.StatusDelivery)
                 status = IntegrationOrderStatus.Deliverid;
@@ -146,6 +148,7 @@ namespace EasyStart.Logic.IntegrationSystem
             var hookStatus = "";
             var hoolStatusList = new List<int>
             {
+                frontPadOptions.StatusNew,
                 frontPadOptions.StatusProcessed,
                 frontPadOptions.StatusDelivery,
                 frontPadOptions.StatusDone,

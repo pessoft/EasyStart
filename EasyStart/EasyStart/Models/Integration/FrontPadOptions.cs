@@ -7,6 +7,7 @@ namespace EasyStart.Models.Integration
 {
     public class FrontPadOptions
     {
+        public int StatusNew { get; set; }
         public int StatusProcessed { get; set; }
         public int StatusDelivery { get; set; }
         public int StatusCancel { get; set; }

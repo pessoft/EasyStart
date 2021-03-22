@@ -8,6 +8,7 @@ namespace EasyStart.Logic.IntegrationSystem
     public enum IntegrationOrderStatus
     {
         Unknown,
+        New,
         Preparing,
         Deliverid,
         Done,

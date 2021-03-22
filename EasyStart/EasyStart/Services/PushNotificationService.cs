@@ -28,10 +28,25 @@ namespace EasyStart.Services
         /// <param name="orderStatus"></param>
         public void ChangeOrderStatus(IntegrationOrderStatus orderStatus, OrderModel order)
         {
+            var bodyMsg = "";
+
+            switch (orderStatus)
+            {
+                case IntegrationOrderStatus.Preparing:
+                    bodyMsg = "Ваш заказ готовится";
+                    break;
+                case IntegrationOrderStatus.Deliverid:
+                    bodyMsg = "Заказ передан курьеру";
+                    break;
+                case IntegrationOrderStatus.Canceled:
+                    bodyMsg = "Заказ отменен";
+                    break;
+            }
+
             var message = new PushNotification
             {
                 Title = $"Инофрмация о заказке #{order.Id}",
-                Body = orderStatus == IntegrationOrderStatus.Preparing ? "Ваш заказ готовится" : "Заказ передан курьеру"
+                Body = bodyMsg
             };
 
             ChangeOrderStatus(orderStatus, order, message);
@@ -46,8 +61,8 @@ namespace EasyStart.Services
             message.Action = new ActionMessage { Type = Logic.FCM.NotificationActionType.OpenOrder, TargetId = order.Id };
             
             if (orderStatus == IntegrationOrderStatus.Unknown ||
-                orderStatus == IntegrationOrderStatus.Done ||
-                orderStatus == IntegrationOrderStatus.Canceled)
+                orderStatus == IntegrationOrderStatus.New ||
+                orderStatus == IntegrationOrderStatus.Done)
                 return;
 
             var clinetDeviceToken = GetClientDiveceToken(order.ClientId);

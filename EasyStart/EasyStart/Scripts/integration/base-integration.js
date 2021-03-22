@@ -40,6 +40,7 @@ function initWithoutIntegration() {
 
 const frontPadIdsStore = {
     secret: 'frontpad-integration',
+    statusNew: 'frontpad-integration-status-new',
     statusProcessed: 'frontpad-integration-status-processed',
     statusDelivery: 'frontpad-integration-status-delivery',
     statusDone: 'frontpad-integration-status-done',
@@ -56,6 +57,11 @@ function initFrontPadIntegration() {
             <label>Секрет из FrontPad</label>
         </div>
         <div class="group">
+            <input required readonly type="text" id="${frontPadIdsStore.statusNew}"/>
+            <span class="bar"></span>
+            <label>Статус новый (код api)</label>
+        </div>
+        <div class="group">
             <input required type="text" id="${frontPadIdsStore.statusProcessed}" />
             <span class="bar"></span>
             <label>Статус в производстве (код api)</label>
@@ -66,7 +72,7 @@ function initFrontPadIntegration() {
             <label>Статус в пути (код api)</label>
         </div>
         <div class="group">
-            <input required type="text" id="${frontPadIdsStore.statusDone}" />
+            <input required readonly type="text" id="${frontPadIdsStore.statusDone}"/>
             <span class="bar"></span>
             <label>Статус выполнен (код api)</label>
         </div>
@@ -85,9 +91,10 @@ function initFrontPadIntegration() {
         $template.find(`#${frontPadIdsStore.secret}`).val(IntegerationSystemSetting.Secret)
 
         const options = JSON.parse(IntegerationSystemSetting.Options)
+        $template.find(`#${frontPadIdsStore.statusNew}`).val(options.statusNew || 1)
         $template.find(`#${frontPadIdsStore.statusProcessed}`).val(options.statusProcessed)
         $template.find(`#${frontPadIdsStore.statusDelivery}`).val(options.statusDelivery)
-        $template.find(`#${frontPadIdsStore.statusDone}`).val(options.statusDone)
+        $template.find(`#${frontPadIdsStore.statusDone}`).val(options.statusDone || 10)
         $template.find(`#${frontPadIdsStore.statusCancel}`).val(options.statusCancel)
     }
     
@@ -244,12 +251,14 @@ function getDefaultSetting() {
 
 function getFrontPadSetting() {
     const secret = $(`#${frontPadIdsStore.secret}`).val().trim()
+    const statusNew = $(`#${frontPadIdsStore.statusNew}`).val().trim()
     const statusProcessed = $(`#${frontPadIdsStore.statusProcessed}`).val().trim()
     const statusDelivery = $(`#${frontPadIdsStore.statusDelivery}`).val().trim()
     const statusDone = $(`#${frontPadIdsStore.statusDone}`).val().trim()
     const statusCancel = $(`#${frontPadIdsStore.statusCancel}`).val().trim()
 
     const options = {
+        statusNew: parseInt(statusNew),
         statusProcessed: parseInt(statusProcessed),
         statusDelivery: parseInt(statusDelivery),
         statusDone: parseInt(statusDone),
@@ -257,8 +266,10 @@ function getFrontPadSetting() {
     }
 
     if (!secret
+        || options.statusNew === 0 || Number.isNaN(options.statusNew)
         || options.statusProcessed === 0 || Number.isNaN(options.statusProcessed)
         || options.statusDelivery === 0 || Number.isNaN(options.statusDelivery)
+        || options.statusDone === 0 || Number.isNaN(options.statusDone)
         || options.statusCancel === 0 || Number.isNaN(options.statusCancel)) {
         const message = 'Не все поля заполненны корректно'
         showErrorMessage(message)
