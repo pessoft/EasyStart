@@ -1,8 +1,11 @@
 ﻿using EasyStart.Logic;
 using EasyStart.Logic.FCM;
+using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Models;
 using EasyStart.Models.FCMNotification;
 using EasyStart.Models.ProductOption;
+using EasyStart.Repositories;
+using EasyStart.Services;
 using EasyStart.Utils;
 using Newtonsoft.Json;
 using System;
@@ -11,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Security;
 
@@ -19,6 +23,22 @@ namespace EasyStart.Controllers
     [RedirectingAction]
     public class AdminController : Controller
     {
+        private readonly PushNotificationService pushNotificationService;
+        private readonly static string fcmAuthKeyPath;
+        static AdminController()
+        {
+            fcmAuthKeyPath = HostingEnvironment.MapPath("/Resource/FCMAuthKey.json");
+        }
+
+        public AdminController()
+        {
+            var context = new AdminPanelContext();
+            var fcmDeviveRepository = new FCMDeviceRepository(context);
+            
+            this.pushNotificationService = new PushNotificationService(fcmDeviveRepository, fcmAuthKeyPath);
+        }
+
+
         // GET: Admin
         [Authorize]
         public ActionResult AdminPanel()
@@ -940,6 +960,10 @@ namespace EasyStart.Controllers
                 else if (data.Status == OrderStatus.Cancellation)
                 {
                     new PromotionLogic().Refund(data.OrderId);
+
+                    if (order.IntegrationOrderStatus == IntegrationOrderStatus.Unknown)
+                        Task.Run(() => this.pushNotificationService.ChangeOrderStatus(IntegrationOrderStatus.Canceled, order));
+                        
                 }
             }
             catch (Exception ex)

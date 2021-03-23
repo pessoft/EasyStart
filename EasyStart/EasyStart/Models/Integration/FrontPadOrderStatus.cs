@@ -10,6 +10,9 @@ namespace EasyStart.Models.Integration
     {
         public string Action { get; set; }
 
+        /// <summary>
+        /// External order id
+        /// </summary>
         [JsonProperty(PropertyName = "order_id")]
         public long OrderId { get; set; }
 

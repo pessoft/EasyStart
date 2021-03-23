@@ -1,4 +1,5 @@
 ﻿using EasyStart.Logic;
+using EasyStart.Logic.IntegrationSystem;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -53,6 +54,8 @@ namespace EasyStart.Models
         public DateTime UpdateDate { get; set; }
         public DateTime? DateDelivery { get; set; }
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Processing;
+
+        public IntegrationOrderStatus IntegrationOrderStatus { get; set; } = IntegrationOrderStatus.Unknown;
 
         public string ProductBonusCountJSON { get; set; }
 

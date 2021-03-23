@@ -14,5 +14,6 @@ namespace EasyStart.Logic.FCM
         OpenPartners = 4,
         OpenCashback = 5,
         OpenNews = 6,
+        OpenOrder = 7,
     }
 }

@@ -1,4 +1,5 @@
-﻿using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
+﻿using EasyStart.Logic.IntegrationSystem;
+using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
 using EasyStart.Models;
 using EasyStart.Repositories;
 using System;
@@ -11,7 +12,7 @@ namespace EasyStart.Services
     public class OrderService
     {
         private readonly IRepository<OrderModel> repository;
-        
+
         public OrderService(IRepository<OrderModel> repository)
         {
             this.repository = repository;
@@ -24,7 +25,7 @@ namespace EasyStart.Services
             return result;
         }
 
-        public OrderModel GetByExternalId(int id)
+        public OrderModel GetByExternalId(long id)
         {
             var result = repository.Get(p => p.IntegrationOrderId == id && p.IntegrationOrderId != 0)
                 .FirstOrDefault();
@@ -41,6 +42,7 @@ namespace EasyStart.Services
             order.IntegrationOrderId = orderResult.ExternalOrderId;
             order.IntegrationOrderNumber = orderResult.OrderNumber;
             order.IsSendToIntegrationSystem = true;
+            order.IntegrationOrderStatus = IntegrationOrderStatus.New;
 
             repository.Update(order);
         }
@@ -50,6 +52,14 @@ namespace EasyStart.Services
             var orders = repository.Get(p => p.ClientId == clinetId).ToList();
 
             return orders;
+        }
+
+        public void ChangeIntegrationStatus(int orderId, IntegrationOrderStatus status)
+        {
+            var order = Get(orderId);
+            order.IntegrationOrderStatus = status;
+
+            repository.Update(order);
         }
     }
 }

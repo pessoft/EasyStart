@@ -21,6 +21,8 @@ namespace EasyStart.Logic.IntegrationSystem
             this.integrationSystemSetting = integrationSystemSetting;
         }
 
+        public abstract IntegrationOrderStatus GetIntegrationOrderStatus(int externalOrderStatusId);
+
         public abstract INewOrderResult SendOrder(IOrderDetails orderDetails, string domainUrl);
 
         protected async Task<string> SendOrder(string url, string postData)
