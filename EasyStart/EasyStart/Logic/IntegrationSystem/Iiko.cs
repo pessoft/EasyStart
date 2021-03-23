@@ -18,5 +18,10 @@ namespace EasyStart.Logic.IntegrationSystem
         {
             throw new NotImplementedException();
         }
+
+        public override IntegrationOrderStatus GetIntegrationOrderStatus(int externalOrderStatusId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
