@@ -39,13 +39,13 @@ namespace EasyStart.Services
                     bodyMsg = "Заказ передан курьеру";
                     break;
                 case IntegrationOrderStatus.Canceled:
-                    bodyMsg = "Заказ отменен";
+                    bodyMsg = "Заказ отменён";
                     break;
             }
 
             var message = new PushNotification
             {
-                Title = $"Инофрмация о заказке #{order.Id}",
+                Title = $"Информация о заказке #{order.Id}",
                 Body = bodyMsg
             };
 

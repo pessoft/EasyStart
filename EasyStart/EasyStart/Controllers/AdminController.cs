@@ -962,7 +962,8 @@ namespace EasyStart.Controllers
                     new PromotionLogic().Refund(data.OrderId);
 
                     if (order.IntegrationOrderStatus == IntegrationOrderStatus.Unknown)
-                        this.pushNotificationService.ChangeOrderStatus(IntegrationOrderStatus.Canceled, order);
+                        Task.Run(() => this.pushNotificationService.ChangeOrderStatus(IntegrationOrderStatus.Canceled, order));
+                        
                 }
             }
             catch (Exception ex)

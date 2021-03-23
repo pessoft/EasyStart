@@ -42,6 +42,7 @@ namespace EasyStart.Services
             order.IntegrationOrderId = orderResult.ExternalOrderId;
             order.IntegrationOrderNumber = orderResult.OrderNumber;
             order.IsSendToIntegrationSystem = true;
+            order.IntegrationOrderStatus = IntegrationOrderStatus.New;
 
             repository.Update(order);
         }
