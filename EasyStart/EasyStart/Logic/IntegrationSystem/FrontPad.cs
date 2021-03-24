@@ -109,7 +109,7 @@ namespace EasyStart.Logic.IntegrationSystem
         private void PrepareOrderData(IOrderDetails orderDetails, StringBuilder postData)
         {
             var order = orderDetails.GetOrder();
-            var phoneNumber = new String(order.PhoneNumber.Where(p => Char.IsDigit(p)).ToArray());
+            var phoneNumber = ProcessedPhoneNumber(order.PhoneNumber);
             var buyType = order.BuyType == BuyType.Cash ? BuyType.Cash : BuyType.Card;
            
             var nfi = new NumberFormatInfo();
@@ -162,6 +162,33 @@ namespace EasyStart.Logic.IntegrationSystem
 
             postData.Append(hookStatus);
             postData.Append($"&hook_url={HttpUtility.UrlEncode($"{domainUrl}/api/frontpad/changestatus")}");
+        }
+
+        private string ProcessedPhoneNumber(string phoneNumber)
+        {
+
+            var phoneChars = phoneNumber.ToArray();
+
+            if (frontPadOptions.UsePhoneMask)
+            {
+                if (frontPadOptions.ReplaceCodeCountry) 
+                {
+                    phoneChars = phoneChars.Where(p => p != '+').ToArray();
+                    phoneChars[0] = '8';
+                }
+            }
+            else 
+            {
+                phoneChars = phoneChars.Where(p => Char.IsDigit(p)).ToArray();
+
+                if(frontPadOptions.ReplaceCodeCountry)
+                    phoneChars[0] = '8';
+            }
+                
+
+            var processedPhoneNumber = new string(phoneChars);
+
+            return processedPhoneNumber;
         }
     }
 }

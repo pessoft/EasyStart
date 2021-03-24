@@ -45,6 +45,8 @@ const frontPadIdsStore = {
     statusDelivery: 'frontpad-integration-status-delivery',
     statusDone: 'frontpad-integration-status-done',
     statusCancel: 'frontpad-integration-status-cancel',
+    replaceCodeCountry: 'frontpad-integration-replce-code-country',
+    usePhoneMask: 'frontpad-integration-use-phone-mask',
 }
 
 function initFrontPadIntegration() {
@@ -55,6 +57,14 @@ function initFrontPadIntegration() {
             <input required type="text" id="${frontPadIdsStore.secret}" />
             <span class="bar"></span>
             <label>Секрет из FrontPad</label>
+        </div>
+        <div class="checkbox-item integration-frontpad-cbx-group">
+            <input type="checkbox" id="${frontPadIdsStore.usePhoneMask}">
+            <label for="${frontPadIdsStore.usePhoneMask}" class="label-for">Использовать маску телефона +7(XXX)XXX-XX-XX</label>
+        </div>
+        <div class="checkbox-item integration-frontpad-cbx-group">
+            <input type="checkbox" id="${frontPadIdsStore.replaceCodeCountry}">
+            <label for="${frontPadIdsStore.replaceCodeCountry}" class="label-for">Заменять +7 на 8 в номере телефона</label>
         </div>
         <div class="group">
             <input required readonly type="text" id="${frontPadIdsStore.statusNew}"/>
@@ -96,8 +106,10 @@ function initFrontPadIntegration() {
         $template.find(`#${frontPadIdsStore.statusDelivery}`).val(options.statusDelivery)
         $template.find(`#${frontPadIdsStore.statusDone}`).val(options.statusDone || 10)
         $template.find(`#${frontPadIdsStore.statusCancel}`).val(options.statusCancel)
+        $template.find(`#${frontPadIdsStore.replaceCodeCountry}`).prop('checked', options.replaceCodeCountry || false)
+        $template.find(`#${frontPadIdsStore.usePhoneMask}`).prop('checked', !(options.usePhoneMask === false))
     }
-    
+
     $integrationWrapper.html($template)
 }
 
@@ -263,6 +275,8 @@ function getFrontPadSetting() {
         statusDelivery: parseInt(statusDelivery),
         statusDone: parseInt(statusDone),
         statusCancel: parseInt(statusCancel),
+        replaceCodeCountry: $(`#${frontPadIdsStore.replaceCodeCountry}`).is(':checked'),
+        usePhoneMask: $(`#${frontPadIdsStore.usePhoneMask}`).is(':checked'),
     }
 
     if (!secret
