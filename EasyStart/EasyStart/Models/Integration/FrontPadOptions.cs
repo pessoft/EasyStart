@@ -12,5 +12,9 @@ namespace EasyStart.Models.Integration
         public int StatusDelivery { get; set; }
         public int StatusCancel { get; set; }
         public int StatusDone { get; set; }
+
+        //Если true, то заменяем +7 на 8
+        public bool ReplaceCodeCountry { get; set; }
+        public bool UsePhoneMask { get; set; } = true;
     }
 }

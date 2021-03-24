@@ -1009,7 +1009,8 @@ div.product-item:hover {
 }
 
 #delivery .label-for,
-#onlinePayDeliverySettingDialog .label-for {
+#onlinePayDeliverySettingDialog .label-for,
+#integration .label-for{
     position: relative;
     pointer-events: all;
     top: 0px;
