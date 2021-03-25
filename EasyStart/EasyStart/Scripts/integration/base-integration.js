@@ -59,7 +59,7 @@ function initFrontPadIntegration() {
             <label>Секрет из FrontPad</label>
         </div>
         <div class="checkbox-item integration-frontpad-cbx-group">
-            <input type="checkbox" id="${frontPadIdsStore.usePhoneMask}">
+            <input type="checkbox" id="${frontPadIdsStore.usePhoneMask}" checked>
             <label for="${frontPadIdsStore.usePhoneMask}" class="label-for">Использовать маску телефона +7(XXX)XXX-XX-XX</label>
         </div>
         <div class="checkbox-item integration-frontpad-cbx-group">
@@ -67,7 +67,7 @@ function initFrontPadIntegration() {
             <label for="${frontPadIdsStore.replaceCodeCountry}" class="label-for">Заменять +7 на 8 в номере телефона</label>
         </div>
         <div class="group">
-            <input required readonly type="text" id="${frontPadIdsStore.statusNew}"/>
+            <input required readonly type="text" id="${frontPadIdsStore.statusNew}" value="1"/>
             <span class="bar"></span>
             <label>Статус новый (код api)</label>
         </div>
@@ -82,7 +82,7 @@ function initFrontPadIntegration() {
             <label>Статус в пути (код api)</label>
         </div>
         <div class="group">
-            <input required readonly type="text" id="${frontPadIdsStore.statusDone}"/>
+            <input required readonly type="text" id="${frontPadIdsStore.statusDone}" value="10"/>
             <span class="bar"></span>
             <label>Статус выполнен (код api)</label>
         </div>
