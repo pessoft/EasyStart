@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("EasyStart")]
-[assembly: AssemblyCopyright("© , 2019")]
+[assembly: AssemblyCopyright("© Alexey Pastukhov 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 //
 // Можно задать все значения или принять номер редакции и номер сборки по умолчанию,
 // используя "*", как показано ниже:
-[assembly: AssemblyVersion("2.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("4.0.*")]
+//[assembly: AssemblyFileVersion("1.0.0.0")]
