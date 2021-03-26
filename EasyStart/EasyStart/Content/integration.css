@@ -31,3 +31,20 @@
     .integration-frontpad-cbx-group input {
         margin-left: 0;
     }
+
+.integration-sync-frontpad-wrapper {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.integration-sync-frontpad-wrapper h3 {
+    margin-bottom: 10px;
+}
+
+    .integration-sync-frontpad-wrapper input[type="file"] {
+        margin-bottom: 15px;
+        border-bottom: none;
+    }
