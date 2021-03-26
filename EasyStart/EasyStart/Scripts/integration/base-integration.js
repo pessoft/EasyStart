@@ -360,7 +360,7 @@ function syncFrontpadClients() {
                         $input.val('')
                         showSuccessMessage(successMsg)
                     } else
-                        showErrorMessage(errMsg)
+                        showErrorMessage(data.ErrorMessage)
                 },
                 error: function () {
                     loader.stop()
