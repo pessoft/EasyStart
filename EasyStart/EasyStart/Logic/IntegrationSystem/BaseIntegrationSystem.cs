@@ -24,8 +24,10 @@ namespace EasyStart.Logic.IntegrationSystem
         public abstract IntegrationOrderStatus GetIntegrationOrderStatus(int externalOrderStatusId);
 
         public abstract INewOrderResult SendOrder(IOrderDetails orderDetails, string domainUrl);
+        
+        public abstract double GetClinetVirtualMoney(string phoneNumber);
 
-        protected async Task<string> SendOrder(string url, string postData)
+        protected async Task<string> Post(string url, string postData)
         {
             WebRequest request = WebRequest.Create(url);
             request.Method = "POST";
