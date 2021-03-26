@@ -76,19 +76,19 @@
         box-shadow: 0px 2px 5px 0px #6192d4ba;
     }
 
-        .main-menu li:hover ul {
-            display:block;
-        }
+    .main-menu li:hover ul {
+        display: block;
+    }
 
-        .main-menu li > ul li {
-           margin: 0;
-           padding: 0;
-        }
+    .main-menu li > ul li {
+        margin: 0;
+        padding: 0;
+    }
 
-            .main-menu li > ul li a {
-                height: 30px;
-                padding: 5px 8px;
-            }
+        .main-menu li > ul li a {
+            height: 30px;
+            padding: 5px 8px;
+        }
 
 .hide {
     display: none !important;
@@ -1010,7 +1010,7 @@ div.product-item:hover {
 
 #delivery .label-for,
 #onlinePayDeliverySettingDialog .label-for,
-#integration .label-for{
+#integration .label-for {
     position: relative;
     pointer-events: all;
     top: 0px;
@@ -1166,17 +1166,18 @@ div.product-item:hover {
 }
 
 #integration {
-    display:grid;
+    display: grid;
 }
 
-#integration .section-wrapper {
-    height: 90%;
-    display: grid;
-    justify-self:center;
-    grid-template-columns: 1fr;
-    grid-template-rows: 100px 1fr 35px;
-    grid-gap: 15px;
-}
+    #integration .section-wrapper {
+        height: 90%;
+        display: grid;
+        justify-self: center;
+        grid-template-columns: 1fr;
+        grid-template-rows: 100px 1fr 35px 110px;
+        grid-gap: 15px;
+        overflow-y: auto;
+    }
 
 #delivery .section-wrapper {
     height: 90%;
@@ -2768,14 +2769,13 @@ button {
 }
 
 .order-details-header-wrapper {
-    display:flex;
-    justify-content:space-between;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    
 }
 
 .send-to-integration-loader {
-    position:relative;
+    position: relative;
     width: 250px;
 }
 

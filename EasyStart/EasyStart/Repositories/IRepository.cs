@@ -13,6 +13,7 @@ namespace EasyStart.Repositories
         T Get(int id);
 
         void Update(T item);
+        void Update(List<T> item);
         void Remove(T item);       
     }
 }
