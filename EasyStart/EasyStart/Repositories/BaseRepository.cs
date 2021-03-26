@@ -63,5 +63,25 @@ namespace EasyStart.Repositories
             context.Entry(item).State = EntityState.Modified;
             context.SaveChanges();
         }
+
+        public virtual void Update(List<T> items)
+        {
+            if (items == null || !items.Any())
+                return;
+
+            var dict = items.ToDictionary(p => p.Id);
+            var ids = dict.Keys.ToList();
+            var savedItems = Get(p => ids.Contains(p.Id)).ToList();
+
+            savedItems.ForEach(savedItem => 
+            {
+                var item = dict[savedItem.Id];
+
+                context.Entry(savedItem).State = EntityState.Detached;
+                context.Entry(item).State = EntityState.Modified;
+            });
+            
+            context.SaveChanges();
+        }
     }
 }

@@ -52,6 +52,22 @@ namespace EasyStart.Services
             this.ToggleBlock(clientId, false);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data">key - phone number, value - cashback </param>
+        public void SetVirtualMoney(Dictionary<string, double> data)
+        {
+            if (data == null || !data.Any())
+                return;
+
+            var phones = data.Keys.ToList();
+            var clients = repository.Get(p => phones.Contains(p.PhoneNumber)).ToList();
+            clients.ForEach(p => p.VirtualMoney = data[p.PhoneNumber]);
+
+            repository.Update(clients);
+        }
+
         private void ToggleBlock(int clientId, bool blocked = true)
         {
             var client = repository.Get(clientId);

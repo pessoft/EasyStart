@@ -18,6 +18,8 @@ function bindChangedIntegragionSelector() {
 function changeIntegrationSystemHandler() {
     const integrationSystemType = parseInt($('#integration-type option:selected').val())
 
+    hideSyncFrontpad()
+
     switch (integrationSystemType) {
         case IntegrationSystemType.withoutIntegration:
             initWithoutIntegration()
@@ -29,6 +31,14 @@ function changeIntegrationSystemHandler() {
             initIikoIntegration()
             break
     }
+}
+
+function hideSyncFrontpad() {
+    $(`#${frontPadIdsStore.syncClients}`).hide()
+}
+
+function showSyncFrontpad() {
+    $(`#${frontPadIdsStore.syncClients}`).show()
 }
 
 function initWithoutIntegration() {
@@ -47,6 +57,7 @@ const frontPadIdsStore = {
     statusCancel: 'frontpad-integration-status-cancel',
     replaceCodeCountry: 'frontpad-integration-replce-code-country',
     usePhoneMask: 'frontpad-integration-use-phone-mask',
+    syncClients: 'integration-sync-frontpad-wrapper'
 }
 
 function initFrontPadIntegration() {
@@ -111,6 +122,7 @@ function initFrontPadIntegration() {
     }
 
     $integrationWrapper.html($template)
+    showSyncFrontpad()
 }
 
 function initIikoIntegration() {
@@ -316,4 +328,48 @@ function getIikoSetting() {
 
 function getTypeIntegrationSystem() {
     return parseInt($('#integration-type option:selected').val())
+}
+
+function syncFrontpadClients() {
+    const $input = $(`#${frontPadIdsStore.syncClients} input[type=file]`)
+    const input = $input[0]
+
+    if (input.files && input.files[0]) {
+        const file = input.files[0]
+        let reader = new FileReader();
+
+        reader.onload = function (e) {
+            const loader = new Loader($('.integration-values-wrapper'))
+            loader.start()
+
+            const successMsg = 'Баллы синхронизированны'
+            const errMsg = 'При синхронизации что-то пошло не так...'
+
+            const formData = new FormData();
+            formData.append('file', file, file.name);
+
+            $.ajax({
+                type: 'POST',
+                url: '/IntegrationSystem/SyncFrontpadClientsCashback',
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (data) {
+                    loader.stop()
+                    if (data.Success) {
+                        $input.val('')
+                        showSuccessMessage(successMsg)
+                    } else
+                        showErrorMessage(errMsg)
+                },
+                error: function () {
+                    loader.stop()
+                    showErrorMessage(errMsg)
+                }
+            });
+        }
+
+        reader.readAsDataURL(file);
+    } else
+        return
 }
