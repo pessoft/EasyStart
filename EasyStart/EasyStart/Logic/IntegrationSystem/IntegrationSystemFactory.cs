@@ -17,7 +17,7 @@ namespace EasyStart.Logic.IntegrationSystem
                 case IntegrationSystemType.Iiko:
                     return new Iiko(integrationSystemSetting);
                 default:
-                    throw new Exception("Unknown integration system");
+                    return new WithoutIntegration(integrationSystemSetting);
             }
         }
     }

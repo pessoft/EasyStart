@@ -7,6 +7,9 @@ namespace EasyStart.Logic.IntegrationSystem.SendNewOrderResult
 {
     public class NewOrderResult : INewOrderResult
     {
+        public NewOrderResult()
+        {}
+
         public NewOrderResult(FrontPadNewOrderResult result)
         {
             Success = result.Success;

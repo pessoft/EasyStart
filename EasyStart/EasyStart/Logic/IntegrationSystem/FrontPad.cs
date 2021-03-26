@@ -17,6 +17,8 @@ namespace EasyStart.Logic.IntegrationSystem
     public class FrontPad : BaseIntegrationSystem
     {
         private const string newOrderUrl = "https://app.frontpad.ru/api/index.php?new_order";
+        private const string getClientUrl = "https://app.frontpad.ru/api/index.php?get_client";
+
         private readonly FrontPadOptions frontPadOptions;
         public FrontPad(IntegrationSystemModel integrationSystemSetting): base(integrationSystemSetting)
         {
@@ -55,9 +57,22 @@ namespace EasyStart.Logic.IntegrationSystem
             return result;
         }
 
+        public override double GetClinetVirtualMoney(string phoneNumber)
+        {
+            var postData = new StringBuilder();
+
+            PrepareSecret(postData);
+            PreparePhoneNumber(phoneNumber, postData, true);
+
+            string responseResult = base.Post(getClientUrl, postData.ToString()).Result;
+            var frontpadClientVirtualMoney = JsonConvert.DeserializeAnonymousType(responseResult, new { Score = 0.0 });
+
+            return frontpadClientVirtualMoney.Score;
+        }
+
         private INewOrderResult SendOrder(string postData)
         {
-            string responseResult = base.SendOrder(newOrderUrl, postData).Result;
+            string responseResult = base.Post(newOrderUrl, postData).Result;
             var frontPadResult = JsonConvert.DeserializeObject<FrontPadNewOrderResult>(responseResult);
             var result = new NewOrderResult(frontPadResult);
 
@@ -67,6 +82,12 @@ namespace EasyStart.Logic.IntegrationSystem
         private void PrepareSecret(StringBuilder postData)
         {
             postData.Append($"&secret={integrationSystemSetting.Secret}");
+        }
+
+        private void PreparePhoneNumber(string phoneNumber, StringBuilder postData, bool forGettingClient = false)
+        {
+            var propName = forGettingClient ? "client_phone" : "phone";
+            postData.Append($"&{propName}={HttpUtility.UrlEncode(ProcessedPhoneNumber(phoneNumber))}");
         }
 
         private void PrepareProductData(IOrderDetails orderDetails, StringBuilder postData)
@@ -109,7 +130,6 @@ namespace EasyStart.Logic.IntegrationSystem
         private void PrepareOrderData(IOrderDetails orderDetails, StringBuilder postData)
         {
             var order = orderDetails.GetOrder();
-            var phoneNumber = ProcessedPhoneNumber(order.PhoneNumber);
             var buyType = order.BuyType == BuyType.Cash ? BuyType.Cash : BuyType.Card;
            
             var nfi = new NumberFormatInfo();
@@ -121,7 +141,6 @@ namespace EasyStart.Logic.IntegrationSystem
             postData.Append($"&pod={HttpUtility.UrlEncode(order.EntranceNumber)}");
             postData.Append($"&et={HttpUtility.UrlEncode(order.Level)}");
             postData.Append($"&apart={HttpUtility.UrlEncode(order.ApartamentNumber)}");
-            postData.Append($"&phone={HttpUtility.UrlEncode(phoneNumber)}");
             postData.Append($"&descr={HttpUtility.UrlEncode(order.Comment)}");
             postData.Append($"&name={HttpUtility.UrlEncode(order.Name)}");
             postData.Append($"&score={HttpUtility.UrlEncode(amountPayCashback)}");
@@ -141,6 +160,8 @@ namespace EasyStart.Logic.IntegrationSystem
             {
                 postData.Append($"&sale_amount={HttpUtility.UrlEncode(order.DiscountRuble.ToString())}");
             }
+
+            PreparePhoneNumber(order.PhoneNumber, postData);
         }
 
         private void PrepareHookUrlData(StringBuilder postData, string domainUrl)

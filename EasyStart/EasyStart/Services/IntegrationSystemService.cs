@@ -61,5 +61,17 @@ namespace EasyStart.Services
 
             return result;
         }
+
+        public double GetClientVirtualMoney(
+            string phoneNumber,
+            int branchId,
+            IIntegrationSystemFactory integrationSystemFactory)
+        {
+            var integrationSystemSetting = Get(branchId);
+            var integrationSystem = integrationSystemFactory.GetIntegrationSystem(integrationSystemSetting);
+            var result = integrationSystem.GetClinetVirtualMoney(phoneNumber);
+
+            return result;
+        }
     }
 }

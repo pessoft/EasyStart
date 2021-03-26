@@ -37,5 +37,10 @@ namespace EasyStart.Services
         {
             return repository.Get(p => p.Login == login).FirstOrDefault();
         }
+
+        public BranchModel GetMainBranch()
+        {
+            return repository.Get(p => p.TypeBranch == Logic.TypeBranch.MainBranch).FirstOrDefault();
+        }
     }
 }
