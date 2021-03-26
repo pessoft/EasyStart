@@ -5,7 +5,6 @@ using EasyStart.Models.Integration;
 using EasyStart.Repositories;
 using EasyStart.Services;
 using Ganss.Excel;
-using Microsoft.Office.Interop.Excel;
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -13,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using ExcelDataReader;
 
 namespace EasyStart.Controllers
 {
@@ -131,7 +131,6 @@ namespace EasyStart.Controllers
         {
             var result = new JsonResultModel();
             string uploadedFilePath = null;
-            string clientsSavedPath = Server.MapPath($"~/Tmp/{System.Guid.NewGuid()}.xlsx"); ;
             try
             {
                 foreach (string file in Request.Files)
@@ -141,20 +140,22 @@ namespace EasyStart.Controllers
                     {
                         string fileName = System.IO.Path.GetFileName(upload.FileName);
                         string ext = fileName.Substring(fileName.LastIndexOf("."));
+
+                        if (ext != ".xlsx")
+                        {
+                            result.Success = false;
+                            result.ErrorMessage = "Не поддерживаемый формат файла. Необходим файл с расширение *.xlsx";
+
+                            return Json(result);
+                        }
+
                         fileName = String.Format(@"{0}{1}", System.Guid.NewGuid(), ext);
                         uploadedFilePath = Server.MapPath("~/Tmp/" + fileName);
-                        
+
                         upload.SaveAs(uploadedFilePath);
 
-                        Application app = new Application();
-                        app.Visible = false;
-                        Workbook wb = app.Workbooks.Open(uploadedFilePath);
-                        wb.SaveAs(clientsSavedPath, XlFileFormat.xlOpenXMLWorkbook);
-                        wb.Close();
-                        app.Quit();
 
-
-                        var clients = new ExcelMapper(clientsSavedPath)
+                        var clients = new ExcelMapper(uploadedFilePath)
                             .Fetch<IntegrationClient>()
                             .Select(p =>
                                 {
@@ -197,7 +198,6 @@ namespace EasyStart.Controllers
             finally
             {
                 DeleteTmpFile(uploadedFilePath);
-                DeleteTmpFile(clientsSavedPath);
             }
 
             return Json(result);
