@@ -1,6 +1,7 @@
 ﻿using EasyStart.HtmlRenderer;
 using EasyStart.Hubs;
 using EasyStart.Logic;
+using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.Notification;
 using EasyStart.Logic.Notification.EmailNotification;
 using EasyStart.Logic.Transaction;
@@ -12,6 +13,8 @@ using EasyStart.Models.OnlinePay;
 using EasyStart.Models.OnlinePay.Fondy;
 using EasyStart.Models.ProductOption;
 using EasyStart.Models.Transaction;
+using EasyStart.Repositories;
+using EasyStart.Services;
 using EasyStart.Utils;
 using Newtonsoft.Json;
 using System;
@@ -33,6 +36,24 @@ namespace EasyStart
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class AdminAppController : ApiController
     {
+        private readonly ClientService clientService;
+        private readonly IntegrationSystemService integrationSystemService;
+        private readonly BranchService branchService;
+
+        public AdminAppController()
+        {
+            var context = new AdminPanelContext();
+
+            var inegrationSystemRepository = new InegrationSystemRepository(context);
+            integrationSystemService = new IntegrationSystemService(inegrationSystemRepository);
+
+            var clientRepository = new ClientRepository(context);
+            clientService = new ClientService(clientRepository);
+
+            var branchRepository = new BranchRepository(context);
+            branchService = new BranchService(branchRepository);
+        }
+
         public JsonResultModel GetLocation()
         {
             var result = new JsonResultModel();
@@ -991,6 +1012,10 @@ namespace EasyStart
                 client.ReferralCode = KeyGenerator.GetUniqueKey(8);
                 var newClient = DataWrapper.RegistrationClient(client);
 
+                var branchId = client.BranchId == 0 ? branchService.GetMainBranch().Id : client.BranchId;
+                var virtualMoney = integrationSystemService.GetClientVirtualMoney(client.PhoneNumber, branchId, new IntegrationSystemFactory());
+                clientService.SetVirtualMoney(newClient.Id, virtualMoney);
+
                 result.Data = new
                 {
                     isLogin = true,
@@ -1005,7 +1030,7 @@ namespace EasyStart
                     referralCode = newClient.ReferralCode,
                     parentReferralClientId = newClient.ParentReferralClientId,
                     parentReferralCode = newClient.ParentReferralCode,
-                    virtualMoney = newClient.VirtualMoney,
+                    virtualMoney = virtualMoney,
                     referralDiscount = newClient.ReferralDiscount,
                 };
                 result.Success = true;

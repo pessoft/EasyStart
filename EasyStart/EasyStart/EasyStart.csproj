@@ -310,6 +310,7 @@
     <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\IikoNewOrderResult.cs" />
     <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\INewOrderResult.cs" />
     <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\NewOrderResult.cs" />
+    <Compile Include="Logic\IntegrationSystem\WithoutIntegration.cs" />
     <Compile Include="Logic\Notification\EmailNotification\RestorePasswordNotification.cs" />
     <Compile Include="Logic\PreprocessorDataAPI.cs" />
     <Compile Include="Logic\PromotionLogic.cs" />
