@@ -4,6 +4,7 @@ using EasyStart.Logic;
 using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.Notification;
 using EasyStart.Logic.Notification.EmailNotification;
+using EasyStart.Logic.OrderProcessor;
 using EasyStart.Logic.Transaction;
 using EasyStart.Migrations;
 using EasyStart.Models;
@@ -27,6 +28,7 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Script.Serialization;
@@ -39,6 +41,8 @@ namespace EasyStart
         private readonly ClientService clientService;
         private readonly IntegrationSystemService integrationSystemService;
         private readonly BranchService branchService;
+        private readonly OrderService orderService;
+        private readonly IOrderProcesser orderProcesser;
 
         public AdminAppController()
         {
@@ -52,6 +56,11 @@ namespace EasyStart
 
             var branchRepository = new BranchRepository(context);
             branchService = new BranchService(branchRepository);
+
+            var orderRepository = new OrderRepository(context);
+            orderService = new OrderService(orderRepository);
+
+            orderProcesser = new OrderProcessor();
         }
 
         public JsonResultModel GetLocation()
@@ -459,7 +468,12 @@ namespace EasyStart
                         {
                             result.Success = true;
                             result.Data = orderId;
-                            Task.Run(() => NotifyAboutNewOrder(currentContext, updateOrder, deliverSetting));
+                            Task.Run(() =>
+                            {
+                                updateOrder = SendOrderToIntegrationSystem(currentContext, updateOrder);
+                                NotifyAboutNewOrder(currentContext, updateOrder, deliverSetting);
+                                
+                            });
                         }
                         else
                             throw new Exception("При обработке заказа что-то пошло не так");
@@ -577,7 +591,11 @@ namespace EasyStart
                     if (order.OrderStatus == OrderStatus.Processing)
                     {
                         var currentContext = System.Web.HttpContext.Current;
-                        Task.Run(() => NotifyAboutNewOrder(currentContext, order, deliverSetting));
+                        Task.Run(() =>
+                        {
+                            order = SendOrderToIntegrationSystem(currentContext, order);
+                            NotifyAboutNewOrder(currentContext, order, deliverSetting);
+                        });
                     }
                 }
             }
@@ -615,6 +633,26 @@ namespace EasyStart
             }
         }
 
+        private OrderModel SendOrderToIntegrationSystem(System.Web.HttpContext currentContext, OrderModel order)
+        {
+            System.Web.HttpContext.Current = currentContext;
+            var integrationSetting = integrationSystemService.Get(order.BranchId);
+            OrderModel updatedOrder = order;
+
+            if (integrationSetting.UseAutomaticDispatch)
+            {
+                var result = orderProcesser.SendOrderToIntegrationSystem(order.Id);
+
+                if (result.Success)
+                {
+                    updatedOrder = orderService.Get(order.Id);
+                }
+            }
+
+            return updatedOrder;
+
+        }
+
         private void NotifyAboutNewOrder(System.Web.HttpContext currentContext, OrderModel order, DeliverySettingModel deliverSetting)
         {
             try
@@ -630,7 +668,7 @@ namespace EasyStart
                 var constructorIngredients = order.ProductConstructorCount != null ?
                 DataWrapper.GetIngredients(order.ProductConstructorCount.SelectMany(p => p.IngredientCount.Keys)) :
                 null;
-                var products = order.ProductCount != null ? 
+                var products = order.ProductCount != null ?
                     DataWrapper.GetOrderProducts(order.ProductCount.Keys) :
                     new List<ProductModel>();
                 var bonusProducts = order.ProductBonusCount != null ?
@@ -791,7 +829,7 @@ namespace EasyStart
                         Func<ProductWithOptionsOrderModel,
                             ProductModel,
                         Tuple<double,
-                        Dictionary<int,AdditionalOption>,
+                        Dictionary<int, AdditionalOption>,
                         Dictionary<int, Models.ProductOption.AdditionalFilling>>> getOptionsData = (pWoptions, product) =>
                         {
                             var additionalOptionsIds = pWoptions.AdditionalOptions?.Keys.ToList() ?? new List<int>();
@@ -1263,7 +1301,7 @@ namespace EasyStart
                     result.ErrorMessage = "Неверный пароль";
                     return result;
                 }
-                else if(client.Blocked)
+                else if (client.Blocked)
                 {
                     result.ErrorMessage = "Учетная запись заблокирована";
                     return result;

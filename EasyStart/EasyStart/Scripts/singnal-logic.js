@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    OrderHub = $.connection.newOrderHub;
+    OrderHub = $.connection.orderHub;
 
     OrderHub.client.addNewOrder = function (newOrder) {
         newOrder = processsingOrder(newOrder);
@@ -8,6 +8,10 @@
         notifySoundNewOrder();
         removeEmptyOrders(Pages.Order);
         CardOrderRenderer.renderOrder(newOrder, Pages.Order);
+    };
+
+    OrderHub.client.changeOrderStatus = function (orderId, orderStatus) {
+        changeOrderStatus(orderId, orderStatus)
     };
 
     $.connection.hub.start().done(function () {

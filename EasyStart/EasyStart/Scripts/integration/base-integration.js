@@ -55,9 +55,11 @@ const frontPadIdsStore = {
     statusDelivery: 'frontpad-integration-status-delivery',
     statusDone: 'frontpad-integration-status-done',
     statusCancel: 'frontpad-integration-status-cancel',
-    replaceCodeCountry: 'frontpad-integration-replce-code-country',
-    usePhoneMask: 'frontpad-integration-use-phone-mask',
-    syncClients: 'integration-sync-frontpad-wrapper'
+    phoneCodeCountry: 'frontpad-integration-phone-code-country',
+    useAutomaticDispatch: 'frontpad-integration-use-automatic-dispatch',
+    syncClients: 'integration-sync-frontpad-wrapper',
+    pointSaleDelivery: 'integration-point-sale-delivery',
+    pointSaleTakeyourself: 'integration-point-sale-takeyourself',
 }
 
 function initFrontPadIntegration() {
@@ -70,12 +72,17 @@ function initFrontPadIntegration() {
             <label>Секрет из FrontPad</label>
         </div>
         <div class="checkbox-item integration-frontpad-cbx-group">
+            <input type="checkbox" id="${frontPadIdsStore.useAutomaticDispatch}">
+            <label for="${frontPadIdsStore.useAutomaticDispatch}" class="label-for">Отправлять новый заказ автоматически</label>
+        </div>        
+        <div class="checkbox-item integration-frontpad-cbx-group">
             <input type="checkbox" id="${frontPadIdsStore.usePhoneMask}" checked>
             <label for="${frontPadIdsStore.usePhoneMask}" class="label-for">Использовать маску телефона +7(XXX)XXX-XX-XX</label>
         </div>
-        <div class="checkbox-item integration-frontpad-cbx-group">
-            <input type="checkbox" id="${frontPadIdsStore.replaceCodeCountry}">
-            <label for="${frontPadIdsStore.replaceCodeCountry}" class="label-for">Заменять +7 на 8 в номере телефона</label>
+        <div class="group">
+            <input required type="text" id="${frontPadIdsStore.phoneCodeCountry}" value="+7"/>
+            <span class="bar"></span>
+            <label>Код страны для номера телефона</label>
         </div>
         <div class="group">
             <input required readonly type="text" id="${frontPadIdsStore.statusNew}" value="1"/>
@@ -103,6 +110,16 @@ function initFrontPadIntegration() {
             <label>Статус списан или отменен (код api)</label>
         </div>
         <div class="group">
+            <input required type="text" id="${frontPadIdsStore.pointSaleTakeyourself}" />
+            <span class="bar"></span>
+            <label>Точка продаж "Самовывоз" (код api)</label>
+        </div>
+        <div class="group">
+            <input required type="text" id="${frontPadIdsStore.pointSaleDelivery}" />
+            <span class="bar"></span>
+            <label>Точка продаж "Доставка" (код api)</label>
+        </div>
+        <div class="group">
             <input required readonly type="text" value="${webHookUrl}"/>
             <span class="bar"></span>
             <label>Webhook url</label>
@@ -110,6 +127,7 @@ function initFrontPadIntegration() {
 
     if (IntegerationSystemSetting && IntegerationSystemSetting.Type == IntegrationSystemType.frontPad) {
         $template.find(`#${frontPadIdsStore.secret}`).val(IntegerationSystemSetting.Secret)
+        $template.find(`#${frontPadIdsStore.useAutomaticDispatch}`).prop('checked', IntegerationSystemSetting.UseAutomaticDispatch)
 
         const options = JSON.parse(IntegerationSystemSetting.Options)
         $template.find(`#${frontPadIdsStore.statusNew}`).val(options.statusNew || 1)
@@ -117,8 +135,11 @@ function initFrontPadIntegration() {
         $template.find(`#${frontPadIdsStore.statusDelivery}`).val(options.statusDelivery)
         $template.find(`#${frontPadIdsStore.statusDone}`).val(options.statusDone || 10)
         $template.find(`#${frontPadIdsStore.statusCancel}`).val(options.statusCancel)
-        $template.find(`#${frontPadIdsStore.replaceCodeCountry}`).prop('checked', options.replaceCodeCountry || false)
+        $template.find(`#${frontPadIdsStore.phoneCodeCountry}`).val(options.phoneCodeCountry)
         $template.find(`#${frontPadIdsStore.usePhoneMask}`).prop('checked', !(options.usePhoneMask === false))
+        $template.find(`#${frontPadIdsStore.pointSaleTakeyourself}`).val(options.pointSaleTakeyourself || '')
+        $template.find(`#${frontPadIdsStore.pointSaleDelivery}`).val(options.pointSaleDelivery || '')
+        
     }
 
     $integrationWrapper.html($template)
@@ -269,17 +290,25 @@ function getDefaultSetting() {
     return {
         type: IntegrationSystemType.withoutIntegration,
         secret: '',
+        useAutomaticDispatch: false,
         options: JSON.stringify('')
     }
 }
 
 function getFrontPadSetting() {
     const secret = $(`#${frontPadIdsStore.secret}`).val().trim()
+    const useAutomaticDispatch = $(`#${frontPadIdsStore.useAutomaticDispatch}`).is(':checked')
     const statusNew = $(`#${frontPadIdsStore.statusNew}`).val().trim()
     const statusProcessed = $(`#${frontPadIdsStore.statusProcessed}`).val().trim()
     const statusDelivery = $(`#${frontPadIdsStore.statusDelivery}`).val().trim()
     const statusDone = $(`#${frontPadIdsStore.statusDone}`).val().trim()
     const statusCancel = $(`#${frontPadIdsStore.statusCancel}`).val().trim()
+    let pointSaleTakeyourself = $(`#${frontPadIdsStore.pointSaleTakeyourself}`).val().trim()
+    let pointSaleDelivery = $(`#${frontPadIdsStore.pointSaleDelivery}`).val().trim()
+    pointSaleTakeyourself = parseInt(pointSaleTakeyourself)
+    pointSaleDelivery = parseInt(pointSaleDelivery)
+    pointSaleTakeyourself = Number.isNaN(pointSaleTakeyourself) ? 0 : pointSaleTakeyourself
+    pointSaleDelivery = Number.isNaN(pointSaleDelivery) ? 0 : pointSaleDelivery
 
     const options = {
         statusNew: parseInt(statusNew),
@@ -287,11 +316,14 @@ function getFrontPadSetting() {
         statusDelivery: parseInt(statusDelivery),
         statusDone: parseInt(statusDone),
         statusCancel: parseInt(statusCancel),
-        replaceCodeCountry: $(`#${frontPadIdsStore.replaceCodeCountry}`).is(':checked'),
+        pointSaleTakeyourself: pointSaleTakeyourself,
+        pointSaleDelivery: pointSaleDelivery,
+        phoneCodeCountry: $(`#${frontPadIdsStore.phoneCodeCountry}`).val().trim(),
         usePhoneMask: $(`#${frontPadIdsStore.usePhoneMask}`).is(':checked'),
     }
 
     if (!secret
+        || !options.phoneCodeCountry
         || options.statusNew === 0 || Number.isNaN(options.statusNew)
         || options.statusProcessed === 0 || Number.isNaN(options.statusProcessed)
         || options.statusDelivery === 0 || Number.isNaN(options.statusDelivery)
@@ -305,12 +337,14 @@ function getFrontPadSetting() {
     return {
         type: IntegrationSystemType.frontPad,
         secret,
+        useAutomaticDispatch,
         options: JSON.stringify(options)
     }
 }
 
 function getIikoSetting() {
     const secret = $('#iiko-integration').val().trim()
+    const useAutomaticDispatch = $(`#${frontPadIdsStore.useAutomaticDispatch}`).is(':checked')
     const options = ''
 
     if (!secret) {
@@ -322,6 +356,7 @@ function getIikoSetting() {
     return {
         type: IntegrationSystemType.iiko,
         secret,
+        useAutomaticDispatch,
         options: JSON.stringify(options)
     }
 }

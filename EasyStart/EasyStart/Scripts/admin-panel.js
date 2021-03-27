@@ -2902,7 +2902,7 @@ class OrderDetailsData {
     }
 
     setPermissionsSendToIntegrationSystem(order) {
-        let allowedSendToIntegrationSystem = true
+        let allowedSendToIntegrationSystem = order.OrderStatus == OrderStatus.Processing
 
         if (!order.IsSendToIntegrationSystem) {
             if (order.ProductCount && Object.keys(order.ProductCount).length > 0) {
