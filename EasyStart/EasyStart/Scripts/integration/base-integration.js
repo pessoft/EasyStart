@@ -55,7 +55,7 @@ const frontPadIdsStore = {
     statusDelivery: 'frontpad-integration-status-delivery',
     statusDone: 'frontpad-integration-status-done',
     statusCancel: 'frontpad-integration-status-cancel',
-    replaceCodeCountry: 'frontpad-integration-replce-code-country',
+    phoneCodeCountry: 'frontpad-integration-phone-code-country',
     usePhoneMask: 'frontpad-integration-use-phone-mask',
     syncClients: 'integration-sync-frontpad-wrapper'
 }
@@ -73,9 +73,10 @@ function initFrontPadIntegration() {
             <input type="checkbox" id="${frontPadIdsStore.usePhoneMask}" checked>
             <label for="${frontPadIdsStore.usePhoneMask}" class="label-for">Использовать маску телефона +7(XXX)XXX-XX-XX</label>
         </div>
-        <div class="checkbox-item integration-frontpad-cbx-group">
-            <input type="checkbox" id="${frontPadIdsStore.replaceCodeCountry}">
-            <label for="${frontPadIdsStore.replaceCodeCountry}" class="label-for">Заменять +7 на 8 в номере телефона</label>
+        <div class="group">
+            <input required type="text" id="${frontPadIdsStore.phoneCodeCountry}" value="+7"/>
+            <span class="bar"></span>
+            <label>Код страны для номера телефона</label>
         </div>
         <div class="group">
             <input required readonly type="text" id="${frontPadIdsStore.statusNew}" value="1"/>
@@ -117,7 +118,7 @@ function initFrontPadIntegration() {
         $template.find(`#${frontPadIdsStore.statusDelivery}`).val(options.statusDelivery)
         $template.find(`#${frontPadIdsStore.statusDone}`).val(options.statusDone || 10)
         $template.find(`#${frontPadIdsStore.statusCancel}`).val(options.statusCancel)
-        $template.find(`#${frontPadIdsStore.replaceCodeCountry}`).prop('checked', options.replaceCodeCountry || false)
+        $template.find(`#${frontPadIdsStore.phoneCodeCountry}`).val(options.phoneCodeCountry)
         $template.find(`#${frontPadIdsStore.usePhoneMask}`).prop('checked', !(options.usePhoneMask === false))
     }
 
@@ -287,11 +288,12 @@ function getFrontPadSetting() {
         statusDelivery: parseInt(statusDelivery),
         statusDone: parseInt(statusDone),
         statusCancel: parseInt(statusCancel),
-        replaceCodeCountry: $(`#${frontPadIdsStore.replaceCodeCountry}`).is(':checked'),
+        phoneCodeCountry: $(`#${frontPadIdsStore.phoneCodeCountry}`).val().trim(),
         usePhoneMask: $(`#${frontPadIdsStore.usePhoneMask}`).is(':checked'),
     }
 
     if (!secret
+        || !options.phoneCodeCountry
         || options.statusNew === 0 || Number.isNaN(options.statusNew)
         || options.statusProcessed === 0 || Number.isNaN(options.statusProcessed)
         || options.statusDelivery === 0 || Number.isNaN(options.statusDelivery)

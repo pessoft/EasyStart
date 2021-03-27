@@ -189,23 +189,25 @@ namespace EasyStart.Logic.IntegrationSystem
         {
 
             var phoneChars = phoneNumber.ToArray();
+            Action<int> addCountryCode = startIndex =>
+            {
+                var tmpChars = new List<Char>(frontPadOptions.PhoneCodeCountry.ToList());
+                for (var i = startIndex; i < phoneChars.Length; ++i)
+                    tmpChars.Add(phoneChars[i]);
+
+                phoneChars = tmpChars.ToArray();
+            };
 
             if (frontPadOptions.UsePhoneMask)
             {
-                if (frontPadOptions.ReplaceCodeCountry) 
-                {
-                    phoneChars = phoneChars.Where(p => p != '+').ToArray();
-                    phoneChars[0] = '8';
-                }
+                var startIdex = phoneChars.ToList().IndexOf('(');
+                addCountryCode(startIdex);
             }
             else 
             {
                 phoneChars = phoneChars.Where(p => Char.IsDigit(p)).ToArray();
-
-                if(frontPadOptions.ReplaceCodeCountry)
-                    phoneChars[0] = '8';
+                addCountryCode(1);
             }
-                
 
             var processedPhoneNumber = new string(phoneChars);
 
