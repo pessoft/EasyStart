@@ -57,7 +57,9 @@ const frontPadIdsStore = {
     statusCancel: 'frontpad-integration-status-cancel',
     phoneCodeCountry: 'frontpad-integration-phone-code-country',
     useAutomaticDispatch: 'frontpad-integration-use-automatic-dispatch',
-    syncClients: 'integration-sync-frontpad-wrapper'
+    syncClients: 'integration-sync-frontpad-wrapper',
+    pointSaleDelivery: 'integration-point-sale-delivery',
+    pointSaleTakeyourself: 'integration-point-sale-takeyourself',
 }
 
 function initFrontPadIntegration() {
@@ -108,6 +110,16 @@ function initFrontPadIntegration() {
             <label>Статус списан или отменен (код api)</label>
         </div>
         <div class="group">
+            <input required type="text" id="${frontPadIdsStore.pointSaleTakeyourself}" />
+            <span class="bar"></span>
+            <label>Точка продаж "Самовывоз" (код api)</label>
+        </div>
+        <div class="group">
+            <input required type="text" id="${frontPadIdsStore.pointSaleDelivery}" />
+            <span class="bar"></span>
+            <label>Точка продаж "Доставка" (код api)</label>
+        </div>
+        <div class="group">
             <input required readonly type="text" value="${webHookUrl}"/>
             <span class="bar"></span>
             <label>Webhook url</label>
@@ -125,6 +137,8 @@ function initFrontPadIntegration() {
         $template.find(`#${frontPadIdsStore.statusCancel}`).val(options.statusCancel)
         $template.find(`#${frontPadIdsStore.phoneCodeCountry}`).val(options.phoneCodeCountry)
         $template.find(`#${frontPadIdsStore.usePhoneMask}`).prop('checked', !(options.usePhoneMask === false))
+        $template.find(`#${frontPadIdsStore.pointSaleTakeyourself}`).val(options.pointSaleTakeyourself || '')
+        $template.find(`#${frontPadIdsStore.pointSaleDelivery}`).val(options.pointSaleDelivery || '')
         
     }
 
@@ -289,6 +303,12 @@ function getFrontPadSetting() {
     const statusDelivery = $(`#${frontPadIdsStore.statusDelivery}`).val().trim()
     const statusDone = $(`#${frontPadIdsStore.statusDone}`).val().trim()
     const statusCancel = $(`#${frontPadIdsStore.statusCancel}`).val().trim()
+    let pointSaleTakeyourself = $(`#${frontPadIdsStore.pointSaleTakeyourself}`).val().trim()
+    let pointSaleDelivery = $(`#${frontPadIdsStore.pointSaleDelivery}`).val().trim()
+    pointSaleTakeyourself = parseInt(pointSaleTakeyourself)
+    pointSaleDelivery = parseInt(pointSaleDelivery)
+    pointSaleTakeyourself = Number.isNaN(pointSaleTakeyourself) ? 0 : pointSaleTakeyourself
+    pointSaleDelivery = Number.isNaN(pointSaleDelivery) ? 0 : pointSaleDelivery
 
     const options = {
         statusNew: parseInt(statusNew),
@@ -296,6 +316,8 @@ function getFrontPadSetting() {
         statusDelivery: parseInt(statusDelivery),
         statusDone: parseInt(statusDone),
         statusCancel: parseInt(statusCancel),
+        pointSaleTakeyourself: pointSaleTakeyourself,
+        pointSaleDelivery: pointSaleDelivery,
         phoneCodeCountry: $(`#${frontPadIdsStore.phoneCodeCountry}`).val().trim(),
         usePhoneMask: $(`#${frontPadIdsStore.usePhoneMask}`).is(':checked'),
     }

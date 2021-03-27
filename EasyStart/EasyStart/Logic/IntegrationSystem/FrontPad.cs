@@ -50,6 +50,7 @@ namespace EasyStart.Logic.IntegrationSystem
             PrepareSecret(postData);
             PrepareProductData(orderDetails, postData);
             PrepareOrderData(orderDetails, postData);
+            PrepareSalePointData(orderDetails, postData);
             PrepareHookUrlData(postData);
 
             var result = SendOrder(postData.ToString());
@@ -181,10 +182,20 @@ namespace EasyStart.Logic.IntegrationSystem
                 hookStatus += $"&hook_status[{i}]={hoolStatusList[i]}";
             }
 
-            //var domainUrl = HttpContext.Current.Request.Url.GetBaseUrl();
-            var domainUrl = "https://729a08255b29.ngrok.io";
+            var domainUrl = HttpContext.Current.Request.Url.GetBaseUrl();
             postData.Append(hookStatus);
             postData.Append($"&hook_url={HttpUtility.UrlEncode($"{domainUrl}/api/frontpad/changestatus")}");
+        }
+
+        private void PrepareSalePointData(IOrderDetails orderDetails, StringBuilder postData)
+        {
+            var order = orderDetails.GetOrder();
+            var pointSale = order.DeliveryType == DeliveryType.Delivery ?
+                frontPadOptions.PointSaleDelivery : 
+                frontPadOptions.PointSaleTakeyourself;
+
+            if(pointSale != 0)
+                postData.Append($"&point={pointSale}");
         }
 
         private string ProcessedPhoneNumber(string phoneNumber)
