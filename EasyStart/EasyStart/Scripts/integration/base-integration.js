@@ -56,7 +56,7 @@ const frontPadIdsStore = {
     statusDone: 'frontpad-integration-status-done',
     statusCancel: 'frontpad-integration-status-cancel',
     phoneCodeCountry: 'frontpad-integration-phone-code-country',
-    usePhoneMask: 'frontpad-integration-use-phone-mask',
+    useAutomaticDispatch: 'frontpad-integration-use-automatic-dispatch',
     syncClients: 'integration-sync-frontpad-wrapper'
 }
 
@@ -69,6 +69,10 @@ function initFrontPadIntegration() {
             <span class="bar"></span>
             <label>Секрет из FrontPad</label>
         </div>
+        <div class="checkbox-item integration-frontpad-cbx-group">
+            <input type="checkbox" id="${frontPadIdsStore.useAutomaticDispatch}">
+            <label for="${frontPadIdsStore.useAutomaticDispatch}" class="label-for">Отправлять новый заказ автоматически</label>
+        </div>        
         <div class="checkbox-item integration-frontpad-cbx-group">
             <input type="checkbox" id="${frontPadIdsStore.usePhoneMask}" checked>
             <label for="${frontPadIdsStore.usePhoneMask}" class="label-for">Использовать маску телефона +7(XXX)XXX-XX-XX</label>
@@ -111,6 +115,7 @@ function initFrontPadIntegration() {
 
     if (IntegerationSystemSetting && IntegerationSystemSetting.Type == IntegrationSystemType.frontPad) {
         $template.find(`#${frontPadIdsStore.secret}`).val(IntegerationSystemSetting.Secret)
+        $template.find(`#${frontPadIdsStore.useAutomaticDispatch}`).prop('checked', IntegerationSystemSetting.UseAutomaticDispatch)
 
         const options = JSON.parse(IntegerationSystemSetting.Options)
         $template.find(`#${frontPadIdsStore.statusNew}`).val(options.statusNew || 1)
@@ -120,6 +125,7 @@ function initFrontPadIntegration() {
         $template.find(`#${frontPadIdsStore.statusCancel}`).val(options.statusCancel)
         $template.find(`#${frontPadIdsStore.phoneCodeCountry}`).val(options.phoneCodeCountry)
         $template.find(`#${frontPadIdsStore.usePhoneMask}`).prop('checked', !(options.usePhoneMask === false))
+        
     }
 
     $integrationWrapper.html($template)
@@ -270,12 +276,14 @@ function getDefaultSetting() {
     return {
         type: IntegrationSystemType.withoutIntegration,
         secret: '',
+        useAutomaticDispatch: false,
         options: JSON.stringify('')
     }
 }
 
 function getFrontPadSetting() {
     const secret = $(`#${frontPadIdsStore.secret}`).val().trim()
+    const useAutomaticDispatch = $(`#${frontPadIdsStore.useAutomaticDispatch}`).is(':checked')
     const statusNew = $(`#${frontPadIdsStore.statusNew}`).val().trim()
     const statusProcessed = $(`#${frontPadIdsStore.statusProcessed}`).val().trim()
     const statusDelivery = $(`#${frontPadIdsStore.statusDelivery}`).val().trim()
@@ -307,12 +315,14 @@ function getFrontPadSetting() {
     return {
         type: IntegrationSystemType.frontPad,
         secret,
+        useAutomaticDispatch,
         options: JSON.stringify(options)
     }
 }
 
 function getIikoSetting() {
     const secret = $('#iiko-integration').val().trim()
+    const useAutomaticDispatch = $(`#${frontPadIdsStore.useAutomaticDispatch}`).is(':checked')
     const options = ''
 
     if (!secret) {
@@ -324,6 +334,7 @@ function getIikoSetting() {
     return {
         type: IntegrationSystemType.iiko,
         secret,
+        useAutomaticDispatch,
         options: JSON.stringify(options)
     }
 }

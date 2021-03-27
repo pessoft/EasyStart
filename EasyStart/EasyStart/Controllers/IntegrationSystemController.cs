@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using ExcelDataReader;
+using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
+using EasyStart.Logic.OrderProcessor;
 
 namespace EasyStart.Controllers
 {
@@ -23,6 +25,7 @@ namespace EasyStart.Controllers
         private readonly OrderService orderService;
         private readonly ProductService productService;
         private readonly ClientService clientService;
+        private readonly IOrderProcesser orderProcessor;
 
         public IntegrationSystemController()
         {
@@ -42,6 +45,8 @@ namespace EasyStart.Controllers
 
             var clientRepository = new ClientRepository(context);
             clientService = new ClientService(clientRepository);
+
+            orderProcessor = new OrderProcessor();
         }
 
         [HttpGet]
@@ -102,16 +107,7 @@ namespace EasyStart.Controllers
 
             try
             {
-                var order = orderService.Get(orderId);
-                var products = productService.Get(order);
-                var orderDetails = new OrderDetails(order, products);
-                var domainUrl = Request.Url.GetBaseUrl();
-                var newOrderResult = integrationSystemService.SendOrder(
-                    orderDetails,
-                    new IntegrationSystemFactory(),
-                    domainUrl);
-
-                orderService.MarkOrderSendToIntegrationSystem(orderId, newOrderResult);
+                var newOrderResult = orderProcessor.SendOrderToIntegrationSystem(orderId);
 
                 result.Success = newOrderResult.Success;
                 result.Data = newOrderResult.OrderNumber;

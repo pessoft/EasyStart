@@ -1,4 +1,7 @@
-﻿using EasyStart.Logic.IntegrationSystem;
+﻿using EasyStart.Hubs;
+using EasyStart.Logic;
+using EasyStart.Logic.IntegrationSystem;
+using EasyStart.Logic.OrderProcessor;
 using EasyStart.Models;
 using EasyStart.Models.Integration;
 using EasyStart.Repositories;
@@ -23,6 +26,7 @@ namespace EasyStart.Controllers
         private readonly OrderService orderService;
         private readonly PushNotificationService pushNotificationService;
         private readonly IntegrationSystemService integrationSystemService;
+        private readonly IOrderProcesser orderProcessor;
 
         public FrontPadController()
         {
@@ -37,27 +41,43 @@ namespace EasyStart.Controllers
             var fcmDeviveRepository = new FCMDeviceRepository(context);
             var fcmAuthKeyPath = HostingEnvironment.MapPath("/Resource/FCMAuthKey.json");
             pushNotificationService = new PushNotificationService(fcmDeviveRepository, fcmAuthKeyPath);
+
+            orderProcessor = new OrderProcessor();
         }
 
         [HttpPost]
         public FrontPadOrderStatus ChangeStatus([FromBody] FrontPadOrderStatus status)
         {
-            if (status.OrderId == 0)
+            var order = orderService.GetByExternalId(status.OrderId);
+
+            if (status.OrderId == 0 || order == null)
                 return status;
 
-            var order = this.orderService.GetByExternalId(status.OrderId);
-            var integrationSetting = this.integrationSystemService.Get(order.BranchId);
+            var integrationSetting = integrationSystemService.Get(order.BranchId);
 
             if (integrationSetting.Type != Logic.IntegrationSystemType.FrontPad)
                 return status;
 
             var integerationSystem = new IntegrationSystemFactory().GetIntegrationSystem(integrationSetting);
             var orderStatus = integerationSystem.GetIntegrationOrderStatus(status.Status);
-            
-            this.orderService.ChangeIntegrationStatus(order.Id, orderStatus);
+
+            orderService.ChangeIntegrationStatus(order.Id, orderStatus);
             order = this.orderService.Get(order.Id);
 
-            this.pushNotificationService.ChangeOrderStatus(orderStatus, order);
+            if (integrationSetting.UseAutomaticDispatch
+                && (orderStatus == IntegrationOrderStatus.Done || orderStatus == IntegrationOrderStatus.Canceled))
+            {
+                var updatePayload = new UpdaterOrderStatus
+                {
+                    OrderId = order.Id,
+                    Status = orderStatus == IntegrationOrderStatus.Done ? OrderStatus.Processed : OrderStatus.Cancellation
+                };
+
+                orderProcessor.ChangeOrderStatus(updatePayload);
+                new OrderHub().ChangeOrderStatus(order.Id, updatePayload.Status, order.BranchId);
+            }
+
+            pushNotificationService.ChangeOrderStatus(orderStatus, order);
 
             return status;
         }

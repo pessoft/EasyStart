@@ -15,7 +15,7 @@ namespace EasyStart.Logic.IntegrationSystem
     public abstract class BaseIntegrationSystem : IIntegrationSystem
     {
         protected readonly IntegrationSystemModel integrationSystemSetting;
-        
+
         public BaseIntegrationSystem(IntegrationSystemModel integrationSystemSetting)
         {
             this.integrationSystemSetting = integrationSystemSetting;
@@ -23,7 +23,7 @@ namespace EasyStart.Logic.IntegrationSystem
 
         public abstract IntegrationOrderStatus GetIntegrationOrderStatus(int externalOrderStatusId);
 
-        public abstract INewOrderResult SendOrder(IOrderDetails orderDetails, string domainUrl);
+        public abstract INewOrderResult SendOrder(IOrderDetails orderDetails);
         
         public abstract double GetClinetVirtualMoney(string phoneNumber);
 

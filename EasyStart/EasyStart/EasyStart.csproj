@@ -286,7 +286,7 @@
     <Compile Include="HtmlRenderer\Models\OrderIfnoModel.cs" />
     <Compile Include="HtmlRenderer\Models\ProductInfoModel.cs" />
     <Compile Include="HtmlRenderer\Models\ProductWithOptionsInfoModel.cs" />
-    <Compile Include="Hubs\NewOrderHub.cs" />
+    <Compile Include="Hubs\OrderHub.cs" />
     <Compile Include="JsResult\JSResult.cs" />
     <Compile Include="JsResult\JsResultHelper.cs" />
     <Compile Include="Logger.cs" />
@@ -312,6 +312,8 @@
     <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\NewOrderResult.cs" />
     <Compile Include="Logic\IntegrationSystem\WithoutIntegration.cs" />
     <Compile Include="Logic\Notification\EmailNotification\RestorePasswordNotification.cs" />
+    <Compile Include="Logic\OrderProcessor\IOrderProcesser.cs" />
+    <Compile Include="Logic\OrderProcessor\OrderProcessor.cs" />
     <Compile Include="Logic\PreprocessorDataAPI.cs" />
     <Compile Include="Logic\PromotionLogic.cs" />
     <Compile Include="Logic\Report\GeneralUserQuantity.cs" />
@@ -508,6 +510,10 @@
     <Compile Include="Migrations\202103221236454_AddedIntegrationOrderStatusInOrderModel.Designer.cs">
       <DependentUpon>202103221236454_AddedIntegrationOrderStatusInOrderModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103271450343_AddedUseAutomaticDispathNewOrderInIntegration.cs" />
+    <Compile Include="Migrations\202103271450343_AddedUseAutomaticDispathNewOrderInIntegration.Designer.cs">
+      <DependentUpon>202103271450343_AddedUseAutomaticDispathNewOrderInIntegration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -593,12 +599,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ClientRepository.cs" />
     <Compile Include="Repositories\FCMDeviceRepository.cs" />
+    <Compile Include="Repositories\DeliverySettingRepository.cs" />
     <Compile Include="Repositories\ProductRepository.cs" />
     <Compile Include="Repositories\OrderRepository.cs" />
     <Compile Include="Repositories\BranchRepository.cs" />
     <Compile Include="Repositories\InegrationSystemRepository.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
+    <Compile Include="Services\DeliverySettingService.cs" />
     <Compile Include="Services\BranchService.cs" />
     <Compile Include="Services\PushNotificationService.cs" />
     <Compile Include="Services\ClientService.cs" />
@@ -937,6 +945,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103221236454_AddedIntegrationOrderStatusInOrderModel.resx">
       <DependentUpon>202103221236454_AddedIntegrationOrderStatusInOrderModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103271450343_AddedUseAutomaticDispathNewOrderInIntegration.resx">
+      <DependentUpon>202103271450343_AddedUseAutomaticDispathNewOrderInIntegration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

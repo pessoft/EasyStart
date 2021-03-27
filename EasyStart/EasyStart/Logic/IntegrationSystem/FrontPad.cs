@@ -43,14 +43,14 @@ namespace EasyStart.Logic.IntegrationSystem
             return status;
         }
 
-        public override INewOrderResult SendOrder(IOrderDetails orderDetails, string domainUrl)
+        public override INewOrderResult SendOrder(IOrderDetails orderDetails)
         {
             var postData = new StringBuilder();
 
             PrepareSecret(postData);
             PrepareProductData(orderDetails, postData);
             PrepareOrderData(orderDetails, postData);
-            PrepareHookUrlData(postData, domainUrl);
+            PrepareHookUrlData(postData);
 
             var result = SendOrder(postData.ToString());
 
@@ -164,7 +164,7 @@ namespace EasyStart.Logic.IntegrationSystem
             PreparePhoneNumber(order.PhoneNumber, postData);
         }
 
-        private void PrepareHookUrlData(StringBuilder postData, string domainUrl)
+        private void PrepareHookUrlData(StringBuilder postData)
         {
             var hookStatus = "";
             var hoolStatusList = new List<int>
@@ -181,6 +181,8 @@ namespace EasyStart.Logic.IntegrationSystem
                 hookStatus += $"&hook_status[{i}]={hoolStatusList[i]}";
             }
 
+            //var domainUrl = HttpContext.Current.Request.Url.GetBaseUrl();
+            var domainUrl = "https://729a08255b29.ngrok.io";
             postData.Append(hookStatus);
             postData.Append($"&hook_url={HttpUtility.UrlEncode($"{domainUrl}/api/frontpad/changestatus")}");
         }

@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using EasyStart.Logic;
 using EasyStart.Models;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 
 namespace EasyStart.Hubs
 {
-    public class NewOrderHub : Hub
+    public class OrderHub : Hub
     {
         public static List<BranchSignal> BranchSignals = new List<BranchSignal>();
         private static IHubCallerConnectionContext<dynamic> clients;
@@ -26,6 +27,22 @@ namespace EasyStart.Hubs
                 clients != null)
             {
                 clients.Clients(connectionIds).addNewOrder(newOrder);
+            }
+        }
+
+        public void ChangeOrderStatus(int orderId, OrderStatus status, int branchId)
+        {
+            var connectionIds = BranchSignals
+                .Where(p => p.BranchIds.Contains(branchId))
+                .Select(p => p.ConnectionId)
+                .Distinct()
+                .ToList();
+
+            if (connectionIds != null &&
+                connectionIds.Any() &&
+                clients != null)
+            {
+                clients.Clients(connectionIds).changeOrderStatus(orderId, (int)status);
             }
         }
 

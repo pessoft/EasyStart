@@ -1,4 +1,5 @@
-﻿using EasyStart.Logic.IntegrationSystem;
+﻿using EasyStart.Logic;
+using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
 using EasyStart.Models;
 using EasyStart.Repositories;
@@ -58,6 +59,26 @@ namespace EasyStart.Services
         {
             var order = Get(orderId);
             order.IntegrationOrderStatus = status;
+
+            repository.Update(order);
+        }
+
+        public void ChangeInnerStatus(int orderId, OrderStatus status, DateTime updateDate)
+        {
+            var order = Get(orderId);
+            order.OrderStatus = status;
+            order.UpdateDate = updateDate;
+
+            repository.Update(order);
+        }
+
+        public void UpdateCommentCauseCancel(int orderId, string commentCauseCancel)
+        {
+            if (commentCauseCancel == null)
+                return;
+
+            var order = Get(orderId);
+            order.CommentCauseCancel = commentCauseCancel;
 
             repository.Update(order);
         }
