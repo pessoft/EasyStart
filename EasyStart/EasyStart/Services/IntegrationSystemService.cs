@@ -51,13 +51,12 @@ namespace EasyStart.Services
 
         public INewOrderResult SendOrder(
             IOrderDetails orderDetails,
-            IIntegrationSystemFactory integrationSystemFactory,
-            string domainUrl)
+            IIntegrationSystemFactory integrationSystemFactory)
         {
             var order = orderDetails.GetOrder();
             var integrationSystemSetting = Get(order.BranchId);
             var integrationSystem = integrationSystemFactory.GetIntegrationSystem(integrationSystemSetting);
-            var result = integrationSystem.SendOrder(orderDetails, domainUrl);
+            var result = integrationSystem.SendOrder(orderDetails);
 
             return result;
         }

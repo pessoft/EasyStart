@@ -1,6 +1,7 @@
 ﻿using EasyStart.Logic;
 using EasyStart.Logic.FCM;
 using EasyStart.Logic.IntegrationSystem;
+using EasyStart.Logic.OrderProcessor;
 using EasyStart.Models;
 using EasyStart.Models.FCMNotification;
 using EasyStart.Models.ProductOption;
@@ -23,21 +24,12 @@ namespace EasyStart.Controllers
     [RedirectingAction]
     public class AdminController : Controller
     {
-        private readonly PushNotificationService pushNotificationService;
-        private readonly static string fcmAuthKeyPath;
-        static AdminController()
-        {
-            fcmAuthKeyPath = HostingEnvironment.MapPath("/Resource/FCMAuthKey.json");
-        }
+        private readonly IOrderProcesser orderProcessor;
 
         public AdminController()
         {
-            var context = new AdminPanelContext();
-            var fcmDeviveRepository = new FCMDeviceRepository(context);
-            
-            this.pushNotificationService = new PushNotificationService(fcmDeviveRepository, fcmAuthKeyPath);
+            orderProcessor = new OrderProcessor();
         }
-
 
         // GET: Admin
         [Authorize]
@@ -935,36 +927,7 @@ namespace EasyStart.Controllers
         {
             try
             {
-                if (data.Status == OrderStatus.Processing || data.OrderId < 1)
-                {
-                    return;
-                }
-
-                var order = DataWrapper.GetOrder(data.OrderId);
-                if (order.OrderStatus != OrderStatus.Processing)
-                {
-                    return;
-                }
-
-                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
-                var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
-                data.DateUpdate = date;
-
-                DataWrapper.UpdateStatusOrder(data);
-
-                if (data.Status == OrderStatus.Processed)
-                {
-                    new PromotionLogic().ProcessingVirtualMoney(data.OrderId, branchId);
-                }
-                else if (data.Status == OrderStatus.Cancellation)
-                {
-                    new PromotionLogic().Refund(data.OrderId);
-
-                    if (order.IntegrationOrderStatus == IntegrationOrderStatus.Unknown)
-                        Task.Run(() => this.pushNotificationService.ChangeOrderStatus(IntegrationOrderStatus.Canceled, order));
-                        
-                }
+                orderProcessor.ChangeOrderStatus(data);
             }
             catch (Exception ex)
             {

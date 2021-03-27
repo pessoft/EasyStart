@@ -27,7 +27,7 @@ namespace EasyStart.Logic.Notification
 
         public void AdminPanelInnerNotify()
         {
-            new NewOrderHub().AddedNewOrder(options.Order);
+            new OrderHub().AddedNewOrder(options.Order);
         }
 
         public void EmailNotify() {

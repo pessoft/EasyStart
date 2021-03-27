@@ -23,7 +23,7 @@ namespace EasyStart.Logic.IntegrationSystem
             return IntegrationOrderStatus.Unknown;
         }
 
-        public override INewOrderResult SendOrder(IOrderDetails orderDetails, string domainUrl)
+        public override INewOrderResult SendOrder(IOrderDetails orderDetails)
         {
             return new NewOrderResult();
         }
