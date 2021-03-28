@@ -20,11 +20,35 @@ namespace EasyStart.Services
             this.areaDeliveryRepository = areaDeliveryRepository;
         }
 
+        public DeliverySettingModel SaveDeliverySetting(DeliverySettingModel setting)
+        {
+            var updateSetting = GetByBranchIdWithoutAreaDelivery(setting.BranchId);
+
+            if (updateSetting != null)
+                repository.Update(setting);
+            else
+                repository.Create(setting);
+
+            var deliverySetting = GetByBranchIdWithoutAreaDelivery(setting.BranchId);
+            setting.AreaDeliveries.ForEach(p => p.DeliverySettingId = deliverySetting.Id);
+
+            SaveAreaDeliveries(setting.AreaDeliveries);
+
+            return GetByBranchId(setting.BranchId);
+        }
+
         public DeliverySettingModel GetByBranchId(int branchId)
         {
-            var setting = repository.Get(p => p.BranchId == branchId).FirstOrDefault();
+            var setting = GetByBranchIdWithoutAreaDelivery(branchId);
             if (setting != null)
                 setting.AreaDeliveries = GetAreaDeliveris(setting.Id);
+
+            return setting;
+        }
+
+        private DeliverySettingModel GetByBranchIdWithoutAreaDelivery(int branchId)
+        {
+            var setting = repository.Get(p => p.BranchId == branchId).FirstOrDefault();
 
             return setting;
         }
@@ -36,10 +60,10 @@ namespace EasyStart.Services
                     .ToList();
         }
 
-        public bool SaveAreaDeliveries(List<AreaDeliveryModel> areaDeliveries)
+        public List<AreaDeliveryModel> SaveAreaDeliveries(List<AreaDeliveryModel> areaDeliveries)
         {
             if (areaDeliveries == null || !areaDeliveries.Any())
-                return false;
+                return areaDeliveries;
 
             var dict = areaDeliveries.ToDictionary(p => p.UniqId);
             var ids = dict.Keys.ToList();
@@ -60,7 +84,7 @@ namespace EasyStart.Services
             areaDeliveryRepository.Create(areaDeliveries);
             areaDeliveryRepository.Remove(removeAreas);
 
-            return true;
+            return GetAreaDeliveris(deliverySettingId);
         }
     }
 }
