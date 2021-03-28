@@ -477,7 +477,12 @@ namespace EasyStart
                         if (updateOrder.OrderStatus == OrderStatus.Processing)
                         {
                             result.Success = true;
-                            result.Data = orderId;
+                            result.Data = new
+                            {
+                                deliveryType = order.DeliveryType,
+                                orderNumber = orderId,
+                                approximateDeliveryTime= approximateDeliveryTime.HasValue ? approximateDeliveryTime.Value.ToUniversalTime() : approximateDeliveryTime
+                            };
                             Task.Run(() =>
                             {
                                 updateOrder = SendOrderToIntegrationSystem(currentContext, updateOrder);
@@ -598,7 +603,12 @@ namespace EasyStart
                     }
 
                     order.Id = numberOrder;
-                    result.Data = numberOrder;
+                    result.Data = new
+                    {
+                        deliveryType = order.DeliveryType,
+                        orderNumber = numberOrder,
+                        approximateDeliveryTime = order.ApproximateDeliveryTime.HasValue ? order.ApproximateDeliveryTime.Value.ToUniversalTime() : order.ApproximateDeliveryTime
+                    };
                     result.Success = true;
 
                     if (order.OrderStatus == OrderStatus.Processing)
@@ -737,6 +747,10 @@ namespace EasyStart
             try
             {
                 var historyOrders = DataWrapper.GetHistoryOrders(dataHistoryForLoad.ClientId, dataHistoryForLoad.BranchId);
+                if (historyOrders != null && historyOrders.Any())
+                    historyOrders.ForEach(p => p.ApproximateDeliveryTime = p.ApproximateDeliveryTime.HasValue ?
+                    p.ApproximateDeliveryTime.Value.ToUniversalTime() :
+                    p.ApproximateDeliveryTime);
 
                 result.Data = historyOrders;
                 result.Success = true;
