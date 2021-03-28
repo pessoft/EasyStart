@@ -14,6 +14,7 @@ namespace EasyStart.Models.Integration
         public int StatusDone { get; set; }
         public int PointSaleDelivery { get; set; }
         public int PointSaleTakeyourself { get; set; }
+        public int OnlineBuyType { get; set; }
         public string PhoneCodeCountry { get; set; }
         public bool UsePhoneMask { get; set; } = true;
     }

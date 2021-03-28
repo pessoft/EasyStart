@@ -131,8 +131,15 @@ namespace EasyStart.Logic.IntegrationSystem
         private void PrepareOrderData(IOrderDetails orderDetails, StringBuilder postData)
         {
             var order = orderDetails.GetOrder();
-            var buyType = order.BuyType == BuyType.Cash ? BuyType.Cash : BuyType.Card;
-           
+            int buyType;
+
+            if (order.BuyType == BuyType.Cash)
+                buyType = (int)BuyType.Cash;
+            else if (order.BuyType == BuyType.Online && frontPadOptions.OnlineBuyType != 0)
+                buyType = frontPadOptions.OnlineBuyType;
+            else
+                buyType = (int)BuyType.Card;
+
             var nfi = new NumberFormatInfo();
             nfi.NumberDecimalSeparator = ".";
             var amountPayCashback = order.AmountPayCashBack.ToString(nfi);
@@ -145,7 +152,7 @@ namespace EasyStart.Logic.IntegrationSystem
             postData.Append($"&descr={HttpUtility.UrlEncode(order.Comment)}");
             postData.Append($"&name={HttpUtility.UrlEncode(order.Name)}");
             postData.Append($"&score={HttpUtility.UrlEncode(amountPayCashback)}");
-            postData.Append($"&pay={HttpUtility.UrlEncode(((int)buyType).ToString())}");
+            postData.Append($"&pay={HttpUtility.UrlEncode((buyType).ToString())}");
             postData.Append($"&person={HttpUtility.UrlEncode(order.NumberAppliances.ToString())}");
 
             if (order.DateDelivery.HasValue)
