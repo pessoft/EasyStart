@@ -29,10 +29,34 @@ namespace EasyStart.Repositories
         }
         public virtual T Create(T item)
         {
-            var addedItem = db.Add(item);
+            var addedItem = CreateWithouSaveChanges(item);
             context.SaveChanges();
 
             return addedItem;
+        }
+
+        protected T CreateWithouSaveChanges(T item)
+        {
+            var addedItem = db.Add(item);
+
+            return addedItem;
+        }
+
+        public virtual List<T> Create(List<T> items)
+        {
+            if (items == null || !items.Any())
+                return items;
+
+            var newItems = new List<T>();
+            items.ForEach(item =>
+            {
+                var addedItem = CreateWithouSaveChanges(item);
+                newItems.Add(addedItem);
+            });
+            
+            context.SaveChanges();
+
+            return newItems;
         }
 
         public virtual IEnumerable<T> Get()
@@ -47,10 +71,25 @@ namespace EasyStart.Repositories
 
         public virtual void Remove(T item)
         {
-            db.Remove(item);
+            RemoveWithotSaveChages(item);
             context.SaveChanges();
         }
+        public virtual void Remove(List<T> items)
+        {
+            if (items == null || !items.Any())
+                return;
+
+            items.ForEach(p => RemoveWithotSaveChages(p));
+            context.SaveChanges();
+        }
+
+        protected virtual void RemoveWithotSaveChages(T item)
+        {
+            db.Remove(item);
+        }
+
         public abstract void Update(T item);
+
         public abstract void Update(List<T> items);
 
         protected void Update(T savedItem, T item)
