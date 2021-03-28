@@ -131,5 +131,13 @@ namespace EasyStart.Logic.OrderProcessor
         {
             return !(order.DiscountPercent > 0 && order.DiscountRuble > 0);
         }
+
+        public TimeSpan GetAverageOrderProcessingTime(int branchId, DeliveryType deliveryType)
+        {
+            var minTimeProcessingOrder = deliverySettingService.GetByBranchId(branchId);
+            var defaultOrderProessingTime = TimeSpan.Parse(minTimeProcessingOrder.MinTimeProcessingOrder);
+
+            return orderService.GetAverageOrderProcessingTime(branchId, deliveryType, defaultOrderProessingTime);
+        }
     }
 }

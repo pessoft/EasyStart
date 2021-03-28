@@ -5,6 +5,7 @@ using EasyStart.Models;
 using EasyStart.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
@@ -81,6 +82,26 @@ namespace EasyStart.Services
             order.CommentCauseCancel = commentCauseCancel;
 
             repository.Update(order);
+        }
+
+        public TimeSpan GetAverageOrderProcessingTime(int branchId, DeliveryType deliveryType, TimeSpan defaultOrderProessingTime)
+        {
+            var timeProcessingOrders = repository.Get(p =>
+                p.BranchId == branchId
+                && p.IsSendToIntegrationSystem
+                && p.OrderStatus == OrderStatus.Processed
+                && p.DeliveryType == deliveryType
+                && p.Date.Date == DateTime.Now.Date)
+                .Select(p => p.UpdateDate - p.Date);
+            var orderCount = timeProcessingOrders.Count();
+
+            if (orderCount == 0)
+                return defaultOrderProessingTime;
+
+            var aggregateTimeProcessingOrder = timeProcessingOrders.Aggregate((t1, t2) => t1 + t2);
+            var timeProcessingOrder = TimeSpan.FromTicks(aggregateTimeProcessingOrder.Ticks / orderCount);
+
+            return timeProcessingOrder;
         }
     }
 }

@@ -460,7 +460,16 @@ namespace EasyStart
                     {
                         var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
                         var dateUpdate = date;
-                        var updateOrderStatus = new UpdaterOrderStatus { DateUpdate = dateUpdate, OrderId = order.Id, Status = OrderStatus.Processing };
+                        var approximateDeliveryTime = order.DateDelivery.HasValue ?
+                            order.DateDelivery : 
+                            order.Date + orderProcesser.GetAverageOrderProcessingTime(order.BranchId, order.DeliveryType);
+                        var updateOrderStatus = new UpdaterOrderStatus 
+                        { 
+                            DateUpdate = dateUpdate,
+                            ApproximateDeliveryTime = approximateDeliveryTime,
+                            OrderId = order.Id,
+                            Status = OrderStatus.Processing
+                        };
 
                         DataWrapper.UpdateStatusOrder(updateOrderStatus);
                         var updateOrder = DataWrapper.GetOrder(order.Id);
@@ -540,6 +549,9 @@ namespace EasyStart
 
                 order.Date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
                 order.UpdateDate = order.Date;
+                order.ApproximateDeliveryTime = order.DateDelivery.HasValue ?
+                            order.DateDelivery :
+                            order.Date + orderProcesser.GetAverageOrderProcessingTime(order.BranchId, order.DeliveryType);
 
                 if (order.AmountPayCashBack > 0
                     && (client.VirtualMoney - order.AmountPayCashBack) < 0)
