@@ -25,16 +25,18 @@ namespace EasyStart.Services
             var updateSetting = GetByBranchIdWithoutAreaDelivery(setting.BranchId);
 
             if (updateSetting != null)
-                repository.Update(setting);
+            {
+                setting.Id = updateSetting.Id;
+                setting = repository.Update(setting);
+            }
             else
-                repository.Create(setting);
+                setting = repository.Create(setting);
 
-            var deliverySetting = GetByBranchIdWithoutAreaDelivery(setting.BranchId);
-            setting.AreaDeliveries.ForEach(p => p.DeliverySettingId = deliverySetting.Id);
+            setting.AreaDeliveries.ForEach(p => p.DeliverySettingId = setting.Id);
 
             SaveAreaDeliveries(setting.AreaDeliveries);
 
-            return GetByBranchId(setting.BranchId);
+            return setting;
         }
 
         public DeliverySettingModel GetByBranchId(int branchId)
@@ -81,7 +83,7 @@ namespace EasyStart.Services
                 .ToList();
 
             areaDeliveryRepository.Update(updates);
-            areaDeliveryRepository.Create(areaDeliveries);
+            areaDeliveryRepository.Create(newAreas);
             areaDeliveryRepository.Remove(removeAreas);
 
             return GetAreaDeliveris(deliverySettingId);
