@@ -7,7 +7,8 @@ using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public class BaseRepository<T> : IRepository<T> where T : BaseEntity
+    public abstract class BaseRepository<T> : IBaseRepository<T>
+        where T : class
     {
         protected bool disposed = false;
         protected DbContext context;
@@ -44,44 +45,24 @@ namespace EasyStart.Repositories
             return db.Where(predicate).AsEnumerable();
         }
 
-        public virtual T Get(int id)
-        {
-            return db.FirstOrDefault(p => p.Id == id);
-        }
-
         public virtual void Remove(T item)
         {
             db.Remove(item);
             context.SaveChanges();
         }
+        public abstract void Update(T item);
+        public abstract void Update(List<T> items);
 
-        public virtual void Update(T item)
+        protected void Update(T savedItem, T item)
         {
-            var savedItem = Get(item.Id);
-            context.Entry(savedItem).State = EntityState.Detached;
-
-            context.Entry(item).State = EntityState.Modified;
+            UpdateWithotSaveChages(savedItem, item);
             context.SaveChanges();
         }
 
-        public virtual void Update(List<T> items)
+        protected void UpdateWithotSaveChages(T savedItem, T item)
         {
-            if (items == null || !items.Any())
-                return;
-
-            var dict = items.ToDictionary(p => p.Id);
-            var ids = dict.Keys.ToList();
-            var savedItems = Get(p => ids.Contains(p.Id)).ToList();
-
-            savedItems.ForEach(savedItem => 
-            {
-                var item = dict[savedItem.Id];
-
-                context.Entry(savedItem).State = EntityState.Detached;
-                context.Entry(item).State = EntityState.Modified;
-            });
-            
-            context.SaveChanges();
+            context.Entry(savedItem).State = EntityState.Detached;
+            context.Entry(item).State = EntityState.Modified;
         }
     }
 }

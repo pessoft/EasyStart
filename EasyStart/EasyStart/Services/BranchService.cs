@@ -9,9 +9,9 @@ namespace EasyStart.Services
 {
     public class BranchService
     {
-        private readonly IRepository<BranchModel> repository;
+        private readonly IDefaultEntityRepository<BranchModel> repository;
 
-        public BranchService(IRepository<BranchModel> repository)
+        public BranchService(IDefaultEntityRepository<BranchModel> repository)
         {
             this.repository = repository;
         }

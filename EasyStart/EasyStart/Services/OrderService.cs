@@ -13,9 +13,9 @@ namespace EasyStart.Services
 {
     public class OrderService
     {
-        private readonly IRepository<OrderModel> repository;
+        private readonly IDefaultEntityRepository<OrderModel> repository;
 
-        public OrderService(IRepository<OrderModel> repository)
+        public OrderService(IDefaultEntityRepository<OrderModel> repository)
         {
             this.repository = repository;
         }

@@ -9,16 +9,24 @@ namespace EasyStart.Services
 {
     public class DeliverySettingService
     {
-        private readonly IRepository<DeliverySettingModel> repository;
+        private readonly IDefaultEntityRepository<DeliverySettingModel> repository;
+        private readonly IUniqIdEntityRepository<AreaDeliveryModel> areaDeliveryRepository;
 
-        public DeliverySettingService(IRepository<DeliverySettingModel> repository)
+        public DeliverySettingService(
+            IDefaultEntityRepository<DeliverySettingModel> repository,
+            IUniqIdEntityRepository<AreaDeliveryModel> areaDeliveryRepository)
         {
             this.repository = repository;
+            this.areaDeliveryRepository = areaDeliveryRepository;
         }
 
         public DeliverySettingModel GetByBranchId(int branchId)
         {
             var setting = repository.Get(p => p.BranchId == branchId).FirstOrDefault();
+            if (setting != null)
+                setting.AreaDeliveries = areaDeliveryRepository
+                    .Get(p => p.DeliverySettingId == setting.Id)
+                    .ToList();
 
             return setting;
         }

@@ -10,9 +10,9 @@ namespace EasyStart.Services
 {
     public class ClientService
     {
-        private readonly IRepository<Client> repository;
+        private readonly IDefaultEntityRepository<Client> repository;
         
-        public ClientService(IRepository<Client> repository)
+        public ClientService(IDefaultEntityRepository<Client> repository)
         {
             this.repository = repository;
         }

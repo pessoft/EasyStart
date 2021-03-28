@@ -46,7 +46,8 @@ namespace EasyStart.Logic.OrderProcessor
             productService = new ProductService(productRepository);
 
             var deliverySettingRepository = new DeliverySettingRepository(context);
-            deliverySettingService = new DeliverySettingService(deliverySettingRepository);
+            var areaDeliveryRepository = new AreaDeliveryRepository(context);
+            deliverySettingService = new DeliverySettingService(deliverySettingRepository, areaDeliveryRepository);
 
             var fCMDeviceRepository = new FCMDeviceRepository(context);
             pushNotificationService = new PushNotificationService(fCMDeviceRepository, fcmAuthKeyPath);

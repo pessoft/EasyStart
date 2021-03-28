@@ -6,10 +6,8 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class AreaDeliveryModel
+    public class AreaDeliveryModel: UniqIdEntity
     {
-        [Key]
-        public string UniqId { get; set; }
         public int DeliverySettingId { get; set; }
         public string NameArea { get; set; }
         public double MinPrice { get; set; }

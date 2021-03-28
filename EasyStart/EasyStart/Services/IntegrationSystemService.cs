@@ -13,9 +13,9 @@ namespace EasyStart.Services
 {
     public class IntegrationSystemService
     {
-        private readonly IRepository<IntegrationSystemModel> repository;
+        private readonly IDefaultEntityRepository<IntegrationSystemModel> repository;
         
-        public IntegrationSystemService(IRepository<IntegrationSystemModel> repository)
+        public IntegrationSystemService(IDefaultEntityRepository<IntegrationSystemModel> repository)
         {
             this.repository = repository;
         }
