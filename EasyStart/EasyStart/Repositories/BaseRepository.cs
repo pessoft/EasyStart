@@ -88,14 +88,16 @@ namespace EasyStart.Repositories
             db.Remove(item);
         }
 
-        public abstract void Update(T item);
+        public abstract T Update(T item);
 
-        public abstract void Update(List<T> items);
+        public abstract List<T> Update(List<T> items);
 
-        protected void Update(T savedItem, T item)
+        protected T Update(T savedItem, T item)
         {
             UpdateWithotSaveChages(savedItem, item);
             context.SaveChanges();
+
+            return item;
         }
 
         protected void UpdateWithotSaveChages(T savedItem, T item)
