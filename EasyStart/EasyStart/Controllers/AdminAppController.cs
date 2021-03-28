@@ -27,6 +27,7 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
@@ -641,6 +642,7 @@ namespace EasyStart
 
             if (integrationSetting.UseAutomaticDispatch)
             {
+                Thread.Sleep(1500);// немного притормаживаем из-за ограничений фронтпада максимум 2 запроса в 1 секунду
                 var result = orderProcesser.SendOrderToIntegrationSystem(order.Id);
 
                 if (result.Success)
