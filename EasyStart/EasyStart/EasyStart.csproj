@@ -518,6 +518,10 @@
     <Compile Include="Migrations\202103280948389_AddedApproximateDeliveryTimeInOrderModel.Designer.cs">
       <DependentUpon>202103280948389_AddedApproximateDeliveryTimeInOrderModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103282317357_AddedVendorCodeInAreaDeliveryModel.cs" />
+    <Compile Include="Migrations\202103282317357_AddedVendorCodeInAreaDeliveryModel.Designer.cs">
+      <DependentUpon>202103282317357_AddedVendorCodeInAreaDeliveryModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -961,6 +965,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103280948389_AddedApproximateDeliveryTimeInOrderModel.resx">
       <DependentUpon>202103280948389_AddedApproximateDeliveryTimeInOrderModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103282317357_AddedVendorCodeInAreaDeliveryModel.resx">
+      <DependentUpon>202103282317357_AddedVendorCodeInAreaDeliveryModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

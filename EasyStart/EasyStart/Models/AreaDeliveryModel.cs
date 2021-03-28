@@ -12,5 +12,6 @@ namespace EasyStart.Models
         public string NameArea { get; set; }
         public double MinPrice { get; set; }
         public double DeliveryPrice { get; set; }
+        public string VendorCode { get; set; }
     }
 }
