@@ -48,7 +48,7 @@ namespace EasyStart.Logic.IntegrationSystem
             var postData = new StringBuilder();
 
             PrepareSecret(postData);
-            PrepareProductData(orderDetails, postData);
+            PrepareProductAndFakeProductAreaDelievryData(orderDetails, postData);
             PrepareOrderData(orderDetails, postData);
             PrepareSalePointData(orderDetails, postData);
             PrepareHookUrlData(postData);
@@ -91,7 +91,7 @@ namespace EasyStart.Logic.IntegrationSystem
             postData.Append($"&{propName}={HttpUtility.UrlEncode(ProcessedPhoneNumber(phoneNumber))}");
         }
 
-        private void PrepareProductData(IOrderDetails orderDetails, StringBuilder postData)
+        private void PrepareProductAndFakeProductAreaDelievryData(IOrderDetails orderDetails, StringBuilder postData)
         {
             var order = orderDetails.GetOrder();
             var products = new List<string>();
@@ -118,6 +118,14 @@ namespace EasyStart.Logic.IntegrationSystem
                     productCount.Add(order.ProductBonusCount[productId]);
                     productPrice.Add(0);
                 }
+            }
+
+            var areaVendorCode = orderDetails.GetAreaDeliveryCode();
+            if (!string.IsNullOrEmpty(areaVendorCode))
+            {
+                products.Add(areaVendorCode);
+                productCount.Add(1);
+                productPrice.Add(order.DeliveryPrice);
             }
 
             for (var i = 0; i < products.Count; ++i)

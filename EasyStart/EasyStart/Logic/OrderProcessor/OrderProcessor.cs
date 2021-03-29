@@ -98,7 +98,8 @@ namespace EasyStart.Logic.OrderProcessor
                     newOrderResult = new NewOrderResult("Discount persent and discount ruble no supported integraion system");
                 else if (IsProductsValidForIntegrationSystem(products))
                 {
-                    var orderDetails = new OrderDetails(order, products);
+                    var deliverySetting = deliverySettingService.GetByBranchId(order.BranchId);
+                    var orderDetails = new OrderDetails(order, products, deliverySetting.AreaDeliveries);
                     newOrderResult = integrationSystemService.SendOrder(
                         orderDetails,
                         new IntegrationSystemFactory());

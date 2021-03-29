@@ -37,6 +37,9 @@ namespace EasyStart.Models
         public double ReferralDiscount { get; set; }
 
         public double DeliveryPrice { get; set; }
+
+        public string AreaDeliveryId { get; set; }
+
         /// <summary>
         /// Сдача с суммы
         /// </summary>
