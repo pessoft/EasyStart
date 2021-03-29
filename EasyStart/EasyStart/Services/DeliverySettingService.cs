@@ -74,6 +74,7 @@ namespace EasyStart.Services
             var allAreas = GetAreaDeliveris(deliverySettingId);
             var updates = allAreas
                     .Where(x => ids.Contains(x.UniqId))
+                    .Select(p => dict[p.UniqId])
                     .ToList();
             var newAreas = areaDeliveries
                    .Where(p => !updates.Exists(x => p.UniqId == x.UniqId))
