@@ -19,13 +19,11 @@
         routeConfig[Navigator.pageIds.ordersHistory] = () => new OrdersHistoryPage()
         routeConfig[Navigator.pageIds.products] = () => new ProductsPage()
         routeConfig[Navigator.pageIds.promotion] = () => new PromotionPage()
-        routeConfig[Navigator.pageIds.users] = () => new UsersPage()
         routeConfig[Navigator.pageIds.analytics] = () => new AnalyticsPage()
         routeConfig[Navigator.pageIds.settings] = () => new SettingsPage()
         routeConfig[Navigator.pageIds.tariffsAndPay] = () => new TariffsPage()
 
         this.app.navigator = new Navigator(routeConfig)
-
     }
     
     hidePreloader() {

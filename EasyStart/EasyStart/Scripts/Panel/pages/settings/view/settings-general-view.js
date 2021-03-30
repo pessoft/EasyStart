@@ -1,7 +1,7 @@
-﻿class SettingsNotificationView {
+﻿class SettingsGeneralView {
 
-    tabName = 'Уведомления'
-    tabContentId = 'settings-tabs-notification'
+    tabName = 'Общие'
+    tabContentId = 'settings-tabs-general'
 
     getInfo() {
         return {

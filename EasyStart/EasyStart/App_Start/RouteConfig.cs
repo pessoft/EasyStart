@@ -18,8 +18,8 @@ namespace EasyStart
                 url: "{controller}/{action}",
                 defaults: new 
                 { 
-                    controller = "Home",
-                    action = "AdminLogin",
+                    controller = "Panel",
+                    action = "Index",
                 }
             );
         }

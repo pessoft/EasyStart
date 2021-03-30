@@ -124,20 +124,14 @@ namespace EasyStart
                 "~/Scripts/panel/pages/promotion/view/promotion-page-view.js",
                 "~/Scripts/panel/pages/promotion/promotion-page.js",
 
-                "~/Scripts/panel/pages/users/logic/users-page-logic.js",
-                "~/Scripts/panel/pages/users/view/users-page-view.js",
-                "~/Scripts/panel/pages/users/users-page.js",
-
                 "~/Scripts/panel/pages/analytics/logic/analytics-page-logic.js",
                 "~/Scripts/panel/pages/analytics/view/analytics-page-view.js",
                 "~/Scripts/panel/pages/analytics/analytics-page.js",
 
                 "~/Scripts/panel/pages/settings/logic/settings-page-logic.js",
                 "~/Scripts/panel/pages/settings/view/settings-contacts-view.js",
-                "~/Scripts/panel/pages/settings/view/settings-delivery-view.js",
-                "~/Scripts/panel/pages/settings/view/settings-working-hours-view.js",
+                "~/Scripts/panel/pages/settings/view/settings-general-view.js",
                 "~/Scripts/panel/pages/settings/view/settings-order-payment-view.js",
-                "~/Scripts/panel/pages/settings/view/settings-notification-view.js",
                 "~/Scripts/panel/pages/settings/view/settings-integration-view.js",
                 "~/Scripts/panel/pages/settings/view/settings-branch-view.js",
                 "~/Scripts/panel/pages/settings/view/settings-page-view.js",
