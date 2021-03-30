@@ -2455,13 +2455,13 @@ button.simple-text-btn:disabled:hover {
         align-self: center;
     }
 
-    .area-delivery-edit-menu {
-        display: grid;
-        grid-template-columns: repeat(2, 120px);
-        grid-template-rows: 35px;
-        grid-column-gap: 15px;
-        justify-self: center;
-    }
+.area-delivery-edit-menu {
+    display: grid;
+    grid-template-columns: repeat(2, 120px);
+    grid-template-rows: 35px;
+    grid-column-gap: 15px;
+    justify-self: center;
+}
 
     .area-delivery-edit-menu button {
         font-size: 0.7em;
@@ -2803,6 +2803,7 @@ button {
     margin-top: 10px;
 }
 
-    .recommended-products-wrapper .SumoSelect.open > .optWrapper.up {
+    .recommended-products-wrapper .SumoSelect.open > .optWrapper.up,
+    .recommended-products-wrapper .SumoSelect.open > .optWrapper.up ul.options {
         height: 225px;
     }
