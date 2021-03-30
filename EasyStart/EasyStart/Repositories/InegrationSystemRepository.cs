@@ -7,7 +7,7 @@ using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public class InegrationSystemRepository : BaseRepository<IntegrationSystemModel>
+    public class InegrationSystemRepository : DefaultRepository<IntegrationSystemModel>
     {
         public InegrationSystemRepository(DbContext dbContext):base(dbContext) 
         { }

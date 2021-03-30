@@ -13,9 +13,9 @@ namespace EasyStart.Services
 {
     public class IntegrationSystemService
     {
-        private readonly IRepository<IntegrationSystemModel> repository;
+        private readonly IDefaultEntityRepository<IntegrationSystemModel> repository;
         
-        public IntegrationSystemService(IRepository<IntegrationSystemModel> repository)
+        public IntegrationSystemService(IDefaultEntityRepository<IntegrationSystemModel> repository)
         {
             this.repository = repository;
         }
@@ -49,12 +49,26 @@ namespace EasyStart.Services
             return result;
         }
 
-        public INewOrderResult SendOrder(IOrderDetails orderDetails, IIntegrationSystemFactory integrationSystemFactory)
+        public INewOrderResult SendOrder(
+            IOrderDetails orderDetails,
+            IIntegrationSystemFactory integrationSystemFactory)
         {
             var order = orderDetails.GetOrder();
             var integrationSystemSetting = Get(order.BranchId);
             var integrationSystem = integrationSystemFactory.GetIntegrationSystem(integrationSystemSetting);
             var result = integrationSystem.SendOrder(orderDetails);
+
+            return result;
+        }
+
+        public double GetClientVirtualMoney(
+            string phoneNumber,
+            int branchId,
+            IIntegrationSystemFactory integrationSystemFactory)
+        {
+            var integrationSystemSetting = Get(branchId);
+            var integrationSystem = integrationSystemFactory.GetIntegrationSystem(integrationSystemSetting);
+            var result = integrationSystem.GetClinetVirtualMoney(phoneNumber);
 
             return result;
         }

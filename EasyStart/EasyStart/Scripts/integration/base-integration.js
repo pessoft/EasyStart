@@ -18,6 +18,8 @@ function bindChangedIntegragionSelector() {
 function changeIntegrationSystemHandler() {
     const integrationSystemType = parseInt($('#integration-type option:selected').val())
 
+    hideSyncFrontpad()
+
     switch (integrationSystemType) {
         case IntegrationSystemType.withoutIntegration:
             initWithoutIntegration()
@@ -31,6 +33,14 @@ function changeIntegrationSystemHandler() {
     }
 }
 
+function hideSyncFrontpad() {
+    $(`#${frontPadIdsStore.syncClients}`).hide()
+}
+
+function showSyncFrontpad() {
+    $(`#${frontPadIdsStore.syncClients}`).show()
+}
+
 function initWithoutIntegration() {
     const $integrationWrapper = $('.integration-values-wrapper')
     const template = '<div class="empty-container">Выберите интеграционную систему</div>'
@@ -38,20 +48,109 @@ function initWithoutIntegration() {
     $integrationWrapper.html(template)
 }
 
+const frontPadIdsStore = {
+    secret: 'frontpad-integration',
+    statusNew: 'frontpad-integration-status-new',
+    statusProcessed: 'frontpad-integration-status-processed',
+    statusDelivery: 'frontpad-integration-status-delivery',
+    statusDone: 'frontpad-integration-status-done',
+    statusCancel: 'frontpad-integration-status-cancel',
+    phoneCodeCountry: 'frontpad-integration-phone-code-country',
+    useAutomaticDispatch: 'frontpad-integration-use-automatic-dispatch',
+    syncClients: 'integration-sync-frontpad-wrapper',
+    pointSaleDelivery: 'integration-point-sale-delivery',
+    pointSaleTakeyourself: 'integration-point-sale-takeyourself',
+    onlineBuyType: 'integration-online-buy-type',
+}
+
 function initFrontPadIntegration() {
-    const secret = IntegerationSystemSetting && IntegerationSystemSetting.Type == IntegrationSystemType.frontPad ?
-        IntegerationSystemSetting.Secret : ''
     const $integrationWrapper = $('.integration-values-wrapper')
-    const inputId = 'frontpad-integration'
+    const webHookUrl = `${window.location.origin}/api/frontpad/changestatus`
     const $template = $(`
         <div class="group">
-            <input required type="text" id="${inputId}" />
+            <input required type="text" id="${frontPadIdsStore.secret}" />
             <span class="bar"></span>
             <label>Секрет из FrontPad</label>
+        </div>
+        <div class="checkbox-item integration-frontpad-cbx-group">
+            <input type="checkbox" id="${frontPadIdsStore.useAutomaticDispatch}">
+            <label for="${frontPadIdsStore.useAutomaticDispatch}" class="label-for">Отправлять новый заказ автоматически</label>
+        </div>        
+        <div class="checkbox-item integration-frontpad-cbx-group">
+            <input type="checkbox" id="${frontPadIdsStore.usePhoneMask}" checked>
+            <label for="${frontPadIdsStore.usePhoneMask}" class="label-for">Использовать маску телефона +7(XXX)XXX-XX-XX</label>
+        </div>
+        <div class="group">
+            <input required type="text" id="${frontPadIdsStore.phoneCodeCountry}" value="+7"/>
+            <span class="bar"></span>
+            <label>Код страны для номера телефона</label>
+        </div>
+        <div class="group">
+            <input required readonly type="text" id="${frontPadIdsStore.statusNew}" value="1"/>
+            <span class="bar"></span>
+            <label>Статус новый (код api)</label>
+        </div>
+        <div class="group">
+            <input required type="text" id="${frontPadIdsStore.statusProcessed}" />
+            <span class="bar"></span>
+            <label>Статус в производстве (код api)</label>
+        </div>
+        <div class="group">
+            <input required type="text" id="${frontPadIdsStore.statusDelivery}" />
+            <span class="bar"></span>
+            <label>Статус в пути (код api)</label>
+        </div>
+        <div class="group">
+            <input required readonly type="text" id="${frontPadIdsStore.statusDone}" value="10"/>
+            <span class="bar"></span>
+            <label>Статус выполнен (код api)</label>
+        </div>
+        <div class="group">
+            <input required type="text" id="${frontPadIdsStore.statusCancel}" />
+            <span class="bar"></span>
+            <label>Статус списан или отменен (код api)</label>
+        </div>
+        <div class="group">
+            <input required type="text" id="${frontPadIdsStore.pointSaleTakeyourself}" />
+            <span class="bar"></span>
+            <label>Точка продаж "Самовывоз" (код api)</label>
+        </div>
+        <div class="group">
+            <input required type="text" id="${frontPadIdsStore.pointSaleDelivery}" />
+            <span class="bar"></span>
+            <label>Точка продаж "Доставка" (код api)</label>
+        </div>
+        <div class="group">
+            <input required type="text" id="${frontPadIdsStore.onlineBuyType}" />
+            <span class="bar"></span>
+            <label>Тип оплаты "Онлайн" (код api)</label>
+        </div>
+        <div class="group">
+            <input required readonly type="text" value="${webHookUrl}"/>
+            <span class="bar"></span>
+            <label>Webhook url</label>
         </div>`)
 
-    $template.find(`#${inputId}`).val(secret)
+    if (IntegerationSystemSetting && IntegerationSystemSetting.Type == IntegrationSystemType.frontPad) {
+        $template.find(`#${frontPadIdsStore.secret}`).val(IntegerationSystemSetting.Secret)
+        $template.find(`#${frontPadIdsStore.useAutomaticDispatch}`).prop('checked', IntegerationSystemSetting.UseAutomaticDispatch)
+
+        const options = JSON.parse(IntegerationSystemSetting.Options)
+        $template.find(`#${frontPadIdsStore.statusNew}`).val(options.statusNew || 1)
+        $template.find(`#${frontPadIdsStore.statusProcessed}`).val(options.statusProcessed)
+        $template.find(`#${frontPadIdsStore.statusDelivery}`).val(options.statusDelivery)
+        $template.find(`#${frontPadIdsStore.statusDone}`).val(options.statusDone || 10)
+        $template.find(`#${frontPadIdsStore.statusCancel}`).val(options.statusCancel)
+        $template.find(`#${frontPadIdsStore.phoneCodeCountry}`).val(options.phoneCodeCountry)
+        $template.find(`#${frontPadIdsStore.usePhoneMask}`).prop('checked', !(options.usePhoneMask === false))
+        $template.find(`#${frontPadIdsStore.pointSaleTakeyourself}`).val(options.pointSaleTakeyourself || '')
+        $template.find(`#${frontPadIdsStore.pointSaleDelivery}`).val(options.pointSaleDelivery || '')
+        $template.find(`#${frontPadIdsStore.onlineBuyType}`).val(options.onlineBuyType || '')
+        
+    }
+
     $integrationWrapper.html($template)
+    showSyncFrontpad()
 }
 
 function initIikoIntegration() {
@@ -71,28 +170,19 @@ function initIikoIntegration() {
 }
 
 function getIntegrationSystemSetting() {
-    const type = parseInt($('#integration-type option:selected').val())
-    let secret = ''
+    const type = getTypeIntegrationSystem()
+    let setting = getDefaultSetting()
 
     switch (type) {
         case IntegrationSystemType.frontPad:
-            secret = $('#frontpad-integration').val().trim()
+            setting = getFrontPadSetting()
             break
         case IntegrationSystemType.iiko:
-            secret = $('#iiko-integration').val().trim()
+            setting = getIikoSetting()
             break
     }
 
-    if (!secret && type != IntegrationSystemType.withoutIntegration) {
-        const message = 'Не все поля заполненны'
-        showErrorMessage(message)
-        throw new Error(message)
-    }
-
-    return {
-        type,
-        secret
-    }
+    return setting
 }
 
 function saveIntegrationSystemSetting() {
@@ -201,4 +291,130 @@ function sendOrderToIntegrationSystem(orderId) {
     }
 
     $.post("/IntegrationSystem/SendOrder", { orderId }, successCallBack(callback))
+}
+
+function getDefaultSetting() {
+    return {
+        type: IntegrationSystemType.withoutIntegration,
+        secret: '',
+        useAutomaticDispatch: false,
+        options: JSON.stringify('')
+    }
+}
+
+function getFrontPadSetting() {
+    const secret = $(`#${frontPadIdsStore.secret}`).val().trim()
+    const useAutomaticDispatch = $(`#${frontPadIdsStore.useAutomaticDispatch}`).is(':checked')
+    const statusNew = $(`#${frontPadIdsStore.statusNew}`).val().trim()
+    const statusProcessed = $(`#${frontPadIdsStore.statusProcessed}`).val().trim()
+    const statusDelivery = $(`#${frontPadIdsStore.statusDelivery}`).val().trim()
+    const statusDone = $(`#${frontPadIdsStore.statusDone}`).val().trim()
+    const statusCancel = $(`#${frontPadIdsStore.statusCancel}`).val().trim()
+    let pointSaleTakeyourself = $(`#${frontPadIdsStore.pointSaleTakeyourself}`).val().trim()
+    let pointSaleDelivery = $(`#${frontPadIdsStore.pointSaleDelivery}`).val().trim()
+    pointSaleTakeyourself = parseInt(pointSaleTakeyourself)
+    pointSaleDelivery = parseInt(pointSaleDelivery)
+    pointSaleTakeyourself = Number.isNaN(pointSaleTakeyourself) ? 0 : pointSaleTakeyourself
+    pointSaleDelivery = Number.isNaN(pointSaleDelivery) ? 0 : pointSaleDelivery
+    let onlineBuyType = $(`#${frontPadIdsStore.onlineBuyType}`).val().trim()
+    onlineBuyType = parseInt(onlineBuyType)
+    onlineBuyType = Number.isNaN(onlineBuyType) ? 0 : onlineBuyType
+    const options = {
+        statusNew: parseInt(statusNew),
+        statusProcessed: parseInt(statusProcessed),
+        statusDelivery: parseInt(statusDelivery),
+        statusDone: parseInt(statusDone),
+        statusCancel: parseInt(statusCancel),
+        pointSaleTakeyourself: pointSaleTakeyourself,
+        pointSaleDelivery: pointSaleDelivery,
+        phoneCodeCountry: $(`#${frontPadIdsStore.phoneCodeCountry}`).val().trim(),
+        usePhoneMask: $(`#${frontPadIdsStore.usePhoneMask}`).is(':checked'),
+        onlineBuyType
+    }
+
+    if (!secret
+        || !options.phoneCodeCountry
+        || options.statusNew === 0 || Number.isNaN(options.statusNew)
+        || options.statusProcessed === 0 || Number.isNaN(options.statusProcessed)
+        || options.statusDelivery === 0 || Number.isNaN(options.statusDelivery)
+        || options.statusDone === 0 || Number.isNaN(options.statusDone)
+        || options.statusCancel === 0 || Number.isNaN(options.statusCancel)) {
+        const message = 'Не все поля заполненны корректно'
+        showErrorMessage(message)
+        throw new Error(message)
+    }
+
+    return {
+        type: IntegrationSystemType.frontPad,
+        secret,
+        useAutomaticDispatch,
+        options: JSON.stringify(options)
+    }
+}
+
+function getIikoSetting() {
+    const secret = $('#iiko-integration').val().trim()
+    const useAutomaticDispatch = $(`#${frontPadIdsStore.useAutomaticDispatch}`).is(':checked')
+    const options = ''
+
+    if (!secret) {
+        const message = 'Не все поля заполненны'
+        showErrorMessage(message)
+        throw new Error(message)
+    }
+
+    return {
+        type: IntegrationSystemType.iiko,
+        secret,
+        useAutomaticDispatch,
+        options: JSON.stringify(options)
+    }
+}
+
+function getTypeIntegrationSystem() {
+    return parseInt($('#integration-type option:selected').val())
+}
+
+function syncFrontpadClients() {
+    const $input = $(`#${frontPadIdsStore.syncClients} input[type=file]`)
+    const input = $input[0]
+
+    if (input.files && input.files[0]) {
+        const file = input.files[0]
+        let reader = new FileReader();
+
+        reader.onload = function (e) {
+            const loader = new Loader($('.integration-values-wrapper'))
+            loader.start()
+
+            const successMsg = 'Баллы синхронизированны'
+            const errMsg = 'При синхронизации что-то пошло не так...'
+
+            const formData = new FormData();
+            formData.append('file', file, file.name);
+
+            $.ajax({
+                type: 'POST',
+                url: '/IntegrationSystem/SyncFrontpadClientsCashback',
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (data) {
+                    loader.stop()
+                    if (data.Success) {
+                        $input.val('')
+                        showSuccessMessage(successMsg)
+                    } else
+                        showErrorMessage(data.ErrorMessage)
+                },
+                error: function () {
+                    loader.stop()
+                    showErrorMessage(errMsg)
+                }
+            });
+        }
+
+        reader.readAsDataURL(file);
+    } else
+        return
 }

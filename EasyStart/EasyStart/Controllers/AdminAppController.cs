@@ -1,8 +1,10 @@
 ﻿using EasyStart.HtmlRenderer;
 using EasyStart.Hubs;
 using EasyStart.Logic;
+using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.Notification;
 using EasyStart.Logic.Notification.EmailNotification;
+using EasyStart.Logic.OrderProcessor;
 using EasyStart.Logic.Transaction;
 using EasyStart.Migrations;
 using EasyStart.Models;
@@ -12,6 +14,8 @@ using EasyStart.Models.OnlinePay;
 using EasyStart.Models.OnlinePay.Fondy;
 using EasyStart.Models.ProductOption;
 using EasyStart.Models.Transaction;
+using EasyStart.Repositories;
+using EasyStart.Services;
 using EasyStart.Utils;
 using Newtonsoft.Json;
 using System;
@@ -23,7 +27,9 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Script.Serialization;
@@ -33,6 +39,31 @@ namespace EasyStart
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class AdminAppController : ApiController
     {
+        private readonly ClientService clientService;
+        private readonly IntegrationSystemService integrationSystemService;
+        private readonly BranchService branchService;
+        private readonly OrderService orderService;
+        private readonly IOrderProcesser orderProcesser;
+
+        public AdminAppController()
+        {
+            var context = new AdminPanelContext();
+
+            var inegrationSystemRepository = new InegrationSystemRepository(context);
+            integrationSystemService = new IntegrationSystemService(inegrationSystemRepository);
+
+            var clientRepository = new ClientRepository(context);
+            clientService = new ClientService(clientRepository);
+
+            var branchRepository = new BranchRepository(context);
+            branchService = new BranchService(branchRepository);
+
+            var orderRepository = new OrderRepository(context);
+            orderService = new OrderService(orderRepository);
+
+            orderProcesser = new OrderProcessor();
+        }
+
         public JsonResultModel GetLocation()
         {
             var result = new JsonResultModel();
@@ -429,7 +460,16 @@ namespace EasyStart
                     {
                         var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
                         var dateUpdate = date;
-                        var updateOrderStatus = new UpdaterOrderStatus { DateUpdate = dateUpdate, OrderId = order.Id, Status = OrderStatus.Processing };
+                        var approximateDeliveryTime = order.DateDelivery.HasValue ?
+                            order.DateDelivery : 
+                            order.Date + orderProcesser.GetAverageOrderProcessingTime(order.BranchId, order.DeliveryType);
+                        var updateOrderStatus = new UpdaterOrderStatus 
+                        { 
+                            DateUpdate = dateUpdate,
+                            ApproximateDeliveryTime = approximateDeliveryTime,
+                            OrderId = order.Id,
+                            Status = OrderStatus.Processing
+                        };
 
                         DataWrapper.UpdateStatusOrder(updateOrderStatus);
                         var updateOrder = DataWrapper.GetOrder(order.Id);
@@ -437,8 +477,18 @@ namespace EasyStart
                         if (updateOrder.OrderStatus == OrderStatus.Processing)
                         {
                             result.Success = true;
-                            result.Data = orderId;
-                            Task.Run(() => NotifyAboutNewOrder(currentContext, updateOrder, deliverSetting));
+                            result.Data = new
+                            {
+                                deliveryType = order.DeliveryType,
+                                orderNumber = orderId,
+                                approximateDeliveryTime= approximateDeliveryTime.HasValue ? approximateDeliveryTime.Value.ToUniversalTime() : approximateDeliveryTime
+                            };
+                            Task.Run(() =>
+                            {
+                                updateOrder = SendOrderToIntegrationSystem(currentContext, updateOrder);
+                                NotifyAboutNewOrder(currentContext, updateOrder, deliverSetting);
+                                
+                            });
                         }
                         else
                             throw new Exception("При обработке заказа что-то пошло не так");
@@ -504,6 +554,9 @@ namespace EasyStart
 
                 order.Date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
                 order.UpdateDate = order.Date;
+                order.ApproximateDeliveryTime = order.DateDelivery.HasValue ?
+                            order.DateDelivery :
+                            order.Date + orderProcesser.GetAverageOrderProcessingTime(order.BranchId, order.DeliveryType);
 
                 if (order.AmountPayCashBack > 0
                     && (client.VirtualMoney - order.AmountPayCashBack) < 0)
@@ -550,13 +603,22 @@ namespace EasyStart
                     }
 
                     order.Id = numberOrder;
-                    result.Data = numberOrder;
+                    result.Data = new
+                    {
+                        deliveryType = order.DeliveryType,
+                        orderNumber = numberOrder,
+                        approximateDeliveryTime = order.ApproximateDeliveryTime.HasValue ? order.ApproximateDeliveryTime.Value.ToUniversalTime() : order.ApproximateDeliveryTime
+                    };
                     result.Success = true;
 
                     if (order.OrderStatus == OrderStatus.Processing)
                     {
                         var currentContext = System.Web.HttpContext.Current;
-                        Task.Run(() => NotifyAboutNewOrder(currentContext, order, deliverSetting));
+                        Task.Run(() =>
+                        {
+                            order = SendOrderToIntegrationSystem(currentContext, order);
+                            NotifyAboutNewOrder(currentContext, order, deliverSetting);
+                        });
                     }
                 }
             }
@@ -594,6 +656,27 @@ namespace EasyStart
             }
         }
 
+        private OrderModel SendOrderToIntegrationSystem(System.Web.HttpContext currentContext, OrderModel order)
+        {
+            System.Web.HttpContext.Current = currentContext;
+            var integrationSetting = integrationSystemService.Get(order.BranchId);
+            OrderModel updatedOrder = order;
+
+            if (integrationSetting.UseAutomaticDispatch)
+            {
+                Thread.Sleep(1500);// немного притормаживаем из-за ограничений фронтпада максимум 2 запроса в 1 секунду
+                var result = orderProcesser.SendOrderToIntegrationSystem(order.Id);
+
+                if (result.Success)
+                {
+                    updatedOrder = orderService.Get(order.Id);
+                }
+            }
+
+            return updatedOrder;
+
+        }
+
         private void NotifyAboutNewOrder(System.Web.HttpContext currentContext, OrderModel order, DeliverySettingModel deliverSetting)
         {
             try
@@ -609,7 +692,7 @@ namespace EasyStart
                 var constructorIngredients = order.ProductConstructorCount != null ?
                 DataWrapper.GetIngredients(order.ProductConstructorCount.SelectMany(p => p.IngredientCount.Keys)) :
                 null;
-                var products = order.ProductCount != null ? 
+                var products = order.ProductCount != null ?
                     DataWrapper.GetOrderProducts(order.ProductCount.Keys) :
                     new List<ProductModel>();
                 var bonusProducts = order.ProductBonusCount != null ?
@@ -664,6 +747,10 @@ namespace EasyStart
             try
             {
                 var historyOrders = DataWrapper.GetHistoryOrders(dataHistoryForLoad.ClientId, dataHistoryForLoad.BranchId);
+                if (historyOrders != null && historyOrders.Any())
+                    historyOrders.ForEach(p => p.ApproximateDeliveryTime = p.ApproximateDeliveryTime.HasValue ?
+                    p.ApproximateDeliveryTime.Value.ToUniversalTime() :
+                    p.ApproximateDeliveryTime);
 
                 result.Data = historyOrders;
                 result.Success = true;
@@ -770,7 +857,7 @@ namespace EasyStart
                         Func<ProductWithOptionsOrderModel,
                             ProductModel,
                         Tuple<double,
-                        Dictionary<int,AdditionalOption>,
+                        Dictionary<int, AdditionalOption>,
                         Dictionary<int, Models.ProductOption.AdditionalFilling>>> getOptionsData = (pWoptions, product) =>
                         {
                             var additionalOptionsIds = pWoptions.AdditionalOptions?.Keys.ToList() ?? new List<int>();
@@ -991,6 +1078,10 @@ namespace EasyStart
                 client.ReferralCode = KeyGenerator.GetUniqueKey(8);
                 var newClient = DataWrapper.RegistrationClient(client);
 
+                var branchId = client.BranchId == 0 ? branchService.GetMainBranch().Id : client.BranchId;
+                var virtualMoney = integrationSystemService.GetClientVirtualMoney(client.PhoneNumber, branchId, new IntegrationSystemFactory());
+                clientService.SetVirtualMoney(newClient.Id, virtualMoney);
+
                 result.Data = new
                 {
                     isLogin = true,
@@ -1005,7 +1096,7 @@ namespace EasyStart
                     referralCode = newClient.ReferralCode,
                     parentReferralClientId = newClient.ParentReferralClientId,
                     parentReferralCode = newClient.ParentReferralCode,
-                    virtualMoney = newClient.VirtualMoney,
+                    virtualMoney = virtualMoney,
                     referralDiscount = newClient.ReferralDiscount,
                 };
                 result.Success = true;
@@ -1236,6 +1327,11 @@ namespace EasyStart
                 if (client == null)
                 {
                     result.ErrorMessage = "Неверный пароль";
+                    return result;
+                }
+                else if (client.Blocked)
+                {
+                    result.ErrorMessage = "Учетная запись заблокирована";
                     return result;
                 }
 

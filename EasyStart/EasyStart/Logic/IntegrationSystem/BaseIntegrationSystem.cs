@@ -15,15 +15,19 @@ namespace EasyStart.Logic.IntegrationSystem
     public abstract class BaseIntegrationSystem : IIntegrationSystem
     {
         protected readonly IntegrationSystemModel integrationSystemSetting;
-        
+
         public BaseIntegrationSystem(IntegrationSystemModel integrationSystemSetting)
         {
             this.integrationSystemSetting = integrationSystemSetting;
         }
 
-        public abstract INewOrderResult SendOrder(IOrderDetails orderDetails);
+        public abstract IntegrationOrderStatus GetIntegrationOrderStatus(int externalOrderStatusId);
 
-        protected async Task<string> SendOrder(string url, string postData)
+        public abstract INewOrderResult SendOrder(IOrderDetails orderDetails);
+        
+        public abstract double GetClinetVirtualMoney(string phoneNumber);
+
+        protected async Task<string> Post(string url, string postData)
         {
             WebRequest request = WebRequest.Create(url);
             request.Method = "POST";
@@ -36,7 +40,7 @@ namespace EasyStart.Logic.IntegrationSystem
                 dataStream.Write(byteArray, 0, byteArray.Length);
             }
 
-            WebResponse response = await request.GetResponseAsync();
+            WebResponse response = request.GetResponse();
             string responseResult = null;
 
             using (Stream stream = response.GetResponseStream())

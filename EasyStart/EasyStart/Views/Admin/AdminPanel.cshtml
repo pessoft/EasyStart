@@ -7,17 +7,20 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link rel="shortcut icon" href="~/Images/favico.ico" type="image/x-icon">
     <title>Панель администратора</title>
-    @Styles.Render("~/timepicker/css")
-    @Styles.Render("~/odometer/css")
-    @Styles.Render("~/main/css")
-    @Styles.Render("~/admin-panel/css")
-    @Styles.Render("~/sumoselect/css")
-    @Styles.Render("~/dragula/css")
-    @Styles.Render("~/datepicker/css")
-    @Styles.Render("~/promotion/css")
-    @Styles.Render("~/image-processing/css")
-    @Styles.Render("~/product-additional-options/css")
-    @Styles.Render("~/integration/css")
+    @{
+        string version = typeof(EasyStart.MvcApplication).Assembly.GetName().Version.ToString();
+    }
+    @Styles.RenderFormat("<link rel='stylesheet' href='{0}?v=" + version + "'>", "~/timepicker/css")
+    @Styles.RenderFormat("<link rel='stylesheet' href='{0}?v=" + version + "'>", "~/odometer/css")
+    @Styles.RenderFormat("<link rel='stylesheet' href='{0}?v=" + version + "'>", "~/main/css")
+    @Styles.RenderFormat("<link rel='stylesheet' href='{0}?v=" + version + "'>", "~/admin-panel/css")
+    @Styles.RenderFormat("<link rel='stylesheet' href='{0}?v=" + version + "'>", "~/sumoselect/css")
+    @Styles.RenderFormat("<link rel='stylesheet' href='{0}?v=" + version + "'>", "~/dragula/css")
+    @Styles.RenderFormat("<link rel='stylesheet' href='{0}?v=" + version + "'>", "~/datepicker/css")
+    @Styles.RenderFormat("<link rel='stylesheet' href='{0}?v=" + version + "'>", "~/promotion/css")
+    @Styles.RenderFormat("<link rel='stylesheet' href='{0}?v=" + version + "'>", "~/image-processing/css")
+    @Styles.RenderFormat("<link rel='stylesheet' href='{0}?v=" + version + "'>", "~/product-additional-options/css")
+    @Styles.RenderFormat("<link rel='stylesheet' href='{0}?v=" + version + "'>", "~/integration/css")
 
 </head>
 <body>
@@ -29,10 +32,10 @@
         var IsValidDeliverySetting = @ViewBag.IsValidDeliverySetting.ToString().ToLower()
         var OnlinePayData = {
             isPayOnline: @(ViewBag.DeliverySetting != null ? ViewBag.DeliverySetting.PayOnline.ToString().ToLower() : false.ToString().ToLower()),
-            isAcceptedOnlinePayCondition: @(ViewBag.DeliverySetting != null ? ViewBag.DeliverySetting.IsAcceptedOnlinePayCondition.ToString().ToLower(): false.ToString().ToLower()),
+            isAcceptedOnlinePayCondition: @(ViewBag.DeliverySetting != null ? ViewBag.DeliverySetting.IsAcceptedOnlinePayCondition.ToString().ToLower() : false.ToString().ToLower()),
             merchantId: '@(ViewBag.DeliverySetting != null ? ViewBag.DeliverySetting.MerchantId : "")' || '',
-            paymentKey: '@(ViewBag.DeliverySetting != null ? ViewBag.DeliverySetting.PaymentKey: "")',
-            creditKey: '@(ViewBag.DeliverySetting != null ? ViewBag.DeliverySetting.CreditKey: "")'
+            paymentKey: '@(ViewBag.DeliverySetting != null ? ViewBag.DeliverySetting.PaymentKey : "")',
+            creditKey: '@(ViewBag.DeliverySetting != null ? ViewBag.DeliverySetting.CreditKey : "")'
         }
     </script>
 
@@ -585,7 +588,7 @@
                             <label>Улица</label>
                         </div>
                         <div class="group">
-                            <input required type="text" autocomplete="off" id="setting-home" value="@(ViewBag.Setting != null && ViewBag.Setting.HomeNumber!= 0 ? ViewBag.Setting.HomeNumber : "")" />
+                            <input required type="text" autocomplete="off" id="setting-home" value="@(ViewBag.Setting != null && ViewBag.Setting.HomeNumber != 0 ? ViewBag.Setting.HomeNumber : "")" />
                             <span class="bar"></span>
                             <label>Номер дома(офиса)</label>
                         </div>
@@ -783,6 +786,13 @@
                 <div class="integration-menu-wrapper">
                     <button class="btn btn-submit" onclick="saveIntegrationSystemSetting()">Сохранить</button>
                 </div>
+                <div id="integration-sync-frontpad-wrapper" class="integration-sync-frontpad-wrapper">
+                    <h3>
+                        Синхронизация баллов
+                    </h3>
+                    <input type="file" id="sync-frontpad-file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                    <button class="btn btn-submit" onclick="syncFrontpadClients()">Синхронизировать</button>
+                </div>
             </div>
         </div>
 
@@ -912,6 +922,9 @@
                             <span class="bar"></span>
                             <label>Артикул</label>
                         </div>
+                        <button disabled type="button" onclick="setProductVendorCode(event)" id="btn-product-generate-vendor-code" class="simple-text-btn">
+                            Сгенерировать артикул
+                        </button>
                         <div class="group">
                             <textarea id="description-product"></textarea>
                             <span class="bar"></span>
@@ -1461,7 +1474,14 @@
             </div>
 
             <div class="order-details-products order-details-block">
-                <span class="order-details-header">Состав заказа</span>
+                <div class="order-details-header-wrapper">
+                    <span class="order-details-header">Состав заказа</span>
+                    <button id="send-to-integration" class="simple-text-btn" onclick="">
+                        Отправить в интеграционную систему
+                    </button>
+                    <span id="integration-order-number" class="integration-order-number font-weight-bold"></span>
+                    <div id="send-to-integration-loader" class="send-to-integration-loader" style="display: none;"></div>
+                </div>
                 <div class="order-details-product-list">
                 </div>
             </div>
@@ -1619,7 +1639,16 @@
                         <label>Стоимость доставки</label>
                     </div>
                 </div>
-
+                <div class="area-delivery-edit-vendor-code">
+                    <div class="group">
+                        <input required id="area-vendor-code" type="text">
+                        <span class="bar"></span>
+                        <label>Артикул (не обязательное поле)</label>
+                    </div>
+                    <button type="button" onclick="setAreaVendorCode(event)" id="btn-area-generate-vendor-code" class="simple-text-btn">
+                        Сгенерировать артикул
+                    </button>
+                </div>
             </div>
             <div class="area-delivery-edit-menu">
                 <button class="btn btn-submit">Сохранить</button>
@@ -2390,27 +2419,27 @@
         </div>
     </template>
 
-    @Scripts.Render("~/bundles/fetch-helpers")
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/signalr")
-    @Scripts.Render("~/bundles/odometer")
-    @Scripts.Render("~/bundles/timepicker")
+    @Scripts.RenderFormat("<script src='{0}?v=" + version + "'></script>", "~/bundles/fetch-helpers")
+    @Scripts.RenderFormat("<script src='{0}?v=" + version + "'></script>", "~/bundles/jquery")
+    @Scripts.RenderFormat("<script src='{0}?v=" + version + "'></script>", "~/bundles/signalr")
+    @Scripts.RenderFormat("<script src='{0}?v=" + version + "'></script>", "~/bundles/odometer")
+    @Scripts.RenderFormat("<script src='{0}?v=" + version + "'></script>", "~/bundles/timepicker")
     <script src="~/signalr/hubs"></script>
-    <script src="~/Scripts/singnal-logic.js"></script>
-    @Scripts.Render("~/bundles/sumoselect")
-    @Scripts.Render("~/bundles/main")
-    @Scripts.Render("~/bundles/notify")
-    @Scripts.Render("~/bundles/chart")
-    @Scripts.Render("~/bundles/admin-panel")
-    @Scripts.Render("~/bundles/dragula")
-    @Scripts.Render("~/bundles/jquery-raty")
-    @Scripts.Render("~/bundles/darepicker")
-    @Scripts.Render("~/bundles/promotion")
-    @Scripts.Render("~/bundles/image-processing")
-    @Scripts.Render("~/bundles/product-additional-options")
-    @Scripts.Render("~/bundles/integration")
-    @Scripts.Render("~/bundles/promotion-clients")
+    <script src="~/Scripts/singnal-logic.js?v=@version"></script>
+    @Scripts.RenderFormat("<script src='{0}?v=" + version + "'></script>", "~/bundles/sumoselect")
+    @Scripts.RenderFormat("<script src='{0}?v=" + version + "'></script>", "~/bundles/main")
+    @Scripts.RenderFormat("<script src='{0}?v=" + version + "'></script>", "~/bundles/notify")
+    @Scripts.RenderFormat("<script src='{0}?v=" + version + "'></script>", "~/bundles/chart")
+    @Scripts.RenderFormat("<script src='{0}?v=" + version + "'></script>", "~/bundles/admin-panel")
+    @Scripts.RenderFormat("<script src='{0}?v=" + version + "'></script>", "~/bundles/dragula")
+    @Scripts.RenderFormat("<script src='{0}?v=" + version + "'></script>", "~/bundles/jquery-raty")
+    @Scripts.RenderFormat("<script src='{0}?v=" + version + "'></script>", "~/bundles/darepicker")
+    @Scripts.RenderFormat("<script src='{0}?v=" + version + "'></script>", "~/bundles/promotion")
+    @Scripts.RenderFormat("<script src='{0}?v=" + version + "'></script>", "~/bundles/image-processing")
+    @Scripts.RenderFormat("<script src='{0}?v=" + version + "'></script>", "~/bundles/product-additional-options")
+    @Scripts.RenderFormat("<script src='{0}?v=" + version + "'></script>", "~/bundles/integration")
+    @Scripts.RenderFormat("<script src='{0}?v=" + version + "'></script>", "~/bundles/promotion-clients")
 
-    <script src="~/Scripts/promotion/clients/promotion-clients.js"></script>
+    <script src="~/Scripts/promotion/clients/promotion-clients.js?v=@version"></script>
 </body>
 </html>

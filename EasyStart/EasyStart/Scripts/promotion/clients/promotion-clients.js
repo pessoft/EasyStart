@@ -105,12 +105,20 @@
     }
 
     showOrderDetailsHandler = ({ order }) => {
-        const orderWithUpCasePromNames = {}
-        for (let key in order) {
-            const propName = key.charAt(0).toUpperCase() + key.slice(1)
-            orderWithUpCasePromNames[propName] = order[key]
-        }
-            
-            showOrderDetailsFromPromotionClient(orderWithUpCasePromNames)
+        const orderWithUpCasePromNamesJson = JSON.stringify(order, function (key, value) {
+            if (value && typeof value === 'object') {
+                var replacement = {};
+                for (var k in value) {
+                    if (Object.hasOwnProperty.call(value, k)) {
+                        replacement[k && k.charAt(0).toUpperCase() + k.substring(1)] = value[k];
+                    }
+                }
+                return replacement;
+            }
+            return value;
+        });
+        const orderWithUpCasePromNames = JSON.parse(orderWithUpCasePromNamesJson)
+
+        showOrderDetailsFromPromotionClient(orderWithUpCasePromNames)
     }
 }

@@ -11,5 +11,6 @@ namespace EasyStart.Logic.IntegrationSystem.SendNewOrderResult
         bool Success { get; }
         string ErrorMessgae { get; }
         long OrderNumber { get; }
+        long ExternalOrderId{ get; }
     }
 }

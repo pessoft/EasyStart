@@ -1,0 +1,85 @@
+﻿using EasyStart.Hubs;
+using EasyStart.Logic;
+using EasyStart.Logic.IntegrationSystem;
+using EasyStart.Logic.OrderProcessor;
+using EasyStart.Models;
+using EasyStart.Models.Integration;
+using EasyStart.Repositories;
+using EasyStart.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Web.Hosting;
+using System.Web.Http;
+using System.Web.Http.Cors;
+
+namespace EasyStart.Controllers
+{
+    /// <summary>
+    /// Web hook controller
+    /// </summary>
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
+    public class FrontPadController : ApiController
+    {
+        private readonly OrderService orderService;
+        private readonly PushNotificationService pushNotificationService;
+        private readonly IntegrationSystemService integrationSystemService;
+        private readonly IOrderProcesser orderProcessor;
+
+        public FrontPadController()
+        {
+            var context = new AdminPanelContext();
+
+            var inegrationSystemRepository = new InegrationSystemRepository(context);
+            integrationSystemService = new IntegrationSystemService(inegrationSystemRepository);
+
+            var orderRepository = new OrderRepository(context);
+            orderService = new OrderService(orderRepository);
+
+            var fcmDeviveRepository = new FCMDeviceRepository(context);
+            var fcmAuthKeyPath = HostingEnvironment.MapPath("/Resource/FCMAuthKey.json");
+            pushNotificationService = new PushNotificationService(fcmDeviveRepository, fcmAuthKeyPath);
+
+            orderProcessor = new OrderProcessor();
+        }
+
+        [HttpPost]
+        public FrontPadOrderStatus ChangeStatus([FromBody] FrontPadOrderStatus status)
+        {
+            var order = orderService.GetByExternalId(status.OrderId);
+
+            if (status.OrderId == 0 || order == null)
+                return status;
+
+            var integrationSetting = integrationSystemService.Get(order.BranchId);
+
+            if (integrationSetting.Type != Logic.IntegrationSystemType.FrontPad)
+                return status;
+
+            var integerationSystem = new IntegrationSystemFactory().GetIntegrationSystem(integrationSetting);
+            var orderStatus = integerationSystem.GetIntegrationOrderStatus(status.Status);
+
+            orderService.ChangeIntegrationStatus(order.Id, orderStatus);
+            order = this.orderService.Get(order.Id);
+
+            if (integrationSetting.UseAutomaticDispatch
+                && (orderStatus == IntegrationOrderStatus.Done || orderStatus == IntegrationOrderStatus.Canceled))
+            {
+                var updatePayload = new UpdaterOrderStatus
+                {
+                    OrderId = order.Id,
+                    Status = orderStatus == IntegrationOrderStatus.Done ? OrderStatus.Processed : OrderStatus.Cancellation
+                };
+
+                orderProcessor.ChangeOrderStatus(updatePayload);
+                new OrderHub().ChangeOrderStatus(order.Id, updatePayload.Status, order.BranchId);
+            }
+
+            pushNotificationService.ChangeOrderStatus(orderStatus, order);
+
+            return status;
+        }
+    }
+}

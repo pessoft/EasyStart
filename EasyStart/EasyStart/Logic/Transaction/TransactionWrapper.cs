@@ -156,7 +156,7 @@ namespace EasyStart.Logic.Transaction
             {
                 using (var db = new AdminPanelContext())
                 {
-                    result = db.CashbackTransactions.Where(p => p.ClientId == clientId).ToList();
+                    result = db.CashbackTransactions.Where(p => p.ClientId == clientId).OrderByDescending(p => p.Date).ToList();
                     if (result != null && result.Any())
                     {
                         var ids = result.Select(p => p.Id).ToList();

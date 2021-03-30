@@ -9,9 +9,9 @@ namespace EasyStart.Services
 {
     public class BranchService
     {
-        private readonly IRepository<BranchModel> repository;
+        private readonly IDefaultEntityRepository<BranchModel> repository;
 
-        public BranchService(IRepository<BranchModel> repository)
+        public BranchService(IDefaultEntityRepository<BranchModel> repository)
         {
             this.repository = repository;
         }
@@ -36,6 +36,11 @@ namespace EasyStart.Services
         public BranchModel Get(string login) 
         {
             return repository.Get(p => p.Login == login).FirstOrDefault();
+        }
+
+        public BranchModel GetMainBranch()
+        {
+            return repository.Get(p => p.TypeBranch == Logic.TypeBranch.MainBranch).FirstOrDefault();
         }
     }
 }

@@ -10,5 +10,6 @@ namespace EasyStart.Models.Integration
     {
         OrderModel GetOrder();
         ProductModel GetProduct(int id);
+        string GetAreaDeliveryCode();
     }
 }

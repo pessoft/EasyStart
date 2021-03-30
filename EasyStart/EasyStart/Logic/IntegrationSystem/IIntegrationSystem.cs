@@ -12,5 +12,7 @@ namespace EasyStart.Logic.IntegrationSystem
     public interface IIntegrationSystem
     {
         INewOrderResult SendOrder(IOrderDetails orderDetails);
+        double GetClinetVirtualMoney(string phoneNumber);
+        IntegrationOrderStatus GetIntegrationOrderStatus(int externalOrderStatusId);
     }
 }

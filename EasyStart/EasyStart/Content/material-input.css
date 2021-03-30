@@ -34,7 +34,8 @@ textarea {
         input:valid ~ label,
         textarea:focus ~ label,
         textarea:valid ~ label,
-        input:disabled ~ label {
+        input:disabled ~ label,
+        input:read-only ~ label {
             top: -10px;
             font-size: 0.7em;
             color: #0f1e32de;

@@ -10,9 +10,9 @@ namespace EasyStart.Services
 {
     public class ClientService
     {
-        private readonly IRepository<Client> repository;
+        private readonly IDefaultEntityRepository<Client> repository;
         
-        public ClientService(IRepository<Client> repository)
+        public ClientService(IDefaultEntityRepository<Client> repository)
         {
             this.repository = repository;
         }
@@ -50,6 +50,22 @@ namespace EasyStart.Services
         public void UnBlock(int clientId)
         {
             this.ToggleBlock(clientId, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data">key - phone number, value - cashback </param>
+        public void SetVirtualMoney(Dictionary<string, double> data)
+        {
+            if (data == null || !data.Any())
+                return;
+
+            var phones = data.Keys.ToList();
+            var clients = repository.Get(p => phones.Contains(p.PhoneNumber)).ToList();
+            clients.ForEach(p => p.VirtualMoney = data[p.PhoneNumber]);
+
+            repository.Update(clients);
         }
 
         private void ToggleBlock(int clientId, bool blocked = true)

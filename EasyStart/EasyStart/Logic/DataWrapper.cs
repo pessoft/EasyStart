@@ -552,14 +552,14 @@ namespace EasyStart.Logic
             return productIds;
         }
 
-        public static List<int> GetRecommendedProductsForCategoryByBranchId(int branchId)
+        public static List<RecommendedProductModel> GetRecommendedProductsForCategoryByBranchId(int branchId)
         {
-            var productIds = new List<int>();
+            var products = new List<RecommendedProductModel>();
             try
             {
                 using (var db = new AdminPanelContext())
                 {
-                    productIds = db.RecommendedProducts.Where(p => p.BranchId == branchId).Select(p => p.ProductId).ToList();
+                    products = db.RecommendedProducts.Where(p => p.BranchId == branchId).ToList();
                 }
             }
             catch (Exception ex)
@@ -567,7 +567,7 @@ namespace EasyStart.Logic
                 Logger.Log.Error(ex);
             }
 
-            return productIds;
+            return products;
         }
 
         public static ConstructorCategory AddOrUpdateConstructorCategory(ConstructorCategory category)
@@ -1156,6 +1156,7 @@ namespace EasyStart.Logic
                     {
                         order.OrderStatus = data.Status;
                         order.UpdateDate = data.DateUpdate;
+                        order.ApproximateDeliveryTime = data.ApproximateDeliveryTime;
 
                         if (data.Status == OrderStatus.Cancellation)
                             order.CommentCauseCancel = data.CommentCauseCancel;

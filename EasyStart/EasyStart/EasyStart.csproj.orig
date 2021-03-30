@@ -45,18 +45,143 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.6.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
+      <HintPath>..\packages\Portable.BouncyCastle.1.8.6\lib\net40\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.3.6.0\lib\net45\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelMapper, Version=5.0.0.0, Culture=neutral, PublicKeyToken=6c3f2bec99465df3, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelMapper.5.1.279\lib\net461\ExcelMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="FirebaseAdmin, Version=1.9.2.0, Culture=neutral, PublicKeyToken=97c8d00c348326ed, processorArchitecture=MSIL">
+      <HintPath>..\packages\FirebaseAdmin.1.9.2\lib\net45\FirebaseAdmin.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Api.Gax, Version=2.7.0.0, Culture=neutral, PublicKeyToken=3ec5ea7f18953e47, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Api.Gax.2.7.0\lib\net45\Google.Api.Gax.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Api.Gax.Rest, Version=2.7.0.0, Culture=neutral, PublicKeyToken=3ec5ea7f18953e47, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Api.Gax.Rest.2.7.0\lib\net45\Google.Api.Gax.Rest.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis, Version=1.40.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.40.0\lib\net45\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth, Version=1.40.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.40.0\lib\net45\Google.Apis.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth.PlatformServices, Version=1.40.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.40.0\lib\net45\Google.Apis.Auth.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Core, Version=1.40.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Core.1.40.0\lib\net45\Google.Apis.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.PlatformServices, Version=1.40.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.40.0\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.2.0.246, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.1.2.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.4.1\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.4.1\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=1.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.1.4.1\lib\net46\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.2.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI, Version=2.5.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.5.1\lib\net45\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML, Version=2.5.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.5.1\lib\net45\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net, Version=2.5.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.5.1\lib\net45\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats, Version=2.5.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.5.1\lib\net45\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.5.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Annotations.4.7.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Interactive.Async, Version=3.2.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Interactive.Async.3.2.0\lib\net46\System.Interactive.Async.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.Packaging, Version=4.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Packaging.4.5.0\lib\net46\System.IO.Packaging.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Text.Encodings.Web, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.5.0.0\lib\net461\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=5.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.5.0.1\lib\net461\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks, Version=4.0.11.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Cors, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.7\lib\net45\System.Web.Cors.dll</HintPath>
@@ -120,9 +245,6 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
@@ -131,6 +253,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
@@ -139,83 +262,397 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Attributes\DescriptionAttribute.cs" />
     <Compile Include="Controllers\AdminAppController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AnalyticsController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ClientController.cs" />
+    <Compile Include="Controllers\IntegrationSystemController.cs" />
+<<<<<<< HEAD
+    <Compile Include="Controllers\PanelController.cs" />
+=======
+    <Compile Include="Controllers\FrontPadController.cs" />
+>>>>>>> master
+    <Compile Include="Controllers\UseController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="HtmlRenderer\EmailOrderBodyHtmlRenderer.cs" />
+    <Compile Include="HtmlRenderer\EmailRestorePasswordBodyHtmlRenderer.cs" />
+    <Compile Include="HtmlRenderer\IHtmlRenderer.cs" />
+    <Compile Include="HtmlRenderer\Models\ConstructorProductInfoModel.cs" />
+    <Compile Include="HtmlRenderer\Models\IngredientOrderModel.cs" />
+    <Compile Include="HtmlRenderer\Models\OrderIfnoModel.cs" />
+    <Compile Include="HtmlRenderer\Models\ProductInfoModel.cs" />
+    <Compile Include="HtmlRenderer\Models\ProductWithOptionsInfoModel.cs" />
+    <Compile Include="Hubs\OrderHub.cs" />
+    <Compile Include="JsResult\JSResult.cs" />
+    <Compile Include="JsResult\JsResultHelper.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="Logic\AdditionalOptions\ProductAdditionalInfoType.cs" />
+    <Compile Include="Logic\AnalyticsDataWrapper.cs" />
+    <Compile Include="Logic\BranchClone.cs" />
     <Compile Include="Logic\BuyType.cs" />
+    <Compile Include="Logic\CategoryType.cs" />
+    <Compile Include="Logic\FCM\FCMNotification.cs" />
+    <Compile Include="Logic\FCM\NotificationActionType.cs" />
+    <Compile Include="Logic\FCM\PlatformDevice.cs" />
+    <Compile Include="Logic\IntegrationSystemType.cs" />
+    <Compile Include="Logic\IntegrationSystem\BaseIntegrationSystem.cs" />
+    <Compile Include="Logic\IntegrationSystem\FrontPad.cs" />
+    <Compile Include="Logic\IntegrationSystem\Iiko.cs" />
+    <Compile Include="Logic\IntegrationSystem\IIntegrationSystem.cs" />
+    <Compile Include="Logic\IntegrationSystem\IIntegrationSystemFactory.cs" />
+    <Compile Include="Logic\IntegrationSystem\IntegrationSystemFactory.cs" />
+    <Compile Include="Logic\IntegrationSystem\IntegrationOrderStatus.cs" />
+    <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\FrontPadNewOrderResult.cs" />
+    <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\IikoNewOrderResult.cs" />
+    <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\INewOrderResult.cs" />
+    <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\NewOrderResult.cs" />
+    <Compile Include="Logic\IntegrationSystem\WithoutIntegration.cs" />
+    <Compile Include="Logic\Notification\EmailNotification\RestorePasswordNotification.cs" />
+    <Compile Include="Logic\OrderProcessor\IOrderProcesser.cs" />
+    <Compile Include="Logic\OrderProcessor\OrderProcessor.cs" />
+    <Compile Include="Logic\PreprocessorDataAPI.cs" />
+    <Compile Include="Logic\PromotionLogic.cs" />
+    <Compile Include="Logic\Report\GeneralUserQuantity.cs" />
+    <Compile Include="Logic\Report\ActiveUsersReport.cs" />
+    <Compile Include="Logic\SettingsValidator.cs" />
+    <Compile Include="Logic\StockInteractionType.cs" />
+    <Compile Include="Logic\StyleTypeIngredient.cs" />
+    <Compile Include="Logic\Transaction\TransactionLogic.cs" />
+    <Compile Include="Logic\Transaction\TransactionWrapper.cs" />
+    <Compile Include="Logic\Transaction\CashbackTransactionType.cs" />
+    <Compile Include="Logic\Transaction\PartnersTransactionType.cs" />
     <Compile Include="Logic\ConverterBranchSetting.cs" />
     <Compile Include="Logic\DataWrapper.cs" />
     <Compile Include="Logic\DayWeekly.cs" />
     <Compile Include="Logic\DeliveryType.cs" />
+    <Compile Include="Logic\DiscountType.cs" />
+    <Compile Include="Logic\Notification\EmailNotification\EmailSender.cs" />
+    <Compile Include="Logic\Notification\EmailNotification\IEmailSender.cs" />
+    <Compile Include="Logic\Notification\EmailNotification\OrderEmailNotification.cs" />
+    <Compile Include="Logic\KeyGenerator.cs" />
+    <Compile Include="Logic\List.cs" />
+    <Compile Include="Logic\Notification\NotifyNewOrderManager.cs" />
+    <Compile Include="Logic\OrderHelper.cs" />
+    <Compile Include="Logic\OrderStatus.cs" />
+    <Compile Include="Logic\ProductHelper.cs" />
+    <Compile Include="Logic\ProductType.cs" />
+    <Compile Include="Logic\PromotionDefaultSetting.cs" />
+    <Compile Include="Logic\PromotionSection.cs" />
+    <Compile Include="Logic\RedirectingActionAttribute.cs" />
+    <Compile Include="Logic\ReportType.cs" />
+    <Compile Include="Logic\Report\BaseReport.cs" />
+    <Compile Include="Logic\Report\CountBaseReport.cs" />
+    <Compile Include="Logic\Report\CountOrderReport.cs" />
+    <Compile Include="Logic\Report\DeliveryMethodReport.cs" />
+    <Compile Include="Logic\Report\IReport.cs" />
+    <Compile Include="Logic\Report\NewUsersReport.cs" />
+    <Compile Include="Logic\Report\ReportFactory.cs" />
+    <Compile Include="Logic\Report\RevenueReport.cs" />
+    <Compile Include="Logic\Report\TopCategoriesReport.cs" />
+    <Compile Include="Logic\Report\TopProductsReport.cs" />
+    <Compile Include="Logic\RewardType.cs" />
+    <Compile Include="Logic\StockConditionDeliveryType.cs" />
+    <Compile Include="Logic\StockConditionTriggerType.cs" />
+    <Compile Include="Logic\StockOneTypeSubtype.cs" />
+    <Compile Include="Logic\StockTypePeriod.cs" />
     <Compile Include="Logic\TypeBranch.cs" />
-    <Compile Include="Migrations\201904240619364_InitialCreate.cs" />
-    <Compile Include="Migrations\201904240619364_InitialCreate.Designer.cs">
-      <DependentUpon>201904240619364_InitialCreate.cs</DependentUpon>
+    <Compile Include="Logic\UriHelper.cs" />
+    <Compile Include="Logic\UseMethod.cs" />
+    <Compile Include="Migrations\202002261818045_initial.cs" />
+    <Compile Include="Migrations\202002261818045_initial.Designer.cs">
+      <DependentUpon>202002261818045_initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201905070940330_AddOrderTable.cs" />
-    <Compile Include="Migrations\201905070940330_AddOrderTable.Designer.cs">
-      <DependentUpon>201905070940330_AddOrderTable.cs</DependentUpon>
+    <Compile Include="Migrations\202003020545383_AddNumberAppliancesInCategoryModel.cs" />
+    <Compile Include="Migrations\202003020545383_AddNumberAppliancesInCategoryModel.Designer.cs">
+      <DependentUpon>202003020545383_AddNumberAppliancesInCategoryModel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201905071337452_AddCityIdOrderModel.cs" />
-    <Compile Include="Migrations\201905071337452_AddCityIdOrderModel.Designer.cs">
-      <DependentUpon>201905071337452_AddCityIdOrderModel.cs</DependentUpon>
+    <Compile Include="Migrations\202003020809476_AddNumberAppliancesInOrderModel.cs" />
+    <Compile Include="Migrations\202003020809476_AddNumberAppliancesInOrderModel.Designer.cs">
+      <DependentUpon>202003020809476_AddNumberAppliancesInOrderModel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201905101937207_AddDateOrder.cs" />
-    <Compile Include="Migrations\201905101937207_AddDateOrder.Designer.cs">
-      <DependentUpon>201905101937207_AddDateOrder.cs</DependentUpon>
+    <Compile Include="Migrations\202003040529388_AddDateDeliveryInOrderModel.cs" />
+    <Compile Include="Migrations\202003040529388_AddDateDeliveryInOrderModel.Designer.cs">
+      <DependentUpon>202003040529388_AddDateDeliveryInOrderModel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201905111241317_AddAmountPayDeliveryDiscountOrder.cs" />
-    <Compile Include="Migrations\201905111241317_AddAmountPayDeliveryDiscountOrder.Designer.cs">
-      <DependentUpon>201905111241317_AddAmountPayDeliveryDiscountOrder.cs</DependentUpon>
+    <Compile Include="Migrations\202003050833374_AddPreorderSettingDelivery.cs" />
+    <Compile Include="Migrations\202003050833374_AddPreorderSettingDelivery.Designer.cs">
+      <DependentUpon>202003050833374_AddPreorderSettingDelivery.cs</DependentUpon>
     </Compile>
-<<<<<<< HEAD
-    <Compile Include="Migrations\201905131819132_AddProductRating.cs" />
-    <Compile Include="Migrations\201905131819132_AddProductRating.Designer.cs">
-      <DependentUpon>201905131819132_AddProductRating.cs</DependentUpon>
-=======
-    <Compile Include="Migrations\201905140514020_AddRatingVotesCountProduct.cs" />
-    <Compile Include="Migrations\201905140514020_AddRatingVotesCountProduct.Designer.cs">
-      <DependentUpon>201905140514020_AddRatingVotesCountProduct.cs</DependentUpon>
+    <Compile Include="Migrations\202003071216232_AddedDateBirthClietn.cs" />
+    <Compile Include="Migrations\202003071216232_AddedDateBirthClietn.Designer.cs">
+      <DependentUpon>202003071216232_AddedDateBirthClietn.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201905140723390_AddRatingVotesSumProduct.cs" />
-    <Compile Include="Migrations\201905140723390_AddRatingVotesSumProduct.Designer.cs">
-      <DependentUpon>201905140723390_AddRatingVotesSumProduct.cs</DependentUpon>
+    <Compile Include="Migrations\202003081340441_DateBirthdayPeriod.cs" />
+    <Compile Include="Migrations\202003081340441_DateBirthdayPeriod.Designer.cs">
+      <DependentUpon>202003081340441_DateBirthdayPeriod.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201905140728430_RenameRatingVotesSumProduct.cs" />
-    <Compile Include="Migrations\201905140728430_RenameRatingVotesSumProduct.Designer.cs">
-      <DependentUpon>201905140728430_RenameRatingVotesSumProduct.cs</DependentUpon>
->>>>>>> 881d7c269cb35dfb7ad57d91b1b323c8a66e7d5a
+    <Compile Include="Migrations\202003081438022_AddedTableFixBirthdays.cs" />
+    <Compile Include="Migrations\202003081438022_AddedTableFixBirthdays.Designer.cs">
+      <DependentUpon>202003081438022_AddedTableFixBirthdays.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202003081610468_AddedClientIdInFixBirthdays.cs" />
+    <Compile Include="Migrations\202003081610468_AddedClientIdInFixBirthdays.Designer.cs">
+      <DependentUpon>202003081610468_AddedClientIdInFixBirthdays.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202003091200555_AddPromotionNewsModel.cs" />
+    <Compile Include="Migrations\202003091200555_AddPromotionNewsModel.Designer.cs">
+      <DependentUpon>202003091200555_AddPromotionNewsModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202003281344574_AddTypeDeliverySetting.cs" />
+    <Compile Include="Migrations\202003281344574_AddTypeDeliverySetting.Designer.cs">
+      <DependentUpon>202003281344574_AddTypeDeliverySetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202004021753547_AddOnlinePayInDeliverySetting.cs" />
+    <Compile Include="Migrations\202004021753547_AddOnlinePayInDeliverySetting.Designer.cs">
+      <DependentUpon>202004021753547_AddOnlinePayInDeliverySetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202004051002153_AddedFondyOnlinePayData.cs" />
+    <Compile Include="Migrations\202004051002153_AddedFondyOnlinePayData.Designer.cs">
+      <DependentUpon>202004051002153_AddedFondyOnlinePayData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202004101238140_AddedIsAcceptedOnlinePayCondition.cs" />
+    <Compile Include="Migrations\202004101238140_AddedIsAcceptedOnlinePayCondition.Designer.cs">
+      <DependentUpon>202004101238140_AddedIsAcceptedOnlinePayCondition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202004191818185_AddedCommentCauseCancelInOrderModel.cs" />
+    <Compile Include="Migrations\202004191818185_AddedCommentCauseCancelInOrderModel.Designer.cs">
+      <DependentUpon>202004191818185_AddedCommentCauseCancelInOrderModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202004222215089_AddedStockInteractionTypeInPromotionSetting.cs" />
+    <Compile Include="Migrations\202004222215089_AddedStockInteractionTypeInPromotionSetting.Designer.cs">
+      <DependentUpon>202004222215089_AddedStockInteractionTypeInPromotionSetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202004231125389_AddedStockExcludedProductsJSONInStockModel.cs" />
+    <Compile Include="Migrations\202004231125389_AddedStockExcludedProductsJSONInStockModel.Designer.cs">
+      <DependentUpon>202004231125389_AddedStockExcludedProductsJSONInStockModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202004272052481_AddedProductAdditionalInfoTypeInProductModel.cs" />
+    <Compile Include="Migrations\202004272052481_AddedProductAdditionalInfoTypeInProductModel.Designer.cs">
+      <DependentUpon>202004272052481_AddedProductAdditionalInfoTypeInProductModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007161815369_AddAdiitionalOptions.cs" />
+    <Compile Include="Migrations\202007161815369_AddAdiitionalOptions.Designer.cs">
+      <DependentUpon>202007161815369_AddAdiitionalOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007161819141_AddAdiitionOptionItems.cs" />
+    <Compile Include="Migrations\202007161819141_AddAdiitionOptionItems.Designer.cs">
+      <DependentUpon>202007161819141_AddAdiitionOptionItems.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007161828184_AddBranchIdInAdditionalOptions.cs" />
+    <Compile Include="Migrations\202007161828184_AddBranchIdInAdditionalOptions.Designer.cs">
+      <DependentUpon>202007161828184_AddBranchIdInAdditionalOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007241804308_AddedBranchIdInAdditionOptionItem.cs" />
+    <Compile Include="Migrations\202007241804308_AddedBranchIdInAdditionOptionItem.Designer.cs">
+      <DependentUpon>202007241804308_AddedBranchIdInAdditionOptionItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007280902000_AddedProductAdditionalOptions.cs" />
+    <Compile Include="Migrations\202007280902000_AddedProductAdditionalOptions.Designer.cs">
+      <DependentUpon>202007280902000_AddedProductAdditionalOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008132026221_AdditionalFilling.cs" />
+    <Compile Include="Migrations\202008132026221_AdditionalFilling.Designer.cs">
+      <DependentUpon>202008132026221_AdditionalFilling.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008241858358_AddedProductWithOptionsCountJSONInOrderModel.cs" />
+    <Compile Include="Migrations\202008241858358_AddedProductWithOptionsCountJSONInOrderModel.Designer.cs">
+      <DependentUpon>202008241858358_AddedProductWithOptionsCountJSONInOrderModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008271733318_AddedAllowCombinationsJSONInProductModel.cs" />
+    <Compile Include="Migrations\202008271733318_AddedAllowCombinationsJSONInProductModel.Designer.cs">
+      <DependentUpon>202008271733318_AddedAllowCombinationsJSONInProductModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202012281832216_AddedIntegrationSystem.cs" />
+    <Compile Include="Migrations\202012281832216_AddedIntegrationSystem.Designer.cs">
+      <DependentUpon>202012281832216_AddedIntegrationSystem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202012282116531_RenamIntegrationSystemModel.cs" />
+    <Compile Include="Migrations\202012282116531_RenamIntegrationSystemModel.Designer.cs">
+      <DependentUpon>202012282116531_RenamIntegrationSystemModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202101271905422_AddedVendorCodeInProductModel.cs" />
+    <Compile Include="Migrations\202101271905422_AddedVendorCodeInProductModel.Designer.cs">
+      <DependentUpon>202101271905422_AddedVendorCodeInProductModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102281021464_AddedInOrderModelIntegrationOrderNumber.cs" />
+    <Compile Include="Migrations\202102281021464_AddedInOrderModelIntegrationOrderNumber.Designer.cs">
+      <DependentUpon>202102281021464_AddedInOrderModelIntegrationOrderNumber.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102281029314_AddedInOrderModelPropsIsSendToIntegrationSystem.cs" />
+    <Compile Include="Migrations\202102281029314_AddedInOrderModelPropsIsSendToIntegrationSystem.Designer.cs">
+      <DependentUpon>202102281029314_AddedInOrderModelPropsIsSendToIntegrationSystem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103011741171_AddClientBlocked.cs" />
+    <Compile Include="Migrations\202103011741171_AddClientBlocked.Designer.cs">
+      <DependentUpon>202103011741171_AddClientBlocked.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103110741026_AddedRecommendedProductsForCategory.cs" />
+    <Compile Include="Migrations\202103110741026_AddedRecommendedProductsForCategory.Designer.cs">
+      <DependentUpon>202103110741026_AddedRecommendedProductsForCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103110801003_RenameTypoBrunchRecommendedProductsForCategory.cs" />
+    <Compile Include="Migrations\202103110801003_RenameTypoBrunchRecommendedProductsForCategory.Designer.cs">
+      <DependentUpon>202103110801003_RenameTypoBrunchRecommendedProductsForCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103141925406_AddedOrderIdExternal.cs" />
+    <Compile Include="Migrations\202103141925406_AddedOrderIdExternal.Designer.cs">
+      <DependentUpon>202103141925406_AddedOrderIdExternal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103141958028_AddedOptionInIntegrationSystem.cs" />
+    <Compile Include="Migrations\202103141958028_AddedOptionInIntegrationSystem.Designer.cs">
+      <DependentUpon>202103141958028_AddedOptionInIntegrationSystem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103221236454_AddedIntegrationOrderStatusInOrderModel.cs" />
+    <Compile Include="Migrations\202103221236454_AddedIntegrationOrderStatusInOrderModel.Designer.cs">
+      <DependentUpon>202103221236454_AddedIntegrationOrderStatusInOrderModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103271450343_AddedUseAutomaticDispathNewOrderInIntegration.cs" />
+    <Compile Include="Migrations\202103271450343_AddedUseAutomaticDispathNewOrderInIntegration.Designer.cs">
+      <DependentUpon>202103271450343_AddedUseAutomaticDispathNewOrderInIntegration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103280948389_AddedApproximateDeliveryTimeInOrderModel.cs" />
+    <Compile Include="Migrations\202103280948389_AddedApproximateDeliveryTimeInOrderModel.Designer.cs">
+      <DependentUpon>202103280948389_AddedApproximateDeliveryTimeInOrderModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103282317357_AddedVendorCodeInAreaDeliveryModel.cs" />
+    <Compile Include="Migrations\202103282317357_AddedVendorCodeInAreaDeliveryModel.Designer.cs">
+      <DependentUpon>202103282317357_AddedVendorCodeInAreaDeliveryModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103291031157_AddedAreaDeliveryIdInProductModels.cs" />
+    <Compile Include="Migrations\202103291031157_AddedAreaDeliveryIdInProductModels.Designer.cs">
+      <DependentUpon>202103291031157_AddedAreaDeliveryIdInProductModels.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
+    <Compile Include="Models\AreaDeliveryModel.cs" />
+    <Compile Include="Models\UniqIdEntity.cs" />
+    <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\BranchModel.cs" />
     <Compile Include="Models\BranchSettingViewModel.cs" />
+    <Compile Include="Models\BranchSignal.cs" />
+    <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\ClientParentReferralCode.cs" />
+    <Compile Include="Models\ConstructorCategory.cs" />
+    <Compile Include="Models\ConstructorProductHistoryModel.cs" />
+    <Compile Include="Models\CouponModel.cs" />
+    <Compile Include="Models\CouponParamsModel.cs" />
+    <Compile Include="Models\DataHistoryForViewModel.cs" />
     <Compile Include="Models\DeliverySettingModel.cs" />
+    <Compile Include="Models\FCMNotification\ActionMessage.cs" />
+    <Compile Include="Models\FCMNotification\FCMDeviceModel.cs" />
+    <Compile Include="Models\FCMNotification\FCMMessage.cs" />
+    <Compile Include="Models\FCMNotification\PushMessageModel.cs" />
+    <Compile Include="Models\FCMNotification\PushNotification.cs" />
+    <Compile Include="Models\FixBirthday.cs" />
+    <Compile Include="Models\HistoryOrderFilter.cs" />
+    <Compile Include="Models\IContainImage.cs" />
+    <Compile Include="Models\IngredientHistoryModel.cs" />
+    <Compile Include="Models\IngredientModel.cs" />
+    <Compile Include="Models\IntegrationSystemModel.cs" />
+    <Compile Include="Models\Integration\IntegrationClient.cs" />
+    <Compile Include="Models\Integration\FrontPadOptions.cs" />
+    <Compile Include="Models\Integration\FrontPadOrderStatus.cs" />
+    <Compile Include="Models\Integration\IOrderDetails.cs" />
+    <Compile Include="Models\Integration\OrderDetails.cs" />
+    <Compile Include="Models\MainDataSignatureModel.cs" />
     <Compile Include="Models\NewBranchModel.cs" />
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\JsonResultModel.cs" />
     <Compile Include="Models\LoginDataModel.cs" />
+    <Compile Include="Models\Notification\OptionsNotificationNewOrderModel.cs" />
+    <Compile Include="Models\OnlinePay\Fondy\PaymentStatus.cs" />
+    <Compile Include="Models\OnlinePay\StatusResponse.cs" />
+    <Compile Include="Models\OrderDetailConstructorProduct.cs" />
+    <Compile Include="Models\OrderDetailProduct.cs" />
+    <Compile Include="Models\OrderInfoParams.cs" />
     <Compile Include="Models\OrderModel.cs" />
+    <Compile Include="Models\OrderStockApply.cs" />
+    <Compile Include="Models\PagingPushMessageHistory.cs" />
+    <Compile Include="Models\ProductOption\AdditionalFilling.cs" />
+    <Compile Include="Models\ProductOption\ProductAdditionalFillingModal.cs" />
+    <Compile Include="Models\ProductOption\ProductAdditionalOptionModal.cs" />
+    <Compile Include="Models\ProductConstructorIngredientModel.cs" />
+    <Compile Include="Models\ProductConstructorOrderModel.cs" />
+    <Compile Include="Models\ProductHistoryModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
-    <Compile Include="Models\RatingProducUpdater.cs" />
+    <Compile Include="Models\ProductOption\AdditionalOption.cs" />
+    <Compile Include="Models\ProductOption\AdditionOptionItem.cs" />
+    <Compile Include="Models\ProductReview.cs" />
+    <Compile Include="Models\ProductWithOptionsHistoryModel.cs" />
+    <Compile Include="Models\ProductWithOptionsOrderModel.cs" />
+    <Compile Include="Models\PromotionCashbackSetting.cs" />
+    <Compile Include="Models\PromotionNewsModel.cs" />
+    <Compile Include="Models\PromotionPartnerSetting.cs" />
+    <Compile Include="Models\PromotionSectionSetting.cs" />
+    <Compile Include="Models\PromotionSetting.cs" />
+    <Compile Include="Models\PromotionSettingWrapper.cs" />
+    <Compile Include="Models\RatingProduct.cs" />
+    <Compile Include="Models\RatingProductMiddleware.cs" />
+    <Compile Include="Models\RatingProductUpdater.cs" />
+    <Compile Include="Models\RecommendedProductModel.cs" />
+    <Compile Include="Models\ReportFilter.cs" />
+    <Compile Include="Models\ReportResult.cs" />
     <Compile Include="Models\SettingModel.cs" />
+    <Compile Include="Models\StockModel.cs" />
+    <Compile Include="Models\TodayDataOrdersModel.cs" />
+    <Compile Include="Models\TopCategoriesReportModel.cs" />
+    <Compile Include="Models\Transaction\CashbackTransaction.cs" />
+    <Compile Include="Models\Transaction\PartnersTransaction.cs" />
+    <Compile Include="Models\Transaction\PartnersTransactionView.cs" />
+    <Compile Include="Models\Transaction\RefundCashbackTransactionModel.cs" />
+    <Compile Include="Models\UpdaterOrderNumber.cs" />
+    <Compile Include="Models\UpdaterOrderStatus.cs" />
+    <Compile Include="Models\UpdaterVisible.cs" />
+    <Compile Include="Models\UseModel.cs" />
+    <Compile Include="Models\UserDataPhoneApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\AreaDeliveryRepository.cs" />
+    <Compile Include="Repositories\UniqIdRepository.cs" />
+    <Compile Include="Repositories\DefaultRepository.cs" />
+    <Compile Include="Repositories\ClientRepository.cs" />
+    <Compile Include="Repositories\FCMDeviceRepository.cs" />
+    <Compile Include="Repositories\DeliverySettingRepository.cs" />
+    <Compile Include="Repositories\IBaseRepository.cs" />
+    <Compile Include="Repositories\IUniqIdEntityRepository.cs" />
+    <Compile Include="Repositories\ProductRepository.cs" />
+    <Compile Include="Repositories\OrderRepository.cs" />
+    <Compile Include="Repositories\BranchRepository.cs" />
+    <Compile Include="Repositories\InegrationSystemRepository.cs" />
+    <Compile Include="Repositories\IDefaultEntityRepository.cs" />
+    <Compile Include="Repositories\BaseRepository.cs" />
+    <Compile Include="Services\DeliverySettingService.cs" />
+    <Compile Include="Services\BranchService.cs" />
+    <Compile Include="Services\PushNotificationService.cs" />
+    <Compile Include="Services\ClientService.cs" />
+    <Compile Include="Services\ProductService.cs" />
+    <Compile Include="Services\OrderService.cs" />
+    <Compile Include="Services\IntegrationSystemService.cs" />
+    <Compile Include="Startup.cs" />
+    <Compile Include="Utils\FondyErrorCodeHelper.cs" />
     <Compile Include="Utils\CityHelper.cs" />
+    <Compile Include="Utils\ConstructorProductHelper.cs" />
+    <Compile Include="Utils\DateTimeHepler.cs" />
+    <Compile Include="Utils\EnumHelper.cs" />
+    <Compile Include="Utils\StringHelper.cs" />
+    <Compile Include="Utils\Utils.cs" />
     <Compile Include="Utils\WeeklyDayHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\admin-login.css" />
+    <Content Include="Content\admin-panel-additional.css" />
     <Content Include="Content\admin-panel.css" />
-    <Content Include="Content\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\analytics.css" />
+    <Content Include="Content\cropper.css" />
+    <Content Include="Content\datepicker.min.css" />
+    <Content Include="Content\dragula.css" />
     <Content Include="Content\fontawesome\css\all.css" />
     <Content Include="Content\fontawesome\css\all.min.css" />
     <Content Include="Content\fontawesome\css\brands.css" />
@@ -236,18 +673,87 @@
     <Content Include="Content\fontawesome\webfonts\fa-light-300.svg" />
     <Content Include="Content\fontawesome\webfonts\fa-regular-400.svg" />
     <Content Include="Content\fontawesome\webfonts\fa-solid-900.svg" />
+    <Content Include="Content\image-processing.css" />
+    <Content Include="Content\integration.css" />
     <Content Include="Content\material-input.css" />
+    <Content Include="Content\odometer\odometer-theme-minimal.css" />
+    <Content Include="Content\panel\mdb-select.css" />
+    <Content Include="Content\panel\common.css" />
+    <Content Include="Content\product-additional-options.css" />
+    <Content Include="Content\product-constructor.css" />
+    <Content Include="Content\promotion.css" />
+    <Content Include="Content\sounds\sound-new-order.mp3" />
+    <Content Include="Content\sumoselect.min.css" />
+    <Content Include="Content\themes\base\accordion.css" />
+    <Content Include="Content\themes\base\all.css" />
+    <Content Include="Content\themes\base\autocomplete.css" />
+    <Content Include="Content\themes\base\base.css" />
+    <Content Include="Content\themes\base\button.css" />
+    <Content Include="Content\themes\base\core.css" />
+    <Content Include="Content\themes\base\datepicker.css" />
+    <Content Include="Content\themes\base\dialog.css" />
+    <Content Include="Content\themes\base\draggable.css" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_444444_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_555555_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777620_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777777_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\themes\base\jquery-ui.css" />
+    <Content Include="Content\themes\base\jquery-ui.min.css" />
+    <Content Include="Content\themes\base\menu.css" />
+    <Content Include="Content\themes\base\progressbar.css" />
+    <Content Include="Content\themes\base\resizable.css" />
+    <Content Include="Content\themes\base\selectable.css" />
+    <Content Include="Content\themes\base\selectmenu.css" />
+    <Content Include="Content\themes\base\slider.css" />
+    <Content Include="Content\themes\base\sortable.css" />
+    <Content Include="Content\themes\base\spinner.css" />
+    <Content Include="Content\themes\base\tabs.css" />
+    <Content Include="Content\themes\base\theme.css" />
+    <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Content\timePicker.css" />
     <Content Include="favicon.ico" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
+    <Content Include="Content\main.css" />
+    <Content Include="Images\android.png" />
+    <Content Include="Images\background.jpg" />
+    <Content Include="Images\blank-ingredients\glass-noodles.png" />
+    <Content Include="Images\blank-ingredients\seafood.png" />
     <Content Include="Images\default-image.jpg" />
+    <Content Include="Images\favico.ico" />
+    <Content Include="Images\full-logo.png" />
+    <Content Include="Images\full-logo-pink.png" />
+    <Content Include="Images\full-logo-blue.png" />
+    <Content Include="Images\iphone.png" />
+    <Content Include="Images\loader-empty-order.gif" />
     <Content Include="Images\loader.gif" />
     <Content Include="Images\loader_old.gif" />
+    <Content Include="Images\logo.png" />
+    <Content Include="Images\rating\cancel-off.png" />
+    <Content Include="Images\rating\cancel-on.png" />
+    <Content Include="Images\rating\star-half.png" />
+    <Content Include="Images\rating\star-off.png" />
+    <Content Include="Images\rating\star-on.png" />
+    <Content Include="Resource\EmailTemplateOrderNotify.html" />
+    <Content Include="Resource\EmailTemplateRestorePassword.html" />
+    <Content Include="Resource\FCMTopicName.txt" />
     <Content Include="Scripts\admin-login.js" />
+    <Content Include="Scripts\admin-panel-additional.js" />
     <Content Include="Scripts\admin-panel.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Resource\City.json" />
     <Content Include="Content\fontawesome\webfonts\fa-brands-400.eot" />
     <Content Include="Content\fontawesome\webfonts\fa-brands-400.ttf" />
@@ -265,12 +771,40 @@
     <Content Include="Content\fontawesome\webfonts\fa-solid-900.ttf" />
     <Content Include="Content\fontawesome\webfonts\fa-solid-900.woff" />
     <Content Include="Content\fontawesome\webfonts\fa-solid-900.woff2" />
+    <Content Include="Images\rating\.DS_Store" />
+    <Content Include="fonts\SFUIDisplay-Light.ttf" />
+    <Content Include="Resource\UserManual.pdf" />
+    <Content Include="fonts\Alphaville.ttf" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Resource\FCMAuthKey.json" />
+    <Content Include="Resource\fondy-error-code-ru.json" />
+    <Content Include="Resource\Condition.pdf" />
+    <Content Include="Resource\OnlinePaySettingHelper.pdf" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\analytics.js" />
+    <Content Include="Scripts\compressor.js" />
+    <Content Include="Scripts\cropper.js" />
+    <Content Include="Scripts\datepicker.min.js" />
+    <Content Include="Scripts\dragula.js" />
+    <Content Include="Scripts\fetch-helpers\disposable.js" />
+    <Content Include="Scripts\fetch-helpers\promotion-client-fetch-helper.js" />
+    <Content Include="Scripts\fetch-helpers\url-store.js" />
+    <Content Include="Scripts\fetch-helpers\base-fetch-helper.js" />
+    <Content Include="Scripts\fetch-helpers\fetch-helper.js" />
+    <Content Include="Scripts\image-processing.js" />
+    <Content Include="Scripts\integration\base-integration.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-timepicker.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
+    <Content Include="Scripts\jquery.raty.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.1.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.1.min.js" />
+    <Content Include="Scripts\jquery.sumoselect.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -280,8 +814,71 @@
     <Content Include="Scripts\loader.js" />
     <Content Include="Scripts\main.js" />
     <Content Include="Scripts\maskedinput.min.js" />
+    <Content Include="Scripts\blocksIt.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Web.config" />
+    <Content Include="Scripts\notify.js" />
+    <Content Include="Scripts\odometer\odometer.js" />
+    <Content Include="Scripts\panel\event\event-type.js" />
+    <Content Include="Scripts\panel\event\event-listener.js" />
+    <Content Include="Scripts\panel\main.js" />
+    <Content Include="Scripts\panel\navigator.js" />
+    <Content Include="Scripts\panel\notification\message-store.js" />
+    <Content Include="Scripts\panel\pages\aboutUs\about-us-page.js" />
+    <Content Include="Scripts\panel\pages\aboutUs\logic\about-us-page-logic.js" />
+    <Content Include="Scripts\panel\pages\aboutUs\view\about-us-page-view.js" />
+    <Content Include="Scripts\panel\pages\base-page-view.js" />
+    <Content Include="Scripts\panel\mdb-select.js" />
+    <Content Include="Scripts\panel\pages\ordersHistory\logic\orders-history-page-logic.js" />
+    <Content Include="Scripts\panel\pages\ordersHistory\orders-history-page.js" />
+    <Content Include="Scripts\panel\pages\ordersHistory\view\orders-history-page-view.js" />
+    <Content Include="Scripts\panel\pages\orders\logic\orders-page-logic.js" />
+    <Content Include="Scripts\panel\pages\orders\orders-page.js" />
+    <Content Include="Scripts\panel\pages\orders\view\orders-page-view.js" />
+    <Content Include="Scripts\panel\pages\products\logic\products-page-logic.js" />
+    <Content Include="Scripts\panel\pages\products\products-page.js" />
+    <Content Include="Scripts\panel\pages\products\view\products-page-view.js" />
+    <Content Include="Scripts\panel\pages\analytics\logic\analytics-page-logic.js" />
+    <Content Include="Scripts\panel\pages\analytics\analytics-page.js" />
+    <Content Include="Scripts\panel\pages\analytics\view\analytics-page-view.js" />
+    <Content Include="Scripts\panel\pages\promotion\logic\promotion-page-logic.js" />
+    <Content Include="Scripts\panel\pages\promotion\promotion-page.js" />
+    <Content Include="Scripts\panel\pages\promotion\view\promotion-page-view.js" />
+    <Content Include="Scripts\panel\pages\settings\logic\settings-page-logic.js" />
+    <Content Include="Scripts\panel\pages\settings\settings-page.js" />
+    <Content Include="Scripts\panel\pages\settings\view\settings-branch-view.js" />
+    <Content Include="Scripts\panel\pages\settings\view\settings-integration-view.js" />
+    <Content Include="Scripts\panel\pages\settings\view\settings-notification-view.js" />
+    <Content Include="Scripts\panel\pages\settings\view\settings-order-payment-view.js" />
+    <Content Include="Scripts\panel\pages\settings\view\settings-working-hours-view.js" />
+    <Content Include="Scripts\panel\pages\settings\view\settings-delivery-view.js" />
+    <Content Include="Scripts\panel\pages\settings\view\settings-contacts-view.js" />
+    <Content Include="Scripts\panel\pages\settings\view\settings-page-view.js" />
+    <Content Include="Scripts\panel\pages\tariffsAndPay\logic\tariffs-page-logic.js" />
+    <Content Include="Scripts\panel\pages\tariffsAndPay\tariffs-page.js" />
+    <Content Include="Scripts\panel\pages\tariffsAndPay\view\tariffs-page-view.js" />
+    <Content Include="Scripts\panel\pages\users\logic\users-page-logic.js" />
+    <Content Include="Scripts\panel\pages\users\users-page.js" />
+    <Content Include="Scripts\panel\pages\users\view\users-page-view.js" />
+    <Content Include="Scripts\panel\startup.js" />
+    <Content Include="Scripts\panel\utils.js" />
+    <Content Include="Scripts\product-additional-options.js" />
+    <Content Include="Scripts\product-constructor.js" />
+    <Content Include="Scripts\promotion\cashback-partners.js" />
+    <Content Include="Scripts\promotion\clients\event-listener.js" />
+    <Content Include="Scripts\promotion\clients\promotion-clients-view.js" />
+    <Content Include="Scripts\promotion\clients\promotion-clients.js" />
+    <Content Include="Scripts\promotion\clients\promotion-clients-logic.js" />
+    <Content Include="Scripts\promotion\coupon.js" />
+    <Content Include="Scripts\promotion\promotion-news.js" />
+    <Content Include="Scripts\promotion\promotion-setting.js" />
+    <Content Include="Scripts\promotion\promotion.js" />
+    <Content Include="Scripts\promotion\push-notification.js" />
+    <Content Include="Scripts\promotion\stock.js" />
+    <Content Include="Scripts\singnal-logic.js" />
+    <Content Include="Scripts\chart.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -292,53 +889,143 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Home\AdminLogin.cshtml" />
     <Content Include="Views\Admin\AdminPanel.cshtml" />
+    <Content Include="Views\Panel\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Images\Products\" />
+    <Folder Include="Logs\" />
+    <Folder Include="Tmp\" />
+    <Folder Include="Views\Analytics\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\bootstrap-theme.min.css.map" />
-    <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201904240619364_InitialCreate.resx">
-      <DependentUpon>201904240619364_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202002261818045_initial.resx">
+      <DependentUpon>202002261818045_initial.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905070940330_AddOrderTable.resx">
-      <DependentUpon>201905070940330_AddOrderTable.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202003020545383_AddNumberAppliancesInCategoryModel.resx">
+      <DependentUpon>202003020545383_AddNumberAppliancesInCategoryModel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905071337452_AddCityIdOrderModel.resx">
-      <DependentUpon>201905071337452_AddCityIdOrderModel.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202003020809476_AddNumberAppliancesInOrderModel.resx">
+      <DependentUpon>202003020809476_AddNumberAppliancesInOrderModel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905101937207_AddDateOrder.resx">
-      <DependentUpon>201905101937207_AddDateOrder.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202003040529388_AddDateDeliveryInOrderModel.resx">
+      <DependentUpon>202003040529388_AddDateDeliveryInOrderModel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905111241317_AddAmountPayDeliveryDiscountOrder.resx">
-      <DependentUpon>201905111241317_AddAmountPayDeliveryDiscountOrder.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202003050833374_AddPreorderSettingDelivery.resx">
+      <DependentUpon>202003050833374_AddPreorderSettingDelivery.cs</DependentUpon>
     </EmbeddedResource>
-<<<<<<< HEAD
-    <EmbeddedResource Include="Migrations\201905131819132_AddProductRating.resx">
-      <DependentUpon>201905131819132_AddProductRating.cs</DependentUpon>
-=======
-    <EmbeddedResource Include="Migrations\201905140514020_AddRatingVotesCountProduct.resx">
-      <DependentUpon>201905140514020_AddRatingVotesCountProduct.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202003071216232_AddedDateBirthClietn.resx">
+      <DependentUpon>202003071216232_AddedDateBirthClietn.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905140723390_AddRatingVotesSumProduct.resx">
-      <DependentUpon>201905140723390_AddRatingVotesSumProduct.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202003081340441_DateBirthdayPeriod.resx">
+      <DependentUpon>202003081340441_DateBirthdayPeriod.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905140728430_RenameRatingVotesSumProduct.resx">
-      <DependentUpon>201905140728430_RenameRatingVotesSumProduct.cs</DependentUpon>
->>>>>>> 881d7c269cb35dfb7ad57d91b1b323c8a66e7d5a
+    <EmbeddedResource Include="Migrations\202003081438022_AddedTableFixBirthdays.resx">
+      <DependentUpon>202003081438022_AddedTableFixBirthdays.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202003081610468_AddedClientIdInFixBirthdays.resx">
+      <DependentUpon>202003081610468_AddedClientIdInFixBirthdays.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202003091200555_AddPromotionNewsModel.resx">
+      <DependentUpon>202003091200555_AddPromotionNewsModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202003281344574_AddTypeDeliverySetting.resx">
+      <DependentUpon>202003281344574_AddTypeDeliverySetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004021753547_AddOnlinePayInDeliverySetting.resx">
+      <DependentUpon>202004021753547_AddOnlinePayInDeliverySetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004051002153_AddedFondyOnlinePayData.resx">
+      <DependentUpon>202004051002153_AddedFondyOnlinePayData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004101238140_AddedIsAcceptedOnlinePayCondition.resx">
+      <DependentUpon>202004101238140_AddedIsAcceptedOnlinePayCondition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004191818185_AddedCommentCauseCancelInOrderModel.resx">
+      <DependentUpon>202004191818185_AddedCommentCauseCancelInOrderModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004222215089_AddedStockInteractionTypeInPromotionSetting.resx">
+      <DependentUpon>202004222215089_AddedStockInteractionTypeInPromotionSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004231125389_AddedStockExcludedProductsJSONInStockModel.resx">
+      <DependentUpon>202004231125389_AddedStockExcludedProductsJSONInStockModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004272052481_AddedProductAdditionalInfoTypeInProductModel.resx">
+      <DependentUpon>202004272052481_AddedProductAdditionalInfoTypeInProductModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007161815369_AddAdiitionalOptions.resx">
+      <DependentUpon>202007161815369_AddAdiitionalOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007161819141_AddAdiitionOptionItems.resx">
+      <DependentUpon>202007161819141_AddAdiitionOptionItems.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007161828184_AddBranchIdInAdditionalOptions.resx">
+      <DependentUpon>202007161828184_AddBranchIdInAdditionalOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007241804308_AddedBranchIdInAdditionOptionItem.resx">
+      <DependentUpon>202007241804308_AddedBranchIdInAdditionOptionItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007280902000_AddedProductAdditionalOptions.resx">
+      <DependentUpon>202007280902000_AddedProductAdditionalOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008132026221_AdditionalFilling.resx">
+      <DependentUpon>202008132026221_AdditionalFilling.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008241858358_AddedProductWithOptionsCountJSONInOrderModel.resx">
+      <DependentUpon>202008241858358_AddedProductWithOptionsCountJSONInOrderModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008271733318_AddedAllowCombinationsJSONInProductModel.resx">
+      <DependentUpon>202008271733318_AddedAllowCombinationsJSONInProductModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202012281832216_AddedIntegrationSystem.resx">
+      <DependentUpon>202012281832216_AddedIntegrationSystem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202012282116531_RenamIntegrationSystemModel.resx">
+      <DependentUpon>202012282116531_RenamIntegrationSystemModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101271905422_AddedVendorCodeInProductModel.resx">
+      <DependentUpon>202101271905422_AddedVendorCodeInProductModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102281021464_AddedInOrderModelIntegrationOrderNumber.resx">
+      <DependentUpon>202102281021464_AddedInOrderModelIntegrationOrderNumber.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102281029314_AddedInOrderModelPropsIsSendToIntegrationSystem.resx">
+      <DependentUpon>202102281029314_AddedInOrderModelPropsIsSendToIntegrationSystem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103011741171_AddClientBlocked.resx">
+      <DependentUpon>202103011741171_AddClientBlocked.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103110741026_AddedRecommendedProductsForCategory.resx">
+      <DependentUpon>202103110741026_AddedRecommendedProductsForCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103110801003_RenameTypoBrunchRecommendedProductsForCategory.resx">
+      <DependentUpon>202103110801003_RenameTypoBrunchRecommendedProductsForCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103141925406_AddedOrderIdExternal.resx">
+      <DependentUpon>202103141925406_AddedOrderIdExternal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103141958028_AddedOptionInIntegrationSystem.resx">
+      <DependentUpon>202103141958028_AddedOptionInIntegrationSystem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103221236454_AddedIntegrationOrderStatusInOrderModel.resx">
+      <DependentUpon>202103221236454_AddedIntegrationOrderStatusInOrderModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103271450343_AddedUseAutomaticDispathNewOrderInIntegration.resx">
+      <DependentUpon>202103271450343_AddedUseAutomaticDispathNewOrderInIntegration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103280948389_AddedApproximateDeliveryTimeInOrderModel.resx">
+      <DependentUpon>202103280948389_AddedApproximateDeliveryTimeInOrderModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103282317357_AddedVendorCodeInAreaDeliveryModel.resx">
+      <DependentUpon>202103282317357_AddedVendorCodeInAreaDeliveryModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103291031157_AddedAreaDeliveryIdInProductModels.resx">
+      <DependentUpon>202103291031157_AddedAreaDeliveryIdInProductModels.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

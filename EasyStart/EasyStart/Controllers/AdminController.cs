@@ -1,8 +1,12 @@
 ﻿using EasyStart.Logic;
 using EasyStart.Logic.FCM;
+using EasyStart.Logic.IntegrationSystem;
+using EasyStart.Logic.OrderProcessor;
 using EasyStart.Models;
 using EasyStart.Models.FCMNotification;
 using EasyStart.Models.ProductOption;
+using EasyStart.Repositories;
+using EasyStart.Services;
 using EasyStart.Utils;
 using Newtonsoft.Json;
 using System;
@@ -11,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Security;
 
@@ -19,6 +24,23 @@ namespace EasyStart.Controllers
     [RedirectingAction]
     public class AdminController : Controller
     {
+        private readonly IOrderProcesser orderProcessor;
+        private readonly DeliverySettingService deliverySettingService;
+        private readonly BranchService branchService;
+        public AdminController()
+        {
+            orderProcessor = new OrderProcessor();
+
+            var context = new AdminPanelContext();
+            
+            var deliverySettingRepository = new DeliverySettingRepository(context);
+            var areaDeliverySettingRepository = new AreaDeliveryRepository(context);
+            deliverySettingService = new DeliverySettingService(deliverySettingRepository, areaDeliverySettingRepository);
+
+            var branchRepository = new BranchRepository(context);
+            branchService = new BranchService(branchRepository);
+        }
+
         // GET: Admin
         [Authorize]
         public ActionResult AdminPanel()
@@ -40,7 +62,7 @@ namespace EasyStart.Controllers
                     .ToDictionary(p => p.Key,
                                   p => CityHelper.GetCity(p.Value.CityId));
 
-                var deliverySetting = DataWrapper.GetDeliverySetting(branchId); ;
+                var deliverySetting = deliverySettingService.GetByBranchId(branchId);
 
                 var settingsValidator = new SettingsValidator();
 
@@ -146,17 +168,20 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SaveDeliverySetting(DeliverySettingModel setting)
         {
-            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-            setting.BranchId = branchId;
-            var successSave = DataWrapper.SaveDeliverySetting(setting);
             var result = new JsonResultModel();
 
-            if (successSave)
+            try
             {
-                result.Success = successSave;
+                var branch = branchService.Get(User.Identity.Name);
+
+                setting.BranchId = branch.Id;
+                deliverySettingService.SaveDeliverySetting(setting);
+
+                result.Success = true;
             }
-            else
+            catch (Exception ex)
             {
+                Logger.Log.Error(ex);
                 result.ErrorMessage = "При сохранении натсройки что-то пошло не так...";
             }
 
@@ -915,32 +940,7 @@ namespace EasyStart.Controllers
         {
             try
             {
-                if (data.Status == OrderStatus.Processing || data.OrderId < 1)
-                {
-                    return;
-                }
-
-                var order = DataWrapper.GetOrder(data.OrderId);
-                if (order.OrderStatus != OrderStatus.Processing)
-                {
-                    return;
-                }
-
-                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
-                var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
-                data.DateUpdate = date;
-
-                DataWrapper.UpdateStatusOrder(data);
-
-                if (data.Status == OrderStatus.Processed)
-                {
-                    new PromotionLogic().ProcessingVirtualMoney(data.OrderId, branchId);
-                }
-                else if (data.Status == OrderStatus.Cancellation)
-                {
-                    new PromotionLogic().Refund(data.OrderId);
-                }
+                orderProcessor.ChangeOrderStatus(data);
             }
             catch (Exception ex)
             {
@@ -957,7 +957,7 @@ namespace EasyStart.Controllers
             try
             {
                 var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
+                var deliverSetting = deliverySettingService.GetByBranchId(branchId);
                 var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
                 var data = DataWrapper.GetDataOrdersByDate(brnachIds, date);
 
@@ -1080,7 +1080,7 @@ namespace EasyStart.Controllers
                 var branchId = DataWrapper.GetBranchId(User.Identity.Name);
                 setting.BranchId = branchId;
 
-                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
+                var deliverSetting = deliverySettingService.GetByBranchId(branchId);
                 setting.DateSave = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
 
                 var newSetting = DataWrapper.SavePromotionCashbackSetting(setting);
@@ -1108,7 +1108,7 @@ namespace EasyStart.Controllers
                 var branchId = DataWrapper.GetBranchId(User.Identity.Name);
                 setting.BranchId = branchId;
 
-                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
+                var deliverSetting = deliverySettingService.GetByBranchId(branchId);
                 setting.DateSave = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
 
                 var newSetting = DataWrapper.SavePromotionPartnerSetting(setting);
@@ -1330,7 +1330,7 @@ namespace EasyStart.Controllers
             try
             {
                 var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
+                var deliverSetting = deliverySettingService.GetByBranchId(branchId);
                 var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
                 var countMessagesSentToday = DataWrapper.GetCountPushMessageByDate(branchId, date);
 
@@ -1388,7 +1388,7 @@ namespace EasyStart.Controllers
             try
             {
                 var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-                var deliverSetting = DataWrapper.GetDeliverySetting(branchId);
+                var deliverSetting = deliverySettingService.GetByBranchId(branchId);
                 var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
                 var countMessagesSentToday = DataWrapper.GetCountPushMessageByDate(branchId, date);
 
