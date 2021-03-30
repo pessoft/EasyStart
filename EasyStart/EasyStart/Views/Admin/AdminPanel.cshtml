@@ -922,7 +922,7 @@
                             <span class="bar"></span>
                             <label>Артикул</label>
                         </div>
-                        <button disabled type="button" onclick="generateVendorCode(event)" id="btn-product-generate-vendor-code" class="simple-text-btn">
+                        <button disabled type="button" onclick="setProductVendorCode(event)" id="btn-product-generate-vendor-code" class="simple-text-btn">
                             Сгенерировать артикул
                         </button>
                         <div class="group">
@@ -1639,7 +1639,16 @@
                         <label>Стоимость доставки</label>
                     </div>
                 </div>
-
+                <div class="area-delivery-edit-vendor-code">
+                    <div class="group">
+                        <input required id="area-vendor-code" type="text">
+                        <span class="bar"></span>
+                        <label>Артикул (не обязательное поле)</label>
+                    </div>
+                    <button type="button" onclick="setAreaVendorCode(event)" id="btn-area-generate-vendor-code" class="simple-text-btn">
+                        Сгенерировать артикул
+                    </button>
+                </div>
             </div>
             <div class="area-delivery-edit-menu">
                 <button class="btn btn-submit">Сохранить</button>

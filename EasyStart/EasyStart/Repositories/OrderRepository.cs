@@ -7,7 +7,7 @@ using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public class OrderRepository : BaseRepository<OrderModel>
+    public class OrderRepository : DefaultRepository<OrderModel>
     {
         public OrderRepository(DbContext dbContext) : base(dbContext)
         { }

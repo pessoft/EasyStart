@@ -7,7 +7,7 @@ using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public class ClientRepository : BaseRepository<Client>
+    public class ClientRepository : DefaultRepository<Client>
     {
         public ClientRepository(DbContext dbContext) : base(dbContext)
         { }

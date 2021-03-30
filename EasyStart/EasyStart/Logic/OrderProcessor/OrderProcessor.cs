@@ -46,7 +46,8 @@ namespace EasyStart.Logic.OrderProcessor
             productService = new ProductService(productRepository);
 
             var deliverySettingRepository = new DeliverySettingRepository(context);
-            deliverySettingService = new DeliverySettingService(deliverySettingRepository);
+            var areaDeliveryRepository = new AreaDeliveryRepository(context);
+            deliverySettingService = new DeliverySettingService(deliverySettingRepository, areaDeliveryRepository);
 
             var fCMDeviceRepository = new FCMDeviceRepository(context);
             pushNotificationService = new PushNotificationService(fCMDeviceRepository, fcmAuthKeyPath);
@@ -97,7 +98,8 @@ namespace EasyStart.Logic.OrderProcessor
                     newOrderResult = new NewOrderResult("Discount persent and discount ruble no supported integraion system");
                 else if (IsProductsValidForIntegrationSystem(products))
                 {
-                    var orderDetails = new OrderDetails(order, products);
+                    var deliverySetting = deliverySettingService.GetByBranchId(order.BranchId);
+                    var orderDetails = new OrderDetails(order, products, deliverySetting.AreaDeliveries);
                     newOrderResult = integrationSystemService.SendOrder(
                         orderDetails,
                         new IntegrationSystemFactory());
@@ -130,6 +132,14 @@ namespace EasyStart.Logic.OrderProcessor
         private bool IsValidOrderDiscount(OrderModel order)
         {
             return !(order.DiscountPercent > 0 && order.DiscountRuble > 0);
+        }
+
+        public TimeSpan GetAverageOrderProcessingTime(int branchId, DeliveryType deliveryType)
+        {
+            var minTimeProcessingOrder = deliverySettingService.GetByBranchId(branchId);
+            var defaultOrderProessingTime = TimeSpan.Parse(minTimeProcessingOrder.MinTimeProcessingOrder);
+
+            return orderService.GetAverageOrderProcessingTime(branchId, deliveryType, defaultOrderProessingTime);
         }
     }
 }

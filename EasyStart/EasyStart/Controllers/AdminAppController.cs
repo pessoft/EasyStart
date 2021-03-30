@@ -27,6 +27,7 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
@@ -459,7 +460,16 @@ namespace EasyStart
                     {
                         var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
                         var dateUpdate = date;
-                        var updateOrderStatus = new UpdaterOrderStatus { DateUpdate = dateUpdate, OrderId = order.Id, Status = OrderStatus.Processing };
+                        var approximateDeliveryTime = order.DateDelivery.HasValue ?
+                            order.DateDelivery : 
+                            order.Date + orderProcesser.GetAverageOrderProcessingTime(order.BranchId, order.DeliveryType);
+                        var updateOrderStatus = new UpdaterOrderStatus 
+                        { 
+                            DateUpdate = dateUpdate,
+                            ApproximateDeliveryTime = approximateDeliveryTime,
+                            OrderId = order.Id,
+                            Status = OrderStatus.Processing
+                        };
 
                         DataWrapper.UpdateStatusOrder(updateOrderStatus);
                         var updateOrder = DataWrapper.GetOrder(order.Id);
@@ -467,7 +477,12 @@ namespace EasyStart
                         if (updateOrder.OrderStatus == OrderStatus.Processing)
                         {
                             result.Success = true;
-                            result.Data = orderId;
+                            result.Data = new
+                            {
+                                deliveryType = order.DeliveryType,
+                                orderNumber = orderId,
+                                approximateDeliveryTime= approximateDeliveryTime.HasValue ? approximateDeliveryTime.Value.ToUniversalTime() : approximateDeliveryTime
+                            };
                             Task.Run(() =>
                             {
                                 updateOrder = SendOrderToIntegrationSystem(currentContext, updateOrder);
@@ -539,6 +554,9 @@ namespace EasyStart
 
                 order.Date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
                 order.UpdateDate = order.Date;
+                order.ApproximateDeliveryTime = order.DateDelivery.HasValue ?
+                            order.DateDelivery :
+                            order.Date + orderProcesser.GetAverageOrderProcessingTime(order.BranchId, order.DeliveryType);
 
                 if (order.AmountPayCashBack > 0
                     && (client.VirtualMoney - order.AmountPayCashBack) < 0)
@@ -585,7 +603,12 @@ namespace EasyStart
                     }
 
                     order.Id = numberOrder;
-                    result.Data = numberOrder;
+                    result.Data = new
+                    {
+                        deliveryType = order.DeliveryType,
+                        orderNumber = numberOrder,
+                        approximateDeliveryTime = order.ApproximateDeliveryTime.HasValue ? order.ApproximateDeliveryTime.Value.ToUniversalTime() : order.ApproximateDeliveryTime
+                    };
                     result.Success = true;
 
                     if (order.OrderStatus == OrderStatus.Processing)
@@ -641,6 +664,7 @@ namespace EasyStart
 
             if (integrationSetting.UseAutomaticDispatch)
             {
+                Thread.Sleep(1500);// немного притормаживаем из-за ограничений фронтпада максимум 2 запроса в 1 секунду
                 var result = orderProcesser.SendOrderToIntegrationSystem(order.Id);
 
                 if (result.Success)
@@ -723,6 +747,10 @@ namespace EasyStart
             try
             {
                 var historyOrders = DataWrapper.GetHistoryOrders(dataHistoryForLoad.ClientId, dataHistoryForLoad.BranchId);
+                if (historyOrders != null && historyOrders.Any())
+                    historyOrders.ForEach(p => p.ApproximateDeliveryTime = p.ApproximateDeliveryTime.HasValue ?
+                    p.ApproximateDeliveryTime.Value.ToUniversalTime() :
+                    p.ApproximateDeliveryTime);
 
                 result.Data = historyOrders;
                 result.Success = true;

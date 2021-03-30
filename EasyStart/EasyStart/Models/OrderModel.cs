@@ -37,6 +37,9 @@ namespace EasyStart.Models
         public double ReferralDiscount { get; set; }
 
         public double DeliveryPrice { get; set; }
+
+        public string AreaDeliveryId { get; set; }
+
         /// <summary>
         /// Сдача с суммы
         /// </summary>
@@ -53,6 +56,7 @@ namespace EasyStart.Models
         public DateTime Date { get; set; }
         public DateTime UpdateDate { get; set; }
         public DateTime? DateDelivery { get; set; }
+        public DateTime? ApproximateDeliveryTime { get; set; }
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Processing;
 
         public IntegrationOrderStatus IntegrationOrderStatus { get; set; } = IntegrationOrderStatus.Unknown;

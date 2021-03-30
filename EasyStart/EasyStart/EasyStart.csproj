@@ -514,9 +514,22 @@
     <Compile Include="Migrations\202103271450343_AddedUseAutomaticDispathNewOrderInIntegration.Designer.cs">
       <DependentUpon>202103271450343_AddedUseAutomaticDispathNewOrderInIntegration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103280948389_AddedApproximateDeliveryTimeInOrderModel.cs" />
+    <Compile Include="Migrations\202103280948389_AddedApproximateDeliveryTimeInOrderModel.Designer.cs">
+      <DependentUpon>202103280948389_AddedApproximateDeliveryTimeInOrderModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103282317357_AddedVendorCodeInAreaDeliveryModel.cs" />
+    <Compile Include="Migrations\202103282317357_AddedVendorCodeInAreaDeliveryModel.Designer.cs">
+      <DependentUpon>202103282317357_AddedVendorCodeInAreaDeliveryModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103291031157_AddedAreaDeliveryIdInProductModels.cs" />
+    <Compile Include="Migrations\202103291031157_AddedAreaDeliveryIdInProductModels.Designer.cs">
+      <DependentUpon>202103291031157_AddedAreaDeliveryIdInProductModels.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
+    <Compile Include="Models\UniqIdEntity.cs" />
     <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\BranchModel.cs" />
     <Compile Include="Models\BranchSettingViewModel.cs" />
@@ -597,14 +610,19 @@
     <Compile Include="Models\UseModel.cs" />
     <Compile Include="Models\UserDataPhoneApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\AreaDeliveryRepository.cs" />
+    <Compile Include="Repositories\UniqIdRepository.cs" />
+    <Compile Include="Repositories\DefaultRepository.cs" />
     <Compile Include="Repositories\ClientRepository.cs" />
     <Compile Include="Repositories\FCMDeviceRepository.cs" />
     <Compile Include="Repositories\DeliverySettingRepository.cs" />
+    <Compile Include="Repositories\IBaseRepository.cs" />
+    <Compile Include="Repositories\IUniqIdEntityRepository.cs" />
     <Compile Include="Repositories\ProductRepository.cs" />
     <Compile Include="Repositories\OrderRepository.cs" />
     <Compile Include="Repositories\BranchRepository.cs" />
     <Compile Include="Repositories\InegrationSystemRepository.cs" />
-    <Compile Include="Repositories\IRepository.cs" />
+    <Compile Include="Repositories\IDefaultEntityRepository.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
     <Compile Include="Services\DeliverySettingService.cs" />
     <Compile Include="Services\BranchService.cs" />
@@ -948,6 +966,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103271450343_AddedUseAutomaticDispathNewOrderInIntegration.resx">
       <DependentUpon>202103271450343_AddedUseAutomaticDispathNewOrderInIntegration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103280948389_AddedApproximateDeliveryTimeInOrderModel.resx">
+      <DependentUpon>202103280948389_AddedApproximateDeliveryTimeInOrderModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103282317357_AddedVendorCodeInAreaDeliveryModel.resx">
+      <DependentUpon>202103282317357_AddedVendorCodeInAreaDeliveryModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103291031157_AddedAreaDeliveryIdInProductModels.resx">
+      <DependentUpon>202103291031157_AddedAreaDeliveryIdInProductModels.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

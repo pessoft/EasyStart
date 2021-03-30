@@ -1156,6 +1156,7 @@ namespace EasyStart.Logic
                     {
                         order.OrderStatus = data.Status;
                         order.UpdateDate = data.DateUpdate;
+                        order.ApproximateDeliveryTime = data.ApproximateDeliveryTime;
 
                         if (data.Status == OrderStatus.Cancellation)
                             order.CommentCauseCancel = data.CommentCauseCancel;

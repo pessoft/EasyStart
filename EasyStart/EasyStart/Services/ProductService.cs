@@ -9,9 +9,9 @@ namespace EasyStart.Services
 {
     public class ProductService
     {
-        private readonly IRepository<ProductModel> repository;
+        private readonly IDefaultEntityRepository<ProductModel> repository;
         
-        public ProductService(IRepository<ProductModel> repository)
+        public ProductService(IDefaultEntityRepository<ProductModel> repository)
         {
             this.repository = repository;
         }

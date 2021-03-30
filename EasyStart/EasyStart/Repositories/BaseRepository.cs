@@ -7,7 +7,8 @@ using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public class BaseRepository<T> : IRepository<T> where T : BaseEntity
+    public abstract class BaseRepository<T> : IBaseRepository<T>
+        where T : class
     {
         protected bool disposed = false;
         protected DbContext context;
@@ -28,10 +29,34 @@ namespace EasyStart.Repositories
         }
         public virtual T Create(T item)
         {
-            var addedItem = db.Add(item);
+            var addedItem = CreateWithouSaveChanges(item);
             context.SaveChanges();
 
             return addedItem;
+        }
+
+        protected T CreateWithouSaveChanges(T item)
+        {
+            var addedItem = db.Add(item);
+
+            return addedItem;
+        }
+
+        public virtual List<T> Create(List<T> items)
+        {
+            if (items == null || !items.Any())
+                return items;
+
+            var newItems = new List<T>();
+            items.ForEach(item =>
+            {
+                var addedItem = CreateWithouSaveChanges(item);
+                newItems.Add(addedItem);
+            });
+            
+            context.SaveChanges();
+
+            return newItems;
         }
 
         public virtual IEnumerable<T> Get()
@@ -44,44 +69,41 @@ namespace EasyStart.Repositories
             return db.Where(predicate).AsEnumerable();
         }
 
-        public virtual T Get(int id)
-        {
-            return db.FirstOrDefault(p => p.Id == id);
-        }
-
         public virtual void Remove(T item)
         {
-            db.Remove(item);
+            RemoveWithotSaveChages(item);
             context.SaveChanges();
         }
-
-        public virtual void Update(T item)
-        {
-            var savedItem = Get(item.Id);
-            context.Entry(savedItem).State = EntityState.Detached;
-
-            context.Entry(item).State = EntityState.Modified;
-            context.SaveChanges();
-        }
-
-        public virtual void Update(List<T> items)
+        public virtual void Remove(List<T> items)
         {
             if (items == null || !items.Any())
                 return;
 
-            var dict = items.ToDictionary(p => p.Id);
-            var ids = dict.Keys.ToList();
-            var savedItems = Get(p => ids.Contains(p.Id)).ToList();
-
-            savedItems.ForEach(savedItem => 
-            {
-                var item = dict[savedItem.Id];
-
-                context.Entry(savedItem).State = EntityState.Detached;
-                context.Entry(item).State = EntityState.Modified;
-            });
-            
+            items.ForEach(p => RemoveWithotSaveChages(p));
             context.SaveChanges();
+        }
+
+        protected virtual void RemoveWithotSaveChages(T item)
+        {
+            db.Remove(item);
+        }
+
+        public abstract T Update(T item);
+
+        public abstract List<T> Update(List<T> items);
+
+        protected T Update(T savedItem, T item)
+        {
+            UpdateWithotSaveChages(savedItem, item);
+            context.SaveChanges();
+
+            return item;
+        }
+
+        protected void UpdateWithotSaveChages(T savedItem, T item)
+        {
+            context.Entry(savedItem).State = EntityState.Detached;
+            context.Entry(item).State = EntityState.Modified;
         }
     }
 }

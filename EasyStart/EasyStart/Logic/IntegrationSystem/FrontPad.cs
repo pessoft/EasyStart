@@ -48,7 +48,7 @@ namespace EasyStart.Logic.IntegrationSystem
             var postData = new StringBuilder();
 
             PrepareSecret(postData);
-            PrepareProductData(orderDetails, postData);
+            PrepareProductAndFakeProductAreaDelievryData(orderDetails, postData);
             PrepareOrderData(orderDetails, postData);
             PrepareSalePointData(orderDetails, postData);
             PrepareHookUrlData(postData);
@@ -91,7 +91,7 @@ namespace EasyStart.Logic.IntegrationSystem
             postData.Append($"&{propName}={HttpUtility.UrlEncode(ProcessedPhoneNumber(phoneNumber))}");
         }
 
-        private void PrepareProductData(IOrderDetails orderDetails, StringBuilder postData)
+        private void PrepareProductAndFakeProductAreaDelievryData(IOrderDetails orderDetails, StringBuilder postData)
         {
             var order = orderDetails.GetOrder();
             var products = new List<string>();
@@ -120,6 +120,14 @@ namespace EasyStart.Logic.IntegrationSystem
                 }
             }
 
+            var areaVendorCode = orderDetails.GetAreaDeliveryCode();
+            if (!string.IsNullOrEmpty(areaVendorCode))
+            {
+                products.Add(areaVendorCode);
+                productCount.Add(1);
+                productPrice.Add(order.DeliveryPrice);
+            }
+
             for (var i = 0; i < products.Count; ++i)
             {
                 postData.Append($"&product[{i}]={products[i]}");
@@ -131,8 +139,15 @@ namespace EasyStart.Logic.IntegrationSystem
         private void PrepareOrderData(IOrderDetails orderDetails, StringBuilder postData)
         {
             var order = orderDetails.GetOrder();
-            var buyType = order.BuyType == BuyType.Cash ? BuyType.Cash : BuyType.Card;
-           
+            int buyType;
+
+            if (order.BuyType == BuyType.Cash)
+                buyType = (int)BuyType.Cash;
+            else if (order.BuyType == BuyType.Online && frontPadOptions.OnlineBuyType != 0)
+                buyType = frontPadOptions.OnlineBuyType;
+            else
+                buyType = (int)BuyType.Card;
+
             var nfi = new NumberFormatInfo();
             nfi.NumberDecimalSeparator = ".";
             var amountPayCashback = order.AmountPayCashBack.ToString(nfi);
@@ -145,7 +160,7 @@ namespace EasyStart.Logic.IntegrationSystem
             postData.Append($"&descr={HttpUtility.UrlEncode(order.Comment)}");
             postData.Append($"&name={HttpUtility.UrlEncode(order.Name)}");
             postData.Append($"&score={HttpUtility.UrlEncode(amountPayCashback)}");
-            postData.Append($"&pay={HttpUtility.UrlEncode(((int)buyType).ToString())}");
+            postData.Append($"&pay={HttpUtility.UrlEncode((buyType).ToString())}");
             postData.Append($"&person={HttpUtility.UrlEncode(order.NumberAppliances.ToString())}");
 
             if (order.DateDelivery.HasValue)
