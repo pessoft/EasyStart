@@ -9,7 +9,9 @@
             throw new Error(MessageStore.navigator.routeConfigIsRequired)
 
         this.id = 'navigator'
-        this.query = `#${this.id} a.nav-link, #${this.id} a.navbar-brand`
+        this.navItemQuery = `#${this.id} a.nav-link, #${this.id} a.navbar-brand`
+        this.mainNavBarQuery = `#${this.id} .navbar-collapse`
+        this.navBarTogglerQuery = `#${this.id} .navbar-toggler`
         this.routeConfig = routeConfig
         this.currentPage = defaultActivePage || Navigator.pageIds.orders 
 
@@ -21,8 +23,22 @@
     }
 
     bindEventChangeActiveItem() {
-        const navigatorItems = document.querySelectorAll(this.query)
-        navigatorItems.forEach(p => p.addEventListener('click', this.changeActiveHandler))
+        const navigatorItems = document.querySelectorAll(this.navItemQuery)
+        
+
+        navigatorItems.forEach(p => p.addEventListener('click', event => {
+            this.hideCollapseMenuHandler();
+            this.changeActiveHandler(event)
+        }))
+    }
+
+    hideCollapseMenuHandler = () => {
+        const navBarToggler = document.querySelector(this.navBarTogglerQuery)
+        const style = window.getComputedStyle(navBarToggler)
+        if (style.display != 'none') {
+            const mainNavBarCollapse = new mdb.Collapse(document.querySelector(this.mainNavBarQuery), { toggle: false })
+            mainNavBarCollapse.toggle()
+        }
     }
 
     changeActiveHandler = event => {
@@ -45,7 +61,7 @@
 
     changeActiveItem(pageId) {
         const activeCssClass = 'active'
-        const navigatorItems = document.querySelectorAll(this.query)
+        const navigatorItems = document.querySelectorAll(this.navItemQuery)
         navigatorItems.forEach(p => p.classList.remove(activeCssClass))
 
         const activeItemQuery = `#${this.id} a[target-page='${pageId}']`
@@ -65,7 +81,6 @@ Navigator.pageIds = {
     ordersHistory: 'ordersHistory',
     products: 'products',
     promotion: 'promotion',
-    users: 'users',
     analytics: 'analytics',
     settings: 'settings',
     tariffsAndPay: 'tariffsAndPay'
