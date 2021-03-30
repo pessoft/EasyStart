@@ -2416,7 +2416,7 @@ button.simple-text-btn:disabled:hover {
 .area-delivery-edit-wrapper {
     display: grid;
     grid-template-columns: 420px;
-    grid-template-rows: 90px 40px;
+    grid-template-rows: 170px 40px;
     padding: 5px 10px;
     grid-column-gap: 10px;
     grid-row-gap: 25px;
@@ -2445,13 +2445,23 @@ button.simple-text-btn:disabled:hover {
     grid-column-gap: 20px;
 }
 
-.area-delivery-edit-menu {
-    display: grid;
-    grid-template-columns: repeat(2, 120px);
-    grid-template-rows: 35px;
-    grid-column-gap: 15px;
-    justify-self: center;
+.area-delivery-edit-vendor-code {
+    display: flex;
+    flex-direction: column;
 }
+
+    .area-delivery-edit-vendor-code button {
+        justify-self: center;
+        align-self: center;
+    }
+
+    .area-delivery-edit-menu {
+        display: grid;
+        grid-template-columns: repeat(2, 120px);
+        grid-template-rows: 35px;
+        grid-column-gap: 15px;
+        justify-self: center;
+    }
 
     .area-delivery-edit-menu button {
         font-size: 0.7em;

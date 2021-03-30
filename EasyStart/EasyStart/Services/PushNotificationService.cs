@@ -13,10 +13,10 @@ namespace EasyStart.Services
 {
     public class PushNotificationService
     {
-        private readonly IRepository<FCMDeviceModel> repository;
+        private readonly IDefaultEntityRepository<FCMDeviceModel> repository;
         private readonly string fcmAuthKeyPath;
 
-        public PushNotificationService(IRepository<FCMDeviceModel> repository, string fcmAuthKeyPath)
+        public PushNotificationService(IDefaultEntityRepository<FCMDeviceModel> repository, string fcmAuthKeyPath)
         {
             this.repository = repository;
             this.fcmAuthKeyPath = fcmAuthKeyPath;

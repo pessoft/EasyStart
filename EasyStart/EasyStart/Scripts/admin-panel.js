@@ -114,10 +114,20 @@ function toggleRecommendedProductsForCategory(ignoreCategoryId = 0, selectedProd
     } 
 }
 
-function generateVendorCode(event) {
+function generateVendorCode() {
+    return new Date().getTime()
+}
+
+function setProductVendorCode(event) {
     event.stopPropagation()
-    const value = new Date().getTime()
+    const value = generateVendorCode()
     $('#vendor-code-product').val(value)
+}
+
+function setAreaVendorCode(event) {
+    event.stopPropagation()
+    const value = generateVendorCode()
+    $('#area-vendor-code').val(value)
 }
 
 function toggleVendorCodeProductInput() {
@@ -1506,6 +1516,7 @@ function saveDeliverySetting() {
         if (!result.Success) {
             showErrorMessage(result.ErrorMessage)
         } else {
+            showSuccessMessage("Настройки сохранены")
             IsValidDeliverySetting = true
 
             checkSettings()
@@ -3244,7 +3255,12 @@ class AreaDeliverySetting {
     renderItem(areaDelivery) {
         const minPriceWithPrefix = `${areaDelivery.MinPrice} руб.`
         const deliveryPriceWithPrefix = `${areaDelivery.DeliveryPrice} руб.`
-        const actionEditClick = () => this.showEditDialog(areaDelivery.NameArea, areaDelivery.MinPrice, areaDelivery.DeliveryPrice, areaDelivery.UniqId)
+        const actionEditClick = () => this.showEditDialog(
+            areaDelivery.UniqId,
+            areaDelivery.NameArea,
+            areaDelivery.MinPrice,
+            areaDelivery.DeliveryPrice,
+            areaDelivery.VendorCode)
         const actionRemoveClick = () => this.removeAreaDelivery(areaDelivery.UniqId)
         const template = `
             <div class="area-delivery-settings-item border-bottom">
@@ -3296,14 +3312,15 @@ class AreaDeliverySetting {
     appendNewArea() {
         const uniqId = generateRandomString(10)
 
-        this.showEditDialog('', '', '', uniqId)
+        this.showEditDialog(uniqId)
     }
 
-    showEditDialog(name, minPrice, deliveryPrice, uniqId) {
+    showEditDialog(uniqId, name = '', minPrice = '', deliveryPrice = '', vendorCode = '') {
         $("#area-name").val(name)
         $("#area-price").val(minPrice)
         $("#area-delivery-price").val(deliveryPrice)
         $("#area-uniqId").val(uniqId)
+        $("#area-vendor-code").val(vendorCode)
 
         const actionSaveClick = () => this.saveAreaDelivery()
         const saveBtn = $('#areaDeliveryEditDialog').find('.btn-submit')
@@ -3322,7 +3339,7 @@ class AreaDeliverySetting {
         const minPrice = $("#area-price").val()
         const deliveryPrice = $("#area-delivery-price").val()
         const uniqId = $("#area-uniqId").val()
-        const names = name.split(',').map(p => p.trim()).filter(p => p)
+        const vendorCode = $("#area-vendor-code").val()
 
         if (!name || !minPrice || !deliveryPrice) {
             showInfoMessage('Заполните все поля')
@@ -3330,10 +3347,7 @@ class AreaDeliverySetting {
             return
         }
 
-        if (names.length > 1)
-            this.multiSaveAreaDelivery(names, minPrice, deliveryPrice)
-        else
-            this.singleSaveAreaDelivery(name, minPrice, deliveryPrice, uniqId)
+        this.singleSaveAreaDelivery(name, minPrice, deliveryPrice, uniqId, vendorCode)
 
         this.render()
         loader.stop()
@@ -3341,19 +3355,21 @@ class AreaDeliverySetting {
         Dialog.close('#areaDeliveryEditDialog')
     }
 
-    singleSaveAreaDelivery(name, minPrice, deliveryPrice, uniqId) {
+    singleSaveAreaDelivery(name, minPrice, deliveryPrice, uniqId, vendorCode) {
         const areaDelivery = this.findAreaByUniqId(uniqId)
 
         if (areaDelivery) {
             areaDelivery.NameArea = name
             areaDelivery.MinPrice = minPrice
             areaDelivery.DeliveryPrice = deliveryPrice
+            areaDelivery.VendorCode = vendorCode
         } else {
             const newAreaDelivery = {
                 UniqId: uniqId,
                 NameArea: name,
                 MinPrice: minPrice,
-                DeliveryPrice: deliveryPrice
+                DeliveryPrice: deliveryPrice,
+                VendorCode: vendorCode
             }
 
             AreaDelivery.push(newAreaDelivery)

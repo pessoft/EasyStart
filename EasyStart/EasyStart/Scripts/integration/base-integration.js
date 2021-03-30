@@ -60,6 +60,7 @@ const frontPadIdsStore = {
     syncClients: 'integration-sync-frontpad-wrapper',
     pointSaleDelivery: 'integration-point-sale-delivery',
     pointSaleTakeyourself: 'integration-point-sale-takeyourself',
+    onlineBuyType: 'integration-online-buy-type',
 }
 
 function initFrontPadIntegration() {
@@ -120,6 +121,11 @@ function initFrontPadIntegration() {
             <label>Точка продаж "Доставка" (код api)</label>
         </div>
         <div class="group">
+            <input required type="text" id="${frontPadIdsStore.onlineBuyType}" />
+            <span class="bar"></span>
+            <label>Тип оплаты "Онлайн" (код api)</label>
+        </div>
+        <div class="group">
             <input required readonly type="text" value="${webHookUrl}"/>
             <span class="bar"></span>
             <label>Webhook url</label>
@@ -139,6 +145,7 @@ function initFrontPadIntegration() {
         $template.find(`#${frontPadIdsStore.usePhoneMask}`).prop('checked', !(options.usePhoneMask === false))
         $template.find(`#${frontPadIdsStore.pointSaleTakeyourself}`).val(options.pointSaleTakeyourself || '')
         $template.find(`#${frontPadIdsStore.pointSaleDelivery}`).val(options.pointSaleDelivery || '')
+        $template.find(`#${frontPadIdsStore.onlineBuyType}`).val(options.onlineBuyType || '')
         
     }
 
@@ -309,7 +316,9 @@ function getFrontPadSetting() {
     pointSaleDelivery = parseInt(pointSaleDelivery)
     pointSaleTakeyourself = Number.isNaN(pointSaleTakeyourself) ? 0 : pointSaleTakeyourself
     pointSaleDelivery = Number.isNaN(pointSaleDelivery) ? 0 : pointSaleDelivery
-
+    let onlineBuyType = $(`#${frontPadIdsStore.onlineBuyType}`).val().trim()
+    onlineBuyType = parseInt(onlineBuyType)
+    onlineBuyType = Number.isNaN(onlineBuyType) ? 0 : onlineBuyType
     const options = {
         statusNew: parseInt(statusNew),
         statusProcessed: parseInt(statusProcessed),
@@ -320,6 +329,7 @@ function getFrontPadSetting() {
         pointSaleDelivery: pointSaleDelivery,
         phoneCodeCountry: $(`#${frontPadIdsStore.phoneCodeCountry}`).val().trim(),
         usePhoneMask: $(`#${frontPadIdsStore.usePhoneMask}`).is(':checked'),
+        onlineBuyType
     }
 
     if (!secret

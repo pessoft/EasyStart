@@ -11,5 +11,6 @@ namespace EasyStart.Logic.OrderProcessor
     {
         void ChangeOrderStatus(UpdaterOrderStatus payload);
         INewOrderResult SendOrderToIntegrationSystem(int orderId);
+        TimeSpan GetAverageOrderProcessingTime(int branchId, DeliveryType deliveryType);
     }
 }
