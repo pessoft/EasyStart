@@ -13,7 +13,7 @@ namespace EasyStart.Models
         public int BranchId { get; set; }
         public int CityId { get; set; }
         public string Street { get; set; }
-        public int HomeNumber { get; set; }
+        public string HomeNumber { get; set; }
         public string PhoneNumber { get; set; }
         public string PhoneNumberAdditional { get; set; }
         public string Email { get; set; }
