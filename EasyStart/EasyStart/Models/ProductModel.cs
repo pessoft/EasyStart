@@ -37,6 +37,8 @@ namespace EasyStart.Models
 
         public string AllowCombinationsJSON { get; set; }
 
+        public string AllowCombinationsVendorCodeJSON { get; set; }
+
         [NotMapped]
         public List<List<int>> AllowCombinations
         {
@@ -47,7 +49,18 @@ namespace EasyStart.Models
                 else
                     return null;
             }
+        }
 
+        [NotMapped]
+        public Dictionary<string, List<int>> AllowCombinationsVendorCode
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(AllowCombinationsVendorCodeJSON))
+                    return JsonConvert.DeserializeObject<Dictionary<string, List<int>>>(AllowCombinationsVendorCodeJSON);
+                else
+                    return null;
+            }
         }
     }
 }

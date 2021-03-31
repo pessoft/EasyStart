@@ -534,6 +534,10 @@
     <Compile Include="Migrations\202103311857392_AddedVendorCodeInAdditionalFilling.Designer.cs">
       <DependentUpon>202103311857392_AddedVendorCodeInAdditionalFilling.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103311904038_AddedAllowCombinationsVendorCodeJSONInProductModel.cs" />
+    <Compile Include="Migrations\202103311904038_AddedAllowCombinationsVendorCodeJSONInProductModel.Designer.cs">
+      <DependentUpon>202103311904038_AddedAllowCombinationsVendorCodeJSONInProductModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -989,6 +993,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103311857392_AddedVendorCodeInAdditionalFilling.resx">
       <DependentUpon>202103311857392_AddedVendorCodeInAdditionalFilling.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103311904038_AddedAllowCombinationsVendorCodeJSONInProductModel.resx">
+      <DependentUpon>202103311904038_AddedAllowCombinationsVendorCodeJSONInProductModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
