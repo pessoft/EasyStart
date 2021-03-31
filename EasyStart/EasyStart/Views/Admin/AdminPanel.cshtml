@@ -588,7 +588,7 @@
                             <label>Улица</label>
                         </div>
                         <div class="group">
-                            <input required type="text" autocomplete="off" id="setting-home" value="@(ViewBag.Setting != null && ViewBag.Setting.HomeNumber != 0 ? ViewBag.Setting.HomeNumber : "")" />
+                            <input required type="text" autocomplete="off" id="setting-home" value="@(ViewBag.Setting != null ? ViewBag.Setting.HomeNumber : "")" />
                             <span class="bar"></span>
                             <label>Номер дома(офиса)</label>
                         </div>

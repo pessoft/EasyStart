@@ -19,7 +19,7 @@ namespace EasyStart.Logic
             if (string.IsNullOrEmpty(setting.Street))
                 return false;
 
-            if (setting.HomeNumber < 0)
+            if (string.IsNullOrEmpty(setting.HomeNumber))
                 return false;
 
             if (string.IsNullOrEmpty(setting.PhoneNumber))
