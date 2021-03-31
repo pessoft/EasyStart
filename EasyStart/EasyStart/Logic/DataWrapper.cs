@@ -3971,6 +3971,7 @@ namespace EasyStart.Logic
 
                         value.Name = additionalFilling.Name;
                         value.Price = additionalFilling.Price;
+                        value.VendorCode = additionalFilling.VendorCode;
                     }
                     else
                         value = db.AdditionalFillings.Add(additionalFilling);
