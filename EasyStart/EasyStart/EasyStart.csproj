@@ -526,6 +526,10 @@
     <Compile Include="Migrations\202103291031157_AddedAreaDeliveryIdInProductModels.Designer.cs">
       <DependentUpon>202103291031157_AddedAreaDeliveryIdInProductModels.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103311824150_ChangeTypeHomeNumber.cs" />
+    <Compile Include="Migrations\202103311824150_ChangeTypeHomeNumber.Designer.cs">
+      <DependentUpon>202103311824150_ChangeTypeHomeNumber.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
@@ -975,6 +979,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103291031157_AddedAreaDeliveryIdInProductModels.resx">
       <DependentUpon>202103291031157_AddedAreaDeliveryIdInProductModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103311824150_ChangeTypeHomeNumber.resx">
+      <DependentUpon>202103311824150_ChangeTypeHomeNumber.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
