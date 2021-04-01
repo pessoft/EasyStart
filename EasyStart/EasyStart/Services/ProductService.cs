@@ -1,4 +1,5 @@
 ﻿using EasyStart.Models;
+using EasyStart.Models.ProductOption;
 using EasyStart.Repositories;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,17 @@ namespace EasyStart.Services
     public class ProductService
     {
         private readonly IDefaultEntityRepository<ProductModel> repository;
-        
-        public ProductService(IDefaultEntityRepository<ProductModel> repository)
+        private readonly IDefaultEntityRepository<AdditionalFilling> additionalFillingRepository;
+        private readonly IDefaultEntityRepository<AdditionOptionItem> additionOptionItemRepository;
+
+        public ProductService(
+            IDefaultEntityRepository<ProductModel> repository,
+            IDefaultEntityRepository<AdditionalFilling> additionalFillingRepository,
+            IDefaultEntityRepository<AdditionOptionItem> additionOptionItemRepository)
         {
             this.repository = repository;
+            this.additionalFillingRepository = additionalFillingRepository;
+            this.additionOptionItemRepository = additionOptionItemRepository;
         }
 
         public ProductModel Get(int id)
@@ -38,10 +46,31 @@ namespace EasyStart.Services
             if (order.ProductBonusCount != null)
                 productIds.AddRange(order.ProductBonusCount.Keys);
 
+            if (order.ProductWithOptionsCount != null)
+                productIds.AddRange(order.ProductWithOptionsCount.Select(p => p.ProductId));
+
             productIds = productIds.Distinct().ToList();
             var products = repository.Get(p => productIds.Contains(p.Id));
 
             return products.ToList();
+        }
+
+        public  List<AdditionalFilling> GetAdditionalFillingsByBranchId(int branchId)
+        {
+            var additionalfillings = additionalFillingRepository
+                .Get(p => p.BranchId == branchId && !p.IsDeleted)
+                .ToList();
+
+            return additionalfillings;
+        }
+
+        public List<AdditionOptionItem> GetAdditionOptionItemByBranchId(int branchId)
+        {
+            var additionOptionItems = additionOptionItemRepository
+                .Get(p => p.BranchId == branchId && !p.IsDeleted)
+                .ToList();
+
+            return additionOptionItems;
         }
     }
 }

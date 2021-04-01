@@ -622,7 +622,9 @@
     <Compile Include="Models\UseModel.cs" />
     <Compile Include="Models\UserDataPhoneApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\AdditionOptionItemRepository.cs" />
     <Compile Include="Repositories\AreaDeliveryRepository.cs" />
+    <Compile Include="Repositories\AdditionalFillingRepository.cs" />
     <Compile Include="Repositories\UniqIdRepository.cs" />
     <Compile Include="Repositories\DefaultRepository.cs" />
     <Compile Include="Repositories\ClientRepository.cs" />

@@ -34,7 +34,12 @@ namespace EasyStart.Controllers
             orderService = new OrderService(orderRepository);
 
             var productRepository = new ProductRepository(context);
-            productService = new ProductService(productRepository);
+            var additionalFillingRepository = new AdditionalFillingRepository(context);
+            var additionOptionItemRepository = new AdditionOptionItemRepository(context);
+            productService = new ProductService(
+                productRepository,
+                additionalFillingRepository,
+                additionOptionItemRepository);
         }
 
         [HttpPost]

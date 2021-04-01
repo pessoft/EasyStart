@@ -43,7 +43,12 @@ namespace EasyStart.Logic.OrderProcessor
             orderService = new OrderService(orderRepository);
 
             var productRepository = new ProductRepository(context);
-            productService = new ProductService(productRepository);
+            var additionalFillingRepository = new AdditionalFillingRepository(context);
+            var additionOptionItemRepository = new AdditionOptionItemRepository(context);
+            productService = new ProductService(
+                productRepository,
+                additionalFillingRepository,
+                additionOptionItemRepository);
 
             var deliverySettingRepository = new DeliverySettingRepository(context);
             var areaDeliveryRepository = new AreaDeliveryRepository(context);
@@ -99,7 +104,14 @@ namespace EasyStart.Logic.OrderProcessor
                 else if (IsProductsValidForIntegrationSystem(products))
                 {
                     var deliverySetting = deliverySettingService.GetByBranchId(order.BranchId);
-                    var orderDetails = new OrderDetails(order, products, deliverySetting.AreaDeliveries);
+                    var additionalFillings = productService.GetAdditionalFillingsByBranchId(order.BranchId);
+                    var additionOptionItems = productService.GetAdditionOptionItemByBranchId(order.BranchId);
+                    var orderDetails = new OrderDetails(
+                        order,
+                        products,
+                        additionalFillings,
+                        additionOptionItems,
+                        deliverySetting.AreaDeliveries);
                     newOrderResult = integrationSystemService.SendOrder(
                         orderDetails,
                         new IntegrationSystemFactory());
