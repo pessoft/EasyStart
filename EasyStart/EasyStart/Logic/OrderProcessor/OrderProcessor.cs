@@ -136,10 +136,10 @@ namespace EasyStart.Logic.OrderProcessor
 
         public TimeSpan GetAverageOrderProcessingTime(int branchId, DeliveryType deliveryType)
         {
-            var minTimeProcessingOrder = deliverySettingService.GetByBranchId(branchId);
-            var defaultOrderProessingTime = TimeSpan.Parse(minTimeProcessingOrder.MinTimeProcessingOrder);
+            var deliverySetting = deliverySettingService.GetByBranchId(branchId);
+            var defaultOrderProessingTime = TimeSpan.Parse(deliverySetting.MinTimeProcessingOrder);
 
-            return orderService.GetAverageOrderProcessingTime(branchId, deliveryType, defaultOrderProessingTime);
+            return orderService.GetAverageOrderProcessingTime(branchId, deliveryType, defaultOrderProessingTime, deliverySetting.ZoneId);
         }
     }
 }

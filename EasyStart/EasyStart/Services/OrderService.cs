@@ -3,6 +3,7 @@ using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
 using EasyStart.Models;
 using EasyStart.Repositories;
+using EasyStart.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -84,7 +85,7 @@ namespace EasyStart.Services
             repository.Update(order);
         }
 
-        public TimeSpan GetAverageOrderProcessingTime(int branchId, DeliveryType deliveryType, TimeSpan defaultOrderProessingTime)
+        public TimeSpan GetAverageOrderProcessingTime(int branchId, DeliveryType deliveryType, TimeSpan defaultOrderProessingTime, string zoneId)
         {
             var timeProcessingOrders = repository.Get(p =>
                 p.BranchId == branchId
@@ -93,7 +94,7 @@ namespace EasyStart.Services
                 && p.DeliveryType == deliveryType
                 && p.Date.Date == DateTime.Now.Date
                 && p.DateDelivery == null)
-                .Select(p => p.UpdateDate - p.Date);
+                .Select(p => p.UpdateDate.GetDateTimeNow(zoneId) - p.Date.GetDateTimeNow(zoneId));
             var orderCount = timeProcessingOrders.Count();
 
             if (orderCount == 0)
