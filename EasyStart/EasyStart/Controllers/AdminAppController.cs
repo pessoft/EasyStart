@@ -466,7 +466,7 @@ namespace EasyStart
                         var updateOrderStatus = new UpdaterOrderStatus 
                         { 
                             DateUpdate = dateUpdate,
-                            ApproximateDeliveryTime = approximateDeliveryTime.HasValue ? approximateDeliveryTime.GetDateTimeNow(deliverSetting.ZoneId) : approximateDeliveryTime,
+                            ApproximateDeliveryTime = approximateDeliveryTime.HasValue ? approximateDeliveryTime.Value.GetDateTimeNow(deliverSetting.ZoneId) : approximateDeliveryTime,
                             OrderId = order.Id,
                             Status = OrderStatus.Processing
                         };
