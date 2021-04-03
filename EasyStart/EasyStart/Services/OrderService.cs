@@ -91,7 +91,8 @@ namespace EasyStart.Services
                 && p.IsSendToIntegrationSystem
                 && p.OrderStatus == OrderStatus.Processed
                 && p.DeliveryType == deliveryType
-                && p.Date.Date == DateTime.Now.Date)
+                && p.Date.Date == DateTime.Now.Date
+                && p.DateDelivery == null)
                 .Select(p => p.UpdateDate - p.Date);
             var orderCount = timeProcessingOrders.Count();
 
