@@ -461,12 +461,12 @@ namespace EasyStart
                         var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
                         var dateUpdate = date;
                         var approximateDeliveryTime = order.DateDelivery.HasValue ?
-                            order.DateDelivery : 
+                            order.DateDelivery :
                             order.Date + orderProcesser.GetAverageOrderProcessingTime(order.BranchId, order.DeliveryType);
-                        var updateOrderStatus = new UpdaterOrderStatus 
-                        { 
+                        var updateOrderStatus = new UpdaterOrderStatus
+                        {
                             DateUpdate = dateUpdate,
-                            ApproximateDeliveryTime = approximateDeliveryTime.HasValue ? approximateDeliveryTime.Value.GetDateTimeNow(deliverSetting.ZoneId) : approximateDeliveryTime,
+                            ApproximateDeliveryTime = approximateDeliveryTime,
                             OrderId = order.Id,
                             Status = OrderStatus.Processing
                         };
@@ -481,13 +481,15 @@ namespace EasyStart
                             {
                                 deliveryType = order.DeliveryType,
                                 orderNumber = orderId,
-                                approximateDeliveryTime= approximateDeliveryTime.HasValue ? approximateDeliveryTime.Value.ToUniversalTime() : approximateDeliveryTime
+                                approximateDeliveryTime = approximateDeliveryTime.HasValue ?
+                                    DateTime.Parse(approximateDeliveryTime.Value.ToString("yyyy-MM-dd HH:mm:ss")) :
+                                    approximateDeliveryTime
                             };
                             Task.Run(() =>
                             {
                                 updateOrder = SendOrderToIntegrationSystem(currentContext, updateOrder);
                                 NotifyAboutNewOrder(currentContext, updateOrder, deliverSetting);
-                                
+
                             });
                         }
                         else
@@ -607,7 +609,9 @@ namespace EasyStart
                     {
                         deliveryType = order.DeliveryType,
                         orderNumber = numberOrder,
-                        approximateDeliveryTime = order.ApproximateDeliveryTime.HasValue ? order.ApproximateDeliveryTime.Value.GetDateTimeNow(deliverSetting.ZoneId) : order.ApproximateDeliveryTime
+                        approximateDeliveryTime = order.ApproximateDeliveryTime.HasValue ?
+                            DateTime.Parse(order.ApproximateDeliveryTime.Value.ToString("yyyy-MM-dd HH:mm:ss")) :
+                            order.ApproximateDeliveryTime
                     };
                     result.Success = true;
 
@@ -747,10 +751,6 @@ namespace EasyStart
             try
             {
                 var historyOrders = DataWrapper.GetHistoryOrders(dataHistoryForLoad.ClientId, dataHistoryForLoad.BranchId);
-                if (historyOrders != null && historyOrders.Any())
-                    historyOrders.ForEach(p => p.ApproximateDeliveryTime = p.ApproximateDeliveryTime.HasValue ?
-                    p.ApproximateDeliveryTime.Value.ToUniversalTime() :
-                    p.ApproximateDeliveryTime);
 
                 result.Data = historyOrders;
                 result.Success = true;
