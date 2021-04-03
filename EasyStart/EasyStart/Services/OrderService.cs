@@ -91,7 +91,7 @@ namespace EasyStart.Services
             var timeProcessingOrders = repository.Get(p =>
                 p.BranchId == branchId
                 && p.IsSendToIntegrationSystem
-                && p.OrderStatus == OrderStatus.Processed
+                && p.IntegrationOrderStatus == IntegrationOrderStatus.Done
                 && p.DeliveryType == deliveryType
                 && p.Date.Date == DateTime.Now.Date
                 && p.DateDelivery == null)
