@@ -57,10 +57,11 @@ namespace EasyStart.Services
             return orders;
         }
 
-        public void ChangeIntegrationStatus(int orderId, IntegrationOrderStatus status)
+        public void ChangeIntegrationStatus(int orderId, IntegrationOrderStatus status, DateTime updateDate)
         {
             var order = Get(orderId);
             order.IntegrationOrderStatus = status;
+            order.UpdateDate = updateDate;
 
             repository.Update(order);
         }

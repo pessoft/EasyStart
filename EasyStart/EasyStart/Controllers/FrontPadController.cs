@@ -61,8 +61,7 @@ namespace EasyStart.Controllers
             var integerationSystem = new IntegrationSystemFactory().GetIntegrationSystem(integrationSetting);
             var orderStatus = integerationSystem.GetIntegrationOrderStatus(status.Status);
 
-            orderService.ChangeIntegrationStatus(order.Id, orderStatus);
-            order = this.orderService.Get(order.Id);
+            orderProcessor.ChangeIntegrationStatus(order.Id, orderStatus);
 
             if (integrationSetting.UseAutomaticDispatch
                 && (orderStatus == IntegrationOrderStatus.Done || orderStatus == IntegrationOrderStatus.Canceled))
