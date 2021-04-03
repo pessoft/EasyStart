@@ -57,10 +57,11 @@ namespace EasyStart.Services
             return orders;
         }
 
-        public void ChangeIntegrationStatus(int orderId, IntegrationOrderStatus status)
+        public void ChangeIntegrationStatus(int orderId, IntegrationOrderStatus status, DateTime updateDate)
         {
             var order = Get(orderId);
             order.IntegrationOrderStatus = status;
+            order.UpdateDate = updateDate;
 
             repository.Update(order);
         }
@@ -90,7 +91,7 @@ namespace EasyStart.Services
             var timeProcessingOrders = repository.Get(p =>
                 p.BranchId == branchId
                 && p.IsSendToIntegrationSystem
-                && p.OrderStatus == OrderStatus.Processed
+                && p.IntegrationOrderStatus == IntegrationOrderStatus.Done
                 && p.DeliveryType == deliveryType
                 && p.Date.Date == DateTime.Now.Date
                 && p.DateDelivery == null)

@@ -53,6 +53,15 @@ namespace EasyStart.Logic.OrderProcessor
             pushNotificationService = new PushNotificationService(fCMDeviceRepository, fcmAuthKeyPath);
         }
 
+        public void ChangeIntegrationStatus(int orderId, IntegrationOrderStatus status)
+        {
+            var order = orderService.Get(orderId);
+            var deliverSetting = deliverySettingService.GetByBranchId(order.BranchId);
+            var dateUpdate = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
+
+            orderService.ChangeIntegrationStatus(orderId, status, dateUpdate);
+        }
+
         public void ChangeOrderStatus(UpdaterOrderStatus payload)
         {
             if (payload.Status == OrderStatus.Processing || payload.OrderId < 1)
