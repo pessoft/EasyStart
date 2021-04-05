@@ -1436,6 +1436,7 @@ namespace EasyStart.Logic
                     result.ProductAdditionalFillingIds = product.ProductAdditionalFillingIds;
                     result.AllowCombinationsJSON = product.AllowCombinationsJSON;
                     result.VendorCode = product.VendorCode;
+                    result.AllowCombinationsVendorCodeJSON = product.AllowCombinationsVendorCodeJSON;
 
                     db.SaveChanges();
 
