@@ -110,7 +110,7 @@ namespace EasyStart.Logic.OrderProcessor
 
                 if(!IsValidOrderDiscount(order))
                     newOrderResult = new NewOrderResult("Discount persent and discount ruble no supported integraion system");
-                else if (IsProductsValidForIntegrationSystem(products))
+                else if (IsProductsValidForIntegrationSystem(products, order))
                 {
                     var deliverySetting = deliverySettingService.GetByBranchId(order.BranchId);
                     var additionalFillings = productService.GetAdditionalFillingsByBranchId(order.BranchId);
@@ -134,16 +134,67 @@ namespace EasyStart.Logic.OrderProcessor
             return newOrderResult;
         }
 
-        private bool IsProductsValidForIntegrationSystem(List<ProductModel> products)
+        private bool IsProductsValidForIntegrationSystem(
+            List<ProductModel> products,
+            OrderModel order)
         {
             if (products == null || !products.Any())
                 return false;
 
+            var additionalFillings = productService.GetAdditionalFillingsByBranchId(order.BranchId).ToDictionary(p => p.Id);
             foreach (var product in products)
             {
-                if (string.IsNullOrEmpty(product.VendorCode)
-                    || product.ProductAdditionalFillingIds != null && product.ProductAdditionalFillingIds.Any()
+                if (product.ProductAdditionalFillingIds != null && product.ProductAdditionalFillingIds.Any()
                     || product.ProductAdditionalOptionIds != null && product.ProductAdditionalOptionIds.Any())
+                {
+                    var productWithOptions = order.ProductWithOptionsCount.FirstOrDefault(p => p.ProductId == product.Id);
+                    var isFillingValid = true;
+                    if (productWithOptions.AdditionalFillings != null && productWithOptions.AdditionalFillings.Any())
+                    {
+                        foreach (var additionalFillingId in productWithOptions.AdditionalFillings)
+                        {
+                            var additionalFilling = additionalFillings[additionalFillingId];
+                            if (string.IsNullOrEmpty(additionalFilling.VendorCode))
+                            {
+                                isFillingValid = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    var isValidAdditionalOptions = true;
+                    if (productWithOptions.AdditionalOptions != null && productWithOptions.AdditionalOptions.Any())
+                    {
+                        var optionIds = productWithOptions.AdditionalOptions.Values.OrderBy(p => p).ToArray();
+                        var optionIdsStr = string.Join("-", optionIds);
+
+                        if (product.AllowCombinationsVendorCode != null && product.AllowCombinationsVendorCode.Any())
+                        {
+                            string combinationVendorCode = null;
+                            foreach (var kv in product.AllowCombinationsVendorCode)
+                            {
+                                var combinatationStre = string.Join("-", kv.Value.OrderBy(p => p));
+
+                                if (combinatationStre == optionIdsStr)
+                                {
+                                    combinationVendorCode = kv.Key;
+                                    break;
+                                }
+                            }
+
+                            isValidAdditionalOptions = !string.IsNullOrEmpty(combinationVendorCode);
+                            if (!isValidAdditionalOptions || !isFillingValid)
+                                return false;
+                        }
+                        else
+                            return false;
+                    }
+                    else
+                    {
+                        if (string.IsNullOrEmpty(product.VendorCode) || !isFillingValid)
+                            return false;
+                    }
+                } else if (string.IsNullOrEmpty(product.VendorCode))
                     return false;
             }
 
