@@ -35,6 +35,7 @@
     const additionFunForAddNewProduct = () => {
         ProductAdditionalOptions = []
         ProductAllowCombinationsAdditionalOptions = []
+        ProductVendorCodeAllowCombinationsAdditionalOptions = {},
         ProductAdditionalFillings = []
         setOperationAdd()
         toggleVendorCodeProductInput()
@@ -917,6 +918,7 @@ function loadProducts() {
 
 var ProductAdditionalOptions = []
 var ProductAllowCombinationsAdditionalOptions = []
+var ProductVendorCodeAllowCombinationsAdditionalOptions = {}//key - vendor code, value [additional options]
 var ProductAdditionalFillings = []
 function addProduct() {
     let loader = new Loader($("#addProducDialog  form"))
@@ -933,6 +935,7 @@ function addProduct() {
         ProductAdditionalInfoType: $("#product-additional-info-type").val(),
         ProductAdditionalOptionIds: ProductAdditionalOptions,
         AllowCombinationsJSON: JSON.stringify(ProductAllowCombinationsAdditionalOptions),
+        AllowCombinationsVendorCodeJSON: JSON.stringify(ProductVendorCodeAllowCombinationsAdditionalOptions),
         ProductAdditionalFillingIds: ProductAdditionalFillings,
         VendorCode: $('#vendor-code-product').val()
     }
@@ -970,6 +973,7 @@ function updateProduct() {
         ProductAdditionalInfoType: $("#product-additional-info-type").val(),
         ProductAdditionalOptionIds: ProductAdditionalOptions,
         AllowCombinationsJSON: JSON.stringify(ProductAllowCombinationsAdditionalOptions),
+        AllowCombinationsVendorCodeJSON: JSON.stringify(ProductVendorCodeAllowCombinationsAdditionalOptions),
         ProductAdditionalFillingIds: ProductAdditionalFillings,
         VendorCode: $('#vendor-code-product').val()
     }
@@ -1205,6 +1209,9 @@ function editProduct(e, event) {
     let product = DataProduct.Products.find(p => p.Id == productId)
     ProductAdditionalOptions = product.ProductAdditionalOptionIds
     ProductAllowCombinationsAdditionalOptions = product.AllowCombinations ? product.AllowCombinations : []
+    ProductVendorCodeAllowCombinationsAdditionalOptions = product.AllowCombinationsVendorCode && Object.keys(product.AllowCombinationsVendorCode) ?
+        product.AllowCombinationsVendorCode :
+        {}
     ProductAdditionalFillings = product.ProductAdditionalFillingIds
 
     dialog.find("#product-id").val(product.Id)

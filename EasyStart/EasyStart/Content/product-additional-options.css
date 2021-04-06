@@ -331,19 +331,34 @@
 .combination-additional-option-item {
     display: grid;
     grid-auto-rows: 30px;
-    grid-template-columns: 20px 1fr;
-    justify-content: center;
-    align-items: center;
-    column-gap: 5px;
     border-radius: 2px;
     border: 1px solid #bdbdbd35;
     margin-bottom: 8px;
-    cursor:default;
+    cursor: default;
 }
 
-    .combination-additional-option-item input {
-        width: auto;
+    .combination-additional-option-item .combination-item {
+        display: grid;
+        grid-template-columns: 20px 1fr;
+        height: 30px;
+        column-gap: 5px;
+        align-items: center;
+        border-bottom: 1px solid #bdbdbd35;
     }
+
+    .combination-additional-option-item .combination-vendor {
+     display:flex;
+     align-items: center;
+    }
+
+        .combination-additional-option-item .combination-vendor input {
+            border: none;
+            width: 100%;
+        }
+
+        .combination-additional-option-item input {
+            width: auto;
+        }
 
     .combination-additional-option-item span {
         display: flex;
