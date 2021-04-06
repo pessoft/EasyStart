@@ -77,7 +77,7 @@
 
 .dialog-body-additional-fillings-wrapper {
     grid-template-columns: 390px;
-    grid-template-rows: 30px 70px;
+    grid-template-rows: 30px 100px;
 }
 
 .dialog-body-additional-options {
@@ -90,7 +90,7 @@
 .dialog-body-additional-filling {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 50px 20px;
+    grid-template-rows: 35px 35px 20px;
     grid-row-gap: 10px;
 }
 
@@ -201,19 +201,22 @@
 
 .additional-option-name,
 .additional-option-value,
-.additional-option-price {
+.additional-option-price,
+.additional-filling-vendor {
     display: grid;
     grid-template-columns: 50px 50px;
     align-items: center;
 }
 
-.additional-option-name {
+.additional-option-name,
+.additional-filling-vendor {
     grid-template-columns: 85px;
 }
 
     .additional-option-name input,
     .additional-option-value input,
-    .additional-option-price input {
+    .additional-option-price input,
+    .additional-filling-vendor input {
         width: 50px;
         margin: 0;
         padding: 0;
@@ -227,18 +230,23 @@
         border-radius: 2px;
     }
 
-.additional-option-value span,
-.additional-option-price span {
-    border: 1px solid #A4A4A4;
-    border-left: 0;
-    border-radius: 2px;
-    height: 25px;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 0.9em;
-}
+    .additional-filling-vendor input {
+        width: 215px;
+        border-radius: 2px;
+    }
+
+    .additional-option-value span,
+    .additional-option-price span {
+        border: 1px solid #A4A4A4;
+        border-left: 0;
+        border-radius: 2px;
+        height: 25px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 0.9em;
+    }
 
 .additional-option-default-check {
     display: grid;
@@ -342,3 +350,7 @@
         align-items: center;
         font-size: 0.9em;
     }
+
+.additional-filling-vendor {
+    padding-left: 5px;
+}

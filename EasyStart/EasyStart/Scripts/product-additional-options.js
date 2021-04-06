@@ -447,6 +447,7 @@ function cleanAdditionalFillingInputs() {
     $('#additional-filling-id').val(-1)
     $('#additional-filling-name').val('')
     $('#additional-filling-price').val('')
+    $('#additional-filling-vendor-code').val('')
 }
 
 function editAdditionalFilling(id) {
@@ -455,6 +456,7 @@ function editAdditionalFilling(id) {
     $('#additional-filling-id').val(data.Id)
     $('#additional-filling-name').val(data.Name)
     $('#additional-filling-price').val(data.Price)
+    $('#additional-filling-vendor-code').val(data.VendorCode)
 }
 
 function doneEditAdditionalFilling(event) {
@@ -464,6 +466,7 @@ function doneEditAdditionalFilling(event) {
         Id: parseInt($('#additional-filling-id').val()),
         Name: $('#additional-filling-name').val().trim(),
         Price: parseFloat($('#additional-filling-price').val()),
+        VendorCode: $('#additional-filling-vendor-code').val(),
     }
 
     if (!additionalFilling.Name ||
