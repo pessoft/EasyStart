@@ -97,6 +97,7 @@ namespace EasyStart.Logic.IntegrationSystem
             var products = new List<string>();
             var productCount = new List<int>();
             var productPrice = new List<double>();
+            var productMod = new Dictionary<int, int>();
 
             if (order.ProductCount != null && order.ProductCount.Any())
             {
@@ -106,6 +107,76 @@ namespace EasyStart.Logic.IntegrationSystem
                     products.Add(product.VendorCode);
                     productCount.Add(order.ProductCount[productId]);
                     productPrice.Add(product.Price);
+                }
+            }
+
+            if (order.ProductWithOptionsCount != null && order.ProductWithOptionsCount.Any())
+            {
+                foreach (var productWithOptionsCount in order.ProductWithOptionsCount)
+                {
+                    var product = orderDetails.GetProduct(productWithOptionsCount.ProductId);
+                    var price = product.Price;
+                    string vendorCode = null;
+
+                    if (productWithOptionsCount.AdditionalOptions != null
+                        && productWithOptionsCount.AdditionalOptions.Any())
+                    {
+                        var optionItemIds = productWithOptionsCount.AdditionalOptions.Values.ToList();
+                        foreach (var optionItemId in optionItemIds)
+                        {
+                            var optionItem = orderDetails.GetAdditionOptionItem(optionItemId);
+                            price += optionItem.Price;
+                        }
+
+                        if (product.AllowCombinationsVendorCode == null
+                            || !product.AllowCombinationsVendorCode.Any())
+                            throw new Exception("No AllowCombinationsVendorCode");
+
+                        var optionItemIdsStr = string.Join("-", optionItemIds.OrderBy(p => p));
+                        foreach (var kv in product.AllowCombinationsVendorCode)
+                        {
+                            var optionItemIdsStrFind = string.Join("-", kv.Value.OrderBy(p => p));
+
+                            if (optionItemIdsStr == optionItemIdsStrFind)
+                            {
+                                vendorCode = kv.Key;
+                            }
+                        }
+
+                        if (string.IsNullOrEmpty(vendorCode))
+                            throw new Exception("Not find vendorCode for additional option");
+                    }
+
+                    if (string.IsNullOrEmpty(vendorCode))
+                    {
+                        if(string.IsNullOrEmpty(product.VendorCode))
+                            throw new Exception($"Not find vendorCode for product id = {product.Id}");
+
+                        vendorCode = product.VendorCode;
+                    }
+
+                    products.Add(vendorCode);
+                    productCount.Add(productWithOptionsCount.Count);
+                    productPrice.Add(price);
+
+                    var productIndex = products.Count - 1;
+
+                    if (productWithOptionsCount.AdditionalFillings != null
+                        && productWithOptionsCount.AdditionalFillings.Any())
+                    {
+                        foreach (var additionalFillingId in productWithOptionsCount.AdditionalFillings)
+                        {
+                            var additionalFilling = orderDetails.GetAdditionalFilling(additionalFillingId);
+
+                            products.Add(additionalFilling.VendorCode);
+                            productCount.Add(productWithOptionsCount.Count);
+                            productPrice.Add(additionalFilling.Price);
+
+                            var modIndex = products.Count - 1; ;
+
+                            productMod.Add(modIndex, productIndex);
+                        }
+                    }
                 }
             }
 
@@ -133,6 +204,12 @@ namespace EasyStart.Logic.IntegrationSystem
                 postData.Append($"&product[{i}]={products[i]}");
                 postData.Append($"&product_kol[{i}]={productCount[i]}");
                 postData.Append($"&product_price[{i}]={productPrice[i]}");
+            }
+
+            if (productMod.Any())
+            {
+                foreach(var kv in productMod)
+                    postData.Append($"&product_mod[{kv.Key}]={kv.Value}");
             }
         }
 

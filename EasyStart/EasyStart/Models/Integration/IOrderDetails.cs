@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasyStart.Models.ProductOption;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,7 @@ namespace EasyStart.Models.Integration
         OrderModel GetOrder();
         ProductModel GetProduct(int id);
         string GetAreaDeliveryCode();
+        AdditionalFilling GetAdditionalFilling(int id);
+        AdditionOptionItem GetAdditionOptionItem(int id);
     }
 }
