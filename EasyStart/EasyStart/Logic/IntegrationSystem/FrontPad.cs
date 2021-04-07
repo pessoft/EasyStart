@@ -169,7 +169,7 @@ namespace EasyStart.Logic.IntegrationSystem
                             var additionalFilling = orderDetails.GetAdditionalFilling(additionalFillingId);
 
                             products.Add(additionalFilling.VendorCode);
-                            productCount.Add(1);
+                            productCount.Add(productWithOptionsCount.Count);
                             productPrice.Add(additionalFilling.Price);
 
                             var modIndex = products.Count - 1; ;
