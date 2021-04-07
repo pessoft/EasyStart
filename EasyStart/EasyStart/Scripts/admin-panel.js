@@ -2920,7 +2920,8 @@ class OrderDetailsData {
     }
 
     setPermissionsSendToIntegrationSystem(order) {
-        let allowedSendToIntegrationSystem = order.OrderStatus == OrderStatus.Processing
+        let allowedSendToIntegrationSystem = order.OrderStatus == OrderStatus.Processing &&
+            IntegerationSystemSetting.Type != IntegrationSystemType.withoutIntegration
 
         if (!order.IsSendToIntegrationSystem) {
             if (order.ProductCount && Object.keys(order.ProductCount).length > 0) {
@@ -2945,8 +2946,59 @@ class OrderDetailsData {
                 }
             }
 
-            allowedSendToIntegrationSystem = allowedSendToIntegrationSystem && !(order.ProductConstructorCount && order.ProductConstructorCount.length > 0)
-            allowedSendToIntegrationSystem = allowedSendToIntegrationSystem && !(order.ProductWithOptionsCount && order.ProductWithOptionsCount.length > 0)
+            if (allowedSendToIntegrationSystem && order.ProductWithOptionsCount && order.ProductWithOptionsCount.length) {
+                for (const productWithOption of order.ProductWithOptionsCount) {
+                    const product = OrderProducts[productWithOption.ProductId]
+
+                    let isFillingValid = true
+                    if (productWithOption.AdditionalFillings != null && productWithOption.AdditionalFillings.length) {
+                        for(const additionalFillingId of productWithOption.AdditionalFillings)
+                        {
+                            var additionalFilling = DataProduct.AdditionalFillings[additionalFillingId]
+                            if (!additionalFilling.VendorCode) {
+                                isFillingValid = false
+                                break
+                            }
+                        }
+                    }
+
+                    var isValidAdditionalOptions = true
+                    if (productWithOption.AdditionalOptions != null && Object.keys(productWithOption.AdditionalOptions).length) {
+                        var optionIds = Object.values(productWithOption.AdditionalOptions).sort((i1, i2) => i1 < i2 ? -1 : 1)
+                        var optionIdsStr = optionIds.join('-')
+
+                        if (product.AllowCombinationsVendorCode != null && Object.keys(product.AllowCombinationsVendorCode).length) {
+                            let combinationVendorCode = null
+                            for(const vCode in product.AllowCombinationsVendorCode)
+                            {
+                                var combinatationStre = [...product.AllowCombinationsVendorCode[vCode]].sort((i1, i2) => i1 < i2 ? -1 : 1).join('-')
+
+                                if (combinatationStre == optionIdsStr) {
+                                    combinationVendorCode = vCode
+                                    break
+                                }
+                            }
+
+                            isValidAdditionalOptions = !!combinationVendorCode
+                            if (!isValidAdditionalOptions || !isFillingValid) {
+                                allowedSendToIntegrationSystem = false
+                                break
+                            }
+                        }
+                        else {
+                            allowedSendToIntegrationSystem = false
+                            break
+                        }
+                    }
+                    else {
+                        if (!product.VendorCode || !isFillingValid) {
+                            allowedSendToIntegrationSystem = false
+                            break
+                        }
+                    }
+                }
+            }
+
             allowedSendToIntegrationSystem = allowedSendToIntegrationSystem && !(order.DiscountPercent != 0 && order.DiscountRuble !=0)
         } else
             allowedSendToIntegrationSystem = false

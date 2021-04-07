@@ -482,7 +482,7 @@ namespace EasyStart
                                 deliveryType = order.DeliveryType,
                                 orderNumber = orderId,
                                 approximateDeliveryTime = approximateDeliveryTime.HasValue ?
-                                    DateTime.Parse(approximateDeliveryTime.Value.ToString("yyyy-MM-dd HH:mm:ss")) :
+                                    TimeZoneInfo.ConvertTimeToUtc(approximateDeliveryTime.Value, TimeZoneInfo.FindSystemTimeZoneById(deliverSetting.ZoneId)) :
                                     approximateDeliveryTime
                             };
                             Task.Run(() =>
@@ -610,7 +610,7 @@ namespace EasyStart
                         deliveryType = order.DeliveryType,
                         orderNumber = numberOrder,
                         approximateDeliveryTime = order.ApproximateDeliveryTime.HasValue ?
-                            DateTime.Parse(order.ApproximateDeliveryTime.Value.ToString("yyyy-MM-dd HH:mm:ss")) :
+                           TimeZoneInfo.ConvertTimeToUtc(order.ApproximateDeliveryTime.Value, TimeZoneInfo.FindSystemTimeZoneById(deliverSetting.ZoneId)) :
                             order.ApproximateDeliveryTime
                     };
                     result.Success = true;
