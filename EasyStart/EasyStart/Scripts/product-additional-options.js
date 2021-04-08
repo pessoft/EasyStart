@@ -87,6 +87,7 @@ function addDataAdditionalOptionsInDialog(additionalOption) {
 
         const templateRow = `
         <div class="additional-option-item" id="${row.Id}">
+            <input type="hidden" value="${row.Id}" class="additional-option-item-id">
             <div class="additional-option-name">
                 <input type="text" class="default-color default-style-input" placeholder="Название" value="${row.Name}">
             </div>
@@ -127,6 +128,7 @@ function addRowAdditionalOptionsInDialog(event) {
     const isEmptyContainer = $containerProps.find('.empty-container').length != 0
     const templateRow = `
         <div class="additional-option-item" id="${tmpId}">
+            <input type="hidden" value="0" class="additional-option-item-id">
             <div class="additional-option-name">
                 <input type="text" class="default-color default-style-input" placeholder="Название">
             </div>
@@ -212,6 +214,7 @@ function doneAdditionalOption() {
     /**
      * 
      * item = {
+     *  id: number,
      *  name: string,
      *  additionalInfo: float
      *  price: float,
@@ -221,6 +224,7 @@ function doneAdditionalOption() {
     let additionOptionItems = []
     $containerProps.find('.additional-option-item').each(function () {
         const $e = $(this)
+        const id = parseInt($e.find('input.additional-option-item-id').val())
         const name = $e.find('.additional-option-name input').val().trim()
         const additionalInfo = parseFloat($e.find('.additional-option-value input').val())
         const price = parseFloat($e.find('.additional-option-price input').val())
@@ -236,7 +240,7 @@ function doneAdditionalOption() {
             return
         }
 
-        additionOptionItems.push({ name, additionalInfo, price, isDefault })
+        additionOptionItems.push({ id, name, additionalInfo, price, isDefault })
     })
 
     let additionalOption = {
