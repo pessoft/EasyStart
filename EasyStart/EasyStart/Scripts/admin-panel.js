@@ -504,8 +504,8 @@ function loadAnalyticsReport() {
 
     new CountOrderReport(containerId, currentBrunchId, URLAnalytics)
     new RevenueReport(containerId, currentBrunchId, URLAnalytics)
-    new Top5Categories(containerId, currentBrunchId, URLAnalytics)
-    new Top5Products(containerId, currentBrunchId, URLAnalytics)
+    //new Top5Categories(containerId, currentBrunchId, URLAnalytics)
+    //new Top5Products(containerId, currentBrunchId, URLAnalytics)
     new DeliveryMethod(containerId, currentBrunchId, URLAnalytics)
     new NewUsersReport(containerId, currentBrunchId, URLAnalytics)
     new ActiveUsersReport(containerId, currentBrunchId, URLAnalytics)
