@@ -1436,6 +1436,7 @@ namespace EasyStart.Logic
                     result.ProductAdditionalFillingIds = product.ProductAdditionalFillingIds;
                     result.AllowCombinationsJSON = product.AllowCombinationsJSON;
                     result.VendorCode = product.VendorCode;
+                    result.AllowCombinationsVendorCodeJSON = product.AllowCombinationsVendorCodeJSON;
 
                     db.SaveChanges();
 
@@ -3971,6 +3972,7 @@ namespace EasyStart.Logic
 
                         value.Name = additionalFilling.Name;
                         value.Price = additionalFilling.Price;
+                        value.VendorCode = additionalFilling.VendorCode;
                     }
                     else
                         value = db.AdditionalFillings.Add(additionalFilling);

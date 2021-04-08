@@ -278,6 +278,7 @@ function saveAdditionalOption(additionalOption, callbackAfterSave) {
             if (ProductAdditionalOptions.findIndex(p => p == data.Data.Id) == -1) {
                 ProductAdditionalOptions.push(data.Data.Id)
                 ProductAllowCombinationsAdditionalOptions = []
+                ProductVendorCodeAllowCombinationsAdditionalOptions = {}
             }
 
             DataProduct.AdditionalOptions[data.Data.Id] = data.Data
@@ -332,6 +333,7 @@ function removeAdditionalOptionFromProduct(event, additionalOptionId) {
     if (i != -1) {
         ProductAdditionalOptions.splice(i, 1)
         ProductAllowCombinationsAdditionalOptions = []
+        ProductVendorCodeAllowCombinationsAdditionalOptions = {}
 
         renderAdditionalOptionFromProduct()
     }
@@ -349,6 +351,7 @@ function changeOrderProductAdditionalOption() {
 
     ProductAdditionalOptions = newProductAdditionalOptions
     ProductAllowCombinationsAdditionalOptions = []
+    ProductVendorCodeAllowCombinationsAdditionalOptions = {}
 }
 
 function renderAdditionalExistingOptions() {
@@ -392,6 +395,7 @@ function complitedSelectionExistingOptions() {
         const id = parseInt($(this).val())
         ProductAdditionalOptions.push(id)
         ProductAllowCombinationsAdditionalOptions = []
+        ProductVendorCodeAllowCombinationsAdditionalOptions = {}
     })
 
     renderAdditionalOptionFromProduct()
@@ -415,6 +419,7 @@ function removeExistingOption(event, id) {
                 if (i != -1) {
                     ProductAdditionalOptions.splice(i, 1)
                     ProductAllowCombinationsAdditionalOptions = []
+                    ProductVendorCodeAllowCombinationsAdditionalOptions = {}
                     renderAdditionalOptionFromProduct()
                 }
 
@@ -447,6 +452,7 @@ function cleanAdditionalFillingInputs() {
     $('#additional-filling-id').val(-1)
     $('#additional-filling-name').val('')
     $('#additional-filling-price').val('')
+    $('#additional-filling-vendor-code').val('')
 }
 
 function editAdditionalFilling(id) {
@@ -455,6 +461,7 @@ function editAdditionalFilling(id) {
     $('#additional-filling-id').val(data.Id)
     $('#additional-filling-name').val(data.Name)
     $('#additional-filling-price').val(data.Price)
+    $('#additional-filling-vendor-code').val(data.VendorCode)
 }
 
 function doneEditAdditionalFilling(event) {
@@ -464,6 +471,7 @@ function doneEditAdditionalFilling(event) {
         Id: parseInt($('#additional-filling-id').val()),
         Name: $('#additional-filling-name').val().trim(),
         Price: parseFloat($('#additional-filling-price').val()),
+        VendorCode: $('#additional-filling-vendor-code').val(),
     }
 
     if (!additionalFilling.Name ||
@@ -656,11 +664,20 @@ function closeSettingCombinationsAdditionalOptions() {
     const $onlyCheckdCombinationItems = $combinationItems.find('input[type=checkbox]:checked')
 
     ProductAllowCombinationsAdditionalOptions = []
-    if ($combinationItems.length != $onlyCheckdCombinationItems.length) {
-        $onlyCheckdCombinationItems.each(function () {
-            const allowCombination = JSON.parse($(this).val())
+    ProductVendorCodeAllowCombinationsAdditionalOptions = {}
 
-            ProductAllowCombinationsAdditionalOptions.push(allowCombination)
+    if ($combinationItems.length != 0) {
+        $combinationItems.each(function () {
+            const $cbx = $(this).find('input[type=checkbox]')
+            const allowCombination = JSON.parse($cbx.val())
+
+            if ($cbx.is(':checked')) {
+                ProductAllowCombinationsAdditionalOptions.push(allowCombination)
+            }
+
+            const vendorCode = $(this).find('.combination-vendor input').val()
+            const allowCombinationSort = [...allowCombination].sort((i1, i2) => i1 < i2 ? -1 : 1)
+            ProductVendorCodeAllowCombinationsAdditionalOptions[vendorCode] = allowCombinationSort
         })
     }
 
@@ -689,6 +706,24 @@ function renderCombinationsAdditonalOptions() {
     $('#combinationsAdditionalOptionsDialog .functions-additional').html(templates)
 }
 
+function getVendorCodeAdditionalOption(ids) {
+    if (!ProductVendorCodeAllowCombinationsAdditionalOptions ||
+        Object.keys(ProductVendorCodeAllowCombinationsAdditionalOptions).length == 0 ||
+        ids == null ||
+        ids.length == 0)
+        return ''
+
+    const idsStr = ids.join('-')
+    for (const vendorCode in ProductVendorCodeAllowCombinationsAdditionalOptions) {
+        var combinationStr = ProductVendorCodeAllowCombinationsAdditionalOptions[vendorCode].join('-')
+
+        if (combinationStr == idsStr)
+            return vendorCode
+    }
+
+    return ''
+}
+
 function getTepmlateCombinationAdditionalOption(combination, defaultCombinationJson) {
     const label = combination.map(p => p.Name).join(', ')
     const ids = combination.map(p => p.Id)
@@ -697,7 +732,8 @@ function getTepmlateCombinationAdditionalOption(combination, defaultCombinationJ
     const isDisabled = idsJson == defaultCombinationJson
     const isDisabledInput = isDisabled ? 'disabled' : ''
     const clickEvent = isDisabled ? '' : 'toggleCheckbox(event, this)'
-
+    const idsSort = [...ids].sort((i1, i2) => i1 < i2 ? -1 : 1)
+    let vendorCode = getVendorCodeAdditionalOption(idsSort)
     if (ProductAllowCombinationsAdditionalOptions.length > 0) {
         for (const allowCombination of ProductAllowCombinationsAdditionalOptions) {
             const allowCombinationJson = JSON.stringify(allowCombination)
@@ -710,9 +746,14 @@ function getTepmlateCombinationAdditionalOption(combination, defaultCombinationJ
     }
 
     const template = `
-        <div class="combination-additional-option-item" onclick="${clickEvent}">
-            <input type="checkbox" value="${idsJson}" ${isChecked} ${isDisabledInput}>
-            <span>${label}</span>
+        <div class="combination-additional-option-item">
+            <div class="combination-item"onclick="${clickEvent}">
+                <input type="checkbox" value="${idsJson}" ${isChecked} ${isDisabledInput}>
+                <span>${label}</span>
+            </div>
+            <div class="combination-vendor">
+                <input type="text" class="additional-option-vendor default-color default-style-input" placeholder="Артикул" value="${vendorCode}">
+            </div>
         </div>`
 
     return template

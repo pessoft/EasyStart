@@ -2,6 +2,7 @@
 using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
 using EasyStart.Models;
 using EasyStart.Models.Integration;
+using EasyStart.Models.ProductOption;
 using EasyStart.Repositories;
 using EasyStart.Services;
 using EasyStart.Utils;
@@ -43,7 +44,16 @@ namespace EasyStart.Logic.OrderProcessor
             orderService = new OrderService(orderRepository);
 
             var productRepository = new ProductRepository(context);
-            productService = new ProductService(productRepository);
+            var additionalFillingRepository = new AdditionalFillingRepository(context);
+            var additionOptionItemRepository = new AdditionOptionItemRepository(context);
+            var productAdditionalFillingRepository = new DefaultRepository<ProductAdditionalFillingModal>(context);
+            var productAdditionOptionItemRepository = new DefaultRepository<ProductAdditionalOptionModal>(context);
+            productService = new ProductService(
+                productRepository,
+                additionalFillingRepository,
+                additionOptionItemRepository,
+                productAdditionalFillingRepository,
+                productAdditionOptionItemRepository);
 
             var deliverySettingRepository = new DeliverySettingRepository(context);
             var areaDeliveryRepository = new AreaDeliveryRepository(context);
@@ -51,6 +61,15 @@ namespace EasyStart.Logic.OrderProcessor
 
             var fCMDeviceRepository = new FCMDeviceRepository(context);
             pushNotificationService = new PushNotificationService(fCMDeviceRepository, fcmAuthKeyPath);
+        }
+
+        public void ChangeIntegrationStatus(int orderId, IntegrationOrderStatus status)
+        {
+            var order = orderService.Get(orderId);
+            var deliverSetting = deliverySettingService.GetByBranchId(order.BranchId);
+            var dateUpdate = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
+
+            orderService.ChangeIntegrationStatus(orderId, status, dateUpdate);
         }
 
         public void ChangeOrderStatus(UpdaterOrderStatus payload)
@@ -96,10 +115,17 @@ namespace EasyStart.Logic.OrderProcessor
 
                 if(!IsValidOrderDiscount(order))
                     newOrderResult = new NewOrderResult("Discount persent and discount ruble no supported integraion system");
-                else if (IsProductsValidForIntegrationSystem(products))
+                else if (IsProductsValidForIntegrationSystem(products, order))
                 {
                     var deliverySetting = deliverySettingService.GetByBranchId(order.BranchId);
-                    var orderDetails = new OrderDetails(order, products, deliverySetting.AreaDeliveries);
+                    var additionalFillings = productService.GetAdditionalFillingsByBranchId(order.BranchId);
+                    var additionOptionItems = productService.GetAdditionOptionItemByBranchId(order.BranchId);
+                    var orderDetails = new OrderDetails(
+                        order,
+                        products,
+                        additionalFillings,
+                        additionOptionItems,
+                        deliverySetting.AreaDeliveries);
                     newOrderResult = integrationSystemService.SendOrder(
                         orderDetails,
                         new IntegrationSystemFactory());
@@ -113,16 +139,67 @@ namespace EasyStart.Logic.OrderProcessor
             return newOrderResult;
         }
 
-        private bool IsProductsValidForIntegrationSystem(List<ProductModel> products)
+        private bool IsProductsValidForIntegrationSystem(
+            List<ProductModel> products,
+            OrderModel order)
         {
             if (products == null || !products.Any())
                 return false;
 
+            var additionalFillings = productService.GetAdditionalFillingsByBranchId(order.BranchId).ToDictionary(p => p.Id);
             foreach (var product in products)
             {
-                if (string.IsNullOrEmpty(product.VendorCode)
-                    || product.ProductAdditionalFillingIds != null && product.ProductAdditionalFillingIds.Any()
+                if (product.ProductAdditionalFillingIds != null && product.ProductAdditionalFillingIds.Any()
                     || product.ProductAdditionalOptionIds != null && product.ProductAdditionalOptionIds.Any())
+                {
+                    var productWithOptions = order.ProductWithOptionsCount.FirstOrDefault(p => p.ProductId == product.Id);
+                    var isFillingValid = true;
+                    if (productWithOptions.AdditionalFillings != null && productWithOptions.AdditionalFillings.Any())
+                    {
+                        foreach (var additionalFillingId in productWithOptions.AdditionalFillings)
+                        {
+                            var additionalFilling = additionalFillings[additionalFillingId];
+                            if (string.IsNullOrEmpty(additionalFilling.VendorCode))
+                            {
+                                isFillingValid = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    var isValidAdditionalOptions = true;
+                    if (productWithOptions.AdditionalOptions != null && productWithOptions.AdditionalOptions.Any())
+                    {
+                        var optionIds = productWithOptions.AdditionalOptions.Values.OrderBy(p => p).ToArray();
+                        var optionIdsStr = string.Join("-", optionIds);
+
+                        if (product.AllowCombinationsVendorCode != null && product.AllowCombinationsVendorCode.Any())
+                        {
+                            string combinationVendorCode = null;
+                            foreach (var kv in product.AllowCombinationsVendorCode)
+                            {
+                                var combinatationStre = string.Join("-", kv.Value.OrderBy(p => p));
+
+                                if (combinatationStre == optionIdsStr)
+                                {
+                                    combinationVendorCode = kv.Key;
+                                    break;
+                                }
+                            }
+
+                            isValidAdditionalOptions = !string.IsNullOrEmpty(combinationVendorCode);
+                            if (!isValidAdditionalOptions || !isFillingValid)
+                                return false;
+                        }
+                        else
+                            return false;
+                    }
+                    else
+                    {
+                        if (string.IsNullOrEmpty(product.VendorCode) || !isFillingValid)
+                            return false;
+                    }
+                } else if (string.IsNullOrEmpty(product.VendorCode))
                     return false;
             }
 
@@ -136,10 +213,10 @@ namespace EasyStart.Logic.OrderProcessor
 
         public TimeSpan GetAverageOrderProcessingTime(int branchId, DeliveryType deliveryType)
         {
-            var minTimeProcessingOrder = deliverySettingService.GetByBranchId(branchId);
-            var defaultOrderProessingTime = TimeSpan.Parse(minTimeProcessingOrder.MinTimeProcessingOrder);
+            var deliverySetting = deliverySettingService.GetByBranchId(branchId);
+            var defaultOrderProessingTime = TimeSpan.Parse(deliverySetting.MinTimeProcessingOrder);
 
-            return orderService.GetAverageOrderProcessingTime(branchId, deliveryType, defaultOrderProessingTime);
+            return orderService.GetAverageOrderProcessingTime(branchId, deliveryType, defaultOrderProessingTime, deliverySetting.ZoneId);
         }
     }
 }

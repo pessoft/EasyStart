@@ -15,6 +15,7 @@ using System.Web.Mvc;
 using ExcelDataReader;
 using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
 using EasyStart.Logic.OrderProcessor;
+using EasyStart.Models.ProductOption;
 
 namespace EasyStart.Controllers
 {
@@ -41,7 +42,16 @@ namespace EasyStart.Controllers
             orderService = new OrderService(orderRepository);
 
             var productRepository = new ProductRepository(context);
-            productService = new ProductService(productRepository);
+            var additionalFillingRepository = new AdditionalFillingRepository(context);
+            var additionOptionItemRepository = new AdditionOptionItemRepository(context);
+            var productAdditionalFillingRepository = new DefaultRepository<ProductAdditionalFillingModal>(context);
+            var productAdditionOptionItemRepository = new DefaultRepository<ProductAdditionalOptionModal>(context);
+            productService = new ProductService(
+                productRepository,
+                additionalFillingRepository,
+                additionOptionItemRepository,
+                productAdditionalFillingRepository,
+                productAdditionOptionItemRepository);
 
             var clientRepository = new ClientRepository(context);
             clientService = new ClientService(clientRepository);
