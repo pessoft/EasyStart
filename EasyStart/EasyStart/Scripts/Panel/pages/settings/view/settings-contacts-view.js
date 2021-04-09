@@ -23,7 +23,7 @@
     renderAddress() {
         const template = `
             <div class="row">
-                <h5 class="mb-3">Адрес</h5>  
+                <h6 class="mb-3">Адрес</h6>  
                 <div class="col-md-4  mb-4">
                    <select label="Город" multiple>
                         <option>Москва</option>
@@ -56,7 +56,7 @@
     renderContacts() {
         const template = `
             <div class="row">
-                <h5 class="mb-3">Контакты</h5>
+                <h6 class="mb-3">Контакты</h6>
                 <div class="col-md-4 mb-4">
                     <div class="form-outline">
                       <input type="tel" id="contacts-phone-number-primary" class="form-control" />
@@ -83,7 +83,7 @@
     renerSocialNetworks() {
         const template = `
             <div class="row">
-                <h5 class="mb-3">Соц.сети</h5>
+                <h6 class="mb-3">Соц.сети</h6>
                 <div class="col-md-4 mb-4">
                     <div class="form-outline">
                       <input type="url" id="contacts-social-vk" class="form-control" />
