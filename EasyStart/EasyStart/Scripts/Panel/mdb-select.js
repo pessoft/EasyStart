@@ -7,6 +7,7 @@
         this.dropdownContainerId = `dropdown-container-${this.id}`
         this.options = {
             height: 190, // max height
+            optionHeight: 38,
             ...options,
             multiple: this.cloneElement.multiple
         }
@@ -161,8 +162,10 @@
         const cbxTemplate = this.options.multiple ? `<input type="checkbox" class="form-check-input">` : ''
         for (let i = 0; i < options.length; ++i) {
             const item = options.item(i)
+            const selected = item.selected ? 'selected active' : ''
+            const disabled = item.disabled ? 'disabled' : ''
             const template = `
-                <div class="mdb-select-option" role="option"style="height: 38px;" selected="true">
+                <div class="mdb-select-option ${selected} ${disabled}" style="height: ${this.options.optionHeight}px;">
                     <span class="mdb-select-option-text">${cbxTemplate}${item.text}</span>
                 </div>
             `
