@@ -17,7 +17,11 @@
         wrapSelect: 'mdb-select-wrapper',
         initializedSelect: 'mdb-select-initialized',
         dropdownOpen: 'open',
-        dropDownContainer: 'mdb-select-dropdown-container'
+        dropDownContainer: 'mdb-select-dropdown-container',
+        selectInput: 'mdb-select-input',
+        selectOption: 'mdb-select-option',
+        focused: 'focused',
+        activeLabel: 'active',
     }
 
     init() {
@@ -34,28 +38,30 @@
     }
 
     getControlTemplate() {
+        const multiple = this.options.multiple ? 'multiple' : ''
+        const iputId = this.generateId(6)
         return `
-            <div id="${this.id}" class="${this.storeCssClass.wrapSelect}">
+            <div id="${this.id}" class="${this.storeCssClass.wrapSelect}" ${multiple}>
                 <div class="form-outline">
-                    ${this.getImitationSelect()}
-                    ${this.getLabel()}
+                    ${this.getImitationSelect(iputId)}
+                    ${this.getLabel(iputId)}
                     <span class="mdb-select-arrow"></span>
                 </div>
             </div>`
     }
 
-    getImitationSelect() {
+    getImitationSelect(id) {
         const placeholder = this.cloneElement.getAttribute('placeholder') || ''
         const disabled = this.cloneElement.disabled ? 'disabled' : ''
-        const inputTemplate = `<input ${disabled} type="text" readonly class="form-control mdb-select-input" placeholder="${placeholder}"/>`
+        const inputTemplate = `<input id="${id}" ${disabled} type="text" readonly class="form-control ${this.storeCssClass.selectInput}" placeholder="${placeholder}"/>`
 
         return inputTemplate
     }
 
-    getLabel() {
+    getLabel(forId) {
         const label = this.cloneElement.getAttribute('label')
         const labelTemplate = label ?
-            `<label class="form-label" for="address-street">${label}</label>` :
+            `<label class="form-label mdb-select-label" for="${forId}">${label}</label>` :
             ''
 
         return labelTemplate
@@ -81,12 +87,19 @@
     initCloseEvent() {
         const selectCloseHandlerName = `selectCloseHandler${this.id}`
         this[selectCloseHandlerName] = event => {
-            const select = document.getElementById(this.dropdownId)
+            const select = document.getElementById(this.id)
+            const input = select.querySelector('input')
+            input.classList.remove(this.storeCssClass.focused)
 
-            if (!select)
+            const label = select.querySelector('label')
+            label.classList.remove(this.storeCssClass.activeLabel)
+
+            const dropDownList = document.getElementById(this.dropdownId)
+
+            if (!dropDownList)
                 return
 
-            select.classList.remove(this.storeCssClass.dropdownOpen)
+            dropDownList.classList.remove(this.storeCssClass.dropdownOpen)
 
             const removeActionAfterAnimationClose = () => {
                 const selectContainer = document.getElementById(this.dropdownContainerId)
@@ -99,8 +112,66 @@
         document.addEventListener('click', this[selectCloseHandlerName])
     }
 
+    initSelectedOptionEvent() {
+        const select = document.getElementById(this.id)
+        const dropdownList = document.getElementById(this.dropdownId)
+        const isMultiple = select.hasAttribute('multiple')
+        const selectedHandler = isMultiple ? this.selectedMultipleOptionHandler : this.selectedOptionHandler
+        const options = dropdownList.querySelectorAll(`.${this.storeCssClass.selectOption}`)
+
+        dropdownList.addEventListener('click', selectedHandler)
+        //options.forEach(p => p.addEventListener('click', selectedHandler))
+    }
+
+    getTargetOptionClick = e => {
+        let isOptionClick = e.classList.contains(this.storeCssClass.selectOption)
+        let targetElem = isOptionClick ? e : null
+
+        if (!isOptionClick) {
+            const parent = e.closest(`.${this.storeCssClass.selectOption}`)
+            isOptionClick = parent != null
+            targetElem = parent
+        }
+
+        return targetElem
+    }
+
+    selectedOptionHandler = event => {
+        const el = this.getTargetOptionClick(event.target)
+
+        if (el && el.classList.contains('disabled') || !el) {
+            event.stopPropagation()
+            return
+        }
+
+        const value = el.getAttribute('value')
+    }
+
+    selectedMultipleOptionHandler = event => {
+        event.stopPropagation()
+
+        const el = this.getTargetOptionClick(event.target)
+        if (el && el.classList.contains('disabled') || !el)
+            return
+
+        const value = el.getAttribute('value')
+    }
+
     selectOpenHandler = event => {
         event.stopPropagation()
+
+        const dropDownList = document.getElementById(this.dropdownId)
+        if (dropDownList) {
+            //document.body.click()
+            return
+        }
+
+        const select = document.getElementById(this.id)
+        const input = select.querySelector('input')
+        input.classList.add(this.storeCssClass.focused)
+
+        const label = select.querySelector('label')
+        label.classList.add(this.storeCssClass.activeLabel)
 
         const width = event.currentTarget.offsetWidth
         const windowCoordinates = event.currentTarget.getBoundingClientRect()
@@ -119,6 +190,7 @@
     showSelectDropdown(coordinates) {
         const dropdown = this.getSelectContainer(coordinates)
         document.body.appendChild(dropdown)
+        this.initSelectedOptionEvent()
 
         setTimeout(this.openDropdown, 50)
     }
@@ -159,13 +231,14 @@
     getOptionsList() {
         let optionsTemplate = ''
         const options = this.cloneElement.options
-        const cbxTemplate = this.options.multiple ? `<input type="checkbox" class="form-check-input">` : ''
+
         for (let i = 0; i < options.length; ++i) {
             const item = options.item(i)
             const selected = item.selected ? 'selected active' : ''
             const disabled = item.disabled ? 'disabled' : ''
+            const cbxTemplate = this.options.multiple ? `<input type="checkbox" class="form-check-input" ${disabled}>` : ''
             const template = `
-                <div class="mdb-select-option ${selected} ${disabled}" style="height: ${this.options.optionHeight}px;">
+                <div class="${this.storeCssClass.selectOption} ${selected} ${disabled}" style="height: ${this.options.optionHeight}px;" value="${item.value}">
                     <span class="mdb-select-option-text">${cbxTemplate}${item.text}</span>
                 </div>
             `

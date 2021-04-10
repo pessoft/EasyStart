@@ -14,21 +14,21 @@ div.mdb-select-wrapper {
     top: 9px;
 }
 
-.mdb-select-arrow::before {
-    content: "▼";
-}
+    .mdb-select-arrow::before {
+        content: "▼";
+    }
 
 .mdb-select-input {
     cursor: pointer;
 }
 
-.mdb-select-input:focus ~ .mdb-select-arrow {
-    color: #4285f4;
-}
+    .mdb-select-input:focus ~ .mdb-select-arrow {
+        color: #4285f4;
+    }
 
-.mdb-select-input.form-control[readonly]:not([disabled]) {
-    background-color: transparent;
-}
+    .mdb-select-input.form-control[readonly]:not([disabled]) {
+        background-color: transparent;
+    }
 
 .mdb-select-dropdown-container {
     z-index: 1050;
@@ -100,10 +100,10 @@ div.mdb-select-wrapper {
     user-select: none;
 }
 
-.mdb-select-option.disabled {
-    cursor: default;
-    color: #9e9e9e;
-}
+    .mdb-select-option.disabled {
+        cursor: default;
+        color: #9e9e9e;
+    }
 
 .mdb-select-option-text .form-check-input {
     margin-right: 10px;
@@ -125,4 +125,99 @@ div.mdb-select-wrapper {
     height: 50px;
     background-color: #999;
     border-radius: 4px
+}
+
+
+.mdb-select-label {
+    max-width: 80%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+
+    .mdb-select-label.active {
+        -webkit-transform: translateY(-1rem) translateY(.1rem) scale(.8);
+        transform: translateY(-1rem) translateY(.1rem) scale(.8)
+    }
+
+.form-control-lg ~ .mdb-select-label.active {
+    -webkit-transform: translateY(-1.25rem) translateY(.1rem) scale(.8);
+    transform: translateY(-1.25rem) translateY(.1rem) scale(.8)
+}
+
+.form-control-sm ~ .mdb-select-label.active {
+    -webkit-transform: translateY(-.83rem) translateY(.1rem) scale(.8);
+    transform: translateY(-.83rem) translateY(.1rem) scale(.8)
+}
+
+.form-outline .mdb-select-label.active ~ .form-notch .form-notch-middle {
+    border-top: none;
+    border-right: none;
+    border-left: none
+}
+
+.form-outline .mdb-select-input.focused {
+    color: #616161;
+    outline: 0
+}
+
+    .form-outline .mdb-select-input.focused ~ .mdb-select-arrow {
+        color: #4285f4;
+    }
+
+    .form-outline .mdb-select-input.focused ~ .mdb-select-label{
+        color: #1266f1
+    }
+
+    .form-outline .mdb-select-input.focused::-webkit-input-placeholder {
+        opacity: 1
+    }
+
+    .form-outline .mdb-select-input.focused::-moz-placeholder {
+        opacity: 1
+    }
+
+    .form-outline .mdb-select-input.focused:-ms-input-placeholder {
+        opacity: 1
+    }
+
+    .form-outline .mdb-select-input.focused::-ms-input-placeholder {
+        opacity: 1
+    }
+
+.form-outline .form-outline mdb-select-input.focused::placeholder {
+    opacity: 1
+}
+
+.form-outline .mdb-select-input.focused ~ .form-notch .form-notch-leading {
+    border-top: 2px solid #1266f1;
+    border-bottom: 2px solid #1266f1;
+    border-left: 2px solid #1266f1;
+    -webkit-transition: all .2s linear;
+    transition: all .2s linear
+}
+
+.form-outline .mdb-select-input.focused ~ .form-notch .form-notch-middle {
+    border-bottom: 2px solid;
+    border-color: #1266f1;
+    -webkit-transition: all .2s linear;
+    transition: all .2s linear
+}
+
+.form-outline .mdb-select-input.focused ~ .form-notch .form-notch-trailing {
+    border-color: currentcolor currentcolor currentcolor #1266f1;
+    border-bottom: 2px solid #1266f1;
+    border-right: 2px solid #1266f1;
+    border-top: 2px solid #1266f1;
+    -webkit-transition: all .2s linear;
+    transition: all .2s linear
+}
+
+.form-outline .mdb-select-input.focused ~ .select-arrow {
+    color: #4285f4
+}
+
+.form-outline .mdb-select-label.active {
+    -webkit-transform: translateY(-1rem) translateY(.1rem) scale(.8);
+    transform: translateY(-1rem) translateY(.1rem) scale(.8);
 }
