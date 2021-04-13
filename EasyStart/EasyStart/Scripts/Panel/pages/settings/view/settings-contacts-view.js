@@ -25,7 +25,7 @@
             <div class="row">
                 <h6 class="mb-3">Адрес</h6>  
                 <div class="col-md-4  mb-4">
-                   <select label="Город" multiple>
+                   <select label="Город">
                         <option value="0" disabled selected>Выберите город</option>
                         <option value="1">Москва</option>
                         <option value="2">Краснодар</option>

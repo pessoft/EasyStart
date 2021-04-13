@@ -5,6 +5,8 @@
         this.id = `${this.storeCssClass.wrapSelect}-${this.generateId(6)}`
         this.dropdownId = `dropdown-${this.id}`
         this.dropdownContainerId = `dropdown-container-${this.id}`
+        this.inputSelectId = this.generateId(6)
+        this.inputSelectWrapperId = this.generateId(6)
         this.options = {
             height: 190, // max height
             optionHeight: 38,
@@ -22,6 +24,7 @@
         selectOption: 'mdb-select-option',
         focused: 'focused',
         activeLabel: 'active',
+        selectedOption: 'selected'
     }
 
     init() {
@@ -42,35 +45,51 @@
         const iputId = this.generateId(6)
         return `
             <div id="${this.id}" class="${this.storeCssClass.wrapSelect}" ${multiple}>
-                <div class="form-outline">
-                    ${this.getImitationSelect(iputId)}
-                    ${this.getLabel(iputId)}
+                <div id="${this.inputSelectWrapperId}" class="form-outline">
+                    ${this.getImitationSelect()}
+                    ${this.getLabel()}
                     <span class="mdb-select-arrow"></span>
                 </div>
             </div>`
     }
 
-    getImitationSelect(id) {
+    getImitationSelect() {
         const placeholder = this.cloneElement.getAttribute('placeholder') || ''
         const disabled = this.cloneElement.disabled ? 'disabled' : ''
-        const inputTemplate = `<input id="${id}" ${disabled} type="text" readonly class="form-control ${this.storeCssClass.selectInput}" placeholder="${placeholder}"/>`
+        const value = [...this.cloneElement.querySelectorAll('option')].
+            filter(p => p.selected).
+            map(p => p.text).
+            join(', ')
+
+        const inputTemplate = `
+            <input id="${this.inputSelectId}" ${disabled}
+                type="text"
+                readonly
+                value="${value}"
+                class="form-control
+                ${this.storeCssClass.selectInput}"
+                placeholder="${placeholder}"/>`
 
         return inputTemplate
     }
 
-    getLabel(forId) {
+    getLabel() {
         const label = this.cloneElement.getAttribute('label')
         const labelTemplate = label ?
-            `<label class="form-label mdb-select-label" for="${forId}">${label}</label>` :
+            `<label class="form-label mdb-select-label" for="${this.inputSelectId}">${label}</label>` :
             ''
 
         return labelTemplate
     }
 
-    initInput() {
-        document.querySelectorAll(`#${this.id} .form-outline`).forEach(formOutline => {
-            new mdb.Input(formOutline).init()
-        })
+    initInput = () => {
+        const input = document.getElementById(this.inputSelectWrapperId)
+        new mdb.Input(input).init()
+    }
+
+    updateInput = () => {
+        const input = document.getElementById(this.inputSelectWrapperId)
+        new mdb.Input(input).init()
     }
 
     initEvents() {
@@ -113,14 +132,8 @@
     }
 
     initSelectedOptionEvent() {
-        const select = document.getElementById(this.id)
         const dropdownList = document.getElementById(this.dropdownId)
-        const isMultiple = select.hasAttribute('multiple')
-        const selectedHandler = isMultiple ? this.selectedMultipleOptionHandler : this.selectedOptionHandler
-        const options = dropdownList.querySelectorAll(`.${this.storeCssClass.selectOption}`)
-
-        dropdownList.addEventListener('click', selectedHandler)
-        //options.forEach(p => p.addEventListener('click', selectedHandler))
+        dropdownList.addEventListener('click', this.selectedOptionHandler)
     }
 
     getTargetOptionClick = e => {
@@ -137,24 +150,54 @@
     }
 
     selectedOptionHandler = event => {
-        const el = this.getTargetOptionClick(event.target)
+        if (this.options.multiple)
+            event.stopPropagation()
 
+        const el = this.getTargetOptionClick(event.target)
         if (el && el.classList.contains('disabled') || !el) {
             event.stopPropagation()
             return
         }
 
         const value = el.getAttribute('value')
-    }
+        const originOption = this.cloneElement.querySelector(`option[value='${value}']`)
+        const isOriginSelected = originOption.selected
 
-    selectedMultipleOptionHandler = event => {
-        event.stopPropagation()
+        if (this.options.multiple)
+            originOption.selected = !isOriginSelected
+        else
+            originOption.selected = true
 
-        const el = this.getTargetOptionClick(event.target)
-        if (el && el.classList.contains('disabled') || !el)
-            return
+        const toggleCheckedCbxMultiple = checked => el.querySelector('input[type=checkbox]').checked = checked
+        if (isOriginSelected) {
+            el.classList.remove(this.storeCssClass.selectedOption)
+            this.options.multiple && toggleCheckedCbxMultiple(false)
+        } else {
+            el.classList.add(this.storeCssClass.selectedOption)
+            this.options.multiple && toggleCheckedCbxMultiple(true)
+        }
 
-        const value = el.getAttribute('value')
+        const updateInputSelectValue = oldValue => {
+            if (!this.options.multiple)
+                return originOption.text
+
+            const values = oldValue.split(',').map(p => p.trim()).filter(p => !!p)
+
+            if (isOriginSelected) {
+                const index = values.findIndex(p => p == originOption.text)
+
+                if (index != -1)
+                    values.splice(index, 1)
+            } else {
+                values.push(originOption.text)
+            }
+
+            return values.join(', ')
+        }
+
+        const inputSelect = document.getElementById(this.inputSelectId)
+        inputSelect.value = updateInputSelectValue(inputSelect.value)
+        this.updateInput()
     }
 
     selectOpenHandler = event => {
@@ -162,7 +205,7 @@
 
         const dropDownList = document.getElementById(this.dropdownId)
         if (dropDownList) {
-            //document.body.click()
+            document.body.click()
             return
         }
 
@@ -234,9 +277,10 @@
 
         for (let i = 0; i < options.length; ++i) {
             const item = options.item(i)
-            const selected = item.selected ? 'selected active' : ''
+            const selected = item.selected ? `${this.storeCssClass.selectedOption}` : ''
+            const checked = item.selected ? 'checked' : ''
             const disabled = item.disabled ? 'disabled' : ''
-            const cbxTemplate = this.options.multiple ? `<input type="checkbox" class="form-check-input" ${disabled}>` : ''
+            const cbxTemplate = this.options.multiple ? `<input type="checkbox" class="form-check-input" ${disabled} ${checked}>` : ''
             const template = `
                 <div class="${this.storeCssClass.selectOption} ${selected} ${disabled}" style="height: ${this.options.optionHeight}px;" value="${item.value}">
                     <span class="mdb-select-option-text">${cbxTemplate}${item.text}</span>
