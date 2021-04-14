@@ -267,16 +267,44 @@
     }
 
     getOptionsWrapper(height) {
-        const optionsListTemplate = this.getOptionsList()
-        const template = `<div class="mdb-select-options-wrapper" style="max-height: ${height}px;">${optionsListTemplate}</div>`
+        const content = this.getOptionsWrapperContent()
+        const template = `<div class="mdb-select-options-wrapper" style="max-height: ${height}px;">${content}</div>`
 
         return template
     }
 
-    getOptionsList() {
-        let optionsTemplate = ''
+    getOptionsWrapperContent() {
+        const groups = this.cloneElement.querySelectorAll('optgroup')
         const options = this.cloneElement.options
 
+        if (groups && groups.length)
+            return this.getGroupList(groups)
+        else
+            return this.getOptionsList(options)
+    }
+
+    getGroupList(groups) {
+        let optGroupsTemplate = ''
+
+        for(const optgroup of groups) {
+            const options = optgroup.querySelectorAll('option')
+            const optionsTemplate = this.getOptionsList(options)
+            const groupId = this.generateId(10)
+            optGroupsTemplate += `
+                <div class="mdb-select-option-group" role="group" id="${groupId}">
+                    <label class="mdb-select-option-group-label" for="${groupId}" style="height: ${this.options.optionHeight}px;">
+                        ${optgroup.label}
+                    </label>
+                    ${optionsTemplate}
+                </div>`
+        }
+
+        return `<div class="mdb-select-options-list">${optGroupsTemplate}</div>`
+    }
+
+    getOptionsList(options) {
+        let optionsTemplate = ''
+        
         for (let i = 0; i < options.length; ++i) {
             const item = options.item(i)
             const selected = item.selected ? `${this.storeCssClass.selectedOption}` : ''

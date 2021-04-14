@@ -225,3 +225,40 @@ div.mdb-select-wrapper {
     -webkit-transform: translateY(-1rem) translateY(.1rem) scale(.8);
     transform: translateY(-1rem) translateY(.1rem) scale(.8);
 }
+
+.mdb-select-options-list {
+    list-style: none;
+    margin: 0;
+    padding: 0
+}
+
+.mdb-select-option-group-label {
+    width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding-left: 16px;
+    padding-right: 16px;
+    font-size: 1rem;
+    font-weight: 400;
+    background-color: transparent;
+    color: rgba(0,0,0,.54);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none
+}
+
+.mdb-select-option-group>.mdb-select-option {
+    padding-left: 26px
+}
