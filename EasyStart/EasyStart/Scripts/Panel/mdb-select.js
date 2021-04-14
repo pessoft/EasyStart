@@ -89,7 +89,8 @@
 
     updateInput = () => {
         const input = document.getElementById(this.inputSelectWrapperId)
-        new mdb.Input(input).init()
+        const instance = mdb.Input.getInstance(input)
+        instance && instance.update()
     }
 
     initEvents() {
@@ -197,6 +198,7 @@
 
         const inputSelect = document.getElementById(this.inputSelectId)
         inputSelect.value = updateInputSelectValue(inputSelect.value)
+
         this.updateInput()
     }
 
