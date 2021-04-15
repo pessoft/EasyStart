@@ -18,6 +18,7 @@
 
     storeCssClass = {
         wrapSelect: 'mdb-select-wrapper',
+        selectOptionsWrapper: 'mdb-select-options-wrapper',
         initializedSelect: 'mdb-select-initialized',
         dropdownOpen: 'open',
         dropDownContainer: 'mdb-select-dropdown-container',
@@ -231,6 +232,26 @@
         }
 
         this.showSelectDropdown(coordinates)
+        this.configInputSearch()
+    }
+
+    configInputSearch() {
+        const searchInput = document.getElementById(this.inputSerachId)
+
+        if (searchInput) {
+            searchInput.focus()
+            searchInput.addEventListener('input', this.searchInputHandler)
+        }
+    }
+
+    searchInputHandler = event => {
+        const searchText = event.currentTarget.value.trim().toLowerCase()
+        const newOptionsWrapperContent = this.getOptionsWrapperContent(searchText)
+        const dropdwonList = document.getElementById(this.dropdownContainerId)
+        const optionsWrapper = dropdwonList.querySelector(`.${this.storeCssClass.selectOptionsWrapper}`)
+
+        optionsWrapper.innerHTML = newOptionsWrapperContent
+        this.initSelectedOptionEvent()
     }
 
     showSelectDropdown(coordinates) {
@@ -244,9 +265,6 @@
     openDropdown = () => {
         const dropdownList = document.getElementById(this.dropdownId)
         dropdownList.classList.add(this.storeCssClass.dropdownOpen)
-
-        const searchInput = document.getElementById(this.inputSerachId)
-        searchInput && searchInput.focus()
     }
 
     getSelectContainer(coordinates) {
@@ -272,21 +290,26 @@
         return dropdown
     }
 
-    getOptionsWrapper(height) {
-        const content = this.getOptionsWrapperContent()
-        const template = `<div class="mdb-select-options-wrapper" style="max-height: ${height}px;">${content}</div>`
+    getOptionsWrapper(height, searchText = null) {
+        const content = this.getOptionsWrapperContent(searchText)
+        const template = `<div class="${this.storeCssClass.selectOptionsWrapper}" style="max-height: ${height}px;">${content}</div>`
 
         return template
     }
 
-    getOptionsWrapperContent() {
+    getOptionsWrapperContent(searchText = null) {
         const groups = this.cloneElement.querySelectorAll('optgroup')
         const options = this.cloneElement.options
-
+        let content = ''
         if (groups && groups.length)
-            return this.getGroupList(groups)
+            content =  this.getGroupList(groups, searchText)
         else
-            return this.getOptionsList(options)
+            content = this.getOptionsList(options, searchText)
+
+        if (searchText && !content)
+            content = `<div class="select-no-results" style="height: ${this.options.optionHeight}px">Поиск не дал результатов</div>`
+
+        return content
     }
 
     getSearchBlock() {
@@ -305,12 +328,16 @@
         return template
     }
 
-    getGroupList(groups) {
+    getGroupList(groups, searchText = null) {
         let optGroupsTemplate = ''
 
         for(const optgroup of groups) {
             const options = optgroup.querySelectorAll('option')
-            const optionsTemplate = this.getOptionsList(options)
+            const optionsTemplate = this.getOptionsList(options, searchText)
+
+            if (searchText && !optionsTemplate)
+                continue
+
             const groupId = this.generateId(10)
             optGroupsTemplate += `
                 <div class="mdb-select-option-group" role="group" id="${groupId}">
@@ -324,11 +351,18 @@
         return `<div class="mdb-select-options-list">${optGroupsTemplate}</div>`
     }
 
-    getOptionsList(options) {
+    getOptionsList(options, searchText = null) {
         let optionsTemplate = ''
         
         for (let i = 0; i < options.length; ++i) {
             const item = options.item(i)
+            if (searchText) {
+                const itemText = item.text.trim().toLowerCase()
+
+                if (!itemText.includes(searchText))
+                    continue
+            }
+
             const selected = item.selected ? `${this.storeCssClass.selectedOption}` : ''
             const checked = item.selected ? 'checked' : ''
             const disabled = item.disabled ? 'disabled' : ''
