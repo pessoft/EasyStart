@@ -7,6 +7,7 @@
         this.dropdownContainerId = `dropdown-container-${this.id}`
         this.inputSelectId = this.generateId(6)
         this.inputSelectWrapperId = this.generateId(6)
+        this.inputSerachId = this.generateId(6)
         this.options = {
             height: 190, // max height
             optionHeight: 38,
@@ -123,7 +124,7 @@
 
             const removeActionAfterAnimationClose = () => {
                 const selectContainer = document.getElementById(this.dropdownContainerId)
-                selectContainer.remove()
+                selectContainer && selectContainer.remove()
             }
             setTimeout(removeActionAfterAnimationClose, 500)
         }
@@ -243,9 +244,13 @@
     openDropdown = () => {
         const dropdownList = document.getElementById(this.dropdownId)
         dropdownList.classList.add(this.storeCssClass.dropdownOpen)
+
+        const searchInput = document.getElementById(this.inputSerachId)
+        searchInput && searchInput.focus()
     }
 
     getSelectContainer(coordinates) {
+        const searchTemplate = this.getSearchBlock()
         const optionsTemplate = this.getOptionsWrapper(coordinates.height)
         const style = `
             position: absolute;
@@ -254,6 +259,7 @@
             left: ${coordinates.left}px;`
         const optionsWrapper = `
                 <div tabindex="0" class="mdb-select-dropdown rounded" id="${this.dropdownId}">
+                    ${searchTemplate}
                     ${optionsTemplate}
                 </div>`
 
@@ -281,6 +287,22 @@
             return this.getGroupList(groups)
         else
             return this.getOptionsList(options)
+    }
+
+    getSearchBlock() {
+        const isSearchEnable = this.cloneElement.hasAttribute('search')
+        let template = ''
+
+        if (isSearchEnable) {
+            const placeholder = this.cloneElement.getAttribute('search-placeholder') || 'Поиск...'
+            template = `
+                <div class="input-group">
+                    <input id="${this.inputSerachId}" class="form-control" placeholder="${placeholder}" role="searchbox" type="text">
+                </div>
+            ` 
+        }
+
+        return template
     }
 
     getGroupList(groups) {

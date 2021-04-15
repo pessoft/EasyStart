@@ -262,3 +262,7 @@ div.mdb-select-wrapper {
 .mdb-select-option-group>.mdb-select-option {
     padding-left: 26px
 }
+
+.mdb-select-dropdown > .input-group {
+    padding: 10px;
+}
