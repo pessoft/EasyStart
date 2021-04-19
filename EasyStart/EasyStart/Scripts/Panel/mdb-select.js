@@ -2,12 +2,17 @@
     constructor(element, options = {}) {
         this.cloneElement = element.cloneNode(true)
         this.select = element
-        this.id = `${this.storeCssClass.wrapSelect}-${this.generateId(6)}`
-        this.dropdownId = `dropdown-${this.id}`
-        this.dropdownContainerId = `dropdown-container-${this.id}`
-        this.inputSelectId = this.generateId(6)
-        this.inputSelectWrapperId = this.generateId(6)
-        this.inputSerachId = this.generateId(6)
+
+        const baseId = `${this.storeCssClass.wrapSelect}-${this.generateId(6)}`
+        this.storeIds = {
+            id: baseId,
+            dropdownId: `dropdown-${baseId}`,
+            dropdownContainerId: `dropdown-container-${baseId}`,
+            inputSelectId: this.generateId(6),
+            inputSelectWrapperId: this.generateId(6),
+            inputSerachId: this.generateId(6)
+        }
+
         this.options = {
             height: 190, // max height
             optionHeight: 38,
@@ -38,7 +43,7 @@
     initImitationSelect() {
         this.select.outerHTML = this.getControlTemplate()
         this.cloneElement.classList.add(this.storeCssClass.initializedSelect)
-        this.select = document.getElementById(this.id)
+        this.select = document.getElementById(this.storeIds.id)
         this.select.appendChild(this.cloneElement)
     }
 
@@ -46,8 +51,8 @@
         const multiple = this.options.multiple ? 'multiple' : ''
         const iputId = this.generateId(6)
         return `
-            <div id="${this.id}" class="${this.storeCssClass.wrapSelect}" ${multiple}>
-                <div id="${this.inputSelectWrapperId}" class="form-outline">
+            <div id="${this.storeIds.id}" class="${this.storeCssClass.wrapSelect}" ${multiple}>
+                <div id="${this.storeIds.inputSelectWrapperId}" class="form-outline">
                     ${this.getImitationSelect()}
                     ${this.getLabel()}
                     <span class="mdb-select-arrow"></span>
@@ -64,7 +69,7 @@
             join(', ')
 
         const inputTemplate = `
-            <input id="${this.inputSelectId}" ${disabled}
+            <input id="${this.storeIds.inputSelectId}" ${disabled}
                 type="text"
                 readonly
                 value="${value}"
@@ -78,19 +83,19 @@
     getLabel() {
         const label = this.cloneElement.getAttribute('label')
         const labelTemplate = label ?
-            `<label class="form-label mdb-select-label" for="${this.inputSelectId}">${label}</label>` :
+            `<label class="form-label mdb-select-label" for="${this.storeIds.inputSelectId}">${label}</label>` :
             ''
 
         return labelTemplate
     }
 
     initInput = () => {
-        const input = document.getElementById(this.inputSelectWrapperId)
+        const input = document.getElementById(this.storeIds.inputSelectWrapperId)
         new mdb.Input(input).init()
     }
 
     updateInput = () => {
-        const input = document.getElementById(this.inputSelectWrapperId)
+        const input = document.getElementById(this.storeIds.inputSelectWrapperId)
         const instance = mdb.Input.getInstance(input)
         instance && instance.update()
     }
@@ -101,22 +106,22 @@
     }
 
     initOpenEvent() {
-        const select = document.getElementById(this.id)
+        const select = document.getElementById(this.storeIds.id)
         select.removeEventListener('click', this.selectOpenHandler)
         select.addEventListener('click', this.selectOpenHandler)
     }
 
     initCloseEvent() {
-        const selectCloseHandlerName = `selectCloseHandler${this.id}`
+        const selectCloseHandlerName = `selectCloseHandler${this.storeIds.id}`
         this[selectCloseHandlerName] = event => {
-            const select = document.getElementById(this.id)
+            const select = document.getElementById(this.storeIds.id)
             const input = select.querySelector('input')
             input.classList.remove(this.storeCssClass.focused)
 
             const label = select.querySelector('label')
             label.classList.remove(this.storeCssClass.activeLabel)
 
-            const dropDownList = document.getElementById(this.dropdownId)
+            const dropDownList = document.getElementById(this.storeIds.dropdownId)
 
             if (!dropDownList)
                 return
@@ -124,7 +129,7 @@
             dropDownList.classList.remove(this.storeCssClass.dropdownOpen)
 
             const removeActionAfterAnimationClose = () => {
-                const selectContainer = document.getElementById(this.dropdownContainerId)
+                const selectContainer = document.getElementById(this.storeIds.dropdownContainerId)
                 selectContainer && selectContainer.remove()
             }
             setTimeout(removeActionAfterAnimationClose, 500)
@@ -135,7 +140,7 @@
     }
 
     initSelectedOptionEvent() {
-        const dropdownList = document.getElementById(this.dropdownId)
+        const dropdownList = document.getElementById(this.storeIds.dropdownId)
         dropdownList.addEventListener('click', this.selectedOptionHandler)
     }
 
@@ -198,7 +203,7 @@
             return values.join(', ')
         }
 
-        const inputSelect = document.getElementById(this.inputSelectId)
+        const inputSelect = document.getElementById(this.storeIds.inputSelectId)
         inputSelect.value = updateInputSelectValue(inputSelect.value)
 
         this.updateInput()
@@ -207,13 +212,13 @@
     selectOpenHandler = event => {
         event.stopPropagation()
 
-        const dropDownList = document.getElementById(this.dropdownId)
+        const dropDownList = document.getElementById(this.storeIds.dropdownId)
         if (dropDownList) {
             document.body.click()
             return
         }
 
-        const select = document.getElementById(this.id)
+        const select = document.getElementById(this.storeIds.id)
         const input = select.querySelector('input')
         input.classList.add(this.storeCssClass.focused)
 
@@ -247,7 +252,7 @@
     searchInputHandler = event => {
         const searchText = event.currentTarget.value.trim().toLowerCase()
         const newOptionsWrapperContent = this.getOptionsWrapperContent(searchText)
-        const dropdwonList = document.getElementById(this.dropdownContainerId)
+        const dropdwonList = document.getElementById(this.storeIds.dropdownContainerId)
         const optionsWrapper = dropdwonList.querySelector(`.${this.storeCssClass.selectOptionsWrapper}`)
 
         optionsWrapper.innerHTML = newOptionsWrapperContent
@@ -263,7 +268,7 @@
     }
 
     openDropdown = () => {
-        const dropdownList = document.getElementById(this.dropdownId)
+        const dropdownList = document.getElementById(this.storeIds.dropdownId)
         dropdownList.classList.add(this.storeCssClass.dropdownOpen)
     }
 
@@ -276,7 +281,7 @@
             top: ${coordinates.top}px;
             left: ${coordinates.left}px;`
         const optionsWrapper = `
-                <div tabindex="0" class="mdb-select-dropdown rounded" id="${this.dropdownId}">
+                <div tabindex="0" class="mdb-select-dropdown rounded" id="${this.storeIds.dropdownId}">
                     ${searchTemplate}
                     ${optionsTemplate}
                 </div>`
@@ -285,7 +290,7 @@
         dropdown.classList.add(this.storeCssClass.dropDownContainer)
         dropdown.style.cssText = style
         dropdown.innerHTML = optionsWrapper
-        dropdown.id = this.dropdownContainerId
+        dropdown.id = this.storeIds.dropdownContainerId
 
         return dropdown
     }
@@ -302,7 +307,7 @@
         const options = this.cloneElement.options
         let content = ''
         if (groups && groups.length)
-            content =  this.getGroupList(groups, searchText)
+            content = this.getGroupList(groups, searchText)
         else
             content = this.getOptionsList(options, searchText)
 
@@ -322,7 +327,7 @@
                 <div class="input-group">
                     <input id="${this.inputSerachId}" class="form-control" placeholder="${placeholder}" role="searchbox" type="text">
                 </div>
-            ` 
+            `
         }
 
         return template
@@ -331,7 +336,7 @@
     getGroupList(groups, searchText = null) {
         let optGroupsTemplate = ''
 
-        for(const optgroup of groups) {
+        for (const optgroup of groups) {
             const options = optgroup.querySelectorAll('option')
             const optionsTemplate = this.getOptionsList(options, searchText)
 
@@ -353,7 +358,7 @@
 
     getOptionsList(options, searchText = null) {
         let optionsTemplate = ''
-        
+
         for (let i = 0; i < options.length; ++i) {
             const item = options.item(i)
             if (searchText) {
