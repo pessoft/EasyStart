@@ -51,6 +51,7 @@ namespace EasyStart.Logic.IntegrationSystem
             PrepareProductAndFakeProductAreaDelievryData(orderDetails, postData);
             PrepareOrderData(orderDetails, postData);
             PrepareSalePointData(orderDetails, postData);
+            PrepareAffiliateData(postData);
             PrepareHookUrlData(postData);
 
             var result = SendOrder(postData.ToString());
@@ -288,6 +289,12 @@ namespace EasyStart.Logic.IntegrationSystem
 
             if(pointSale != 0)
                 postData.Append($"&point={pointSale}");
+        }
+
+        private void PrepareAffiliateData(StringBuilder postData)
+        {
+            if (frontPadOptions.Affiliate != 0)
+                postData.Append($"&affiliate={frontPadOptions.Affiliate}");
         }
 
         private string ProcessedPhoneNumber(string phoneNumber)

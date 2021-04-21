@@ -1829,6 +1829,7 @@ namespace EasyStart.Logic
             {
                 using (var db = new AdminPanelContext())
                 {
+                    var deliverySetting = db.DeliverySettings.FirstOrDefault(p => p.BranchId == branchId);
                     histroyOrders = db.Orders
                         .Where(p => p.ClientId == clientId &&
                         p.BranchId == branchId &&
@@ -1838,6 +1839,17 @@ namespace EasyStart.Logic
                         .Take(50)
                         .OrderBy(p => p.Date)
                         .ToList();
+
+                    if (deliverySetting != null)
+                    {
+                        histroyOrders.ForEach(p => 
+                        {
+                            if(p.ApproximateDeliveryTime.HasValue)
+                                p.ApproximateDeliveryTime = TimeZoneInfo.ConvertTimeToUtc(
+                                    p.ApproximateDeliveryTime.Value,
+                                    TimeZoneInfo.FindSystemTimeZoneById(deliverySetting.ZoneId));
+                        });
+                    }
 
                     if (histroyOrders != null && histroyOrders.Any())
                     {
