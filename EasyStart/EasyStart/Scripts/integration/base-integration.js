@@ -41,10 +41,12 @@ function showSyncFrontpad() {
     $(`#${frontPadIdsStore.syncClients}`).show()
 }
 
+const withoutIntegrationCssClass = 'without-integration'
 function initWithoutIntegration() {
     const $integrationWrapper = $('.integration-values-wrapper')
     const template = '<div class="empty-container">Выберите интеграционную систему</div>'
 
+    $integrationWrapper.addClass(withoutIntegrationCssClass)
     $integrationWrapper.html(template)
 }
 
@@ -61,6 +63,7 @@ const frontPadIdsStore = {
     pointSaleDelivery: 'integration-point-sale-delivery',
     pointSaleTakeyourself: 'integration-point-sale-takeyourself',
     onlineBuyType: 'integration-online-buy-type',
+    affiliate: 'integration-online-affiliate',
 }
 
 function initFrontPadIntegration() {
@@ -121,6 +124,11 @@ function initFrontPadIntegration() {
             <label>Точка продаж "Доставка" (код api)</label>
         </div>
         <div class="group">
+            <input required type="text" id="${frontPadIdsStore.affiliate}" />
+            <span class="bar"></span>
+            <label>Филиал (код api)</label>
+        </div>
+        <div class="group">
             <input required type="text" id="${frontPadIdsStore.onlineBuyType}" />
             <span class="bar"></span>
             <label>Тип оплаты "Онлайн" (код api)</label>
@@ -146,9 +154,10 @@ function initFrontPadIntegration() {
         $template.find(`#${frontPadIdsStore.pointSaleTakeyourself}`).val(options.pointSaleTakeyourself || '')
         $template.find(`#${frontPadIdsStore.pointSaleDelivery}`).val(options.pointSaleDelivery || '')
         $template.find(`#${frontPadIdsStore.onlineBuyType}`).val(options.onlineBuyType || '')
+        $template.find(`#${frontPadIdsStore.affiliate}`).val(options.affiliate || '')
         
     }
-
+    $integrationWrapper.removeClass(withoutIntegrationCssClass)
     $integrationWrapper.html($template)
     showSyncFrontpad()
 }
@@ -166,6 +175,8 @@ function initIikoIntegration() {
         </div>`)
 
     $template.find(`#${inputId}`).val(secret)
+
+    $integrationWrapper.removeClass(withoutIntegrationCssClass)
     $integrationWrapper.html($template)
 }
 
@@ -319,6 +330,9 @@ function getFrontPadSetting() {
     let onlineBuyType = $(`#${frontPadIdsStore.onlineBuyType}`).val().trim()
     onlineBuyType = parseInt(onlineBuyType)
     onlineBuyType = Number.isNaN(onlineBuyType) ? 0 : onlineBuyType
+    let affiliate = $(`#${frontPadIdsStore.affiliate}`).val().trim()
+    affiliate = parseInt(affiliate)
+    affiliate = Number.isNaN(affiliate) ? 0 : affiliate
     const options = {
         statusNew: parseInt(statusNew),
         statusProcessed: parseInt(statusProcessed),
@@ -329,7 +343,8 @@ function getFrontPadSetting() {
         pointSaleDelivery: pointSaleDelivery,
         phoneCodeCountry: $(`#${frontPadIdsStore.phoneCodeCountry}`).val().trim(),
         usePhoneMask: $(`#${frontPadIdsStore.usePhoneMask}`).is(':checked'),
-        onlineBuyType
+        onlineBuyType,
+        affiliate
     }
 
     if (!secret
