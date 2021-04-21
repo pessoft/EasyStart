@@ -17,5 +17,6 @@ namespace EasyStart.Models.Integration
         public int OnlineBuyType { get; set; }
         public string PhoneCodeCountry { get; set; }
         public bool UsePhoneMask { get; set; } = true;
+        public int Affiliate { get; set; }
     }
 }
