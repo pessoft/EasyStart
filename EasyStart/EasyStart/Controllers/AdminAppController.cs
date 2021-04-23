@@ -5,6 +5,7 @@ using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.Notification;
 using EasyStart.Logic.Notification.EmailNotification;
 using EasyStart.Logic.OrderProcessor;
+using EasyStart.Logic.Services.IntegrationSystem;
 using EasyStart.Logic.Services.Order;
 using EasyStart.Logic.Transaction;
 using EasyStart.Migrations;
@@ -51,7 +52,8 @@ namespace EasyStart
             var context = new AdminPanelContext();
 
             var inegrationSystemRepository = new InegrationSystemRepository(context);
-            integrationSystemService = new IntegrationSystemService(inegrationSystemRepository);
+            var integrationSystemLogic = new IntegrationSystemLogic(inegrationSystemRepository);
+            integrationSystemService = new IntegrationSystemService(integrationSystemLogic);
 
             var clientRepository = new ClientRepository(context);
             clientService = new ClientService(clientRepository);

@@ -1,5 +1,6 @@
 ﻿using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
+using EasyStart.Logic.Services.IntegrationSystem;
 using EasyStart.Logic.Services.Order;
 using EasyStart.Models;
 using EasyStart.Models.Integration;
@@ -36,7 +37,8 @@ namespace EasyStart.Logic.OrderProcessor
             var context = new AdminPanelContext();
 
             var inegrationSystemRepository = new InegrationSystemRepository(context);
-            integrationSystemService = new IntegrationSystemService(inegrationSystemRepository);
+            var integrationSystemLogic = new IntegrationSystemLogic(inegrationSystemRepository);
+            integrationSystemService = new IntegrationSystemService(integrationSystemLogic);
 
             var branchRepository = new BranchRepository(context);
             branchService = new BranchService(branchRepository);

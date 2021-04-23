@@ -17,6 +17,7 @@ using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
 using EasyStart.Logic.OrderProcessor;
 using EasyStart.Models.ProductOption;
 using EasyStart.Logic.Services.Order;
+using EasyStart.Logic.Services.IntegrationSystem;
 
 namespace EasyStart.Controllers
 {
@@ -34,7 +35,8 @@ namespace EasyStart.Controllers
             var context = new AdminPanelContext();
 
             var inegrationSystemRepository = new InegrationSystemRepository(context);
-            integrationSystemService = new IntegrationSystemService(inegrationSystemRepository);
+            var integrationSystemLogic = new IntegrationSystemLogic(inegrationSystemRepository);
+            integrationSystemService = new IntegrationSystemService(integrationSystemLogic);
 
             var branchRepository = new BranchRepository(context);
             branchService = new BranchService(branchRepository);

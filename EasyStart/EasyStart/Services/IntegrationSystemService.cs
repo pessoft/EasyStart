@@ -1,5 +1,6 @@
 ﻿using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
+using EasyStart.Logic.Services.IntegrationSystem;
 using EasyStart.Models;
 using EasyStart.Models.Integration;
 using EasyStart.Repositories;
@@ -13,52 +14,28 @@ namespace EasyStart.Services
 {
     public class IntegrationSystemService
     {
-        private readonly IDefaultEntityRepository<IntegrationSystemModel> repository;
+        private readonly IIntegrationSystemLogic integrationSystemLogic;
         
-        public IntegrationSystemService(IDefaultEntityRepository<IntegrationSystemModel> repository)
+        public IntegrationSystemService(IIntegrationSystemLogic integrationSystemLogic)
         {
-            this.repository = repository;
+            this.integrationSystemLogic = integrationSystemLogic;
         }
 
-        public IntegrationSystemModel Save(IntegrationSystemModel setting) 
+        public IntegrationSystemModel Save(IntegrationSystemModel setting)
         {
-            IntegrationSystemModel result;
-
-            var oldSetting = setting.Id > 0 ? null : Get(setting.BranchId);
-            setting.Id = oldSetting?.Id ?? setting.Id;
-
-            if (setting.Id > 0)
-            {
-                setting.Id = oldSetting.Id;
-
-                repository.Update(setting);
-                result = repository.Get(setting.Id);
-            }
-            else
-            {
-                result = repository.Create(setting);
-            }
-
-            return result;
+            return integrationSystemLogic.Save(setting);
         }
 
         public IntegrationSystemModel Get(int branchId)
         {
-            var result = repository.Get(p => p.BranchId == branchId).FirstOrDefault();
-
-            return result;
+            return integrationSystemLogic.Get(branchId);
         }
 
         public INewOrderResult SendOrder(
             IOrderDetails orderDetails,
             IIntegrationSystemFactory integrationSystemFactory)
         {
-            var order = orderDetails.GetOrder();
-            var integrationSystemSetting = Get(order.BranchId);
-            var integrationSystem = integrationSystemFactory.GetIntegrationSystem(integrationSystemSetting);
-            var result = integrationSystem.SendOrder(orderDetails);
-
-            return result;
+            return integrationSystemLogic.SendOrder(orderDetails, integrationSystemFactory);
         }
 
         public double GetClientVirtualMoney(
@@ -66,11 +43,7 @@ namespace EasyStart.Services
             int branchId,
             IIntegrationSystemFactory integrationSystemFactory)
         {
-            var integrationSystemSetting = Get(branchId);
-            var integrationSystem = integrationSystemFactory.GetIntegrationSystem(integrationSystemSetting);
-            var result = integrationSystem.GetClinetVirtualMoney(phoneNumber);
-
-            return result;
+            return integrationSystemLogic.GetClientVirtualMoney(phoneNumber, branchId, integrationSystemFactory);
         }
     }
 }
