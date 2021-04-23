@@ -1,4 +1,5 @@
 ﻿using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
+using EasyStart.Logic.Services.Client;
 using EasyStart.Models;
 using EasyStart.Repositories;
 using System;
@@ -10,46 +11,36 @@ namespace EasyStart.Services
 {
     public class ClientService
     {
-        private readonly IDefaultEntityRepository<Client> repository;
+        private readonly IClientLogic clientLogic;
         
-        public ClientService(IDefaultEntityRepository<Client> repository)
+        public ClientService(IClientLogic clientLogic)
         {
-            this.repository = repository;
+            this.clientLogic = clientLogic;
         }
 
         public List<Client> GetAll(int branchId)
         {
-            return repository.Get(p => p.BranchId == branchId).ToList();
+            return clientLogic.GetAll(branchId);
         }
 
         public Client Get(int id)
         {
-            var result = repository.Get(id);
-
-            return result;
+            return clientLogic.Get(id);
         }
 
         public double SetVirtualMoney(int clientId, double virtualMoney)
         {
-            if (virtualMoney < 0)
-                throw new Exception("Value virtual money must be greater than zero");
-
-            var client = repository.Get(clientId);
-            client.VirtualMoney = virtualMoney;
-
-            repository.Update(client);
-
-            return virtualMoney;
+            return clientLogic.SetVirtualMoney(clientId, virtualMoney);
         }
 
         public void Block(int clientId)
         {
-            this.ToggleBlock(clientId);
+            clientLogic.Block(clientId);
         }
 
         public void UnBlock(int clientId)
         {
-            this.ToggleBlock(clientId, false);
+            clientLogic.UnBlock(clientId);
         }
 
         /// <summary>
@@ -58,22 +49,7 @@ namespace EasyStart.Services
         /// <param name="data">key - phone number, value - cashback </param>
         public void SetVirtualMoney(Dictionary<string, double> data)
         {
-            if (data == null || !data.Any())
-                return;
-
-            var phones = data.Keys.ToList();
-            var clients = repository.Get(p => phones.Contains(p.PhoneNumber)).ToList();
-            clients.ForEach(p => p.VirtualMoney = data[p.PhoneNumber]);
-
-            repository.Update(clients);
-        }
-
-        private void ToggleBlock(int clientId, bool blocked = true)
-        {
-            var client = repository.Get(clientId);
-            client.Blocked = blocked;
-
-            repository.Update(client);
+            clientLogic.SetVirtualMoney(data);
         }
     }
 }

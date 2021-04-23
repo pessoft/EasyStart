@@ -1,6 +1,7 @@
 ﻿using EasyStart.JsResult;
 using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.Services.Branch;
+using EasyStart.Logic.Services.Client;
 using EasyStart.Logic.Services.Order;
 using EasyStart.Logic.Services.Product;
 using EasyStart.Models;
@@ -33,7 +34,8 @@ namespace EasyStart.Controllers
             branchService = new BranchService(branchLogic);
 
             var clientRepository = new ClientRepository(context);
-            clientService = new ClientService(clientRepository);
+            var clientLogic = new ClientLogic(clientRepository);
+            clientService = new ClientService(clientLogic);
 
             var orderRepository = new OrderRepository(context);
             var orderLogic = new OrderLogic(orderRepository);

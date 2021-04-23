@@ -20,6 +20,7 @@ using EasyStart.Logic.Services.Order;
 using EasyStart.Logic.Services.IntegrationSystem;
 using EasyStart.Logic.Services.Product;
 using EasyStart.Logic.Services.Branch;
+using EasyStart.Logic.Services.Client;
 
 namespace EasyStart.Controllers
 {
@@ -62,7 +63,8 @@ namespace EasyStart.Controllers
             productService = new ProductService(productLogic);
 
             var clientRepository = new ClientRepository(context);
-            clientService = new ClientService(clientRepository);
+            var clientLogic = new ClientLogic(clientRepository);
+            clientService = new ClientService(clientLogic);
 
             orderProcessor = new OrderProcessor();
         }

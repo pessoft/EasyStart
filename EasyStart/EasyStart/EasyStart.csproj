@@ -320,6 +320,8 @@
     <Compile Include="Logic\Report\ActiveUsersReport.cs" />
     <Compile Include="Logic\Services\Branch\BranchLogic.cs" />
     <Compile Include="Logic\Services\Branch\IBranchLogic.cs" />
+    <Compile Include="Logic\Services\Client\ClientLogic.cs" />
+    <Compile Include="Logic\Services\Client\IClientLogic.cs" />
     <Compile Include="Logic\Services\IntegrationSystem\IIntegrationSystemLogic.cs" />
     <Compile Include="Logic\Services\IntegrationSystem\IntegrationSystemLogic.cs" />
     <Compile Include="Logic\Services\Order\IOrderLogic.cs" />
