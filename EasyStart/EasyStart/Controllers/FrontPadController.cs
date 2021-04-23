@@ -2,6 +2,7 @@
 using EasyStart.Logic;
 using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.OrderProcessor;
+using EasyStart.Logic.Services.Order;
 using EasyStart.Models;
 using EasyStart.Models.Integration;
 using EasyStart.Repositories;
@@ -36,7 +37,8 @@ namespace EasyStart.Controllers
             integrationSystemService = new IntegrationSystemService(inegrationSystemRepository);
 
             var orderRepository = new OrderRepository(context);
-            orderService = new OrderService(orderRepository);
+            var orderLogic = new OrderLogic(orderRepository);
+            orderService = new OrderService(orderLogic);
 
             var fcmDeviveRepository = new FCMDeviceRepository(context);
             var fcmAuthKeyPath = HostingEnvironment.MapPath("/Resource/FCMAuthKey.json");

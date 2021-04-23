@@ -1,5 +1,6 @@
 ﻿using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
+using EasyStart.Logic.Services.Order;
 using EasyStart.Models;
 using EasyStart.Models.Integration;
 using EasyStart.Models.ProductOption;
@@ -41,7 +42,8 @@ namespace EasyStart.Logic.OrderProcessor
             branchService = new BranchService(branchRepository);
 
             var orderRepository = new OrderRepository(context);
-            orderService = new OrderService(orderRepository);
+            var orderLogic = new OrderLogic(orderRepository);
+            orderService = new OrderService(orderLogic);
 
             var productRepository = new ProductRepository(context);
             var additionalFillingRepository = new AdditionalFillingRepository(context);

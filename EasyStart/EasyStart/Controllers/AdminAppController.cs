@@ -5,6 +5,7 @@ using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.Notification;
 using EasyStart.Logic.Notification.EmailNotification;
 using EasyStart.Logic.OrderProcessor;
+using EasyStart.Logic.Services.Order;
 using EasyStart.Logic.Transaction;
 using EasyStart.Migrations;
 using EasyStart.Models;
@@ -59,7 +60,8 @@ namespace EasyStart
             branchService = new BranchService(branchRepository);
 
             var orderRepository = new OrderRepository(context);
-            orderService = new OrderService(orderRepository);
+            var orderLogic = new OrderLogic(orderRepository);
+            orderService = new OrderService(orderLogic);
 
             orderProcesser = new OrderProcessor();
         }

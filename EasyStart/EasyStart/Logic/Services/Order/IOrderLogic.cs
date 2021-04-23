@@ -1,0 +1,23 @@
+﻿using EasyStart.Logic.IntegrationSystem;
+using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
+using EasyStart.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace EasyStart.Logic.Services.Order
+{
+    public interface IOrderLogic
+    {
+        OrderModel Get(int id);
+        OrderModel GetByExternalId(long id);
+        void MarkOrderSendToIntegrationSystem(int orderId, INewOrderResult orderResult);
+        List<OrderModel> GetOrdersForClient(int clinetId);
+        void ChangeIntegrationStatus(int orderId, IntegrationOrderStatus status, DateTime updateDate);
+        void ChangeInnerStatus(int orderId, OrderStatus status, DateTime updateDate);
+        void UpdateCommentCauseCancel(int orderId, string commentCauseCancel);
+        TimeSpan GetAverageOrderProcessingTime(int branchId, DeliveryType deliveryType, TimeSpan defaultOrderProessingTime, string zoneId);
+    }
+}

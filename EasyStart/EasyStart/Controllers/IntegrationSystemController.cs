@@ -16,6 +16,7 @@ using ExcelDataReader;
 using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
 using EasyStart.Logic.OrderProcessor;
 using EasyStart.Models.ProductOption;
+using EasyStart.Logic.Services.Order;
 
 namespace EasyStart.Controllers
 {
@@ -39,7 +40,8 @@ namespace EasyStart.Controllers
             branchService = new BranchService(branchRepository);
 
             var orderRepository = new OrderRepository(context);
-            orderService = new OrderService(orderRepository);
+            var orderLogic = new OrderLogic(orderRepository);
+            orderService = new OrderService(orderLogic);
 
             var productRepository = new ProductRepository(context);
             var additionalFillingRepository = new AdditionalFillingRepository(context);
