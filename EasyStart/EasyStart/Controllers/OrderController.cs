@@ -1,5 +1,6 @@
 ﻿using EasyStart.JsResult;
 using EasyStart.Logic.IntegrationSystem;
+using EasyStart.Logic.Services.Branch;
 using EasyStart.Logic.Services.Order;
 using EasyStart.Logic.Services.Product;
 using EasyStart.Models;
@@ -28,7 +29,8 @@ namespace EasyStart.Controllers
             var context = new AdminPanelContext();
 
             var branchRepository = new BranchRepository(context);
-            branchService = new BranchService(branchRepository);
+            var branchLogic = new BranchLogic(branchRepository);
+            branchService = new BranchService(branchLogic);
 
             var clientRepository = new ClientRepository(context);
             clientService = new ClientService(clientRepository);

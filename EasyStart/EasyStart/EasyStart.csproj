@@ -318,6 +318,8 @@
     <Compile Include="Logic\PromotionLogic.cs" />
     <Compile Include="Logic\Report\GeneralUserQuantity.cs" />
     <Compile Include="Logic\Report\ActiveUsersReport.cs" />
+    <Compile Include="Logic\Services\Branch\BranchLogic.cs" />
+    <Compile Include="Logic\Services\Branch\IBranchLogic.cs" />
     <Compile Include="Logic\Services\IntegrationSystem\IIntegrationSystemLogic.cs" />
     <Compile Include="Logic\Services\IntegrationSystem\IntegrationSystemLogic.cs" />
     <Compile Include="Logic\Services\Order\IOrderLogic.cs" />

@@ -19,6 +19,7 @@ using EasyStart.Models.ProductOption;
 using EasyStart.Logic.Services.Order;
 using EasyStart.Logic.Services.IntegrationSystem;
 using EasyStart.Logic.Services.Product;
+using EasyStart.Logic.Services.Branch;
 
 namespace EasyStart.Controllers
 {
@@ -40,7 +41,8 @@ namespace EasyStart.Controllers
             integrationSystemService = new IntegrationSystemService(integrationSystemLogic);
 
             var branchRepository = new BranchRepository(context);
-            branchService = new BranchService(branchRepository);
+            var branchLogic = new BranchLogic(branchRepository);
+            branchService = new BranchService(branchLogic);
 
             var orderRepository = new OrderRepository(context);
             var orderLogic = new OrderLogic(orderRepository);

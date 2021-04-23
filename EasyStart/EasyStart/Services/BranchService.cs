@@ -1,4 +1,5 @@
-﻿using EasyStart.Models;
+﻿using EasyStart.Logic.Services.Branch;
+using EasyStart.Models;
 using EasyStart.Repositories;
 using System;
 using System.Collections.Generic;
@@ -9,38 +10,26 @@ namespace EasyStart.Services
 {
     public class BranchService
     {
-        private readonly IDefaultEntityRepository<BranchModel> repository;
+        private readonly IBranchLogic branchLogic;
 
-        public BranchService(IDefaultEntityRepository<BranchModel> repository)
+        public BranchService(IBranchLogic branchLogic)
         {
-            this.repository = repository;
+            this.branchLogic = branchLogic;
         }
 
         public BranchModel Save(BranchModel branch)
         {
-            BranchModel result;
-
-            if (branch.Id > 0)
-            {
-                repository.Update(branch);
-                result = repository.Get(branch.Id);
-            }
-            else
-            {
-                result = repository.Create(branch);
-            }
-
-            return result;
+            return branchLogic.Save(branch);
         }
 
         public BranchModel Get(string login) 
         {
-            return repository.Get(p => p.Login == login).FirstOrDefault();
+            return branchLogic.Get(login);
         }
 
         public BranchModel GetMainBranch()
         {
-            return repository.Get(p => p.TypeBranch == Logic.TypeBranch.MainBranch).FirstOrDefault();
+            return branchLogic.GetMainBranch();
         }
     }
 }

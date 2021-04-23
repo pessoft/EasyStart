@@ -2,6 +2,7 @@
 using EasyStart.Logic.FCM;
 using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.OrderProcessor;
+using EasyStart.Logic.Services.Branch;
 using EasyStart.Models;
 using EasyStart.Models.FCMNotification;
 using EasyStart.Models.ProductOption;
@@ -38,7 +39,8 @@ namespace EasyStart.Controllers
             deliverySettingService = new DeliverySettingService(deliverySettingRepository, areaDeliverySettingRepository);
 
             var branchRepository = new BranchRepository(context);
-            branchService = new BranchService(branchRepository);
+            var branchLogic = new BranchLogic(branchRepository);
+            branchService = new BranchService(branchLogic);
         }
 
         // GET: Admin
