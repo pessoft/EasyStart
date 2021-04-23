@@ -1,6 +1,7 @@
 ﻿using EasyStart.JsResult;
 using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.Services.Order;
+using EasyStart.Logic.Services.Product;
 using EasyStart.Models;
 using EasyStart.Models.Integration;
 using EasyStart.Models.ProductOption;
@@ -41,12 +42,13 @@ namespace EasyStart.Controllers
             var additionOptionItemRepository = new AdditionOptionItemRepository(context);
             var productAdditionalFillingRepository = new DefaultRepository<ProductAdditionalFillingModal>(context);
             var productAdditionOptionItemRepository = new DefaultRepository<ProductAdditionalOptionModal>(context);
-            productService = new ProductService(
+            var productLogic = new ProductLogic(
                 productRepository,
                 additionalFillingRepository,
                 additionOptionItemRepository,
                 productAdditionalFillingRepository,
                 productAdditionOptionItemRepository);
+            productService = new ProductService(productLogic);
         }
 
         [HttpGet]

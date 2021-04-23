@@ -2,6 +2,7 @@
 using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
 using EasyStart.Logic.Services.IntegrationSystem;
 using EasyStart.Logic.Services.Order;
+using EasyStart.Logic.Services.Product;
 using EasyStart.Models;
 using EasyStart.Models.Integration;
 using EasyStart.Models.ProductOption;
@@ -52,12 +53,13 @@ namespace EasyStart.Logic.OrderProcessor
             var additionOptionItemRepository = new AdditionOptionItemRepository(context);
             var productAdditionalFillingRepository = new DefaultRepository<ProductAdditionalFillingModal>(context);
             var productAdditionOptionItemRepository = new DefaultRepository<ProductAdditionalOptionModal>(context);
-            productService = new ProductService(
+            var productLogic = new ProductLogic(
                 productRepository,
                 additionalFillingRepository,
                 additionOptionItemRepository,
                 productAdditionalFillingRepository,
                 productAdditionOptionItemRepository);
+            productService = new ProductService(productLogic);
 
             var deliverySettingRepository = new DeliverySettingRepository(context);
             var areaDeliveryRepository = new AreaDeliveryRepository(context);

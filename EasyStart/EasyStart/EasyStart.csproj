@@ -322,6 +322,8 @@
     <Compile Include="Logic\Services\IntegrationSystem\IntegrationSystemLogic.cs" />
     <Compile Include="Logic\Services\Order\IOrderLogic.cs" />
     <Compile Include="Logic\Services\Order\OrderLogic.cs" />
+    <Compile Include="Logic\Services\Product\IProductLogic.cs" />
+    <Compile Include="Logic\Services\Product\ProductLogic.cs" />
     <Compile Include="Logic\SettingsValidator.cs" />
     <Compile Include="Logic\StockInteractionType.cs" />
     <Compile Include="Logic\StyleTypeIngredient.cs" />
