@@ -1,12 +1,16 @@
 ﻿using EasyStart.Hubs;
 using EasyStart.Logic;
 using EasyStart.Logic.IntegrationSystem;
-using EasyStart.Logic.OrderProcessor;
+using EasyStart.Logic.Services.Branch;
+using EasyStart.Logic.Services.Client;
+using EasyStart.Logic.Services.DeliverySetting;
 using EasyStart.Logic.Services.IntegrationSystem;
 using EasyStart.Logic.Services.Order;
+using EasyStart.Logic.Services.Product;
 using EasyStart.Logic.Services.PushNotification;
 using EasyStart.Models;
 using EasyStart.Models.Integration;
+using EasyStart.Models.ProductOption;
 using EasyStart.Repositories;
 using EasyStart.Services;
 using System;
@@ -29,25 +33,45 @@ namespace EasyStart.Controllers
         private readonly OrderService orderService;
         private readonly PushNotificationService pushNotificationService;
         private readonly IntegrationSystemService integrationSystemService;
-        private readonly IOrderProcesser orderProcessor;
 
         public FrontPadController()
         {
             var context = new AdminPanelContext();
 
-            var inegrationSystemRepository = new InegrationSystemRepository(context);
-            var integrationSystemLogic = new IntegrationSystemLogic(inegrationSystemRepository);
-            integrationSystemService = new IntegrationSystemService(integrationSystemLogic);
-
             var orderRepository = new OrderRepository(context);
             var orderLogic = new OrderLogic(orderRepository);
-            orderService = new OrderService(orderLogic);
+
+            var inegrationSystemRepository = new InegrationSystemRepository(context);
+            var integrationSystemLogic = new IntegrationSystemLogic(inegrationSystemRepository);
+
+            var productRepository = new ProductRepository(context);
+            var additionalFillingRepository = new AdditionalFillingRepository(context);
+            var additionOptionItemRepository = new AdditionOptionItemRepository(context);
+            var productAdditionalFillingRepository = new DefaultRepository<ProductAdditionalFillingModal>(context);
+            var productAdditionOptionItemRepository = new DefaultRepository<ProductAdditionalOptionModal>(context);
+            var productLogic = new ProductLogic(
+                productRepository,
+                additionalFillingRepository,
+                additionOptionItemRepository,
+                productAdditionalFillingRepository,
+                productAdditionOptionItemRepository);
+
+            var deliverySettingRepository = new DeliverySettingRepository(context);
+            var areaDeliverySettingRepository = new AreaDeliveryRepository(context);
+            var deliverySettingLogic = new DeliverySettingLogic(deliverySettingRepository, areaDeliverySettingRepository);
 
             var fcmDeviveRepository = new FCMDeviceRepository(context);
             var pushNotificationLogic = new PushNotificationLogic(fcmDeviveRepository);
-            pushNotificationService = new PushNotificationService(pushNotificationLogic);
 
-            orderProcessor = new OrderProcessor();
+            orderService = new OrderService(
+                orderLogic,
+                integrationSystemLogic,
+                productLogic,
+                deliverySettingLogic,
+                pushNotificationLogic);
+            integrationSystemService = new IntegrationSystemService(integrationSystemLogic);
+            pushNotificationService = new PushNotificationService(pushNotificationLogic);
+            integrationSystemService = new IntegrationSystemService(integrationSystemLogic);
         }
 
         [HttpPost]
@@ -66,7 +90,7 @@ namespace EasyStart.Controllers
             var integerationSystem = new IntegrationSystemFactory().GetIntegrationSystem(integrationSetting);
             var orderStatus = integerationSystem.GetIntegrationOrderStatus(status.Status);
 
-            orderProcessor.ChangeIntegrationStatus(order.Id, orderStatus);
+            orderService.ChangeIntegrationStatus(order.Id, orderStatus);
 
             if (integrationSetting.UseAutomaticDispatch
                 && (orderStatus == IntegrationOrderStatus.Done || orderStatus == IntegrationOrderStatus.Canceled))
@@ -77,7 +101,7 @@ namespace EasyStart.Controllers
                     Status = orderStatus == IntegrationOrderStatus.Done ? OrderStatus.Processed : OrderStatus.Cancellation
                 };
 
-                orderProcessor.ChangeOrderStatus(updatePayload);
+                orderService.ChangeOrderStatus(updatePayload);
                 new OrderHub().ChangeOrderStatus(order.Id, updatePayload.Status, order.BranchId);
             }
 

@@ -14,13 +14,14 @@ using System.Web;
 using System.Web.Mvc;
 using ExcelDataReader;
 using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
-using EasyStart.Logic.OrderProcessor;
 using EasyStart.Models.ProductOption;
 using EasyStart.Logic.Services.Order;
 using EasyStart.Logic.Services.IntegrationSystem;
 using EasyStart.Logic.Services.Product;
 using EasyStart.Logic.Services.Branch;
 using EasyStart.Logic.Services.Client;
+using EasyStart.Logic.Services.DeliverySetting;
+using EasyStart.Logic.Services.PushNotification;
 
 namespace EasyStart.Controllers
 {
@@ -31,23 +32,16 @@ namespace EasyStart.Controllers
         private readonly OrderService orderService;
         private readonly ProductService productService;
         private readonly ClientService clientService;
-        private readonly IOrderProcesser orderProcessor;
 
         public IntegrationSystemController()
         {
             var context = new AdminPanelContext();
 
-            var inegrationSystemRepository = new InegrationSystemRepository(context);
-            var integrationSystemLogic = new IntegrationSystemLogic(inegrationSystemRepository);
-            integrationSystemService = new IntegrationSystemService(integrationSystemLogic);
-
-            var branchRepository = new BranchRepository(context);
-            var branchLogic = new BranchLogic(branchRepository);
-            branchService = new BranchService(branchLogic);
-
             var orderRepository = new OrderRepository(context);
             var orderLogic = new OrderLogic(orderRepository);
-            orderService = new OrderService(orderLogic);
+
+            var inegrationSystemRepository = new InegrationSystemRepository(context);
+            var integrationSystemLogic = new IntegrationSystemLogic(inegrationSystemRepository);
 
             var productRepository = new ProductRepository(context);
             var additionalFillingRepository = new AdditionalFillingRepository(context);
@@ -60,13 +54,30 @@ namespace EasyStart.Controllers
                 additionOptionItemRepository,
                 productAdditionalFillingRepository,
                 productAdditionOptionItemRepository);
-            productService = new ProductService(productLogic);
+
+            var deliverySettingRepository = new DeliverySettingRepository(context);
+            var areaDeliverySettingRepository = new AreaDeliveryRepository(context);
+            var deliverySettingLogic = new DeliverySettingLogic(deliverySettingRepository, areaDeliverySettingRepository);
+
+            var fcmDeviveRepository = new FCMDeviceRepository(context);
+            var pushNotificationLogic = new PushNotificationLogic(fcmDeviveRepository);
+
+            var branchRepository = new BranchRepository(context);
+            var branchLogic = new BranchLogic(branchRepository);
 
             var clientRepository = new ClientRepository(context);
             var clientLogic = new ClientLogic(clientRepository);
-            clientService = new ClientService(clientLogic);
 
-            orderProcessor = new OrderProcessor();
+            orderService = new OrderService(
+                orderLogic,
+                integrationSystemLogic,
+                productLogic,
+                deliverySettingLogic,
+                pushNotificationLogic);
+            integrationSystemService = new IntegrationSystemService(integrationSystemLogic);
+            clientService = new ClientService(clientLogic);
+            branchService = new BranchService(branchLogic);
+            productService = new ProductService(productLogic);
         }
 
         [HttpGet]
@@ -127,7 +138,7 @@ namespace EasyStart.Controllers
 
             try
             {
-                var newOrderResult = orderProcessor.SendOrderToIntegrationSystem(orderId);
+                var newOrderResult = orderService.SendOrderToIntegrationSystem(orderId);
 
                 result.Success = newOrderResult.Success;
                 result.Data = newOrderResult.OrderNumber;

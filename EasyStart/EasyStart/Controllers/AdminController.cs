@@ -1,9 +1,13 @@
 ﻿using EasyStart.Logic;
 using EasyStart.Logic.FCM;
 using EasyStart.Logic.IntegrationSystem;
-using EasyStart.Logic.OrderProcessor;
 using EasyStart.Logic.Services.Branch;
+using EasyStart.Logic.Services.Client;
 using EasyStart.Logic.Services.DeliverySetting;
+using EasyStart.Logic.Services.IntegrationSystem;
+using EasyStart.Logic.Services.Order;
+using EasyStart.Logic.Services.Product;
+using EasyStart.Logic.Services.PushNotification;
 using EasyStart.Models;
 using EasyStart.Models.FCMNotification;
 using EasyStart.Models.ProductOption;
@@ -26,22 +30,51 @@ namespace EasyStart.Controllers
     [RedirectingAction]
     public class AdminController : Controller
     {
-        private readonly IOrderProcesser orderProcessor;
         private readonly DeliverySettingService deliverySettingService;
         private readonly BranchService branchService;
+        private readonly OrderService orderService;
         public AdminController()
         {
-            orderProcessor = new OrderProcessor();
-
             var context = new AdminPanelContext();
-            
+
+            var orderRepository = new OrderRepository(context);
+            var orderLogic = new OrderLogic(orderRepository);
+
+            var inegrationSystemRepository = new InegrationSystemRepository(context);
+            var integrationSystemLogic = new IntegrationSystemLogic(inegrationSystemRepository);
+
+            var productRepository = new ProductRepository(context);
+            var additionalFillingRepository = new AdditionalFillingRepository(context);
+            var additionOptionItemRepository = new AdditionOptionItemRepository(context);
+            var productAdditionalFillingRepository = new DefaultRepository<ProductAdditionalFillingModal>(context);
+            var productAdditionOptionItemRepository = new DefaultRepository<ProductAdditionalOptionModal>(context);
+            var productLogic = new ProductLogic(
+                productRepository,
+                additionalFillingRepository,
+                additionOptionItemRepository,
+                productAdditionalFillingRepository,
+                productAdditionOptionItemRepository);
+
             var deliverySettingRepository = new DeliverySettingRepository(context);
             var areaDeliverySettingRepository = new AreaDeliveryRepository(context);
             var deliverySettingLogic = new DeliverySettingLogic(deliverySettingRepository, areaDeliverySettingRepository);
-            deliverySettingService = new DeliverySettingService(deliverySettingLogic);
+
+            var fcmDeviveRepository = new FCMDeviceRepository(context);
+            var pushNotificationLogic = new PushNotificationLogic(fcmDeviveRepository);
 
             var branchRepository = new BranchRepository(context);
             var branchLogic = new BranchLogic(branchRepository);
+
+            var clientRepository = new ClientRepository(context);
+            var clientLogic = new ClientLogic(clientRepository);
+
+            orderService = new OrderService(
+                orderLogic,
+                integrationSystemLogic,
+                productLogic,
+                deliverySettingLogic,
+                pushNotificationLogic);
+            deliverySettingService = new DeliverySettingService(deliverySettingLogic);
             branchService = new BranchService(branchLogic);
         }
 
@@ -944,7 +977,7 @@ namespace EasyStart.Controllers
         {
             try
             {
-                orderProcessor.ChangeOrderStatus(data);
+                orderService.ChangeOrderStatus(data);
             }
             catch (Exception ex)
             {

@@ -312,8 +312,6 @@
     <Compile Include="Logic\IntegrationSystem\SendNewOrderResult\NewOrderResult.cs" />
     <Compile Include="Logic\IntegrationSystem\WithoutIntegration.cs" />
     <Compile Include="Logic\Notification\EmailNotification\RestorePasswordNotification.cs" />
-    <Compile Include="Logic\OrderProcessor\IOrderProcesser.cs" />
-    <Compile Include="Logic\OrderProcessor\OrderProcessor.cs" />
     <Compile Include="Logic\PreprocessorDataAPI.cs" />
     <Compile Include="Logic\PromotionLogic.cs" />
     <Compile Include="Logic\Report\GeneralUserQuantity.cs" />

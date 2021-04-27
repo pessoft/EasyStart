@@ -2,8 +2,11 @@
 using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.Services.Branch;
 using EasyStart.Logic.Services.Client;
+using EasyStart.Logic.Services.DeliverySetting;
+using EasyStart.Logic.Services.IntegrationSystem;
 using EasyStart.Logic.Services.Order;
 using EasyStart.Logic.Services.Product;
+using EasyStart.Logic.Services.PushNotification;
 using EasyStart.Models;
 using EasyStart.Models.Integration;
 using EasyStart.Models.ProductOption;
@@ -29,17 +32,11 @@ namespace EasyStart.Controllers
         {
             var context = new AdminPanelContext();
 
-            var branchRepository = new BranchRepository(context);
-            var branchLogic = new BranchLogic(branchRepository);
-            branchService = new BranchService(branchLogic);
-
-            var clientRepository = new ClientRepository(context);
-            var clientLogic = new ClientLogic(clientRepository);
-            clientService = new ClientService(clientLogic);
-
             var orderRepository = new OrderRepository(context);
             var orderLogic = new OrderLogic(orderRepository);
-            orderService = new OrderService(orderLogic);
+
+            var inegrationSystemRepository = new InegrationSystemRepository(context);
+            var integrationSystemLogic = new IntegrationSystemLogic(inegrationSystemRepository);
 
             var productRepository = new ProductRepository(context);
             var additionalFillingRepository = new AdditionalFillingRepository(context);
@@ -52,7 +49,29 @@ namespace EasyStart.Controllers
                 additionOptionItemRepository,
                 productAdditionalFillingRepository,
                 productAdditionOptionItemRepository);
+
+            var deliverySettingRepository = new DeliverySettingRepository(context);
+            var areaDeliverySettingRepository = new AreaDeliveryRepository(context);
+            var deliverySettingLogic = new DeliverySettingLogic(deliverySettingRepository, areaDeliverySettingRepository);
+
+            var fcmDeviveRepository = new FCMDeviceRepository(context);
+            var pushNotificationLogic = new PushNotificationLogic(fcmDeviveRepository);
+
+            var branchRepository = new BranchRepository(context);
+            var branchLogic = new BranchLogic(branchRepository);
+
+            var clientRepository = new ClientRepository(context);
+            var clientLogic = new ClientLogic(clientRepository);
+
+            orderService = new OrderService(
+                orderLogic,
+                integrationSystemLogic,
+                productLogic,
+                deliverySettingLogic,
+                pushNotificationLogic);
             productService = new ProductService(productLogic);
+            clientService = new ClientService(clientLogic);
+            branchService = new BranchService(branchLogic);
         }
 
         [HttpPost]

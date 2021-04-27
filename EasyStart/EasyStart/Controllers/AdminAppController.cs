@@ -4,11 +4,13 @@ using EasyStart.Logic;
 using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.Notification;
 using EasyStart.Logic.Notification.EmailNotification;
-using EasyStart.Logic.OrderProcessor;
 using EasyStart.Logic.Services.Branch;
 using EasyStart.Logic.Services.Client;
+using EasyStart.Logic.Services.DeliverySetting;
 using EasyStart.Logic.Services.IntegrationSystem;
 using EasyStart.Logic.Services.Order;
+using EasyStart.Logic.Services.Product;
+using EasyStart.Logic.Services.PushNotification;
 using EasyStart.Logic.Transaction;
 using EasyStart.Migrations;
 using EasyStart.Models;
@@ -47,29 +49,51 @@ namespace EasyStart
         private readonly IntegrationSystemService integrationSystemService;
         private readonly BranchService branchService;
         private readonly OrderService orderService;
-        private readonly IOrderProcesser orderProcesser;
 
         public AdminAppController()
         {
             var context = new AdminPanelContext();
 
+            var orderRepository = new OrderRepository(context);
+            var orderLogic = new OrderLogic(orderRepository);
+
             var inegrationSystemRepository = new InegrationSystemRepository(context);
             var integrationSystemLogic = new IntegrationSystemLogic(inegrationSystemRepository);
-            integrationSystemService = new IntegrationSystemService(integrationSystemLogic);
 
-            var clientRepository = new ClientRepository(context);
-            var clientLogic = new ClientLogic(clientRepository);
-            clientService = new ClientService(clientLogic);
+            var productRepository = new ProductRepository(context);
+            var additionalFillingRepository = new AdditionalFillingRepository(context);
+            var additionOptionItemRepository = new AdditionOptionItemRepository(context);
+            var productAdditionalFillingRepository = new DefaultRepository<ProductAdditionalFillingModal>(context);
+            var productAdditionOptionItemRepository = new DefaultRepository<ProductAdditionalOptionModal>(context);
+            var productLogic = new ProductLogic(
+                productRepository,
+                additionalFillingRepository,
+                additionOptionItemRepository,
+                productAdditionalFillingRepository,
+                productAdditionOptionItemRepository);
+
+            var deliverySettingRepository = new DeliverySettingRepository(context);
+            var areaDeliverySettingRepository = new AreaDeliveryRepository(context);
+            var deliverySettingLogic = new DeliverySettingLogic(deliverySettingRepository, areaDeliverySettingRepository);
+
+            var fcmDeviveRepository = new FCMDeviceRepository(context);
+            var pushNotificationLogic = new PushNotificationLogic(fcmDeviveRepository);
 
             var branchRepository = new BranchRepository(context);
             var branchLogic = new BranchLogic(branchRepository);
+
+            var clientRepository = new ClientRepository(context);
+            var clientLogic = new ClientLogic(clientRepository);
+
+            orderService = new OrderService(
+                orderLogic,
+                integrationSystemLogic,
+                productLogic,
+                deliverySettingLogic,
+                pushNotificationLogic);
+            integrationSystemService = new IntegrationSystemService(integrationSystemLogic);
+            clientService = new ClientService(clientLogic);
             branchService = new BranchService(branchLogic);
-
-            var orderRepository = new OrderRepository(context);
-            var orderLogic = new OrderLogic(orderRepository);
-            orderService = new OrderService(orderLogic);
-
-            orderProcesser = new OrderProcessor();
         }
 
         public JsonResultModel GetLocation()
@@ -470,7 +494,7 @@ namespace EasyStart
                         var dateUpdate = date;
                         var approximateDeliveryTime = order.DateDelivery.HasValue ?
                             order.DateDelivery :
-                            order.Date + orderProcesser.GetAverageOrderProcessingTime(order.BranchId, order.DeliveryType);
+                            order.Date + orderService.GetAverageOrderProcessingTime(order.BranchId, order.DeliveryType);
                         var updateOrderStatus = new UpdaterOrderStatus
                         {
                             DateUpdate = dateUpdate,
@@ -505,7 +529,7 @@ namespace EasyStart
                     }
                     else
                     {
-                        result.ErrorMessage = "Закак уже был оплачен";
+                        result.ErrorMessage = "Заказ уже был оплачен";
                     }
                 }
                 else
@@ -566,7 +590,7 @@ namespace EasyStart
                 order.UpdateDate = order.Date;
                 order.ApproximateDeliveryTime = order.DateDelivery.HasValue ?
                             order.DateDelivery :
-                            order.Date + orderProcesser.GetAverageOrderProcessingTime(order.BranchId, order.DeliveryType);
+                            order.Date + orderService.GetAverageOrderProcessingTime(order.BranchId, order.DeliveryType);
 
                 if (order.AmountPayCashBack > 0
                     && (client.VirtualMoney - order.AmountPayCashBack) < 0)
@@ -677,7 +701,7 @@ namespace EasyStart
             if (integrationSetting.UseAutomaticDispatch)
             {
                 Thread.Sleep(1500);// немного притормаживаем из-за ограничений фронтпада максимум 2 запроса в 1 секунду
-                var result = orderProcesser.SendOrderToIntegrationSystem(order.Id);
+                var result = orderService.SendOrderToIntegrationSystem(order.Id);
 
                 if (result.Success)
                 {
