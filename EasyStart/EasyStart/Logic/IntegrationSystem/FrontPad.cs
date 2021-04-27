@@ -66,7 +66,7 @@ namespace EasyStart.Logic.IntegrationSystem
             PrepareSecret(postData);
             PreparePhoneNumber(phoneNumber, postData, true);
 
-            string responseResult = base.Post(getClientUrl, postData.ToString()).Result;
+            string responseResult = base.Post(getClientUrl, postData.ToString());
             var frontpadClientVirtualMoney = JsonConvert.DeserializeAnonymousType(responseResult, new { Score = 0.0 });
 
             return frontpadClientVirtualMoney.Score;
@@ -74,7 +74,7 @@ namespace EasyStart.Logic.IntegrationSystem
 
         private INewOrderResult SendOrder(string postData)
         {
-            string responseResult = base.Post(newOrderUrl, postData).Result;
+            string responseResult = base.Post(newOrderUrl, postData);
             var frontPadResult = JsonConvert.DeserializeObject<FrontPadNewOrderResult>(responseResult);
             var result = new NewOrderResult(frontPadResult);
 

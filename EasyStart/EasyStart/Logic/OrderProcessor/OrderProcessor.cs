@@ -1,6 +1,7 @@
 ﻿using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
 using EasyStart.Logic.Services.Branch;
+using EasyStart.Logic.Services.DeliverySetting;
 using EasyStart.Logic.Services.IntegrationSystem;
 using EasyStart.Logic.Services.Order;
 using EasyStart.Logic.Services.Product;
@@ -64,8 +65,9 @@ namespace EasyStart.Logic.OrderProcessor
             productService = new ProductService(productLogic);
 
             var deliverySettingRepository = new DeliverySettingRepository(context);
-            var areaDeliveryRepository = new AreaDeliveryRepository(context);
-            deliverySettingService = new DeliverySettingService(deliverySettingRepository, areaDeliveryRepository);
+            var areaDeliverySettingRepository = new AreaDeliveryRepository(context);
+            var deliverySettingLogic = new DeliverySettingLogic(deliverySettingRepository, areaDeliverySettingRepository);
+            deliverySettingService = new DeliverySettingService(deliverySettingLogic);
 
             var fCMDeviceRepository = new FCMDeviceRepository(context);
             pushNotificationService = new PushNotificationService(fCMDeviceRepository, fcmAuthKeyPath);

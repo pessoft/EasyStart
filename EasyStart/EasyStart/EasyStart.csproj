@@ -322,6 +322,8 @@
     <Compile Include="Logic\Services\Branch\IBranchLogic.cs" />
     <Compile Include="Logic\Services\Client\ClientLogic.cs" />
     <Compile Include="Logic\Services\Client\IClientLogic.cs" />
+    <Compile Include="Logic\Services\DeliverySetting\DeliverySettingLogic.cs" />
+    <Compile Include="Logic\Services\DeliverySetting\IDeliverySettingLogic.cs" />
     <Compile Include="Logic\Services\IntegrationSystem\IIntegrationSystemLogic.cs" />
     <Compile Include="Logic\Services\IntegrationSystem\IntegrationSystemLogic.cs" />
     <Compile Include="Logic\Services\Order\IOrderLogic.cs" />

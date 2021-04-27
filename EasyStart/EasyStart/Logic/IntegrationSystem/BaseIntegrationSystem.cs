@@ -27,7 +27,7 @@ namespace EasyStart.Logic.IntegrationSystem
         
         public abstract double GetClinetVirtualMoney(string phoneNumber);
 
-        protected async Task<string> Post(string url, string postData)
+        protected string Post(string url, string postData)
         {
             WebRequest request = WebRequest.Create(url);
             request.Method = "POST";

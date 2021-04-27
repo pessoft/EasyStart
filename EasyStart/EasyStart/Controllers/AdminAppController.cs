@@ -424,7 +424,7 @@ namespace EasyStart
 
                 Func<string> getSignature = () =>
                 {
-                    var currency = "RUB";
+                    //var currency = "RUB";
                     var amount = Utils.Utils.ConvertRubToKopeks(order.AmountPayDiscountDelivery);
                     var signatureStr = $"{deliverSetting.PaymentKey}|{deliverSetting.MerchantId}|{order.Id}";
                     var signatureSHA = Utils.Utils.SHA1(signatureStr);
