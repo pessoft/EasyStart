@@ -5,6 +5,7 @@ using EasyStart.Logic.Services.DeliverySetting;
 using EasyStart.Logic.Services.IntegrationSystem;
 using EasyStart.Logic.Services.Order;
 using EasyStart.Logic.Services.Product;
+using EasyStart.Logic.Services.PushNotification;
 using EasyStart.Models;
 using EasyStart.Models.Integration;
 using EasyStart.Models.ProductOption;
@@ -28,12 +29,6 @@ namespace EasyStart.Logic.OrderProcessor
         private readonly ProductService productService;
         private readonly DeliverySettingService deliverySettingService;
         private readonly PushNotificationService pushNotificationService;
-        private readonly static string fcmAuthKeyPath;
-
-        static OrderProcessor()
-        {
-            fcmAuthKeyPath = HostingEnvironment.MapPath("/Resource/FCMAuthKey.json");
-        }
 
         public OrderProcessor()
         {
@@ -69,8 +64,9 @@ namespace EasyStart.Logic.OrderProcessor
             var deliverySettingLogic = new DeliverySettingLogic(deliverySettingRepository, areaDeliverySettingRepository);
             deliverySettingService = new DeliverySettingService(deliverySettingLogic);
 
-            var fCMDeviceRepository = new FCMDeviceRepository(context);
-            pushNotificationService = new PushNotificationService(fCMDeviceRepository, fcmAuthKeyPath);
+            var fcmDeviveRepository = new FCMDeviceRepository(context);
+            var pushNotificationLogic = new PushNotificationLogic(fcmDeviveRepository);
+            pushNotificationService = new PushNotificationService(pushNotificationLogic);
         }
 
         public void ChangeIntegrationStatus(int orderId, IntegrationOrderStatus status)

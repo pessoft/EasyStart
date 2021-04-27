@@ -330,6 +330,8 @@
     <Compile Include="Logic\Services\Order\OrderLogic.cs" />
     <Compile Include="Logic\Services\Product\IProductLogic.cs" />
     <Compile Include="Logic\Services\Product\ProductLogic.cs" />
+    <Compile Include="Logic\Services\PushNotification\IPushNotificationLogic.cs" />
+    <Compile Include="Logic\Services\PushNotification\PushNotificationLogic.cs" />
     <Compile Include="Logic\SettingsValidator.cs" />
     <Compile Include="Logic\StockInteractionType.cs" />
     <Compile Include="Logic\StyleTypeIngredient.cs" />
