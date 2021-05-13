@@ -257,6 +257,12 @@
                                         <input id="toggle-cashback-bonus" type="checkbox" onchange="CashbackPartners.toggleCashbackBonus()" />
                                         <label for="toggle-cashback-bonus">Использовать кешбек</label>
                                     </div>
+                                    <div class="checkbox-item checkbox-item-left">
+                                        <input id="toggle-cashback-always" type="checkbox" onchange="CashbackPartners.toggleCashbackBonus()" />
+                                        <label for="toggle-cashback-always">
+                                            Начислять кешбек, если заказ частично оплачен кешбеком
+                                        </label>
+                                    </div>
                                     <div class="row">
                                         <div class="group">
                                             <input required disabled type="number" min="0" max="100" oninput="CashbackPartners.onChangeCashbackBonusPersentValue()" autocomplete="off" id="cashback-bonus-return" value="10" />

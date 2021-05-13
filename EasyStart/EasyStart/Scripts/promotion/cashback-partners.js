@@ -35,6 +35,7 @@
             isUseCashback: isUseCashback,
             returnedValue: isUseCashback ? $('#cashback-bonus-return').val() : 0,
             paymentValue: isUseCashback ? $('#payment-cashback-bonus').val() : 0,
+            alwaysApplyCashback: isUseCashback ? $('#toggle-cashback-always').is(':checked') : false,
         }
 
         const successFunc = function (result, loader) {
@@ -94,10 +95,12 @@
                 $('#promotion-cashback-bonus .group input').removeAttr('disabled')
                 $('#cashback-bonus-return').val(this.cashbackSetting.ReturnedValue)
                 $('#payment-cashback-bonus').val(this.cashbackSetting.PaymentValue)
+                $('#toggle-cashback-always').prop('checked', this.cashbackSetting.AlwaysApplyCashback)
             } else {
                 $('#promotion-cashback-bonus .group input').attr('disabled', true)
                 $('#cashback-bonus-return').val(10)
                 $('#payment-cashback-bonus').val(40)
+                $('#toggle-cashback-always').prop('checked', false)
             }
         }
     },
