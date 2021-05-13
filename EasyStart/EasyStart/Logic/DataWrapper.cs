@@ -2843,6 +2843,7 @@ namespace EasyStart.Logic
                             oldSetting.PaymentValue = setting.PaymentValue;
                             oldSetting.ReturnedValue = setting.ReturnedValue;
                             oldSetting.DateSave = setting.DateSave;
+                            oldSetting.AlwaysApplyCashback = setting.AlwaysApplyCashback;
 
                             result = oldSetting;
                         }

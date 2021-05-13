@@ -443,7 +443,7 @@ textarea.default-style-input {
 .promotion-cashback-partners {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 230px 230px;
+    grid-template-rows: 260px 230px;
     padding: 1% 2%;
     position: relative;
 }
