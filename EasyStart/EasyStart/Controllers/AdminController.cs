@@ -174,12 +174,21 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SaveSetting(SettingModel setting)
         {
-            var successSave = generalSettingsService.SaveSettings(setting);
+            var errMsg = "При сохранении натсройки что-то пошло не так...";
+            try
+            {
+                var successSave = generalSettingsService.SaveSettings(setting);
 
-            if (successSave)
-                result = JsonResultModel.CreateSuccess(true);
-            else
-                result = JsonResultModel.CreateError("При сохранении натсройки что-то пошло не так...");
+                if (successSave)
+                    result = JsonResultModel.CreateSuccess(true);
+                else
+                    throw new Exception(errMsg);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result = JsonResultModel.CreateError(errMsg);
+            }
 
             return Json(result);
         }
