@@ -30,9 +30,11 @@ namespace EasyStart.Controllers
     [RedirectingAction]
     public class AdminController : Controller
     {
+        private JsonResultModel result;
         private readonly DeliverySettingService deliverySettingService;
         private readonly BranchService branchService;
         private readonly OrderService orderService;
+        private readonly UtilsService utilsService;
         public AdminController()
         {
             var context = new AdminPanelContext();
@@ -68,6 +70,8 @@ namespace EasyStart.Controllers
             var clientRepository = new ClientRepository(context);
             var clientLogic = new ClientLogic(clientRepository);
 
+
+
             orderService = new OrderService(
                 orderLogic,
                 integrationSystemLogic,
@@ -76,6 +80,7 @@ namespace EasyStart.Controllers
                 pushNotificationLogic);
             deliverySettingService = new DeliverySettingService(deliverySettingLogic);
             branchService = new BranchService(branchLogic);
+            utilsService = new UtilsService(new UtilsLogic());
         }
 
         // GET: Admin
@@ -146,35 +151,15 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult UploadImage()
         {
-            var result = new JsonResultModel();
-
             try
             {
-                foreach (string file in Request.Files)
-                {
-                    var upload = Request.Files[file];
-                    if (upload != null)
-                    {
-                        string fileName = System.IO.Path.GetFileName(upload.FileName);
-                        string ext = fileName.Substring(fileName.LastIndexOf("."));
-                        string newFileName = String.Format(@"{0}{1}", System.Guid.NewGuid(), ext);
-
-                        upload.SaveAs(Server.MapPath("~/Images/Products/" + newFileName));
-
-                        result.Success = true;
-                        result.URL = $"../Images/Products/{newFileName}";
-                    }
-                    else
-                    {
-                        result.Success = false;
-                        result.ErrorMessage = " Не удалось загрузить изображение";
-                    }
-                }
+                var url = utilsService.SaveImage(Server, Request);
+                result = JsonResultModel.CreateSuccessWithDataURL(url);
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result.ErrorMessage = "При загрузки изображения что-то пошло не так";
+                result = JsonResultModel.CreateError("При загрузки изображения что-то пошло не так");
             }
 
             return Json(result);
@@ -187,7 +172,7 @@ namespace EasyStart.Controllers
             var branchId = DataWrapper.GetBranchId(User.Identity.Name);
             setting.BranchId = branchId;
             var successSave = DataWrapper.SaveSetting(setting);
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
 
             if (successSave)
             {
@@ -205,7 +190,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SaveDeliverySetting(DeliverySettingModel setting)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
 
             try
             {
@@ -229,7 +214,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult AddCategory(CategoryModel category)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
             var defaultImage = "../Images/default-image.jpg";
 
             if (!System.IO.File.Exists(Server.MapPath(category.Image)))
@@ -270,7 +255,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult AddProduct(ProductModel product)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
             var defaultImage = "../Images/default-image.jpg";
             if (!System.IO.File.Exists(Server.MapPath(product.Image)))
             {
@@ -310,7 +295,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult AddBranch(NewBranchModel newBranch)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
             try
             {
                 var branchId = DataWrapper.GetBranchId(User.Identity.Name);
@@ -380,7 +365,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult RemoveBranch(int id)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
             try
             {
                 var branchId = DataWrapper.GetBranchId(User.Identity.Name);
@@ -424,7 +409,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadBranchList()
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
 
             var branchId = DataWrapper.GetBranchId(User.Identity.Name);
             var typeBranch = DataWrapper.GetBranchType(branchId);
@@ -444,7 +429,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadMainProductData()
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
             var branchId = DataWrapper.GetBranchId(User.Identity.Name);
             var categories = DataWrapper.GetCategories(branchId);
             var additionalOptions = DataWrapper.GetAllProductAdditionalOptionByBranchId(branchId);
@@ -474,7 +459,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult RemoveCategory(int id)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
             var success = DataWrapper.RemoveCategory(id);
 
             if (success)
@@ -493,7 +478,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult UpdateCategory(CategoryModel category)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
             var defaultImage = "../Images/default-image.jpg";
 
             try
@@ -542,7 +527,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadProductList(int idCategory)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
             var products = DataWrapper.GetProducts(idCategory);
 
             if (products != null)
@@ -562,7 +547,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult RemoveProduct(int id)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
             var success = DataWrapper.RemoveProduct(id);
 
             if (success)
@@ -581,7 +566,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult UpdateProduct(ProductModel product)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
             var defaultImage = "../Images/default-image.jpg";
 
             if (!System.IO.File.Exists(Server.MapPath(product.Image)))
@@ -622,7 +607,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SaveNews(PromotionNewsModel promotionNews)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
 
             if (!System.IO.File.Exists(Server.MapPath(promotionNews.Image)))
             {
@@ -651,7 +636,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult RemoveNews(int id)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
             var success = DataWrapper.RemovePromotionNews(id);
 
             if (success)
@@ -670,7 +655,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadNewsList()
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
             var branchId = DataWrapper.GetBranchId(User.Identity.Name);
             var news = DataWrapper.GetPromotionNews(branchId);
 
@@ -691,7 +676,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SaveStock(StockModel stock)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
 
             if (!System.IO.File.Exists(Server.MapPath(stock.Image)))
             {
@@ -720,7 +705,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult RemoveStock(int id)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
             var success = DataWrapper.RemoveStock(id);
 
             if (success)
@@ -739,7 +724,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadStockList()
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
             var branchId = DataWrapper.GetBranchId(User.Identity.Name);
             var stock = DataWrapper.GetStocks(branchId);
 
@@ -813,7 +798,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadProductReviews(int productId)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
             var reviews = DataWrapper.GetProductReviews(productId);
 
             if (reviews != null)
@@ -843,7 +828,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadOrders(List<int> brnachIds)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
             var orders = DataWrapper.GetOrders(brnachIds);
             var todayData = DataWrapper.GetDataOrdersByDate(brnachIds, DateTime.Now);
 
@@ -864,7 +849,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadHistoryOrders(HistoryOrderFilter filter)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
             var orders = DataWrapper.GetHistoryOrders(filter.BranchIds, filter.StartDate, filter.EndDate);
 
             if (orders != null)
@@ -885,7 +870,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadOrderItems(List<int> productIds, List<int> constructorCategoryIds)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
 
             if ((productIds == null || !productIds.Any())
                 && (constructorCategoryIds == null || !constructorCategoryIds.Any()))
@@ -961,10 +946,6 @@ namespace EasyStart.Controllers
                         constructor = detailConstructorProducts
                     };
                 }
-
-
-
-
             }
 
             return Json(result);
@@ -989,7 +970,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult GetTodayOrderData(List<int> brnachIds)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
 
             try
             {
@@ -1014,7 +995,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadCoupons()
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
 
             try
             {
@@ -1037,7 +1018,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SaveCoupon(CouponModel newCoupon)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
 
             try
             {
@@ -1063,7 +1044,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult RemoveCoupon(int id)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
 
             try
             {
@@ -1085,7 +1066,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadCashbackPartnerSettings()
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
 
             try
             {
@@ -1110,7 +1091,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SavePromotionCashbackSetting(PromotionCashbackSetting setting)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
 
             try
             {
@@ -1138,7 +1119,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SavePromotionPartnerSetting(PromotionPartnerSetting setting)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
 
             try
             {
@@ -1166,7 +1147,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadPromotionSettings()
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
 
             try
             {
@@ -1195,7 +1176,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SavePromotionSettings(PromotionSettingWrapper setting)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
 
             try
             {
@@ -1244,7 +1225,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult AddOrUpdateCategoryConstructor(ProductConstructorIngredientModel category)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
 
             if (category.Ingredients == null || !category.Ingredients.Any())
             {
@@ -1302,7 +1283,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadProductConstructorList(int idCategory)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
             var constructorCategories = DataWrapper.GetConstructorCategoriesVisible(idCategory);
 
             if (constructorCategories != null)
@@ -1350,7 +1331,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult PushNotification(PushNotification pushNotification)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
             var message = new FCMMessage(pushNotification);
 
             if (string.IsNullOrEmpty(message.Title))
@@ -1420,7 +1401,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult GetPushNotificationLimits()
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
 
             try
             {
@@ -1452,7 +1433,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadPushNotification(int pageNumber)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
 
             try
             {
@@ -1494,7 +1475,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SaveProductAdditionalOption(AdditionalOption additionalOption)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
 
             try
             {
@@ -1532,7 +1513,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult RemoveProductAdditionalOption(int id)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
 
             try
             {
@@ -1562,7 +1543,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SaveAdditionalFilling(AdditionalFilling additionalFilling)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
 
             try
             {
@@ -1597,7 +1578,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult RemoveAdditionalFilling(int id)
         {
-            var result = new JsonResultModel();
+            result = new JsonResultModel();
 
             try
             {
