@@ -28,6 +28,7 @@ using System.Web.Security;
 namespace EasyStart.Controllers
 {
     [RedirectingAction]
+    [Authorize]
     public class AdminController : Controller
     {
         private JsonResultModel result;
@@ -35,6 +36,8 @@ namespace EasyStart.Controllers
         private readonly BranchService branchService;
         private readonly OrderService orderService;
         private readonly UtilsService utilsService;
+        private readonly GeneralSettingsService generalSettingsService;
+
         public AdminController()
         {
             var context = new AdminPanelContext();
@@ -65,12 +68,13 @@ namespace EasyStart.Controllers
             var pushNotificationLogic = new PushNotificationLogic(fcmDeviveRepository);
 
             var branchRepository = new BranchRepository(context);
-            var branchLogic = new BranchLogic(branchRepository);
+            var branchLogic = new BranchLogic(branchRepository, User.Identity.Name);
 
             var clientRepository = new ClientRepository(context);
             var clientLogic = new ClientLogic(clientRepository);
 
-
+            var generalSettingRepositorhy = new DefaultRepository<SettingModel>(context);
+            var generalSettingLogic = new GeneralSettingsLogic(generalSettingRepositorhy);
 
             orderService = new OrderService(
                 orderLogic,
@@ -81,6 +85,7 @@ namespace EasyStart.Controllers
             deliverySettingService = new DeliverySettingService(deliverySettingLogic);
             branchService = new BranchService(branchLogic);
             utilsService = new UtilsService(new UtilsLogic());
+            generalSettingsService = new GeneralSettingsService(generalSettingLogic, branchLogic);
         }
 
         // GET: Admin
@@ -169,19 +174,12 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SaveSetting(SettingModel setting)
         {
-            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-            setting.BranchId = branchId;
-            var successSave = DataWrapper.SaveSetting(setting);
-            result = new JsonResultModel();
+            var successSave = generalSettingsService.SaveSettings(setting);
 
             if (successSave)
-            {
-                result.Success = successSave;
-            }
+                result = JsonResultModel.CreateSuccess(true);
             else
-            {
-                result.ErrorMessage = "При сохранении натсройки что-то пошло не так...";
-            }
+                result = JsonResultModel.CreateError("При сохранении натсройки что-то пошло не так...");
 
             return Json(result);
         }

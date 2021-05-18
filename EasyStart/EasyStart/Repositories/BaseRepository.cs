@@ -19,6 +19,7 @@ namespace EasyStart.Repositories
             context = dbContext;
             db = context.Set<T>();
         }
+
         public void Dispose()
         {
             if (disposed) return;
@@ -27,6 +28,7 @@ namespace EasyStart.Repositories
             context.Dispose();
             GC.SuppressFinalize(this);
         }
+
         public virtual T Create(T item)
         {
             var addedItem = CreateWithouSaveChanges(item);

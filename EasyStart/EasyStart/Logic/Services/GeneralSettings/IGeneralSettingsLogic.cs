@@ -4,14 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace EasyStart.Logic.Services.Branch
 {
-    public interface IBranchLogic
+    public interface IGeneralSettingsLogic
     {
-        BranchModel Save(BranchModel branch);
-        BranchModel Get();
-        BranchModel Get(string login);
-        BranchModel GetMainBranch();
+        bool SaveSetting(SettingModel setting);
     }
 }
