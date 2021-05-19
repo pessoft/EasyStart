@@ -181,17 +181,15 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SaveSetting(SettingModel setting)
         {
-            var errMsg = "При сохранении натсройки что-то пошло не так...";
             try
             {
                 var savedSetting = generalSettingsService.SaveSettings(setting);
-
                 result = JsonResultModel.CreateSuccess(savedSetting);
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result = JsonResultModel.CreateError(errMsg);
+                result = JsonResultModel.CreateError("При сохранении натсройки что-то пошло не так...");
             }
 
             return Json(result);
@@ -201,17 +199,15 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SaveDeliverySetting(DeliverySettingModel setting)
         {
-            var errMsg = "При сохранении натсройки что-то пошло не так...";
             try
             {
                 var savedSetting = deliverySettingService.SaveDeliverySetting(setting);
-
                 result = JsonResultModel.CreateSuccess(savedSetting);
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result = JsonResultModel.CreateError(errMsg);
+                result = JsonResultModel.CreateError("При сохранении натсройки что-то пошло не так...");
             }
 
             return Json(result);
@@ -221,18 +217,15 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult AddCategory(CategoryModel category)
         {
-            var errMsg = "При добавлении категории что-то пошло не так...";
-
             try
             {
                 var savedCategory = categoryProductService.SaveCategory(category);
-
                 result = JsonResultModel.CreateSuccess(savedCategory);
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result = JsonResultModel.CreateError(errMsg);
+                result = JsonResultModel.CreateError("При добавлении категории что-то пошло не так...");
             }
 
             return Json(result);
