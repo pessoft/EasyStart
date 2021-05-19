@@ -53,7 +53,13 @@ namespace EasyStart.Logic.Services.Product
                 savedCategory = categoryRepository.Update(category);
             }
             else
+            {
+                var orderNumber = categoryRepository.Get(p => p.BranchId == category.BranchId && !p.IsDeleted).Count() + 1;
+                category.OrderNumber = orderNumber;
+                
                 savedCategory = categoryRepository.Create(category);
+            }
+                
 
             var recommendedProducts = SaveRecommendedProductsForCategory(
                 category.RecommendedProducts,
