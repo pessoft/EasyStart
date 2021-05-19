@@ -14,7 +14,7 @@ namespace EasyStart.Logic.Services.Branch
         {
             this.settingRepository = settingRepository;
         }
-        public bool SaveSetting(SettingModel setting)
+        public SettingModel SaveSetting(SettingModel setting)
         {
             var oldSetting = settingRepository.Get(setting.Id);
             SettingModel newSetting = null;
@@ -24,8 +24,7 @@ namespace EasyStart.Logic.Services.Branch
             else
                 newSetting = settingRepository.Create(setting);
 
-            var success = newSetting != null;
-            return success;
+            return newSetting;
         }
     }
 }

@@ -21,7 +21,7 @@ namespace EasyStart.Services
             this.branchLogic = branchLogic;
         }
 
-        public bool SaveSettings(SettingModel setting)
+        public SettingModel SaveSettings(SettingModel setting)
         {
             var branch = branchLogic.Get();
             setting.BranchId = branch.Id;

@@ -10,6 +10,6 @@ namespace EasyStart.Logic.Services.Branch
 {
     public interface IGeneralSettingsLogic
     {
-        bool SaveSetting(SettingModel setting);
+        SettingModel SaveSetting(SettingModel setting);
     }
 }

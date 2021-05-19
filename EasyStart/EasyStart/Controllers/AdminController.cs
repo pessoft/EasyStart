@@ -184,12 +184,9 @@ namespace EasyStart.Controllers
             var errMsg = "При сохранении натсройки что-то пошло не так...";
             try
             {
-                var successSave = generalSettingsService.SaveSettings(setting);
+                var savedSetting = generalSettingsService.SaveSettings(setting);
 
-                if (successSave)
-                    result = JsonResultModel.CreateSuccess(true);
-                else
-                    throw new Exception(errMsg);
+                result = JsonResultModel.CreateSuccess(savedSetting);
             }
             catch (Exception ex)
             {
