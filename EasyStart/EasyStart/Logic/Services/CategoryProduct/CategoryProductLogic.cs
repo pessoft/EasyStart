@@ -12,13 +12,16 @@ namespace EasyStart.Logic.Services.Product
     public class CategoryProductLogic : ICategoryProductLogic
     {
         private readonly IDefaultEntityRepository<CategoryModel> categoryRepository;
+        private readonly IDefaultEntityRepository<RecommendedProductModel> recommendedProductRepository;
         private readonly IServerUtility serverUtility;
 
         public CategoryProductLogic(
             IDefaultEntityRepository<CategoryModel> categoryRepository,
+            IDefaultEntityRepository<RecommendedProductModel> recommendedProductRepository,
             IServerUtility serverUtility)
         {
             this.categoryRepository = categoryRepository;
+            this.recommendedProductRepository = recommendedProductRepository;
             this.serverUtility = serverUtility;
         }
 
@@ -52,7 +55,38 @@ namespace EasyStart.Logic.Services.Product
             else
                 savedCategory = categoryRepository.Create(category);
 
+            var recommendedProducts = SaveRecommendedProductsForCategory(
+                category.RecommendedProducts,
+                savedCategory.BranchId,
+                savedCategory.Id);
+            savedCategory.RecommendedProducts = recommendedProducts;
+
             return savedCategory;
+        }
+
+        private List<int> SaveRecommendedProductsForCategory(
+            List<int> recommendedProducts,
+            int branchId,
+            int categoryId)
+        {
+            List<RecommendedProductModel> recommendedProductModels = recommendedProducts?
+                .Select(productId => new RecommendedProductModel
+                {
+                    BranchId = branchId,
+                    CategoryId = categoryId,
+                    ProductId = productId
+                })
+                .ToList();
+
+            var forRemove = recommendedProductRepository.Get(p => p.CategoryId == categoryId).ToList();
+            recommendedProductRepository.Remove(forRemove);
+
+            if (recommendedProductModels != null && recommendedProductModels.Any())
+            {
+                recommendedProductRepository.Create(recommendedProductModels);
+            }
+
+            return recommendedProducts;
         }
     }
 }

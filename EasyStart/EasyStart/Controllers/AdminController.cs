@@ -80,7 +80,11 @@ namespace EasyStart.Controllers
             var generalSettingLogic = new GeneralSettingsLogic(generalSettingRepositorhy);
 
             var categoryProductRepositorhy = new DefaultRepository<CategoryModel>(context);
-            var categoryProductLogic = new CategoryProductLogic(categoryProductRepositorhy, serverUtility);
+            var recommendedProductRepositorhy = new DefaultRepository<RecommendedProductModel>(context);
+            var categoryProductLogic = new CategoryProductLogic(
+                categoryProductRepositorhy,
+                recomendedProductRepositorhy, 
+                serverUtility);
 
             orderService = new OrderService(
                 orderLogic,
