@@ -82,7 +82,7 @@ namespace EasyStart.Controllers
                 productLogic,
                 deliverySettingLogic,
                 pushNotificationLogic);
-            deliverySettingService = new DeliverySettingService(deliverySettingLogic);
+            deliverySettingService = new DeliverySettingService(deliverySettingLogic, branchLogic);
             branchService = new BranchService(branchLogic);
             utilsService = new UtilsService(new UtilsLogic());
             generalSettingsService = new GeneralSettingsService(generalSettingLogic, branchLogic);
@@ -197,21 +197,20 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SaveDeliverySetting(DeliverySettingModel setting)
         {
-            result = new JsonResultModel();
-
+            var errMsg = "При сохранении натсройки что-то пошло не так...";
             try
             {
-                var branch = branchService.Get(User.Identity.Name);
+                var savedSetting = deliverySettingService.SaveDeliverySetting(setting);
 
-                setting.BranchId = branch.Id;
-                deliverySettingService.SaveDeliverySetting(setting);
-
-                result.Success = true;
+                if (savedSetting == null)
+                    throw new Exception(errMsg);
+                
+                result = JsonResultModel.CreateSuccess(true);
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result.ErrorMessage = "При сохранении натсройки что-то пошло не так...";
+                result = JsonResultModel.CreateError(errMsg);
             }
 
             return Json(result);

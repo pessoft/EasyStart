@@ -1,4 +1,5 @@
-﻿using EasyStart.Logic.Services.DeliverySetting;
+﻿using EasyStart.Logic.Services.Branch;
+using EasyStart.Logic.Services.DeliverySetting;
 using EasyStart.Models;
 using EasyStart.Repositories;
 using System;
@@ -11,14 +12,20 @@ namespace EasyStart.Services
     public class DeliverySettingService
     {
         private readonly IDeliverySettingLogic deliverySettingLogic;
+        private readonly IBranchLogic branchLogic;
 
-        public DeliverySettingService(IDeliverySettingLogic deliverySettingLogic)
+        public DeliverySettingService(
+            IDeliverySettingLogic deliverySettingLogic,
+            IBranchLogic branchLogic)
         {
             this.deliverySettingLogic = deliverySettingLogic;
+            this.branchLogic = branchLogic;
         }
 
         public DeliverySettingModel SaveDeliverySetting(DeliverySettingModel setting)
         {
+            var branch = branchLogic.Get();
+            setting.BranchId = branch.Id;
             return deliverySettingLogic.SaveDeliverySetting(setting);
         }
 
