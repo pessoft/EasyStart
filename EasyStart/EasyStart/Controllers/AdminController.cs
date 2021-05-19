@@ -209,10 +209,7 @@ namespace EasyStart.Controllers
             {
                 var savedSetting = deliverySettingService.SaveDeliverySetting(setting);
 
-                if (savedSetting == null)
-                    throw new Exception(errMsg);
-                
-                result = JsonResultModel.CreateSuccess(true);
+                result = JsonResultModel.CreateSuccess(savedSetting);
             }
             catch (Exception ex)
             {
