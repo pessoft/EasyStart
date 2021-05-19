@@ -10,6 +10,6 @@ namespace EasyStart.Logic.Services.Branch
 {
     public interface IUtilsLogic
     {
-        string SaveImage(HttpServerUtilityBase Server, HttpRequestBase request);
+        string SaveImage(HttpRequestBase request);
     }
 }

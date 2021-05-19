@@ -17,9 +17,9 @@ namespace EasyStart.Services
             this.utilsLogic = utilsLogic;
         }
 
-        public string SaveImage(HttpServerUtilityBase server, HttpRequestBase request)
+        public string SaveImage(HttpRequestBase request)
         {
-            return utilsLogic.SaveImage(server, request);
+            return utilsLogic.SaveImage(request);
         }
     }
 }

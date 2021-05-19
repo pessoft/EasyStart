@@ -8,6 +8,7 @@ using EasyStart.Logic.Services.IntegrationSystem;
 using EasyStart.Logic.Services.Order;
 using EasyStart.Logic.Services.Product;
 using EasyStart.Logic.Services.PushNotification;
+using EasyStart.Logic.Services.Utils;
 using EasyStart.Models;
 using EasyStart.Models.FCMNotification;
 using EasyStart.Models.ProductOption;
@@ -37,10 +38,12 @@ namespace EasyStart.Controllers
         private readonly OrderService orderService;
         private readonly UtilsService utilsService;
         private readonly GeneralSettingsService generalSettingsService;
+        private readonly CategoryProductService categoryProductService;
 
         public AdminController()
         {
             var context = new AdminPanelContext();
+            var serverUtility = new ServerUtility(Server);
 
             var orderRepository = new OrderRepository(context);
             var orderLogic = new OrderLogic(orderRepository);
@@ -76,6 +79,9 @@ namespace EasyStart.Controllers
             var generalSettingRepositorhy = new DefaultRepository<SettingModel>(context);
             var generalSettingLogic = new GeneralSettingsLogic(generalSettingRepositorhy);
 
+            var categoryProductRepositorhy = new DefaultRepository<CategoryModel>(context);
+            var categoryProductLogic = new CategoryProductLogic(categoryProductRepositorhy, serverUtility);
+
             orderService = new OrderService(
                 orderLogic,
                 integrationSystemLogic,
@@ -84,8 +90,9 @@ namespace EasyStart.Controllers
                 pushNotificationLogic);
             deliverySettingService = new DeliverySettingService(deliverySettingLogic, branchLogic);
             branchService = new BranchService(branchLogic);
-            utilsService = new UtilsService(new UtilsLogic());
+            utilsService = new UtilsService(new UtilsLogic(serverUtility));
             generalSettingsService = new GeneralSettingsService(generalSettingLogic, branchLogic);
+            categoryProductService = new CategoryProductService(categoryProductLogic, branchLogic);
         }
 
         // GET: Admin
@@ -158,7 +165,7 @@ namespace EasyStart.Controllers
         {
             try
             {
-                var url = utilsService.SaveImage(Server, Request);
+                var url = utilsService.SaveImage(Request);
                 result = JsonResultModel.CreateSuccessWithDataURL(url);
             }
             catch (Exception ex)
@@ -220,38 +227,18 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult AddCategory(CategoryModel category)
         {
-            result = new JsonResultModel();
-            var defaultImage = "../Images/default-image.jpg";
+            var errMsg = "При добавлении категории что-то пошло не так...";
 
-            if (!System.IO.File.Exists(Server.MapPath(category.Image)))
+            try
             {
-                category.Image = defaultImage;
+                var savedCategory = categoryProductService.SaveCategory(category);
+
+                result = JsonResultModel.CreateSuccess(savedCategory);
             }
-            else if (category.Id > 0)
+            catch (Exception ex)
             {
-                var oldImage = DataWrapper.GetCategoryImage(category.Id);
-
-                if (oldImage != category.Image
-                    && oldImage != defaultImage
-                   && System.IO.File.Exists(Server.MapPath(oldImage)))
-                {
-                    System.IO.File.Delete(Server.MapPath(oldImage));
-                }
-            }
-
-            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-
-            category.BranchId = branchId;
-            category = DataWrapper.SaveCategory(category);
-
-            if (category != null)
-            {
-                result.Data = category;
-                result.Success = true;
-            }
-            else
-            {
-                result.ErrorMessage = "При добавлении категории что-то пошло не так...";
+                Logger.Log.Error(ex);
+                result = JsonResultModel.CreateError(errMsg);
             }
 
             return Json(result);

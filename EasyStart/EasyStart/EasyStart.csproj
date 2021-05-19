@@ -318,6 +318,10 @@
     <Compile Include="Logic\Report\ActiveUsersReport.cs" />
     <Compile Include="Logic\Services\GeneralSettings\IGeneralSettingsLogic.cs" />
     <Compile Include="Logic\Services\GeneralSettings\GeneralSettingsLogic.cs" />
+    <Compile Include="Logic\Services\CategoryProduct\ICategoryProductLogic.cs" />
+    <Compile Include="Logic\Services\CategoryProduct\CategoryProductLogic.cs" />
+    <Compile Include="Logic\Services\Utils\IServerUtility.cs" />
+    <Compile Include="Logic\Services\Utils\ServerUtility.cs" />
     <Compile Include="Logic\Services\Utils\UtilsLogic.cs" />
     <Compile Include="Logic\Services\Utils\IUtilsLogic.cs" />
     <Compile Include="Logic\Services\Branch\BranchLogic.cs" />
@@ -659,6 +663,7 @@
     <Compile Include="Repositories\IDefaultEntityRepository.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
     <Compile Include="Services\GeneralSettingsService.cs" />
+    <Compile Include="Services\CategoryProductService.cs" />
     <Compile Include="Services\UtilsService.cs" />
     <Compile Include="Services\DeliverySettingService.cs" />
     <Compile Include="Services\BranchService.cs" />
