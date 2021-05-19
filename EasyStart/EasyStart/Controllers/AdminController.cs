@@ -20,10 +20,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
+using System.Web.Routing;
 using System.Web.Security;
 
 namespace EasyStart.Controllers
@@ -33,15 +35,20 @@ namespace EasyStart.Controllers
     public class AdminController : Controller
     {
         private JsonResultModel result;
-        private readonly DeliverySettingService deliverySettingService;
-        private readonly BranchService branchService;
-        private readonly OrderService orderService;
-        private readonly UtilsService utilsService;
-        private readonly GeneralSettingsService generalSettingsService;
-        private readonly CategoryProductService categoryProductService;
+        private DeliverySettingService deliverySettingService;
+        private BranchService branchService;
+        private OrderService orderService;
+        private UtilsService utilsService;
+        private GeneralSettingsService generalSettingsService;
+        private CategoryProductService categoryProductService;
 
         public AdminController()
+        {}
+
+        protected override void Initialize(RequestContext requestContext)
         {
+            base.Initialize(requestContext);
+
             var context = new AdminPanelContext();
             var serverUtility = new ServerUtility(Server);
 
@@ -83,7 +90,7 @@ namespace EasyStart.Controllers
             var recommendedProductRepository = new DefaultRepository<RecommendedProductModel>(context);
             var categoryProductLogic = new CategoryProductLogic(
                 categoryProductRepositorhy,
-                recommendedProductRepository, 
+                recommendedProductRepository,
                 serverUtility);
 
             orderService = new OrderService(
@@ -206,7 +213,7 @@ namespace EasyStart.Controllers
             try
             {
                 var savedSetting = deliverySettingService.SaveDeliverySetting(setting);
-                result = JsonResultModel.CreateSuccess(savedSetting);
+                result = JsonResultModel.CreateSuccess(true);
             }
             catch (Exception ex)
             {

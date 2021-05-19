@@ -29,8 +29,8 @@ namespace EasyStart.Logic.Services.Branch
                     string ext = fileName.Substring(fileName.LastIndexOf("."));
                     string newFileName = String.Format(@"{0}{1}", System.Guid.NewGuid(), ext);
 
-                    upload.SaveAs(serverUtility.MapPath($"~/{imagePath}/${newFileName}"));
-                    urlSavedImage = $"../${imagePath}/{newFileName}";
+                    upload.SaveAs(serverUtility.MapPath($"~/{imagePath}/{newFileName}"));
+                    urlSavedImage = $"../{imagePath}/{newFileName}";
                 }
                 else
                     throw new Exception("Не удалось загрузить изображение");
