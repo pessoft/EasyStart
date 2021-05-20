@@ -228,6 +228,13 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult AddCategory(CategoryModel category)
         {
+            return SaveCategory(category);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult SaveCategory(CategoryModel category)
+        {
             try
             {
                 var savedCategory = categoryProductService.SaveCategory(category);
@@ -469,49 +476,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult UpdateCategory(CategoryModel category)
         {
-            result = new JsonResultModel();
-            var defaultImage = "../Images/default-image.jpg";
-
-            try
-            {
-                if (!System.IO.File.Exists(Server.MapPath(category.Image)))
-                {
-                    category.Image = defaultImage;
-                }
-                else if (category.Id > 0)
-                {
-                    var oldImage = DataWrapper.GetCategoryImage(category.Id);
-
-                    if (oldImage != category.Image
-                        && oldImage != defaultImage
-                        && System.IO.File.Exists(Server.MapPath(oldImage)))
-                    {
-                        System.IO.File.Delete(Server.MapPath(oldImage));
-                    }
-                }
-
-                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-
-                category.BranchId = branchId;
-                var updateCategory = DataWrapper.UpdateCategory(category);
-
-                if (updateCategory != null)
-                {
-                    result.Data = updateCategory;
-                    result.Success = true;
-                }
-                else
-                {
-                    result.ErrorMessage = "Категория не обновлена";
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log.Error(ex);
-                result.ErrorMessage = "При загрузке изображения что-то пошло не так...";
-            }
-
-            return Json(result);
+            return SaveCategory(category);
         }
 
         [HttpPost]
