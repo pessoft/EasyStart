@@ -41,8 +41,8 @@ namespace EasyStart.Controllers
             var productRepository = new ProductRepository(context);
             var additionalFillingRepository = new AdditionalFillingRepository(context);
             var additionOptionItemRepository = new AdditionOptionItemRepository(context);
-            var productAdditionalFillingRepository = new BaseRepository<ProductAdditionalFillingModal, int>(context);
-            var productAdditionOptionItemRepository = new BaseRepository<ProductAdditionalOptionModal, int>(context);
+            var productAdditionalFillingRepository = new ProductAdditionalFillingRepository(context);
+            var productAdditionOptionItemRepository = new ProductAdditionOptionItemRepository(context);
             var productLogic = new ProductLogic(
                 productRepository,
                 additionalFillingRepository,
