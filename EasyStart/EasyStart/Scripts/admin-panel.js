@@ -3315,12 +3315,12 @@ class AreaDeliverySetting {
         const minPriceWithPrefix = `${areaDelivery.MinPrice} руб.`
         const deliveryPriceWithPrefix = `${areaDelivery.DeliveryPrice} руб.`
         const actionEditClick = () => this.showEditDialog(
-            areaDelivery.UniqId,
+            areaDelivery.Id,
             areaDelivery.NameArea,
             areaDelivery.MinPrice,
             areaDelivery.DeliveryPrice,
             areaDelivery.VendorCode)
-        const actionRemoveClick = () => this.removeAreaDelivery(areaDelivery.UniqId)
+        const actionRemoveClick = () => this.removeAreaDelivery(areaDelivery.Id)
         const template = `
             <div class="area-delivery-settings-item border-bottom">
                 <span class="area-name">${areaDelivery.NameArea}</span>
@@ -3350,14 +3350,14 @@ class AreaDeliverySetting {
         return $item
     }
 
-    removeAreaDelivery(uniqId) {
+    removeAreaDelivery(id) {
         const loader = new Loader('#areaDeliveryEditDialog')
         loader.start()
 
         let newAreaDelivery = []
 
         for (let area of AreaDelivery) {
-            if (area.UniqId != uniqId) {
+            if (area.Id != id) {
                 newAreaDelivery.push(area)
             }
         }
@@ -3369,16 +3369,16 @@ class AreaDeliverySetting {
     }
 
     appendNewArea() {
-        const uniqId = generateRandomString(10)
+        const id = generateRandomString(10)
 
-        this.showEditDialog(uniqId)
+        this.showEditDialog(id)
     }
 
-    showEditDialog(uniqId, name = '', minPrice = '', deliveryPrice = '', vendorCode = '') {
+    showEditDialog(id, name = '', minPrice = '', deliveryPrice = '', vendorCode = '') {
         $("#area-name").val(name)
         $("#area-price").val(minPrice)
         $("#area-delivery-price").val(deliveryPrice)
-        $("#area-uniqId").val(uniqId)
+        $("#area-uniqId").val(id)
         $("#area-vendor-code").val(vendorCode)
 
         const actionSaveClick = () => this.saveAreaDelivery()
@@ -3397,7 +3397,7 @@ class AreaDeliverySetting {
         const name = $("#area-name").val()
         const minPrice = $("#area-price").val()
         const deliveryPrice = $("#area-delivery-price").val()
-        const uniqId = $("#area-uniqId").val()
+        const id = $("#area-uniqId").val()
         const vendorCode = $("#area-vendor-code").val()
 
         if (!name || !minPrice || !deliveryPrice) {
@@ -3406,7 +3406,7 @@ class AreaDeliverySetting {
             return
         }
 
-        this.singleSaveAreaDelivery(name, minPrice, deliveryPrice, uniqId, vendorCode)
+        this.singleSaveAreaDelivery(name, minPrice, deliveryPrice, id, vendorCode)
 
         this.render()
         loader.stop()
@@ -3414,8 +3414,8 @@ class AreaDeliverySetting {
         Dialog.close('#areaDeliveryEditDialog')
     }
 
-    singleSaveAreaDelivery(name, minPrice, deliveryPrice, uniqId, vendorCode) {
-        const areaDelivery = this.findAreaByUniqId(uniqId)
+    singleSaveAreaDelivery(name, minPrice, deliveryPrice, id, vendorCode) {
+        const areaDelivery = this.findAreaByUniqId(id)
 
         if (areaDelivery) {
             areaDelivery.NameArea = name
@@ -3424,7 +3424,7 @@ class AreaDeliverySetting {
             areaDelivery.VendorCode = vendorCode
         } else {
             const newAreaDelivery = {
-                UniqId: uniqId,
+                Id: id,
                 NameArea: name,
                 MinPrice: minPrice,
                 DeliveryPrice: deliveryPrice,
@@ -3437,7 +3437,7 @@ class AreaDeliverySetting {
 
     multiSaveAreaDelivery(names, minPrice, deliveryPrice) {
         for (name of names) {
-            const uniqId = generateRandomString(10)
+            const id = generateRandomString(10)
             const areaDelivery = this.findAreaByName(names)
 
             if (areaDelivery) {
@@ -3446,7 +3446,7 @@ class AreaDeliverySetting {
                 areaDelivery.DeliveryPrice = deliveryPrice
             } else {
                 const newAreaDelivery = {
-                    UniqId: uniqId,
+                    Id: id,
                     NameArea: name,
                     MinPrice: minPrice,
                     DeliveryPrice: deliveryPrice
@@ -3457,9 +3457,9 @@ class AreaDeliverySetting {
         }
     }
 
-    findAreaByUniqId(uniqId) {
+    findAreaByUniqId(id) {
         for (let areaDelivery of AreaDelivery) {
-            if (areaDelivery.UniqId === uniqId) {
+            if (areaDelivery.Id === id) {
                 return areaDelivery
             }
         }
