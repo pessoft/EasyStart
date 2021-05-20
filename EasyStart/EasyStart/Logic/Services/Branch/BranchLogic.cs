@@ -9,16 +9,16 @@ namespace EasyStart.Logic.Services.Branch
 {
     public class BranchLogic : IBranchLogic
     {
-        private readonly IDefaultEntityRepository<BranchModel> repository;
+        private readonly IBaseRepository<BranchModel, int> repository;
         private readonly string userLogin;
 
-        public BranchLogic(IDefaultEntityRepository<BranchModel> repository, string userLogin)
+        public BranchLogic(IBaseRepository<BranchModel, int> repository, string userLogin)
         {
             this.repository = repository;
             this.userLogin = userLogin;
         }
 
-        public BranchLogic(IDefaultEntityRepository<BranchModel> repository) : this(repository, null)
+        public BranchLogic(IBaseRepository<BranchModel, int> repository) : this(repository, null)
         {}
 
         public BranchModel Save(BranchModel branch)

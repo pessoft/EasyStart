@@ -12,9 +12,9 @@ namespace EasyStart.Logic.Services.Order
 {
     public class OrderLogic: IOrderLogic
     {
-        private readonly IDefaultEntityRepository<OrderModel> repository;
+        private readonly IBaseRepository<OrderModel, int> repository;
 
-        public OrderLogic(IDefaultEntityRepository<OrderModel> repository)
+        public OrderLogic(IBaseRepository<OrderModel, int> repository)
         {
             this.repository = repository;
         }

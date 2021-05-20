@@ -11,13 +11,13 @@ namespace EasyStart.Logic.Services.Product
 {
     public class CategoryProductLogic : ICategoryProductLogic
     {
-        private readonly IDefaultEntityRepository<CategoryModel> categoryRepository;
-        private readonly IDefaultEntityRepository<RecommendedProductModel> recommendedProductRepository;
+        private readonly IBaseRepository<CategoryModel, int> categoryRepository;
+        private readonly IBaseRepository<RecommendedProductModel, int> recommendedProductRepository;
         private readonly IServerUtility serverUtility;
 
         public CategoryProductLogic(
-            IDefaultEntityRepository<CategoryModel> categoryRepository,
-            IDefaultEntityRepository<RecommendedProductModel> recommendedProductRepository,
+            IBaseRepository<CategoryModel, int> categoryRepository,
+            IBaseRepository<RecommendedProductModel, int> recommendedProductRepository,
             IServerUtility serverUtility)
         {
             this.categoryRepository = categoryRepository;

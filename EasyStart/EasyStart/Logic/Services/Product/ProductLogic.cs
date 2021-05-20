@@ -10,18 +10,18 @@ namespace EasyStart.Logic.Services.Product
 {
     public class ProductLogic: IProductLogic
     {
-        private readonly IDefaultEntityRepository<ProductModel> repository;
-        private readonly IDefaultEntityRepository<AdditionalFilling> additionalFillingRepository;
-        private readonly IDefaultEntityRepository<AdditionOptionItem> additionOptionItemRepository;
-        private readonly IDefaultEntityRepository<ProductAdditionalFillingModal> productAdditionalFillingRepository;
-        private readonly IDefaultEntityRepository<ProductAdditionalOptionModal> productAdditionOptionItemRepository;
+        private readonly IBaseRepository<ProductModel, int> repository;
+        private readonly IBaseRepository<AdditionalFilling, int> additionalFillingRepository;
+        private readonly IBaseRepository<AdditionOptionItem, int> additionOptionItemRepository;
+        private readonly IBaseRepository<ProductAdditionalFillingModal, int> productAdditionalFillingRepository;
+        private readonly IBaseRepository<ProductAdditionalOptionModal, int> productAdditionOptionItemRepository;
 
         public ProductLogic(
-            IDefaultEntityRepository<ProductModel> repository,
-            IDefaultEntityRepository<AdditionalFilling> additionalFillingRepository,
-            IDefaultEntityRepository<AdditionOptionItem> additionOptionItemRepository,
-            IDefaultEntityRepository<ProductAdditionalFillingModal> productAdditionalFillingRepository,
-            IDefaultEntityRepository<ProductAdditionalOptionModal> productAdditionOptionItemRepository)
+            IBaseRepository<ProductModel, int> repository,
+            IBaseRepository<AdditionalFilling, int> additionalFillingRepository,
+            IBaseRepository<AdditionOptionItem, int> additionOptionItemRepository,
+            IBaseRepository<ProductAdditionalFillingModal, int> productAdditionalFillingRepository,
+            IBaseRepository<ProductAdditionalOptionModal, int> productAdditionOptionItemRepository)
         {
             this.repository = repository;
             this.additionalFillingRepository = additionalFillingRepository;

@@ -9,6 +9,6 @@ namespace EasyStart.Models
     public class UniqIdEntity
     {
         [Key]
-        public string UniqId { get; set; }
+        public string Id { get; set; }
     }
 }

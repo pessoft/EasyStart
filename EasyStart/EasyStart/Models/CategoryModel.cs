@@ -7,7 +7,7 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class CategoryModel : BaseEntity, IContainImage
+    public class CategoryModel : BaseEntity<int>, IContainImage
     { 
         public int BranchId { get; set; }
         public string Name { get; set; }

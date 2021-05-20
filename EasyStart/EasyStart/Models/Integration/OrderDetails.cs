@@ -37,7 +37,7 @@ namespace EasyStart.Models.Integration
             if (string.IsNullOrEmpty(order.AreaDeliveryId))
                 areaDeliveryVendorCode = null;
             else
-                areaDeliveryVendorCode = areaDeliveries.FirstOrDefault(p => p.UniqId == order.AreaDeliveryId)?.VendorCode;
+                areaDeliveryVendorCode = areaDeliveries.FirstOrDefault(p => p.Id == order.AreaDeliveryId)?.VendorCode;
         }
 
         public string GetAreaDeliveryCode()

@@ -378,7 +378,7 @@ namespace EasyStart.Logic
 
             try
             {
-                var dict = areaDeliveries.ToDictionary(p => p.UniqId);
+                var dict = areaDeliveries.ToDictionary(p => p.Id);
                 var ids = dict.Keys.ToList();
                 var deliverySettingId = areaDeliveries.First().DeliverySettingId;
 
@@ -386,13 +386,13 @@ namespace EasyStart.Logic
                 {
                     var allAreas = db.AreaDeliveryModels.Where(p => p.DeliverySettingId == deliverySettingId).ToList();
                     var updates = allAreas
-                        .Where(x => ids.Contains(x.UniqId))
+                        .Where(x => ids.Contains(x.Id))
                         .ToList();
                     var newAreas = areaDeliveries
-                        .Where(p => !updates.Exists(x => p.UniqId == x.UniqId))
+                        .Where(p => !updates.Exists(x => p.Id == x.Id))
                         .ToList();
                     var removeAreas = allAreas
-                        .Where(x => !updates.Exists(p => p.UniqId == x.UniqId))
+                        .Where(x => !updates.Exists(p => p.Id == x.Id))
                         .ToList();
 
                     if (removeAreas != null && removeAreas.Any())
@@ -404,9 +404,9 @@ namespace EasyStart.Logic
                     {
                         updates.ForEach(p =>
                         {
-                            p.NameArea = dict[p.UniqId].NameArea;
-                            p.MinPrice = dict[p.UniqId].MinPrice;
-                            p.DeliveryPrice = dict[p.UniqId].DeliveryPrice;
+                            p.NameArea = dict[p.Id].NameArea;
+                            p.MinPrice = dict[p.Id].MinPrice;
+                            p.DeliveryPrice = dict[p.Id].DeliveryPrice;
                         });
                     }
 

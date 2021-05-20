@@ -7,7 +7,7 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class BranchModel: BaseEntity
+    public class BranchModel: BaseEntity<int>
     {
         public string Login { get; set; }
         public string Password { get; set; }

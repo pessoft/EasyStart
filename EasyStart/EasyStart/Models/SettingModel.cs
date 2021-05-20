@@ -7,7 +7,7 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class SettingModel: BaseEntity
+    public class SettingModel: BaseEntity<int>
     {
         public int BranchId { get; set; }
         public int CityId { get; set; }

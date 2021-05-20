@@ -9,8 +9,8 @@ namespace EasyStart.Logic.Services.Branch
 {
     public class GeneralSettingsLogic : IGeneralSettingsLogic
     {
-        private readonly IDefaultEntityRepository<SettingModel> settingRepository;
-        public GeneralSettingsLogic(IDefaultEntityRepository<SettingModel> settingRepository)
+        private readonly IBaseRepository<SettingModel, int> settingRepository;
+        public GeneralSettingsLogic(IBaseRepository<SettingModel, int> settingRepository)
         {
             this.settingRepository = settingRepository;
         }

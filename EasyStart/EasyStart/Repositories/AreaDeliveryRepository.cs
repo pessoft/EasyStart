@@ -7,7 +7,7 @@ using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public class AreaDeliveryRepository : UniqIdRepository<AreaDeliveryModel>
+    public class AreaDeliveryRepository : BaseRepository<AreaDeliveryModel, string>
     {
         public AreaDeliveryRepository(DbContext dbContext) : base(dbContext)
         { }

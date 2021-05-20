@@ -8,7 +8,7 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class DeliverySettingModel: BaseEntity
+    public class DeliverySettingModel: BaseEntity<int>
     {
         public int BranchId { get; set; }
         public bool PayCard { get; set; }

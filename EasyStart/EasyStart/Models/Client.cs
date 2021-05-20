@@ -5,7 +5,7 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class Client: BaseEntity
+    public class Client: BaseEntity<int>
     {
         public string PhoneNumber { get; set; }
         public string Password { get; set; }

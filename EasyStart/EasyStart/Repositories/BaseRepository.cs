@@ -1,14 +1,16 @@
 ﻿using EasyStart.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public abstract class BaseRepository<T> : IBaseRepository<T>
-        where T : class
+    public class BaseRepository<T, U> : IBaseRepository<T, U>
+        where T : BaseEntity<U>
+        where U: IEquatable<U>
     {
         protected bool disposed = false;
         protected DbContext context;
@@ -66,6 +68,11 @@ namespace EasyStart.Repositories
             return db.AsEnumerable();
         }
 
+        public virtual T Get(U id)
+        {
+            return db.FirstOrDefault(p => p.Id.Equals(id));
+        }
+
         public virtual IEnumerable<T> Get(Func<T, bool> predicate)
         {
             return db.Where(predicate).AsEnumerable();
@@ -90,9 +97,32 @@ namespace EasyStart.Repositories
             db.Remove(item);
         }
 
-        public abstract T Update(T item);
+        public virtual T Update(T item)
+        {
+            var savedItem = Get(item.Id);
+            return Update(savedItem, item);
+        }
 
-        public abstract List<T> Update(List<T> items);
+        public virtual List<T> Update(List<T> items)
+        {
+            if (items != null && items.Any())
+            {
+                var dict = items.ToDictionary(p => p.Id);
+                var ids = dict.Keys.ToList();
+                var savedItems = Get(p => ids.Contains(p.Id)).ToList();
+
+                savedItems.ForEach(savedItem =>
+                {
+                    var item = dict[savedItem.Id];
+
+                    UpdateWithotSaveChages(savedItem, item);
+                });
+
+                context.SaveChanges();
+            }
+
+            return items;
+        }
 
         protected T Update(T savedItem, T item)
         {

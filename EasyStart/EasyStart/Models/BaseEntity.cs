@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
 namespace EasyStart.Models
 {
-    public class BaseEntity
+    public class BaseEntity<T>
     {
-        public int Id { get; set; }
+        [Key]
+        public T Id { get; set; }
     }
 }

@@ -8,7 +8,7 @@ using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public class FCMDeviceRepository : DefaultRepository<FCMDeviceModel>
+    public class FCMDeviceRepository : BaseRepository<FCMDeviceModel, int>
     {
         public FCMDeviceRepository(DbContext dbContext) : base(dbContext)
         { }

@@ -9,12 +9,12 @@ namespace EasyStart.Logic.Services.DeliverySetting
 {
     public class DeliverySettingLogic: IDeliverySettingLogic
     {
-        private readonly IDefaultEntityRepository<DeliverySettingModel> repository;
-        private readonly IUniqIdEntityRepository<AreaDeliveryModel> areaDeliveryRepository;
+        private readonly IBaseRepository<DeliverySettingModel, int> repository;
+        private readonly IBaseRepository<AreaDeliveryModel, string> areaDeliveryRepository;
 
         public DeliverySettingLogic(
-            IDefaultEntityRepository<DeliverySettingModel> repository,
-            IUniqIdEntityRepository<AreaDeliveryModel> areaDeliveryRepository)
+            IBaseRepository<DeliverySettingModel, int> repository,
+            IBaseRepository<AreaDeliveryModel, string> areaDeliveryRepository)
         {
             this.repository = repository;
             this.areaDeliveryRepository = areaDeliveryRepository;
@@ -67,20 +67,20 @@ namespace EasyStart.Logic.Services.DeliverySetting
             if (areaDeliveries == null || !areaDeliveries.Any())
                 return areaDeliveries;
 
-            var dict = areaDeliveries.ToDictionary(p => p.UniqId);
+            var dict = areaDeliveries.ToDictionary(p => p.Id);
             var ids = dict.Keys.ToList();
             var deliverySettingId = areaDeliveries.First().DeliverySettingId;
 
             var allAreas = GetAreaDeliveris(deliverySettingId);
             var updates = allAreas
-                    .Where(x => ids.Contains(x.UniqId))
-                    .Select(p => dict[p.UniqId])
+                    .Where(x => ids.Contains(x.Id))
+                    .Select(p => dict[p.Id])
                     .ToList();
             var newAreas = areaDeliveries
-                   .Where(p => !updates.Exists(x => p.UniqId == x.UniqId))
+                   .Where(p => !updates.Exists(x => p.Id == x.Id))
                    .ToList();
             var removeAreas = allAreas
-                .Where(x => !updates.Exists(p => p.UniqId == x.UniqId))
+                .Where(x => !updates.Exists(p => p.Id == x.Id))
                 .ToList();
 
             areaDeliveryRepository.Update(updates);

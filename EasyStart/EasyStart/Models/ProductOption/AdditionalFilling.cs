@@ -5,7 +5,7 @@ using System.Web;
 
 namespace EasyStart.Models.ProductOption
 {
-    public class AdditionalFilling: BaseEntity
+    public class AdditionalFilling: BaseEntity<int>
     {
         public int BranchId { get; set; }
         public string Name { get; set; }

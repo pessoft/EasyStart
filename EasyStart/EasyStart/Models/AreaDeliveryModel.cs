@@ -6,7 +6,7 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class AreaDeliveryModel: UniqIdEntity
+    public class AreaDeliveryModel: BaseEntity<string>
     {
         public int DeliverySettingId { get; set; }
         public string NameArea { get; set; }

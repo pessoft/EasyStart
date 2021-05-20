@@ -61,8 +61,8 @@ namespace EasyStart.Controllers
             var productRepository = new ProductRepository(context);
             var additionalFillingRepository = new AdditionalFillingRepository(context);
             var additionOptionItemRepository = new AdditionOptionItemRepository(context);
-            var productAdditionalFillingRepository = new DefaultRepository<ProductAdditionalFillingModal>(context);
-            var productAdditionOptionItemRepository = new DefaultRepository<ProductAdditionalOptionModal>(context);
+            var productAdditionalFillingRepository = new BaseRepository<ProductAdditionalFillingModal, int>(context);
+            var productAdditionOptionItemRepository = new BaseRepository<ProductAdditionalOptionModal, int>(context);
             var productLogic = new ProductLogic(
                 productRepository,
                 additionalFillingRepository,
@@ -83,11 +83,11 @@ namespace EasyStart.Controllers
             var clientRepository = new ClientRepository(context);
             var clientLogic = new ClientLogic(clientRepository);
 
-            var generalSettingRepositorhy = new DefaultRepository<SettingModel>(context);
+            var generalSettingRepositorhy = new BaseRepository<SettingModel, int>(context);
             var generalSettingLogic = new GeneralSettingsLogic(generalSettingRepositorhy);
 
-            var categoryProductRepositorhy = new DefaultRepository<CategoryModel>(context);
-            var recommendedProductRepository = new DefaultRepository<RecommendedProductModel>(context);
+            var categoryProductRepositorhy = new BaseRepository<CategoryModel, int>(context);
+            var recommendedProductRepository = new BaseRepository<RecommendedProductModel, int>(context);
             var categoryProductLogic = new CategoryProductLogic(
                 categoryProductRepositorhy,
                 recommendedProductRepository,
