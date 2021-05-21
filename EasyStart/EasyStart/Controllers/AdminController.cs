@@ -457,16 +457,19 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult RemoveCategory(int id)
         {
-            result = new JsonResultModel();
-            var success = DataWrapper.RemoveCategory(id);
+            try
+            {
+                var success = categoryProductService.RemoveCategory(id);
 
-            if (success)
-            {
-                result.Success = success;
+                if (success)
+                    result = JsonResultModel.CreateSuccess(success);
+                else
+                    result = JsonResultModel.CreateError($"Категория с идентификатором {id} не найдена");
             }
-            else
+            catch (Exception ex)
             {
-                result.ErrorMessage = "Категория не удалена";
+                Logger.Log.Error(ex);
+                result = JsonResultModel.CreateError("При удалении категории что-то пошло не так...");
             }
 
             return Json(result);

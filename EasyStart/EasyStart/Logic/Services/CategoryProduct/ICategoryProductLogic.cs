@@ -12,5 +12,6 @@ namespace EasyStart.Logic.Services.Product
     {
         CategoryModel Get(int id);
         CategoryModel SaveCategory(CategoryModel category);
+        bool RemoveCategory(int id);
     }
 }

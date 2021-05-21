@@ -30,6 +30,19 @@ namespace EasyStart.Logic.Services.Product
             return categoryRepository.Get(id);
         }
 
+        public bool RemoveCategory(int id)
+        {
+            var category = Get(id);
+
+            if (category == null)
+                return false;
+
+            category.IsDeleted = true;
+            categoryRepository.Update(category);
+
+            return true;
+        }
+
         public CategoryModel SaveCategory(CategoryModel category)
         {
             var defaultImage = "../Images/default-image.jpg";

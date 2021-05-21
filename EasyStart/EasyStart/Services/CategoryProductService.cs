@@ -30,12 +30,17 @@ namespace EasyStart.Services
 
         public CategoryModel SaveCategory(CategoryModel category)
         {
-            var branch = this.branchLogic.Get();
+            var branch = branchLogic.Get();
             category.BranchId = branch.Id;
 
             var savedCategory = categoryProductLogic.SaveCategory(category);
 
             return savedCategory;
+        }
+
+        public bool RemoveCategory(int id)
+        {
+            return categoryProductLogic.RemoveCategory(id);
         }
     }
 }
