@@ -8,7 +8,6 @@ using EasyStart.Logic.Services.IntegrationSystem;
 using EasyStart.Logic.Services.Order;
 using EasyStart.Logic.Services.Product;
 using EasyStart.Logic.Services.PushNotification;
-using EasyStart.Logic.Services.Utils;
 using EasyStart.Models;
 using EasyStart.Models.FCMNotification;
 using EasyStart.Models.ProductOption;
@@ -50,7 +49,6 @@ namespace EasyStart.Controllers
             base.Initialize(requestContext);
 
             var context = new AdminPanelContext();
-            var serverUtility = new ServerUtility(Server);
 
             var orderRepository = new OrderRepository(context);
             var orderLogic = new OrderLogic(orderRepository);
@@ -90,8 +88,7 @@ namespace EasyStart.Controllers
             var recommendedProductRepository = new RecommendedProductRepository(context);
             var categoryProductLogic = new CategoryProductLogic(
                 categoryProductRepository,
-                recommendedProductRepository,
-                serverUtility);
+                recommendedProductRepository);
 
             orderService = new OrderService(
                 orderLogic,
@@ -101,7 +98,7 @@ namespace EasyStart.Controllers
                 pushNotificationLogic);
             deliverySettingService = new DeliverySettingService(deliverySettingLogic, branchLogic);
             branchService = new BranchService(branchLogic);
-            utilsService = new UtilsService(new UtilsLogic(serverUtility));
+            utilsService = new UtilsService(new UtilsLogic());
             generalSettingsService = new GeneralSettingsService(generalSettingLogic, branchLogic);
             categoryProductService = new CategoryProductService(categoryProductLogic, branchLogic);
         }

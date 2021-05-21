@@ -1,28 +1,25 @@
-﻿using EasyStart.Logic.Services.Utils;
-using EasyStart.Models;
+﻿using EasyStart.Models;
 using EasyStart.Models.ProductOption;
 using EasyStart.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Hosting;
 
 namespace EasyStart.Logic.Services.Product
 {
-    public class CategoryProductLogic : ICategoryProductLogic
+    public class CategoryProductLogic : CatalogItemBase, ICategoryProductLogic
     {
         private readonly IBaseRepository<CategoryModel, int> categoryRepository;
         private readonly IBaseRepository<RecommendedProductModel, int> recommendedProductRepository;
-        private readonly IServerUtility serverUtility;
 
         public CategoryProductLogic(
             IBaseRepository<CategoryModel, int> categoryRepository,
-            IBaseRepository<RecommendedProductModel, int> recommendedProductRepository,
-            IServerUtility serverUtility)
+            IBaseRepository<RecommendedProductModel, int> recommendedProductRepository)
         {
             this.categoryRepository = categoryRepository;
             this.recommendedProductRepository = recommendedProductRepository;
-            this.serverUtility = serverUtility;
         }
 
         public CategoryModel Get(int id)
@@ -45,24 +42,16 @@ namespace EasyStart.Logic.Services.Product
 
         public CategoryModel SaveCategory(CategoryModel category)
         {
-            var defaultImage = "../Images/default-image.jpg";
             var oldCategory = categoryRepository.Get(category.Id);
             CategoryModel savedCategory = null;
 
-            if (!System.IO.File.Exists(serverUtility.MapPath(category.Image)))
-                category.Image = defaultImage;
+            PrepareImage(category);
 
             if (oldCategory != null)
             {
-                var oldImage = oldCategory.Image;
+                category.OrderNumber = oldCategory.OrderNumber;
 
-                if (oldImage != category.Image
-                    && oldImage != defaultImage
-                   && System.IO.File.Exists(serverUtility.MapPath(oldImage)))
-                {
-                    System.IO.File.Delete(serverUtility.MapPath(oldImage));
-                }
-
+                RemoveOldImage(oldCategory, category);
                 savedCategory = categoryRepository.Update(category);
             }
             else

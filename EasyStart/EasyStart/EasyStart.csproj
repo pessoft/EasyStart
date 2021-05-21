@@ -316,12 +316,11 @@
     <Compile Include="Logic\PromotionLogic.cs" />
     <Compile Include="Logic\Report\GeneralUserQuantity.cs" />
     <Compile Include="Logic\Report\ActiveUsersReport.cs" />
+    <Compile Include="Logic\Services\CatalogItemBase.cs" />
     <Compile Include="Logic\Services\GeneralSettings\IGeneralSettingsLogic.cs" />
     <Compile Include="Logic\Services\GeneralSettings\GeneralSettingsLogic.cs" />
     <Compile Include="Logic\Services\CategoryProduct\ICategoryProductLogic.cs" />
     <Compile Include="Logic\Services\CategoryProduct\CategoryProductLogic.cs" />
-    <Compile Include="Logic\Services\Utils\IServerUtility.cs" />
-    <Compile Include="Logic\Services\Utils\ServerUtility.cs" />
     <Compile Include="Logic\Services\Utils\UtilsLogic.cs" />
     <Compile Include="Logic\Services\Utils\IUtilsLogic.cs" />
     <Compile Include="Logic\Services\Branch\BranchLogic.cs" />

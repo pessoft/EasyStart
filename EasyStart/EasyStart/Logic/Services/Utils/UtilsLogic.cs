@@ -1,20 +1,15 @@
-﻿using EasyStart.Logic.Services.Utils;
-using EasyStart.Models;
+﻿using EasyStart.Models;
 using EasyStart.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Hosting;
 
 namespace EasyStart.Logic.Services.Branch
 {
     public class UtilsLogic : IUtilsLogic
     {
-        private readonly IServerUtility serverUtility;
-        public UtilsLogic(IServerUtility serverUtility)
-        {
-            this.serverUtility = serverUtility;
-        }
         public string SaveImage(HttpRequestBase request)
         {
             string urlSavedImage = null;
@@ -29,7 +24,7 @@ namespace EasyStart.Logic.Services.Branch
                     string ext = fileName.Substring(fileName.LastIndexOf("."));
                     string newFileName = String.Format(@"{0}{1}", System.Guid.NewGuid(), ext);
 
-                    upload.SaveAs(serverUtility.MapPath($"~/{imagePath}/{newFileName}"));
+                    upload.SaveAs(HostingEnvironment.MapPath($"~/{imagePath}/{newFileName}"));
                     urlSavedImage = $"../{imagePath}/{newFileName}";
                 }
                 else
