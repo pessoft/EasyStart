@@ -40,6 +40,7 @@ namespace EasyStart.Controllers
         private UtilsService utilsService;
         private GeneralSettingsService generalSettingsService;
         private CategoryProductService categoryProductService;
+        private ProductService productService;
 
         public AdminController()
         {}
@@ -101,6 +102,7 @@ namespace EasyStart.Controllers
             utilsService = new UtilsService(new UtilsLogic());
             generalSettingsService = new GeneralSettingsService(generalSettingLogic, branchLogic);
             categoryProductService = new CategoryProductService(categoryProductLogic, branchLogic);
+            productService = new ProductService(productLogic, branchLogic);
         }
 
         // GET: Admin
@@ -240,7 +242,7 @@ namespace EasyStart.Controllers
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result = JsonResultModel.CreateError("При добавлении категории что-то пошло не так...");
+                result = JsonResultModel.CreateError("При сохранении категории что-то пошло не так...");
             }
 
             return Json(result);
@@ -250,40 +252,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult AddProduct(ProductModel product)
         {
-            result = new JsonResultModel();
-            var defaultImage = "../Images/default-image.jpg";
-            if (!System.IO.File.Exists(Server.MapPath(product.Image)))
-            {
-                product.Image = defaultImage;
-            }
-            else if (product.Id > 0)
-            {
-                var oldImage = DataWrapper.GetProductImage(product.Id);
-
-                if (oldImage != product.Image
-                    && oldImage != defaultImage
-                    && System.IO.File.Exists(Server.MapPath(oldImage)))
-                {
-                    System.IO.File.Delete(Server.MapPath(oldImage));
-                }
-            }
-
-            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-
-            product.BranchId = branchId;
-            product = DataWrapper.SaveProduct(product);
-
-            if (product != null)
-            {
-                result.Data = product;
-                result.Success = true;
-            }
-            else
-            {
-                result.ErrorMessage = "При добавлении продукта что-то пошло не так...";
-            }
-
-            return Json(result);
+            return SaveProduct(product);
         }
 
         [HttpPost]
@@ -520,43 +489,27 @@ namespace EasyStart.Controllers
 
         [HttpPost]
         [Authorize]
-        public JsonResult UpdateProduct(ProductModel product)
+        public JsonResult SaveProduct(ProductModel product)
         {
-            result = new JsonResultModel();
-            var defaultImage = "../Images/default-image.jpg";
-
-            if (!System.IO.File.Exists(Server.MapPath(product.Image)))
+            try
             {
-                product.Image = defaultImage;
+                var savedProduct = productService.SaveProduct(product);
+                result = JsonResultModel.CreateSuccess(savedProduct);
             }
-            else if (product.Id > 0)
+            catch (Exception ex)
             {
-                var oldImage = DataWrapper.GetProductImage(product.Id);
-
-                if (oldImage != product.Image
-                    && oldImage != defaultImage
-                    && System.IO.File.Exists(Server.MapPath(oldImage)))
-                {
-                    System.IO.File.Delete(Server.MapPath(oldImage));
-                }
-            }
-
-            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-
-            product.CategoryId = branchId;
-            var updateProduct = DataWrapper.UpdateProduct(product);
-
-            if (updateProduct != null)
-            {
-                result.Data = updateProduct;
-                result.Success = true;
-            }
-            else
-            {
-                result.ErrorMessage = "Продукт не обновлена";
+                Logger.Log.Error(ex);
+                result = JsonResultModel.CreateError("При сохранении продукта что-то пошло не так...");
             }
 
             return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult UpdateProduct(ProductModel product)
+        {
+            return SaveProduct(product);
         }
 
         [HttpPost]

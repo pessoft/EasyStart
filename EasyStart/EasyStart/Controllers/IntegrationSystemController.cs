@@ -77,7 +77,7 @@ namespace EasyStart.Controllers
             integrationSystemService = new IntegrationSystemService(integrationSystemLogic);
             clientService = new ClientService(clientLogic);
             branchService = new BranchService(branchLogic);
-            productService = new ProductService(productLogic);
+            productService = new ProductService(productLogic, branchLogic);
         }
 
         [HttpGet]

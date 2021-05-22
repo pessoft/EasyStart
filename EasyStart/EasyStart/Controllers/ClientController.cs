@@ -69,7 +69,7 @@ namespace EasyStart.Controllers
                 productLogic,
                 deliverySettingLogic,
                 pushNotificationLogic);
-            productService = new ProductService(productLogic);
+            productService = new ProductService(productLogic, branchLogic);
             clientService = new ClientService(clientLogic);
             branchService = new BranchService(branchLogic);
         }

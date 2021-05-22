@@ -8,22 +8,22 @@ using System.Web;
 
 namespace EasyStart.Logic.Services.Product
 {
-    public class ProductLogic: IProductLogic
+    public class ProductLogic: CatalogItemBase, IProductLogic
     {
-        private readonly IBaseRepository<ProductModel, int> repository;
+        private readonly IBaseRepository<ProductModel, int> productRepository;
         private readonly IBaseRepository<AdditionalFilling, int> additionalFillingRepository;
         private readonly IBaseRepository<AdditionOptionItem, int> additionOptionItemRepository;
         private readonly IBaseRepository<ProductAdditionalFillingModal, int> productAdditionalFillingRepository;
         private readonly IBaseRepository<ProductAdditionalOptionModal, int> productAdditionOptionItemRepository;
 
         public ProductLogic(
-            IBaseRepository<ProductModel, int> repository,
+            IBaseRepository<ProductModel, int> productRepository,
             IBaseRepository<AdditionalFilling, int> additionalFillingRepository,
             IBaseRepository<AdditionOptionItem, int> additionOptionItemRepository,
             IBaseRepository<ProductAdditionalFillingModal, int> productAdditionalFillingRepository,
             IBaseRepository<ProductAdditionalOptionModal, int> productAdditionOptionItemRepository)
         {
-            this.repository = repository;
+            this.productRepository = productRepository;
             this.additionalFillingRepository = additionalFillingRepository;
             this.additionOptionItemRepository = additionOptionItemRepository;
             this.productAdditionalFillingRepository = productAdditionalFillingRepository;
@@ -32,7 +32,7 @@ namespace EasyStart.Logic.Services.Product
 
         public ProductModel Get(int id)
         {
-            var result = repository.Get(id);
+            var result = productRepository.Get(id);
 
             if (result != null)
             {
@@ -66,7 +66,7 @@ namespace EasyStart.Logic.Services.Product
                 productIds.AddRange(order.ProductWithOptionsCount.Select(p => p.ProductId));
 
             productIds = productIds.Distinct().ToList();
-            var products = repository.Get(p => productIds.Contains(p.Id)).ToList();
+            var products = productRepository.Get(p => productIds.Contains(p.Id)).ToList();
 
             if (products.Any())
             {
@@ -131,6 +131,79 @@ namespace EasyStart.Logic.Services.Product
             }
 
             return additionOptionItems;
+        }
+
+        public ProductModel SaveProduct(ProductModel product)
+        {
+            var oldProduct = productRepository.Get(product.Id);
+            ProductModel savedProduct = null;
+
+            PrepareImage(product);
+
+            if(oldProduct != null)
+            {
+                product.OrderNumber = oldProduct.OrderNumber;
+
+                RemoveOldImage(oldProduct, product);
+                savedProduct = productRepository.Update(product);
+            }
+            else
+            {
+                var orderNumber = productRepository.Get(p => p.CategoryId == product.CategoryId && !p.IsDeleted).Count() + 1;
+                product.OrderNumber = orderNumber;
+                
+                savedProduct = productRepository.Create(product);
+            }
+
+            savedProduct.ProductAdditionalOptionIds = product.ProductAdditionalOptionIds;
+            SaveProductAdditionalOptions(savedProduct);
+
+            savedProduct.ProductAdditionalFillingIds = product.ProductAdditionalFillingIds;
+            SaveProductAdditionalFilling(savedProduct);
+
+            return savedProduct;
+        }
+
+        private void SaveProductAdditionalOptions(ProductModel product)
+        {
+            var orderNumber = 1;
+            var additionalOptions = product.ProductAdditionalOptionIds == null ? null : product.ProductAdditionalOptionIds
+                .Select(p => new ProductAdditionalOptionModal
+                {
+                    AdditionalOptionId = p,
+                    BranchId = product.BranchId,
+                    OrderNumber = orderNumber++,
+                    ProductId = product.Id
+                }).ToList();
+            var oldItems = productAdditionOptionItemRepository
+                .Get(p => p.ProductId == product.Id && !p.IsDeleted)
+                .ToList();
+            oldItems.ForEach(p => p.IsDeleted = true);
+
+            productAdditionOptionItemRepository.Update(oldItems);
+            productAdditionOptionItemRepository.Create(additionalOptions);
+        }
+
+        private void SaveProductAdditionalFilling(ProductModel product)
+        {
+            var orderNumber = 1;
+            var additionalFillings = product.ProductAdditionalFillingIds == null ? null : product.ProductAdditionalFillingIds
+                .Select(p => new ProductAdditionalFillingModal
+                {
+                    AdditionalFillingId = p,
+                    BranchId = product.BranchId,
+                    OrderNumber = orderNumber++,
+                    ProductId = product.Id
+                })
+                .ToList();
+
+            var oldItems = productAdditionalFillingRepository
+                .Get(p => p.ProductId == product.Id && !p.IsDeleted)
+                .ToList();
+            oldItems.ForEach(p => p.IsDeleted = true);
+
+            productAdditionalFillingRepository.Update(oldItems);
+            productAdditionalFillingRepository.Create(additionalFillings);
         }
     }
 }

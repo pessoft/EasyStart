@@ -1,4 +1,5 @@
-﻿using EasyStart.Logic.Services.Product;
+﻿using EasyStart.Logic.Services.Branch;
+using EasyStart.Logic.Services.Product;
 using EasyStart.Models;
 using EasyStart.Models.ProductOption;
 using EasyStart.Repositories;
@@ -12,10 +13,14 @@ namespace EasyStart.Services
     public class ProductService
     {
         private readonly IProductLogic productLogic;
+        private readonly IBranchLogic branchLogic;
 
-        public ProductService(IProductLogic productLogic)
+        public ProductService(
+            IProductLogic productLogic,
+            IBranchLogic branchLogic)
         {
             this.productLogic = productLogic;
+            this.branchLogic = branchLogic;
         }
 
         public ProductModel Get(int id)
@@ -51,6 +56,14 @@ namespace EasyStart.Services
         public Dictionary<int, List<ProductAdditionalOptionModal>> GetProductAdditionOptionItemByProductIds(List<int> productIds)
         {
             return productLogic.GetProductAdditionOptionItemByProductIds(productIds);
+        }
+
+        public ProductModel SaveProduct(ProductModel product)
+        {
+            var branch = branchLogic.Get();
+            product.BranchId = branch.Id;
+
+            return productLogic.SaveProduct(product);
         }
     }
 }
