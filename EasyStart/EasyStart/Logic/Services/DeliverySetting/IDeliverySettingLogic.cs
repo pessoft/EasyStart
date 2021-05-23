@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EasyStart.Logic.Services.DeliverySetting
 {
-    public interface IDeliverySettingLogic
+    public interface IDeliverySettingLogic: IBranchRemoval
     {
         DeliverySettingModel SaveDeliverySetting(DeliverySettingModel setting);
         DeliverySettingModel GetByBranchId(int branchId);

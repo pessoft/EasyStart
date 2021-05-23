@@ -1,4 +1,5 @@
 ﻿using EasyStart.Logic.Services.Branch;
+using EasyStart.Logic.Services.CategoryProduct;
 using EasyStart.Logic.Services.Product;
 using EasyStart.Models;
 using EasyStart.Models.ProductOption;

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Hosting;
 
-namespace EasyStart.Logic.Services.Product
+namespace EasyStart.Logic.Services.CategoryProduct
 {
     public class CategoryProductLogic : CatalogItemBase, ICategoryProductLogic
     {
@@ -25,6 +25,14 @@ namespace EasyStart.Logic.Services.Product
         public CategoryModel Get(int id)
         {
             return categoryRepository.Get(id);
+        }
+
+        public void RemoveByBranch(int branchId)
+        {
+            var categories = categoryRepository.Get(p => p.BranchId == branchId).ToList();
+            categories.ForEach(p => p.IsDeleted = true);
+
+            categoryRepository.Update(categories);
         }
 
         public bool RemoveCategory(int id)

@@ -55,5 +55,13 @@ namespace EasyStart.Logic.Services.Branch
         {
             return repository.Get(p => p.TypeBranch == Logic.TypeBranch.MainBranch).FirstOrDefault();
         }
+
+        public void RemoveByBranch(int branchId)
+        {
+            var branch = repository.Get(branchId);
+            branch.IsDeleted = true;
+
+            repository.Update(branch);
+        }
     }
 }

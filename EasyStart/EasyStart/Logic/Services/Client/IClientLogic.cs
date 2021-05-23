@@ -7,7 +7,7 @@ using ClientModel = EasyStart.Models.Client;
 
 namespace EasyStart.Logic.Services.Client
 {
-    public interface IClientLogic
+    public interface IClientLogic: IBranchRemoval
     {
         List<ClientModel> GetAll(int branchId);
         ClientModel Get(int id);

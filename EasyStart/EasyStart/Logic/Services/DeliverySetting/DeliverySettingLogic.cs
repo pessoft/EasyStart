@@ -89,5 +89,16 @@ namespace EasyStart.Logic.Services.DeliverySetting
 
             return GetAreaDeliveris(deliverySettingId);
         }
+
+        public void RemoveByBranch(int branchId)
+        {
+            var setting = repository.Get(p => p.BranchId == branchId).FirstOrDefault();
+
+            if (setting != null)
+            {
+                setting.IsDeleted = true;
+                repository.Update(setting);
+            }
+        }
     }
 }

@@ -205,5 +205,49 @@ namespace EasyStart.Logic.Services.Product
             productAdditionalFillingRepository.Update(oldItems);
             productAdditionalFillingRepository.Create(additionalFillings);
         }
+
+        public void RemoveByBranch(int branchId)
+        {
+            RemoveProductsByBranch(branchId);
+            RemoveAdditionalFillingsByBranch(branchId);
+            RemoveAdditionOptionsByBranch(branchId);
+            RemoveProductAdditionalFillingsByBranch(branchId);
+            RemoveProductAdditionOptionsByBranch(branchId);
+        }
+
+        private void RemoveProductsByBranch(int branchId)
+        {
+            var items = productRepository.Get(p => p.BranchId == branchId).ToList();
+            items.ForEach(p => p.IsDeleted = true);
+            productRepository.Update(items);
+        }
+
+        private void RemoveAdditionalFillingsByBranch(int branchId)
+        {
+            var items = additionalFillingRepository.Get(p => p.BranchId == branchId).ToList();
+            items.ForEach(p => p.IsDeleted = true);
+            additionalFillingRepository.Update(items);
+        }
+
+        private void RemoveAdditionOptionsByBranch(int branchId)
+        {
+            var items = additionOptionItemRepository.Get(p => p.BranchId == branchId).ToList();
+            items.ForEach(p => p.IsDeleted = true);
+            additionOptionItemRepository.Update(items);
+        }
+
+        private void RemoveProductAdditionalFillingsByBranch(int branchId)
+        {
+            var items = productAdditionalFillingRepository.Get(p => p.BranchId == branchId).ToList();
+            items.ForEach(p => p.IsDeleted = true);
+            productAdditionalFillingRepository.Update(items);
+        }
+
+        private void RemoveProductAdditionOptionsByBranch(int branchId)
+        {
+            var items = productAdditionOptionItemRepository.Get(p => p.BranchId == branchId).ToList();
+            items.ForEach(p => p.IsDeleted = true);
+            productAdditionOptionItemRepository.Update(items);
+        }
     }
 }

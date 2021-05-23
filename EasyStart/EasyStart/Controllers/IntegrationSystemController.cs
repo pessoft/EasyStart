@@ -22,6 +22,7 @@ using EasyStart.Logic.Services.Branch;
 using EasyStart.Logic.Services.Client;
 using EasyStart.Logic.Services.DeliverySetting;
 using EasyStart.Logic.Services.PushNotification;
+using EasyStart.Logic.Services.GeneralSettings;
 
 namespace EasyStart.Controllers
 {

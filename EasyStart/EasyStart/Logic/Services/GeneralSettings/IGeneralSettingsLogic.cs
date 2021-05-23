@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace EasyStart.Logic.Services.Branch
+namespace EasyStart.Logic.Services.GeneralSettings
 {
-    public interface IGeneralSettingsLogic
+    public interface IGeneralSettingsLogic: IBranchRemoval
     {
         SettingModel SaveSetting(SettingModel setting);
     }

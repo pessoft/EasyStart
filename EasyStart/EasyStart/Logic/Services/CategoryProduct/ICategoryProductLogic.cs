@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EasyStart.Logic.Services.Product
+namespace EasyStart.Logic.Services.CategoryProduct
 {
-    public interface ICategoryProductLogic
+    public interface ICategoryProductLogic: IBranchRemoval
     {
         CategoryModel Get(int id);
         CategoryModel SaveCategory(CategoryModel category);

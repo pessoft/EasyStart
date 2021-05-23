@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EasyStart.Logic.Services.Branch
 {
-    public interface IBranchLogic
+    public interface IBranchLogic: IBranchRemoval
     {
         BranchModel Save(BranchModel branch);
         BranchModel Get();

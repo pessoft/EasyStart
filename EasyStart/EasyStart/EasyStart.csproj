@@ -318,11 +318,15 @@
     <Compile Include="Logic\Report\ActiveUsersReport.cs" />
     <Compile Include="Logic\Services\Branch\BranchAlreadyExistException.cs" />
     <Compile Include="Logic\Services\Branch\BranchActionPermissionDeniedException.cs" />
+    <Compile Include="Logic\Services\Branch\BranchSelfDeletionException.cs" />
     <Compile Include="Logic\Services\CatalogItemBase.cs" />
+    <Compile Include="Logic\Services\ConstructorProduct\ConstructorProductLogic.cs" />
+    <Compile Include="Logic\Services\ConstructorProduct\IConstructorProductLogic.cs" />
     <Compile Include="Logic\Services\GeneralSettings\IGeneralSettingsLogic.cs" />
     <Compile Include="Logic\Services\GeneralSettings\GeneralSettingsLogic.cs" />
     <Compile Include="Logic\Services\CategoryProduct\ICategoryProductLogic.cs" />
     <Compile Include="Logic\Services\CategoryProduct\CategoryProductLogic.cs" />
+    <Compile Include="Logic\Services\IBranchRemoval.cs" />
     <Compile Include="Logic\Services\Utils\UtilsLogic.cs" />
     <Compile Include="Logic\Services\Utils\IUtilsLogic.cs" />
     <Compile Include="Logic\Services\Branch\BranchLogic.cs" />
@@ -654,6 +658,8 @@
     <Compile Include="Repositories\AdditionOptionItemRepository.cs" />
     <Compile Include="Repositories\AreaDeliveryRepository.cs" />
     <Compile Include="Repositories\AdditionalFillingRepository.cs" />
+    <Compile Include="Repositories\ConstructorIngredientRepository.cs" />
+    <Compile Include="Repositories\ConstructorCategoryRepository.cs" />
     <Compile Include="Repositories\CategoryProductRepository.cs" />
     <Compile Include="Repositories\ClientRepository.cs" />
     <Compile Include="Repositories\FCMDeviceRepository.cs" />
@@ -668,6 +674,7 @@
     <Compile Include="Repositories\InegrationSystemRepository.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
     <Compile Include="Repositories\RecommendedProductRepository.cs" />
+    <Compile Include="Services\BranchRemovalService.cs" />
     <Compile Include="Services\GeneralSettingsService.cs" />
     <Compile Include="Services\CategoryProductService.cs" />
     <Compile Include="Services\UtilsService.cs" />

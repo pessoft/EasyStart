@@ -74,5 +74,17 @@ namespace EasyStart.Logic.Services.Client
 
             repository.Update(client);
         }
+
+        /// <summary>
+        /// Тут ни чего не удаляется, а просто у клиентов сбрасываются настройки филиала
+        /// </summary>
+        /// <param name="branchId"></param>
+        public void RemoveByBranch(int branchId)
+        {
+            var clients = repository.Get(p => p.BranchId == branchId).ToList();
+            clients.ForEach(p => { p.BranchId = -1; p.CityId = -1; });
+
+            repository.Update(clients);
+        }
     }
 }

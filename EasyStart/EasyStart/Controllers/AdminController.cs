@@ -2,8 +2,11 @@
 using EasyStart.Logic.FCM;
 using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.Services.Branch;
+using EasyStart.Logic.Services.CategoryProduct;
 using EasyStart.Logic.Services.Client;
+using EasyStart.Logic.Services.ConstructorProduct;
 using EasyStart.Logic.Services.DeliverySetting;
+using EasyStart.Logic.Services.GeneralSettings;
 using EasyStart.Logic.Services.IntegrationSystem;
 using EasyStart.Logic.Services.Order;
 using EasyStart.Logic.Services.Product;
@@ -41,6 +44,7 @@ namespace EasyStart.Controllers
         private GeneralSettingsService generalSettingsService;
         private CategoryProductService categoryProductService;
         private ProductService productService;
+        private BranchRemovalService branchRemovalService;
 
         public AdminController()
         {}
@@ -91,6 +95,12 @@ namespace EasyStart.Controllers
                 categoryProductRepository,
                 recommendedProductRepository);
 
+            var constructorCategoryRepository = new ConstructorCategoryRepository(context);
+            var constructorIngredientRepository = new ConstructorIngredientRepository(context);
+            var constructorProductLogic = new ConstructorProductLogic(
+                constructorCategoryRepository,
+                constructorIngredientRepository);
+
             orderService = new OrderService(
                 orderLogic,
                 integrationSystemLogic,
@@ -103,6 +113,14 @@ namespace EasyStart.Controllers
             generalSettingsService = new GeneralSettingsService(generalSettingLogic, branchLogic);
             categoryProductService = new CategoryProductService(categoryProductLogic, branchLogic);
             productService = new ProductService(productLogic, branchLogic);
+            branchRemovalService = new BranchRemovalService(
+                branchLogic,
+                generalSettingLogic,
+                deliverySettingLogic,
+                clientLogic,
+                categoryProductLogic,
+                productLogic,
+                constructorProductLogic);
         }
 
         // GET: Admin
@@ -282,42 +300,21 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult RemoveBranch(int id)
         {
-            result = new JsonResultModel();
             try
             {
-                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-                var typeBranch = DataWrapper.GetBranchType(branchId);
-
-                if (branchId == id)
-                {
-                    result.ErrorMessage = "Самоудаление не возможно";
-                    return Json(result);
-                }
-
-                if (typeBranch != TypeBranch.MainBranch)
-                {
-                    result.ErrorMessage = "Вы не можете удалять филиалы";
-                }
-                else
-                {
-                    var success = DataWrapper.RemoveBranch(id);
-
-                    if (success)
-                    {
-                        result.Success = success;
-                    }
-                    else
-                    {
-                        result.ErrorMessage = "Отдедение не удалено";
-                    }
-                }
+                branchRemovalService.Remove(id);
+                result = JsonResultModel.CreateSuccess(true);
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result.ErrorMessage = ex.Message;
-            }
 
+                if (ex is BranchActionPermissionDeniedException
+                    || ex is BranchSelfDeletionException)
+                    result = JsonResultModel.CreateError(ex.Message);
+                else
+                    result = JsonResultModel.CreateError("При удалении филиала что-то пошло не так...");
+            }
 
             return Json(result);
         }

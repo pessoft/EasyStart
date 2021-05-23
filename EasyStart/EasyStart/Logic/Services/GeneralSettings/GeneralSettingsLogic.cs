@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace EasyStart.Logic.Services.Branch
+namespace EasyStart.Logic.Services.GeneralSettings
 {
     public class GeneralSettingsLogic : IGeneralSettingsLogic
     {
@@ -14,6 +14,18 @@ namespace EasyStart.Logic.Services.Branch
         {
             this.settingRepository = settingRepository;
         }
+
+        public void RemoveByBranch(int branchId)
+        {
+            var setting = settingRepository.Get(p => p.BranchId == branchId).FirstOrDefault();
+
+            if (setting != null)
+            {
+                setting.IsDeleted = true;
+                settingRepository.Update(setting);
+            }
+        }
+
         public SettingModel SaveSetting(SettingModel setting)
         {
             var oldSetting = settingRepository.Get(setting.Id);

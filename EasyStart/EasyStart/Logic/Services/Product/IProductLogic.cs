@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace EasyStart.Logic.Services.Product
 {
-    public interface IProductLogic
+    public interface IProductLogic: IBranchRemoval
     {
         ProductModel Get(int id);
         List<ProductModel> Get(OrderModel order);

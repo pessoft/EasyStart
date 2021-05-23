@@ -3,6 +3,7 @@ using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.Services.Branch;
 using EasyStart.Logic.Services.Client;
 using EasyStart.Logic.Services.DeliverySetting;
+using EasyStart.Logic.Services.GeneralSettings;
 using EasyStart.Logic.Services.IntegrationSystem;
 using EasyStart.Logic.Services.Order;
 using EasyStart.Logic.Services.Product;
