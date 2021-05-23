@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 
 namespace EasyStart.Logic
@@ -13,7 +14,6 @@ namespace EasyStart.Logic
     {
         private int mainBrachId;
         private int newBrachId;
-        private HttpServerUtilityBase server;
         
         /// <summary>
         /// key - base id
@@ -28,9 +28,8 @@ namespace EasyStart.Logic
         /// </summary>
         private Dictionary<int, int> additionalFillings;
 
-        public BranchClone(HttpServerUtilityBase server, int mainBrachId, int newBrachId)
+        public BranchClone(int mainBrachId, int newBrachId)
         {
-            this.server = server;
             this.mainBrachId = mainBrachId;
             this.newBrachId = newBrachId;
             additionalOptions = new Dictionary<int, int>();
@@ -168,16 +167,17 @@ namespace EasyStart.Logic
             DataWrapper.AddOrUpdateIngredients(newIngredients);
         }
 
-        private string CloneImage(string imagePath)
+        private string CloneImage(string path)
         {
-            if (string.IsNullOrEmpty(imagePath))
+            if (string.IsNullOrEmpty(path))
                 return "";
 
-            string baseFilePath = server.MapPath(imagePath);
+            var imagePath = path.StartsWith("../") ? path.Replace("../", "~/") : path;
+            string baseFilePath = HostingEnvironment.MapPath(imagePath);
             string fileName = System.IO.Path.GetFileName(baseFilePath);
             string ext = fileName.Substring(fileName.LastIndexOf("."));
             string newFileName = String.Format(@"{0}{1}", System.Guid.NewGuid(), ext);
-            string newPath = server.MapPath("~/Images/Products/" + newFileName);
+            string newPath = HostingEnvironment.MapPath("~/Images/Products/" + newFileName);
             File.Copy(baseFilePath, newPath);
 
             return $"../Images/Products/{newFileName}";

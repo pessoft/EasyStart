@@ -98,7 +98,7 @@ namespace EasyStart.Controllers
                 deliverySettingLogic,
                 pushNotificationLogic);
             deliverySettingService = new DeliverySettingService(deliverySettingLogic, branchLogic);
-            branchService = new BranchService(branchLogic);
+            branchService = new BranchService(branchLogic, generalSettingLogic);
             utilsService = new UtilsService(new UtilsLogic());
             generalSettingsService = new GeneralSettingsService(generalSettingLogic, branchLogic);
             categoryProductService = new CategoryProductService(categoryProductLogic, branchLogic);
@@ -259,68 +259,21 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult AddBranch(NewBranchModel newBranch)
         {
-            result = new JsonResultModel();
             try
             {
-                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-                var typeBranch = DataWrapper.GetBranchType(branchId);
-                var newBranchId = DataWrapper.GetBranchId(newBranch.Login);
-
-                if (typeBranch != TypeBranch.MainBranch)
-                {
-                    result.ErrorMessage = "Вы не можете добавлять филиалы";
-                    return Json(result);
-                }
-
-                var branch = new BranchModel
-                {
-                    Login = newBranch.Login,
-                    Password = newBranch.Password,
-                    TypeBranch = Logic.TypeBranch.SubBranch
-                };
-
-
-                if (newBranchId == -1)
-                {
-                    var savedBranch = DataWrapper.SaveBranch(branch);
-                    if (savedBranch == null)
-                    {
-                        result.ErrorMessage = "При сохранении что-то пошло не так";
-                    }
-                    else
-                    {
-                        newBranchId = DataWrapper.GetBranchId(newBranch.Login);
-                        var setting = new SettingModel
-                        {
-                            BranchId = newBranchId,
-                            CityId = newBranch.CityId
-                        };
-
-                        DataWrapper.SaveSetting(setting);
-
-                        var baseBrachClone = new BranchClone(Server, branchId, newBranchId);
-                        baseBrachClone.Clone();
-
-                        var converter = new ConverterBranchSetting();
-                        var branchView = converter.GetBranchSettingViews(branch, setting, typeBranch);
-
-                        new PromotionDefaultSetting(newBranchId).SaveSettings();
-
-                        result.Data = branchView;
-                        result.Success = true;
-                    }
-                }
-                else
-                {
-                    result.ErrorMessage = "Учетная запись с таким логином уже существует";
-                }
+                var viewBranch =  branchService.AddBranch(newBranch);
+                result = JsonResultModel.CreateSuccess(viewBranch);
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result.ErrorMessage = ex.Message;
-            }
 
+                if (ex is BranchActionPermissionDeniedException
+                    || ex is BranchAlreadyExistException)
+                    result = JsonResultModel.CreateError(ex.Message);
+                else
+                    result = JsonResultModel.CreateError("При добавлении филиала что-то пошло не так...");
+            }
 
             return Json(result);
         }

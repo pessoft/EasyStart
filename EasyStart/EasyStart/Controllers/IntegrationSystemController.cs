@@ -68,6 +68,9 @@ namespace EasyStart.Controllers
             var clientRepository = new ClientRepository(context);
             var clientLogic = new ClientLogic(clientRepository);
 
+            var generalSettingRepository = new GeneralSettingRepository(context);
+            var generalSettingLogic = new GeneralSettingsLogic(generalSettingRepository);
+
             orderService = new OrderService(
                 orderLogic,
                 integrationSystemLogic,
@@ -76,7 +79,7 @@ namespace EasyStart.Controllers
                 pushNotificationLogic);
             integrationSystemService = new IntegrationSystemService(integrationSystemLogic);
             clientService = new ClientService(clientLogic);
-            branchService = new BranchService(branchLogic);
+            branchService = new BranchService(branchLogic, generalSettingLogic);
             productService = new ProductService(productLogic, branchLogic);
         }
 
