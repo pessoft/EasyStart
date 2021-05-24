@@ -63,5 +63,17 @@ namespace EasyStart.Logic.Services.Branch
 
             repository.Update(branch);
         }
+
+        public List<BranchSettingViewModel> GetBranches(IEnumerable<SettingModel> generalSettings)
+        {
+            var branch = Get();
+            var converter = new ConverterBranchSetting();
+            var branchViewvs = converter.GetBranchSettingViews(
+                repository.Get().ToList(),
+                generalSettings.ToDictionary(p => p.BranchId),
+                branch.TypeBranch);
+
+            return branchViewvs;
+        }
     }
 }

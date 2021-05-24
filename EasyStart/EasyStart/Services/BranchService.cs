@@ -78,5 +78,13 @@ namespace EasyStart.Services
 
             return branchView;
         }
+
+        public List<BranchSettingViewModel> GetBranches()
+        {
+            var settings = generalSettingsLogic.Get();
+            var branchViews = branchLogic.GetBranches(settings);
+
+            return branchViews;
+        }
     }
 }

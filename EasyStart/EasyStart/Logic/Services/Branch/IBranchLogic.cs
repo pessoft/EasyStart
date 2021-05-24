@@ -13,5 +13,6 @@ namespace EasyStart.Logic.Services.Branch
         BranchModel Get();
         BranchModel Get(string login);
         BranchModel GetMainBranch();
+        List<BranchSettingViewModel> GetBranches(IEnumerable<SettingModel> generalSettings);
     }
 }

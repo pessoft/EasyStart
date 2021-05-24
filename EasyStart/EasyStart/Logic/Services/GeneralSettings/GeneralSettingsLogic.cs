@@ -15,6 +15,11 @@ namespace EasyStart.Logic.Services.GeneralSettings
             this.settingRepository = settingRepository;
         }
 
+        public IEnumerable<SettingModel> Get()
+        {
+            return settingRepository.Get();
+        }
+
         public void RemoveByBranch(int branchId)
         {
             var setting = settingRepository.Get(p => p.BranchId == branchId).FirstOrDefault();

@@ -323,18 +323,16 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadBranchList()
         {
-            result = new JsonResultModel();
-
-            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-            var typeBranch = DataWrapper.GetBranchType(branchId);
-            var converter = new ConverterBranchSetting();
-            var branchViewvs = converter.GetBranchSettingViews(
-                DataWrapper.GetAllBranch(),
-                DataWrapper.GetAllSettingDictionary(),
-                typeBranch);
-
-            result.Data = branchViewvs;
-            result.Success = true;
+            try
+            {
+                var branchViews = branchService.GetBranches();
+                result = JsonResultModel.CreateSuccess(branchViews);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+                result = JsonResultModel.CreateError("При загрузки филиалов что-то пошло не так...");
+            }
 
             return Json(result);
         }
