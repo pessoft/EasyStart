@@ -283,6 +283,18 @@ namespace EasyStart.Logic.Services.Product
 
             return products;
         }
+        
+        public void RemoveProduct(int id)
+        {
+            var product = productRepository.Get(id);
+
+            product.IsDeleted = true;
+            productRepository.Update(product);
+
+            RecalcProductsOrderNumber(product.CategoryId);
+            SaveProductAdditionalFilling(product);
+            SaveProductAdditionalOptions(product);
+        }
 
         private void AppendProductAdditionalItems(List<ProductModel> products)
         {
@@ -296,6 +308,19 @@ namespace EasyStart.Logic.Services.Product
                 p.ProductAdditionalFillingIds = additionalFillings[p.Id].Select(x => x.AdditionalFillingId).ToList();
                 p.ProductAdditionalOptionIds = additionalOptions[p.Id].Select(x => x.AdditionalOptionId).ToList();
             });
+        }
+
+
+        private void RecalcProductsOrderNumber(int categoryId)
+        {
+            var products = productRepository.Get(p => p.CategoryId == categoryId && !p.IsDeleted).ToList();
+            
+            for (var i = 0; i < products.Count; ++i)
+            {
+                products[i].OrderNumber = i + 1;
+            }
+
+            productRepository.Update(products);
         }
     }
 }

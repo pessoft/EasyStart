@@ -414,16 +414,16 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult RemoveProduct(int id)
         {
-            result = new JsonResultModel();
-            var success = DataWrapper.RemoveProduct(id);
+            try
+            {
+                productService.RemoveProduct(id);
 
-            if (success)
-            {
-                result.Success = success;
+                result = JsonResultModel.CreateSuccess(true);
             }
-            else
+            catch (Exception ex)
             {
-                result.ErrorMessage = "Продукт не удалена";
+                Logger.Log.Error(ex);
+                result = JsonResultModel.CreateError("При удалении продуктов что-то пошло не так...");
             }
 
             return Json(result);

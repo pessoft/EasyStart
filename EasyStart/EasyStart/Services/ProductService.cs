@@ -79,5 +79,10 @@ namespace EasyStart.Services
 
             return productLogic.GetAdditionalOptionsByBranchId(branch.Id);
         }
+
+        public void RemoveProduct(int id)
+        {
+            productLogic.RemoveProduct(id);
+        }
     }
 }
