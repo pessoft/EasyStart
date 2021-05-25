@@ -18,5 +18,6 @@ namespace EasyStart.Logic.Services.Product
         Dictionary<int, List<ProductAdditionalFillingModal>> GetProductAdditionalFillingsByProductIds(List<int> productIds);
         Dictionary<int, List<ProductAdditionalOptionModal>> GetProductAdditionOptionItemByProductIds(List<int> productIds);
         ProductModel SaveProduct(ProductModel product);
+        void RemoveProductByCategory(int categoryId);
     }
 }

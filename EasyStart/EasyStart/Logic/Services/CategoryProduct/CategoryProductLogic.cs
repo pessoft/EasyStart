@@ -69,6 +69,8 @@ namespace EasyStart.Logic.Services.CategoryProduct
             category.IsDeleted = true;
             categoryRepository.Update(category);
 
+            RecalculateOrderNumber(category.BranchId);
+            SaveRecommendedProductsForCategory(null, category.BranchId, category.Id);
             return true;
         }
 
@@ -122,11 +124,22 @@ namespace EasyStart.Logic.Services.CategoryProduct
             recommendedProductRepository.Remove(forRemove);
 
             if (recommendedProductModels != null && recommendedProductModels.Any())
-            {
                 recommendedProductRepository.Create(recommendedProductModels);
-            }
 
             return recommendedProducts;
+        }
+
+        private void RecalculateOrderNumber(int branchId)
+        {
+            var categories = categoryRepository
+                .Get(p => p.BranchId == branchId && !p.IsDeleted)
+                .OrderBy(p => p.OrderNumber)
+                .ToList();
+
+            for (var i = 0; i < categories.Count; ++i)
+                categories[i].OrderNumber = i + 1;
+
+            categoryRepository.Update(categories);
         }
     }
 }

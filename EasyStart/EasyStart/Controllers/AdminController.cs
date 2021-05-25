@@ -113,7 +113,7 @@ namespace EasyStart.Controllers
             branchService = new BranchService(branchLogic, generalSettingLogic);
             utilsService = new UtilsService(new UtilsLogic());
             generalSettingsService = new GeneralSettingsService(generalSettingLogic, branchLogic);
-            categoryProductService = new CategoryProductService(categoryProductLogic, branchLogic);
+            categoryProductService = new CategoryProductService(categoryProductLogic, productLogic, branchLogic);
             productService = new ProductService(productLogic, branchLogic);
             branchRemovalService = new BranchRemovalService(
                 branchLogic,

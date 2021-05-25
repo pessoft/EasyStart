@@ -184,7 +184,9 @@ namespace EasyStart.Logic.Services.Product
             oldItems.ForEach(p => p.IsDeleted = true);
 
             productAdditionOptionItemRepository.Update(oldItems);
-            productAdditionOptionItemRepository.Create(additionalOptions);
+
+            if(additionalOptions != null && additionalOptions.Any())
+                productAdditionOptionItemRepository.Create(additionalOptions);
         }
 
         private void SaveProductAdditionalFilling(ProductModel product)
@@ -206,7 +208,9 @@ namespace EasyStart.Logic.Services.Product
             oldItems.ForEach(p => p.IsDeleted = true);
 
             productAdditionalFillingRepository.Update(oldItems);
-            productAdditionalFillingRepository.Create(additionalFillings);
+
+            if (additionalFillings != null && additionalFillings.Any())
+                productAdditionalFillingRepository.Create(additionalFillings);
         }
 
         public void RemoveByBranch(int branchId)
@@ -276,6 +280,19 @@ namespace EasyStart.Logic.Services.Product
             });
 
             return additionalOptions;
+        }
+
+        public void RemoveProductByCategory(int categoryId)
+        {
+            var product = productRepository.Get(p => p.CategoryId == categoryId && !p.IsDeleted).ToList();
+            product.ForEach(p => 
+            {
+                p.IsDeleted = true;
+                SaveProductAdditionalFilling(p);
+                SaveProductAdditionalOptions(p);
+            });
+
+            productRepository.Update(product);
         }
     }
 }

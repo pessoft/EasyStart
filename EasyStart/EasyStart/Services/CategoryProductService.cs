@@ -14,13 +14,16 @@ namespace EasyStart.Services
     public class CategoryProductService
     {
         private readonly ICategoryProductLogic categoryProductLogic;
+        private readonly IProductLogic productLogic;
         private readonly IBranchLogic branchLogic;
 
         public CategoryProductService(
             ICategoryProductLogic categoryProductLogic,
+            IProductLogic productLogic,
             IBranchLogic branchLogic)
         {
             this.categoryProductLogic = categoryProductLogic;
+            this.productLogic = productLogic;
             this.branchLogic = branchLogic;
         }
 
@@ -48,7 +51,12 @@ namespace EasyStart.Services
 
         public bool RemoveCategory(int id)
         {
-            return categoryProductLogic.RemoveCategory(id);
+            var success = categoryProductLogic.RemoveCategory(id);
+
+            if (success)
+                productLogic.RemoveProductByCategory(id);
+
+            return success;
         }
     }
 }
