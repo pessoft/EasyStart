@@ -38,6 +38,11 @@ namespace EasyStart.Services
             return productLogic.Get(order);
         }
 
+        public List<ProductModel> GetByCategory(int categoryId)
+        {
+            return productLogic.GetByCategory(categoryId);
+        }
+
         public List<AdditionalFilling> GetAdditionalFillingsByBranch()
         {
             var branch = branchLogic.Get();

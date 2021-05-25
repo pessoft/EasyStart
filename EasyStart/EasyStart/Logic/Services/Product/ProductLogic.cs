@@ -35,19 +35,10 @@ namespace EasyStart.Logic.Services.Product
 
         public ProductModel Get(int id)
         {
-            var result = productRepository.Get(id);
+            var product = productRepository.Get(id);
+            AppendProductAdditionalItems(new List<ProductModel> { product });
 
-            if (result != null)
-            {
-                var productIds = new List<int> { id };
-                var additionalFillings = GetProductAdditionalFillingsByProductIds(productIds);
-                var additionalOptions = GetProductAdditionOptionItemByProductIds(productIds);
-
-                result.ProductAdditionalFillingIds = additionalFillings[id].Select(p => p.AdditionalFillingId).ToList();
-                result.ProductAdditionalOptionIds = additionalOptions[id].Select(p => p.AdditionalOptionId).ToList();
-            }
-
-            return result;
+            return product;
         }
 
         /// <summary>
@@ -71,18 +62,8 @@ namespace EasyStart.Logic.Services.Product
             productIds = productIds.Distinct().ToList();
             var products = productRepository.Get(p => productIds.Contains(p.Id)).ToList();
 
-            if (products.Any())
-            {
-                var additionalFillings = GetProductAdditionalFillingsByProductIds(productIds);
-                var additionalOptions = GetProductAdditionOptionItemByProductIds(productIds);
-
-                products.ForEach(p =>
-                {
-                    p.ProductAdditionalFillingIds = additionalFillings[p.Id].Select(x => x.AdditionalFillingId).ToList();
-                    p.ProductAdditionalOptionIds = additionalOptions[p.Id].Select(x => x.AdditionalOptionId).ToList();
-                });
-
-            }
+            AppendProductAdditionalItems(products);
+            
             return products;
         }
 
@@ -293,6 +274,28 @@ namespace EasyStart.Logic.Services.Product
             });
 
             productRepository.Update(product);
+        }
+
+        public List<ProductModel> GetByCategory(int categoryId)
+        {
+            var products = productRepository.Get(p => p.CategoryId == categoryId && !p.IsDeleted).ToList();
+            AppendProductAdditionalItems(products);
+
+            return products;
+        }
+
+        private void AppendProductAdditionalItems(List<ProductModel> products)
+        {
+            var productIds = products.Select(p => p.Id).ToList();
+
+            var additionalFillings = GetProductAdditionalFillingsByProductIds(productIds);
+            var additionalOptions = GetProductAdditionOptionItemByProductIds(productIds);
+
+            products.ForEach(p =>
+            {
+                p.ProductAdditionalFillingIds = additionalFillings[p.Id].Select(x => x.AdditionalFillingId).ToList();
+                p.ProductAdditionalOptionIds = additionalOptions[p.Id].Select(x => x.AdditionalOptionId).ToList();
+            });
         }
     }
 }
