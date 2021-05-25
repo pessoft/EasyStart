@@ -319,7 +319,7 @@
     <Compile Include="Logic\Services\Branch\BranchAlreadyExistException.cs" />
     <Compile Include="Logic\Services\Branch\BranchActionPermissionDeniedException.cs" />
     <Compile Include="Logic\Services\Branch\BranchSelfDeletionException.cs" />
-    <Compile Include="Logic\Services\CatalogItemBase.cs" />
+    <Compile Include="Logic\Services\ContainImageLogic.cs" />
     <Compile Include="Logic\Services\ConstructorProduct\ConstructorProductLogic.cs" />
     <Compile Include="Logic\Services\ConstructorProduct\IConstructorProductLogic.cs" />
     <Compile Include="Logic\Services\GeneralSettings\IGeneralSettingsLogic.cs" />
@@ -327,6 +327,8 @@
     <Compile Include="Logic\Services\CategoryProduct\ICategoryProductLogic.cs" />
     <Compile Include="Logic\Services\CategoryProduct\CategoryProductLogic.cs" />
     <Compile Include="Logic\Services\IBranchRemoval.cs" />
+    <Compile Include="Logic\Services\Promotion\IPromotionLogic.cs" />
+    <Compile Include="Logic\Services\Promotion\PromotionLogic.cs" />
     <Compile Include="Logic\Services\Utils\UtilsLogic.cs" />
     <Compile Include="Logic\Services\Utils\IUtilsLogic.cs" />
     <Compile Include="Logic\Services\Branch\BranchLogic.cs" />
@@ -667,6 +669,7 @@
     <Compile Include="Repositories\DeliverySettingRepository.cs" />
     <Compile Include="Repositories\GeneralSettingRepository.cs" />
     <Compile Include="Repositories\IBaseRepository.cs" />
+    <Compile Include="Repositories\PromotionNewsRepository.cs" />
     <Compile Include="Repositories\ProductAdditionalFillingRepository.cs" />
     <Compile Include="Repositories\ProductAdditionOptionItemRepository.cs" />
     <Compile Include="Repositories\ProductRepository.cs" />
@@ -678,6 +681,7 @@
     <Compile Include="Services\BranchRemovalService.cs" />
     <Compile Include="Services\GeneralSettingsService.cs" />
     <Compile Include="Services\CategoryProductService.cs" />
+    <Compile Include="Services\PromotionService.cs" />
     <Compile Include="Services\UtilsService.cs" />
     <Compile Include="Services\DeliverySettingService.cs" />
     <Compile Include="Services\BranchService.cs" />

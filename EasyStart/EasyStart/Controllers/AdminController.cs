@@ -45,6 +45,7 @@ namespace EasyStart.Controllers
         private CategoryProductService categoryProductService;
         private ProductService productService;
         private BranchRemovalService branchRemovalService;
+        private PromotionService promotionService;
 
         public AdminController()
         {}
@@ -103,6 +104,9 @@ namespace EasyStart.Controllers
                 constructorCategoryRepository,
                 constructorIngredientRepository);
 
+            var promotionNewsRepository = new PromotionNewsRepository(context);
+            var promotionLogic = new Logic.Services.Promotion.PromotionLogic(promotionNewsRepository);
+
             orderService = new OrderService(
                 orderLogic,
                 integrationSystemLogic,
@@ -123,6 +127,7 @@ namespace EasyStart.Controllers
                 categoryProductLogic,
                 productLogic,
                 constructorProductLogic);
+            promotionService = new PromotionService(promotionLogic, branchLogic);
         }
 
         // GET: Admin
@@ -458,26 +463,15 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SaveNews(PromotionNewsModel promotionNews)
         {
-            result = new JsonResultModel();
-
-            if (!System.IO.File.Exists(Server.MapPath(promotionNews.Image)))
+            try
             {
-                promotionNews.Image = "../Images/default-image.jpg";
+                var savedNews = promotionService.SaveNews(promotionNews);
+                result = JsonResultModel.CreateSuccess(savedNews);
             }
-
-            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-            promotionNews.BranchId = branchId;
-            promotionNews.IsDeleted = false;
-            promotionNews = DataWrapper.SavePromotionNews(promotionNews);
-
-            if (promotionNews != null)
+            catch (Exception ex)
             {
-                result.Data = promotionNews;
-                result.Success = true;
-            }
-            else
-            {
-                result.ErrorMessage = "При добавлении новости что-то пошло не так...";
+                Logger.Log.Error(ex);
+                result = JsonResultModel.CreateError("При сохранении новости что-то пошло не так...");
             }
 
             return Json(result);

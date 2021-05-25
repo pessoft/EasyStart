@@ -7,7 +7,7 @@ using System.Web.Hosting;
 
 namespace EasyStart.Logic.Services
 {
-    public abstract class CatalogItemBase
+    public abstract class ContainImageLogic
     {
         private const string defaultImage = "../Images/default-image.jpg";
 

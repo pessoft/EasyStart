@@ -8,7 +8,7 @@ using System.Web;
 
 namespace EasyStart.Logic.Services.Product
 {
-    public class ProductLogic: CatalogItemBase, IProductLogic
+    public class ProductLogic: ContainImageLogic, IProductLogic
     {
         private readonly IBaseRepository<ProductModel, int> productRepository;
         private readonly IBaseRepository<AdditionalFilling, int> additionalFillingRepository;
