@@ -481,16 +481,15 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult RemoveNews(int id)
         {
-            result = new JsonResultModel();
-            var success = DataWrapper.RemovePromotionNews(id);
-
-            if (success)
+            try
             {
-                result.Success = success;
+                promotionService.RemovePromotionNews(id);
+                result = JsonResultModel.CreateSuccess(true);
             }
-            else
+            catch (Exception ex)
             {
-                result.ErrorMessage = "Новость не удалена";
+                Logger.Log.Error(ex);
+                result = JsonResultModel.CreateError("При удалении новости что-то пошло не так...");
             }
 
             return Json(result);

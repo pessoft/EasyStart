@@ -15,6 +15,14 @@ namespace EasyStart.Logic.Services.Promotion
             this.promotionNewsRepository = promotionNewsRepository;
         }
 
+        public void RemovePromotionNews(int newsId)
+        {
+            var news = promotionNewsRepository.Get(newsId);
+            news.IsDeleted = true;
+
+            promotionNewsRepository.Update(news);
+        }
+
         public PromotionNewsModel SaveNews(PromotionNewsModel promotionNews)
         {
             PrepareImage(promotionNews);

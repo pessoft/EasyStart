@@ -27,5 +27,10 @@ namespace EasyStart.Services
 
             return promotionLogic.SaveNews(promotionNews);
         }
+
+        public void RemovePromotionNews(int newsId)
+        {
+            promotionLogic.RemovePromotionNews(newsId);
+        }
     }
 }

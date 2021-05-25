@@ -10,5 +10,6 @@ namespace EasyStart.Logic.Services.Promotion
     public interface IPromotionLogic
     {
         PromotionNewsModel SaveNews(PromotionNewsModel promotionNews);
+        void RemovePromotionNews(int newsId);
     }
 }
