@@ -13,6 +13,7 @@ namespace EasyStart.Logic.Services.Product
         ProductModel Get(int id);
         List<ProductModel> Get(OrderModel order);
         List<AdditionalFilling> GetAdditionalFillingsByBranchId(int branchId);
+        List<AdditionalOption> GetAdditionalOptionsByBranchId(int branchId);
         List<AdditionOptionItem> GetAdditionOptionItemByBranchId(int branchId);
         Dictionary<int, List<ProductAdditionalFillingModal>> GetProductAdditionalFillingsByProductIds(List<int> productIds);
         Dictionary<int, List<ProductAdditionalOptionModal>> GetProductAdditionOptionItemByProductIds(List<int> productIds);

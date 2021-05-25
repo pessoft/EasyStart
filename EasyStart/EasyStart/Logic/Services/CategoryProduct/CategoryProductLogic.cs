@@ -24,7 +24,31 @@ namespace EasyStart.Logic.Services.CategoryProduct
 
         public CategoryModel Get(int id)
         {
-            return categoryRepository.Get(id);
+            var category = categoryRepository.Get(id);
+            category.RecommendedProducts = recommendedProductRepository.Get(p => p.CategoryId == id).Select(p => p.ProductId).ToList();
+
+            return category; 
+        }
+
+        public List<CategoryModel> GetByBranch(int branchId)
+        {
+            var categories = categoryRepository
+                .Get(p => p.BranchId == branchId && !p.IsDeleted)
+                .ToList();
+            var recommendedProductsDict = recommendedProductRepository
+                .Get(p => p.BranchId == branchId)
+                .GroupBy(p => p.CategoryId)
+                .ToDictionary(
+                    p => p.Key,
+                    p => p.Select(x => x.ProductId).ToList());
+            
+            categories.ForEach(p => 
+            {
+                recommendedProductsDict.TryGetValue(p.Id, out List<int> recommendetProducts);
+                p.RecommendedProducts = recommendetProducts;
+            });
+
+            return categories;
         }
 
         public void RemoveByBranch(int branchId)

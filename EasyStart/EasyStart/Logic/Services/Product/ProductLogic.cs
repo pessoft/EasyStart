@@ -12,6 +12,7 @@ namespace EasyStart.Logic.Services.Product
     {
         private readonly IBaseRepository<ProductModel, int> productRepository;
         private readonly IBaseRepository<AdditionalFilling, int> additionalFillingRepository;
+        private readonly IBaseRepository<AdditionalOption, int> additionalOptionRepository;
         private readonly IBaseRepository<AdditionOptionItem, int> additionOptionItemRepository;
         private readonly IBaseRepository<ProductAdditionalFillingModal, int> productAdditionalFillingRepository;
         private readonly IBaseRepository<ProductAdditionalOptionModal, int> productAdditionOptionItemRepository;
@@ -19,12 +20,14 @@ namespace EasyStart.Logic.Services.Product
         public ProductLogic(
             IBaseRepository<ProductModel, int> productRepository,
             IBaseRepository<AdditionalFilling, int> additionalFillingRepository,
+            IBaseRepository<AdditionalOption, int> additionalOptionRepository,
             IBaseRepository<AdditionOptionItem, int> additionOptionItemRepository,
             IBaseRepository<ProductAdditionalFillingModal, int> productAdditionalFillingRepository,
             IBaseRepository<ProductAdditionalOptionModal, int> productAdditionOptionItemRepository)
         {
             this.productRepository = productRepository;
             this.additionalFillingRepository = additionalFillingRepository;
+            this.additionalOptionRepository = additionalOptionRepository;
             this.additionOptionItemRepository = additionOptionItemRepository;
             this.productAdditionalFillingRepository = productAdditionalFillingRepository;
             this.productAdditionOptionItemRepository = productAdditionOptionItemRepository;
@@ -211,6 +214,7 @@ namespace EasyStart.Logic.Services.Product
             RemoveProductsByBranch(branchId);
             RemoveAdditionalFillingsByBranch(branchId);
             RemoveAdditionOptionsByBranch(branchId);
+            RemoveAdditionOptionItemsByBranch(branchId);
             RemoveProductAdditionalFillingsByBranch(branchId);
             RemoveProductAdditionOptionsByBranch(branchId);
         }
@@ -231,6 +235,13 @@ namespace EasyStart.Logic.Services.Product
 
         private void RemoveAdditionOptionsByBranch(int branchId)
         {
+            var items = additionalOptionRepository.Get(p => p.BranchId == branchId).ToList();
+            items.ForEach(p => p.IsDeleted = true);
+            additionalOptionRepository.Update(items);
+        }
+
+        private void RemoveAdditionOptionItemsByBranch(int branchId)
+        {
             var items = additionOptionItemRepository.Get(p => p.BranchId == branchId).ToList();
             items.ForEach(p => p.IsDeleted = true);
             additionOptionItemRepository.Update(items);
@@ -248,6 +259,23 @@ namespace EasyStart.Logic.Services.Product
             var items = productAdditionOptionItemRepository.Get(p => p.BranchId == branchId).ToList();
             items.ForEach(p => p.IsDeleted = true);
             productAdditionOptionItemRepository.Update(items);
+        }
+
+        public List<AdditionalOption> GetAdditionalOptionsByBranchId(int branchId)
+        {
+            var optionItemsDict = additionOptionItemRepository
+                .Get(p => p.BranchId == branchId)
+                .GroupBy(p => p.AdditionOptionId)
+                .ToDictionary(p => p.Key, p => p.ToList());
+            var additionalOptions = additionalOptionRepository.Get(p => p.BranchId == branchId).ToList();
+
+            additionalOptions.ForEach(p => 
+            {
+                optionItemsDict.TryGetValue(p.Id, out List<AdditionOptionItem> items);
+                p.Items = items;
+            });
+
+            return additionalOptions;
         }
     }
 }

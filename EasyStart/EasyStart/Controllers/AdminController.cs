@@ -66,9 +66,11 @@ namespace EasyStart.Controllers
             var additionOptionItemRepository = new AdditionOptionItemRepository(context);
             var productAdditionalFillingRepository = new ProductAdditionalFillingRepository(context);
             var productAdditionOptionItemRepository = new ProductAdditionOptionItemRepository(context);
+            var additionalOptionRepository = new AdditionalOptionRepository(context);
             var productLogic = new ProductLogic(
                 productRepository,
                 additionalFillingRepository,
+                additionalOptionRepository,
                 additionOptionItemRepository,
                 productAdditionalFillingRepository,
                 productAdditionOptionItemRepository);
@@ -341,27 +343,20 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadMainProductData()
         {
-            result = new JsonResultModel();
-            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-            var categories = DataWrapper.GetCategories(branchId);
-            var additionalOptions = DataWrapper.GetAllProductAdditionalOptionByBranchId(branchId);
-            additionalOptions = additionalOptions ?? new List<AdditionalOption>();
-            var additionalFillings = DataWrapper.GetAllAdditionalFillingsByBranchId(branchId);
-            additionalFillings = additionalFillings ?? new List<AdditionalFilling>();
-
-            if (categories != null)
+            try
             {
-                result.Data = new 
-                { 
-                    Categories = categories,
-                    AdditionalOptions = additionalOptions,
-                    AdditionalFillings = additionalFillings
+                var data = new
+                {
+                    Categories = categoryProductService.GetByBranch(),
+                    AdditionalOptions = productService.GetAdditionalOptionsByBranch(),
+                    AdditionalFillings = productService.GetAdditionalFillingsByBranch()
                 };
-                result.Success = true;
+                result = JsonResultModel.CreateSuccess(data);
             }
-            else
+            catch (Exception ex)
             {
-                result.ErrorMessage = "При загрузки категорий что-то пошло не так";
+                Logger.Log.Error(ex);
+                result = JsonResultModel.CreateError("При загрузки категорий что-то пошло не так...");
             }
 
             return Json(result);

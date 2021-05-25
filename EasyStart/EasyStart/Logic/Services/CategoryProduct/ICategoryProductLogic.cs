@@ -11,6 +11,7 @@ namespace EasyStart.Logic.Services.CategoryProduct
     public interface ICategoryProductLogic: IBranchRemoval
     {
         CategoryModel Get(int id);
+        List<CategoryModel> GetByBranch(int branchId);
         CategoryModel SaveCategory(CategoryModel category);
         bool RemoveCategory(int id);
     }

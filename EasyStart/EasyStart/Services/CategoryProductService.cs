@@ -29,6 +29,13 @@ namespace EasyStart.Services
             return categoryProductLogic.Get(id);
         }
 
+        public List<CategoryModel> GetByBranch()
+        {
+            var branch = branchLogic.Get();
+
+            return categoryProductLogic.GetByBranch(branch.Id);
+        }
+
         public CategoryModel SaveCategory(CategoryModel category)
         {
             var branch = branchLogic.Get();

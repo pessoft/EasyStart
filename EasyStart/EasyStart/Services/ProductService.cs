@@ -38,9 +38,11 @@ namespace EasyStart.Services
             return productLogic.Get(order);
         }
 
-        public List<AdditionalFilling> GetAdditionalFillingsByBranchId(int branchId)
+        public List<AdditionalFilling> GetAdditionalFillingsByBranch()
         {
-            return productLogic.GetAdditionalFillingsByBranchId(branchId);
+            var branch = branchLogic.Get();
+
+            return productLogic.GetAdditionalFillingsByBranchId(branch.Id);
         }
 
         public List<AdditionOptionItem> GetAdditionOptionItemByBranchId(int branchId)
@@ -64,6 +66,13 @@ namespace EasyStart.Services
             product.BranchId = branch.Id;
 
             return productLogic.SaveProduct(product);
+        }
+
+        public List<AdditionalOption> GetAdditionalOptionsByBranch()
+        {
+            var branch = branchLogic.Get();
+
+            return productLogic.GetAdditionalOptionsByBranchId(branch.Id);
         }
     }
 }
