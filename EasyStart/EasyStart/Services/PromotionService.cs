@@ -32,5 +32,12 @@ namespace EasyStart.Services
         {
             promotionLogic.RemovePromotionNews(newsId);
         }
+
+        public List<PromotionNewsModel> GetNews()
+        {
+            var branch = branchLogic.Get();
+
+            return promotionLogic.GetNews(branch.Id);
+        }
     }
 }

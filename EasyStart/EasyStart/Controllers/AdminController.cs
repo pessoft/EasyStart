@@ -499,18 +499,15 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadNewsList()
         {
-            result = new JsonResultModel();
-            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-            var news = DataWrapper.GetPromotionNews(branchId);
-
-            if (news != null)
+            try
             {
-                result.Data = news;
-                result.Success = true;
+                var news = promotionService.GetNews();
+                result = JsonResultModel.CreateSuccess(news);
             }
-            else
+            catch (Exception ex)
             {
-                result.ErrorMessage = "При загрузке новостей что-то пошло не так";
+                Logger.Log.Error(ex);
+                result = JsonResultModel.CreateError("При загрузке новостей что-то пошло не так...");
             }
 
             return Json(result);

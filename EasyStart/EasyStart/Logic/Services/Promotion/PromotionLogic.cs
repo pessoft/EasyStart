@@ -15,6 +15,11 @@ namespace EasyStart.Logic.Services.Promotion
             this.promotionNewsRepository = promotionNewsRepository;
         }
 
+        public List<PromotionNewsModel> GetNews(int branchId)
+        {
+            return promotionNewsRepository.Get(p => p.BranchId == branchId).ToList();
+        }
+
         public void RemovePromotionNews(int newsId)
         {
             var news = promotionNewsRepository.Get(newsId);
