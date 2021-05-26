@@ -9,37 +9,61 @@ namespace EasyStart.Logic.Services.Promotion
 {
     public class PromotionLogic : ContainImageLogic, IPromotionLogic
     {
-        private IBaseRepository<PromotionNewsModel, int> promotionNewsRepository;
-        public PromotionLogic(IBaseRepository<PromotionNewsModel, int> promotionNewsRepository)
+        private IBaseRepository<PromotionNewsModel, int> newsRepository;
+        private IBaseRepository<StockModel, int> stockRepository;
+        
+        public PromotionLogic(
+            IBaseRepository<PromotionNewsModel, int> newsRepository,
+            IBaseRepository<StockModel, int> stockRepository)
         {
-            this.promotionNewsRepository = promotionNewsRepository;
+            this.newsRepository = newsRepository;
+            this.stockRepository = stockRepository;
         }
 
         public List<PromotionNewsModel> GetNews(int branchId)
         {
-            return promotionNewsRepository.Get(p => p.BranchId == branchId).ToList();
+            return newsRepository.Get(p => p.BranchId == branchId).ToList();
         }
 
         public void RemovePromotionNews(int newsId)
         {
-            var news = promotionNewsRepository.Get(newsId);
+            var news = newsRepository.Get(newsId);
             news.IsDeleted = true;
 
-            promotionNewsRepository.Update(news);
+            newsRepository.Update(news);
         }
 
         public PromotionNewsModel SaveNews(PromotionNewsModel promotionNews)
         {
             PrepareImage(promotionNews);
 
-            var oldNews = promotionNewsRepository.Get(promotionNews.Id);
+            var oldNews = newsRepository.Get(promotionNews.Id);
             PromotionNewsModel savedNews;
             if (oldNews != null)
-                savedNews = promotionNewsRepository.Update(promotionNews);
+                savedNews = newsRepository.Update(promotionNews);
             else
-                savedNews = promotionNewsRepository.Create(promotionNews);
+                savedNews = newsRepository.Create(promotionNews);
 
             return savedNews;
+        }
+
+        public StockModel SaveStock(StockModel stock)
+        {
+            PrepareImage(stock);
+
+            var oldStock = stockRepository.Get(stock.Id);
+
+            if (oldStock != null)
+            {
+                oldStock.IsDeleted = true;
+                stock.UniqId = oldStock.UniqId;
+
+                stockRepository.Update(oldStock);
+            }
+            else
+                stock.UniqId = Guid.NewGuid();
+
+            return stockRepository.Create(stock);
         }
     }
 }

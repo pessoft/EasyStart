@@ -39,5 +39,13 @@ namespace EasyStart.Services
 
             return promotionLogic.GetNews(branch.Id);
         }
+
+        public StockModel SaveStock(StockModel stock)
+        {
+            var branch = branchLogic.Get();
+            stock.BranchId = branch.Id;
+
+            return promotionLogic.SaveStock(stock);
+        }
     }
 }

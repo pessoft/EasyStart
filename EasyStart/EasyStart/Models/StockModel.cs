@@ -9,9 +9,8 @@ using System.Web.Script.Serialization;
 
 namespace EasyStart.Models
 {
-    public class StockModel : IContainImage
+    public class StockModel : BaseEntity<int>, IContainImage
     {
-        public int Id { get; set; }
         public int BranchId { get; set; }
         public StockTypePeriod StockTypePeriod { get; set; }
         public StockOneTypeSubtype StockOneTypeSubtype { get; set; }

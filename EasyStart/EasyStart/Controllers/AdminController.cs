@@ -105,7 +105,10 @@ namespace EasyStart.Controllers
                 constructorIngredientRepository);
 
             var promotionNewsRepository = new PromotionNewsRepository(context);
-            var promotionLogic = new Logic.Services.Promotion.PromotionLogic(promotionNewsRepository);
+            var promotionStockRepository = new PromotionStockRepository(context);
+            var promotionLogic = new Logic.Services.Promotion.PromotionLogic(
+                promotionNewsRepository,
+                promotionStockRepository);
 
             orderService = new OrderService(
                 orderLogic,
@@ -517,26 +520,15 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SaveStock(StockModel stock)
         {
-            result = new JsonResultModel();
-
-            if (!System.IO.File.Exists(Server.MapPath(stock.Image)))
+            try
             {
-                stock.Image = "../Images/default-image.jpg";
+                var savedStock = promotionService.SaveStock(stock);
+                result = JsonResultModel.CreateSuccess(savedStock);
             }
-
-            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-            stock.BranchId = branchId;
-            stock.IsDeleted = false;
-            stock = DataWrapper.SaveStock(stock);
-
-            if (stock != null)
+            catch (Exception ex)
             {
-                result.Data = stock;
-                result.Success = true;
-            }
-            else
-            {
-                result.ErrorMessage = "При добавлении акции что-то пошло не так...";
+                Logger.Log.Error(ex);
+                result = JsonResultModel.CreateError("При добавлении акции что-то пошло не так...");
             }
 
             return Json(result);
