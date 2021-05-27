@@ -10,5 +10,6 @@ namespace EasyStart.Logic.Services.ConstructorProduct
 {
     public interface IConstructorProductLogic : IBranchRemoval
     {
+        void UpdateOrder(List<UpdaterOrderNumber> items);
     }
 }

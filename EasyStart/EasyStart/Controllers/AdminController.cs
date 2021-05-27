@@ -47,6 +47,7 @@ namespace EasyStart.Controllers
         private ProductService productService;
         private BranchRemovalService branchRemovalService;
         private PromotionService promotionService;
+        private ConstructorProductService constructorProductService;
 
         public AdminController()
         {}
@@ -108,7 +109,8 @@ namespace EasyStart.Controllers
             var constructorIngredientRepository = new ConstructorIngredientRepository(context);
             var constructorProductLogic = new ConstructorProductLogic(
                 constructorCategoryRepository,
-                constructorIngredientRepository);
+                constructorIngredientRepository,
+                orderableLogic);
 
             var promotionNewsRepository = new PromotionNewsRepository(context);
             var promotionStockRepository = new PromotionStockRepository(context);
@@ -138,6 +140,7 @@ namespace EasyStart.Controllers
                 productLogic,
                 constructorProductLogic);
             promotionService = new PromotionService(promotionLogic, branchLogic);
+            constructorProductService = new ConstructorProductService(constructorProductLogic);
         }
 
         // GET: Admin
@@ -596,9 +599,13 @@ namespace EasyStart.Controllers
         [Authorize]
         public void UpdateOrderNumberConstructorProducts(List<UpdaterOrderNumber> data)
         {
-            if (data != null && data.Any())
+            try
             {
-                DataWrapper.UpdateOrderNumberConstructorProducts(data);
+                constructorProductService.UpdateOrder(data);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
             }
         }
 

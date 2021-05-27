@@ -13,13 +13,16 @@ namespace EasyStart.Logic.Services.ConstructorProduct
     {
         private IBaseRepository<ConstructorCategory, int> categoryRepository;
         private IBaseRepository<IngredientModel, int> ingredientRepository;
+        private readonly IOrderableLogic orderableLogic;
 
         public ConstructorProductLogic(
             IBaseRepository<ConstructorCategory, int> categoryRepository,
-            IBaseRepository<IngredientModel, int> ingredientRepository)
+            IBaseRepository<IngredientModel, int> ingredientRepository,
+            IOrderableLogic orderableLogic)
         {
             this.categoryRepository = categoryRepository;
             this.ingredientRepository = ingredientRepository;
+            this.orderableLogic = orderableLogic;
         }
 
         public void RemoveByBranch(int branchId)
@@ -44,6 +47,11 @@ namespace EasyStart.Logic.Services.ConstructorProduct
             
             ingredients.ForEach(p => p.IsDeleted = true);
             ingredientRepository.Update(ingredients);
+        }
+
+        public void UpdateOrder(List<UpdaterOrderNumber> items)
+        {
+            orderableLogic.UpdateOrder(categoryRepository, items);
         }
     }
 }

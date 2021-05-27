@@ -684,6 +684,7 @@
     <Compile Include="Repositories\BaseRepository.cs" />
     <Compile Include="Repositories\RecommendedProductRepository.cs" />
     <Compile Include="Services\BranchRemovalService.cs" />
+    <Compile Include="Services\ConstructorProductService.cs" />
     <Compile Include="Services\GeneralSettingsService.cs" />
     <Compile Include="Services\CategoryProductService.cs" />
     <Compile Include="Services\PromotionService.cs" />
