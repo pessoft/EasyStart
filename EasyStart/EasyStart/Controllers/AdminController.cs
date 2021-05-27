@@ -79,7 +79,8 @@ namespace EasyStart.Controllers
                 additionOptionItemRepository,
                 productAdditionalFillingRepository,
                 productAdditionOptionItemRepository,
-                imageLogic);
+                imageLogic,
+                orderableLogic);
 
             var deliverySettingRepository = new DeliverySettingRepository(context);
             var areaDeliverySettingRepository = new AreaDeliveryRepository(context);
@@ -580,7 +581,6 @@ namespace EasyStart.Controllers
             return Json(result);
         }
 
-        #region To do унифицировать логику
         [HttpPost]
         [Authorize]
         public void UpdateOrderNumberCategory(List<UpdaterOrderNumber> data)
@@ -613,13 +613,15 @@ namespace EasyStart.Controllers
         [Authorize]
         public void UpdateOrderNumberProducts(List<UpdaterOrderNumber> data)
         {
-            if (data != null && data.Any())
+            try
             {
-                DataWrapper.UpdateOrderNumberProducts(data);
+                productService.UpdateOrder(data);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
             }
         }
-
-        #endregion
 
         [HttpPost]
         [Authorize]

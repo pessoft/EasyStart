@@ -17,6 +17,7 @@ namespace EasyStart.Logic.Services.Product
         private readonly IBaseRepository<ProductAdditionalFillingModal, int> productAdditionalFillingRepository;
         private readonly IBaseRepository<ProductAdditionalOptionModal, int> productAdditionOptionItemRepository;
         private readonly IContainImageLogic imageLogic;
+        private readonly IOrderableLogic orderableLogic;
 
         public ProductLogic(
             IBaseRepository<ProductModel, int> productRepository,
@@ -25,7 +26,8 @@ namespace EasyStart.Logic.Services.Product
             IBaseRepository<AdditionOptionItem, int> additionOptionItemRepository,
             IBaseRepository<ProductAdditionalFillingModal, int> productAdditionalFillingRepository,
             IBaseRepository<ProductAdditionalOptionModal, int> productAdditionOptionItemRepository,
-            IContainImageLogic imageLogic)
+            IContainImageLogic imageLogic,
+            IOrderableLogic orderableLogic)
         {
             this.productRepository = productRepository;
             this.additionalFillingRepository = additionalFillingRepository;
@@ -34,6 +36,7 @@ namespace EasyStart.Logic.Services.Product
             this.productAdditionalFillingRepository = productAdditionalFillingRepository;
             this.productAdditionOptionItemRepository = productAdditionOptionItemRepository;
             this.imageLogic = imageLogic;
+            this.orderableLogic = orderableLogic;
         }
 
         public ProductModel Get(int id)
@@ -324,6 +327,11 @@ namespace EasyStart.Logic.Services.Product
             }
 
             productRepository.Update(products);
+        }
+
+        public void UpdateOrder(List<UpdaterOrderNumber> items)
+        {
+            orderableLogic.UpdateOrder(productRepository, items);
         }
     }
 }

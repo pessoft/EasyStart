@@ -56,6 +56,7 @@ namespace EasyStart
         {
             var context = new AdminPanelContext();
             var imageLogic = new ContainImageLogic();
+            var orderableLogic = new OrderableLogic();
 
             var orderRepository = new OrderRepository(context);
             var orderLogic = new OrderLogic(orderRepository);
@@ -76,7 +77,8 @@ namespace EasyStart
                 additionOptionItemRepository,
                 productAdditionalFillingRepository,
                 productAdditionOptionItemRepository,
-                imageLogic);
+                imageLogic,
+                orderableLogic);
 
             var deliverySettingRepository = new DeliverySettingRepository(context);
             var areaDeliverySettingRepository = new AreaDeliveryRepository(context);

@@ -84,5 +84,10 @@ namespace EasyStart.Services
         {
             productLogic.RemoveProduct(id);
         }
+
+        public void UpdateOrder(List<UpdaterOrderNumber> items)
+        {
+            productLogic.UpdateOrder(items);
+        }
     }
 }
