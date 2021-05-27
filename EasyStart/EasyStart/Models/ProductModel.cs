@@ -10,8 +10,9 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class ProductModel : BaseEntity<int>, IContainImage
+    public class ProductModel : IBaseEntity<int>, IContainImage
     {
+        public int Id { get; set; }
         public int BranchId { get; set; }
         public int CategoryId { get; set; }
         public string Name { get; set; }

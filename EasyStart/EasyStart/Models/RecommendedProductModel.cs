@@ -5,8 +5,9 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class RecommendedProductModel: BaseEntity<int>
+    public class RecommendedProductModel: IBaseEntity<int>
     {
+        public int Id { get; set; }
         public int CategoryId { get; set; }
         public int BranchId { get; set; }
         public int ProductId { get; set; }

@@ -6,8 +6,9 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class ConstructorCategory: BaseEntity<int>
+    public class ConstructorCategory: IBaseEntity<int>
     {
+        public int Id { get; set; }
         public int CategoryId { get; set; }
         public int BranchId { get; set; }
         public string Name { get; set; }

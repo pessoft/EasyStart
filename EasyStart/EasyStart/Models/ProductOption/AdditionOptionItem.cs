@@ -5,8 +5,9 @@ using System.Web;
 
 namespace EasyStart.Models.ProductOption
 {
-    public class AdditionOptionItem: BaseEntity<int>
+    public class AdditionOptionItem: IBaseEntity<int>
     {
+        public int Id { get; set; }
         public int BranchId { get; set; }
         public int AdditionOptionId { get; set; }
         public string Name { get; set; }

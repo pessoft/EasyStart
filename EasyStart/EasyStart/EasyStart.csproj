@@ -328,6 +328,8 @@
     <Compile Include="Logic\Services\CategoryProduct\ICategoryProductLogic.cs" />
     <Compile Include="Logic\Services\CategoryProduct\CategoryProductLogic.cs" />
     <Compile Include="Logic\Services\IBranchRemoval.cs" />
+    <Compile Include="Logic\Services\IOrderableLogic.cs" />
+    <Compile Include="Logic\Services\OrderableLogic.cs" />
     <Compile Include="Logic\Services\Promotion\IPromotionLogic.cs" />
     <Compile Include="Logic\Services\Promotion\PromotionLogic.cs" />
     <Compile Include="Logic\Services\Utils\UtilsLogic.cs" />
@@ -577,9 +579,9 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
-    <Compile Include="Models\IOrderable.cs" />
+    <Compile Include="Models\IEntityOrderable.cs" />
     <Compile Include="Models\UniqIdEntity.cs" />
-    <Compile Include="Models\BaseEntity.cs" />
+    <Compile Include="Models\IBaseEntity.cs" />
     <Compile Include="Models\BranchModel.cs" />
     <Compile Include="Models\BranchSettingViewModel.cs" />
     <Compile Include="Models\BranchSignal.cs" />

@@ -10,8 +10,9 @@ using System.Web.Script.Serialization;
 
 namespace EasyStart.Models
 {
-    public class OrderModel: BaseEntity<int>
+    public class OrderModel: IBaseEntity<int>
     {
+        public int Id { get; set; }
         public int BranchId { get; set; }
         public int CityId { get; set; }
         public int ClientId { get; set; }

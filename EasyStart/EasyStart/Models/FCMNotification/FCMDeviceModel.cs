@@ -6,8 +6,9 @@ using System.Web;
 
 namespace EasyStart.Models.FCMNotification
 {
-    public class FCMDeviceModel: BaseEntity<int>
+    public class FCMDeviceModel: IBaseEntity<int>
     {
+        public int Id { get; set; }
         public int BranchId { get; set; }
         public int ClientId { get; set; }
         public string Token { get; set;}

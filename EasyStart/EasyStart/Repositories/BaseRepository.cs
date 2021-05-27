@@ -9,7 +9,7 @@ using System.Web;
 namespace EasyStart.Repositories
 {
     public class BaseRepository<T, U> : IBaseRepository<T, U>
-        where T : BaseEntity<U>
+        where T : class, IBaseEntity<U>
         where U: IEquatable<U>
     {
         protected bool disposed = false;

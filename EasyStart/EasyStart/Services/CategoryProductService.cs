@@ -58,5 +58,10 @@ namespace EasyStart.Services
 
             return success;
         }
+
+        public void UpdateOrder(List<UpdaterOrderNumber> items)
+        {
+            categoryProductLogic.UpdateOrder(items);
+        }
     }
 }

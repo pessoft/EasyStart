@@ -14,5 +14,6 @@ namespace EasyStart.Logic.Services.CategoryProduct
         List<CategoryModel> GetByBranch(int branchId);
         CategoryModel SaveCategory(CategoryModel category);
         bool RemoveCategory(int id);
+        void UpdateOrder(List<UpdaterOrderNumber> items);
     }
 }

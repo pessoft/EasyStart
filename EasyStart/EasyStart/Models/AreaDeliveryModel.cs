@@ -6,8 +6,9 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class AreaDeliveryModel: BaseEntity<string>
+    public class AreaDeliveryModel: IBaseEntity<string>
     {
+        public string Id { get; set; }
         public int DeliverySettingId { get; set; }
         public string NameArea { get; set; }
         public double MinPrice { get; set; }

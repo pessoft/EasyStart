@@ -57,6 +57,7 @@ namespace EasyStart.Controllers
 
             var context = new AdminPanelContext();
             var imageLogic = new ContainImageLogic();
+            var orderableLogic = new OrderableLogic();
 
             var orderRepository = new OrderRepository(context);
             var orderLogic = new OrderLogic(orderRepository);
@@ -100,7 +101,8 @@ namespace EasyStart.Controllers
             var categoryProductLogic = new CategoryProductLogic(
                 categoryProductRepository,
                 recommendedProductRepository,
-                imageLogic);
+                imageLogic,
+                orderableLogic);
 
             var constructorCategoryRepository = new ConstructorCategoryRepository(context);
             var constructorIngredientRepository = new ConstructorIngredientRepository(context);
@@ -580,9 +582,13 @@ namespace EasyStart.Controllers
         [Authorize]
         public void UpdateOrderNumberCategory(List<UpdaterOrderNumber> data)
         {
-            if (data != null && data.Any())
+            try
             {
-                DataWrapper.UpdateOrderNumberCategory(data);
+                categoryProductService.UpdateOrder(data);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
             }
         }
 

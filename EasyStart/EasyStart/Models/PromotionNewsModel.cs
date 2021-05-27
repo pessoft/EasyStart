@@ -5,8 +5,9 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class PromotionNewsModel: BaseEntity<int>, IContainImage
+    public class PromotionNewsModel: IBaseEntity<int>, IContainImage
     {
+        public int Id { get; set; }
         public int BranchId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }

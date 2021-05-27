@@ -6,8 +6,9 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class IntegrationSystemModel: BaseEntity<int>
+    public class IntegrationSystemModel: IBaseEntity<int>
     {
+        public int Id { get; set; }
         public int BranchId { get; set; }
         public IntegrationSystemType Type { get; set; }
         public string Secret { get; set; }

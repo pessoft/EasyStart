@@ -6,9 +6,9 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class BaseEntity<T>
+    public interface IBaseEntity<T>
     {
         [Key]
-        public T Id { get; set; }
+        T Id { get; set; }
     }
 }
