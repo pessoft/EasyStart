@@ -22,7 +22,12 @@ namespace EasyStart.Logic.Services.Promotion
 
         public List<PromotionNewsModel> GetNews(int branchId)
         {
-            return newsRepository.Get(p => p.BranchId == branchId).ToList();
+            return newsRepository.Get(p => p.BranchId == branchId && !p.IsDeleted).ToList();
+        }
+
+        public List<StockModel> GetStocks(int branchId)
+        {
+            return stockRepository.Get(p => p.BranchId == branchId && !p.IsDeleted).ToList();
         }
 
         public void RemoveNews(int newsId)

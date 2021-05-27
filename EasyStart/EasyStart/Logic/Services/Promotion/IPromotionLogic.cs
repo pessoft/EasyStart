@@ -13,6 +13,7 @@ namespace EasyStart.Logic.Services.Promotion
         List<PromotionNewsModel> GetNews(int branchId);
         void RemoveNews(int newsId);
         StockModel SaveStock(StockModel stock);
+        List<StockModel> GetStocks(int branchId);
         void RemoveStock(int stockId);
     }
 }

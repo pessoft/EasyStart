@@ -556,18 +556,15 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadStockList()
         {
-            result = new JsonResultModel();
-            var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-            var stock = DataWrapper.GetStocks(branchId);
-
-            if (stock != null)
+            try
             {
-                result.Data = stock;
-                result.Success = true;
+                var stocks = promotionService.GetStocks();
+                result = JsonResultModel.CreateSuccess(stocks);
             }
-            else
+            catch (Exception ex)
             {
-                result.ErrorMessage = "При загрузке акций что-то пошло не так";
+                Logger.Log.Error(ex);
+                result = JsonResultModel.CreateError("При загрузке акции что-то пошло не так...");
             }
 
             return Json(result);

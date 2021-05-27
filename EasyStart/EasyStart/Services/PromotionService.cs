@@ -52,5 +52,12 @@ namespace EasyStart.Services
         {
             promotionLogic.RemoveStock(stockId);
         }
+
+        public List<StockModel> GetStocks()
+        {
+            var branch = branchLogic.Get();
+
+            return promotionLogic.GetStocks(branch.Id);
+        }
     }
 }
