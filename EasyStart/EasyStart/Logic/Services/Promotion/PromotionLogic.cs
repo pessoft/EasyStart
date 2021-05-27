@@ -33,6 +33,14 @@ namespace EasyStart.Logic.Services.Promotion
             newsRepository.Update(news);
         }
 
+        public void RemoveStock(int stockId)
+        {
+            var stock = stockRepository.Get(stockId);
+            stock.IsDeleted = true;
+
+            stockRepository.Update(stock);
+        }
+
         public PromotionNewsModel SaveNews(PromotionNewsModel promotionNews)
         {
             PrepareImage(promotionNews);

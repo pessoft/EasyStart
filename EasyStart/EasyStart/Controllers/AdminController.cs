@@ -538,16 +538,15 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult RemoveStock(int id)
         {
-            result = new JsonResultModel();
-            var success = DataWrapper.RemoveStock(id);
-
-            if (success)
+            try
             {
-                result.Success = success;
+                promotionService.RemoveStock(id);
+                result = JsonResultModel.CreateSuccess(true);
             }
-            else
+            catch (Exception ex)
             {
-                result.ErrorMessage = "Акция не удалена";
+                Logger.Log.Error(ex);
+                result = JsonResultModel.CreateError("При удалении акции что-то пошло не так...");
             }
 
             return Json(result);

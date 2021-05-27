@@ -47,5 +47,10 @@ namespace EasyStart.Services
 
             return promotionLogic.SaveStock(stock);
         }
+
+        public void RemoveStock(int stockId)
+        {
+            promotionLogic.RemoveStock(stockId);
+        }
     }
 }
