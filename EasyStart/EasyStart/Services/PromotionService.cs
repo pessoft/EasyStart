@@ -30,7 +30,7 @@ namespace EasyStart.Services
 
         public void RemovePromotionNews(int newsId)
         {
-            promotionLogic.RemovePromotionNews(newsId);
+            promotionLogic.RemoveNews(newsId);
         }
 
         public List<PromotionNewsModel> GetNews()

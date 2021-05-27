@@ -25,7 +25,7 @@ namespace EasyStart.Logic.Services.Promotion
             return newsRepository.Get(p => p.BranchId == branchId).ToList();
         }
 
-        public void RemovePromotionNews(int newsId)
+        public void RemoveNews(int newsId)
         {
             var news = newsRepository.Get(newsId);
             news.IsDeleted = true;
