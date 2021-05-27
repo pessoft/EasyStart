@@ -8,7 +8,7 @@ using System.Web;
 
 namespace EasyStart.Logic.Services.Product
 {
-    public class ProductLogic: ContainImageLogic, IProductLogic
+    public class ProductLogic: IProductLogic
     {
         private readonly IBaseRepository<ProductModel, int> productRepository;
         private readonly IBaseRepository<AdditionalFilling, int> additionalFillingRepository;
@@ -16,6 +16,7 @@ namespace EasyStart.Logic.Services.Product
         private readonly IBaseRepository<AdditionOptionItem, int> additionOptionItemRepository;
         private readonly IBaseRepository<ProductAdditionalFillingModal, int> productAdditionalFillingRepository;
         private readonly IBaseRepository<ProductAdditionalOptionModal, int> productAdditionOptionItemRepository;
+        private readonly IContainImageLogic imageLogic;
 
         public ProductLogic(
             IBaseRepository<ProductModel, int> productRepository,
@@ -23,7 +24,8 @@ namespace EasyStart.Logic.Services.Product
             IBaseRepository<AdditionalOption, int> additionalOptionRepository,
             IBaseRepository<AdditionOptionItem, int> additionOptionItemRepository,
             IBaseRepository<ProductAdditionalFillingModal, int> productAdditionalFillingRepository,
-            IBaseRepository<ProductAdditionalOptionModal, int> productAdditionOptionItemRepository)
+            IBaseRepository<ProductAdditionalOptionModal, int> productAdditionOptionItemRepository,
+            IContainImageLogic imageLogic)
         {
             this.productRepository = productRepository;
             this.additionalFillingRepository = additionalFillingRepository;
@@ -31,6 +33,7 @@ namespace EasyStart.Logic.Services.Product
             this.additionOptionItemRepository = additionOptionItemRepository;
             this.productAdditionalFillingRepository = productAdditionalFillingRepository;
             this.productAdditionOptionItemRepository = productAdditionOptionItemRepository;
+            this.imageLogic = imageLogic;
         }
 
         public ProductModel Get(int id)
@@ -122,13 +125,13 @@ namespace EasyStart.Logic.Services.Product
             var oldProduct = productRepository.Get(product.Id);
             ProductModel savedProduct = null;
 
-            PrepareImage(product);
+            imageLogic.PrepareImage(product);
 
             if(oldProduct != null)
             {
                 product.OrderNumber = oldProduct.OrderNumber;
 
-                RemoveOldImage(oldProduct, product);
+                imageLogic.RemoveOldImage(oldProduct, product);
                 savedProduct = productRepository.Update(product);
             }
             else

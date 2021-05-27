@@ -9,7 +9,7 @@ using System.Web.Hosting;
 
 namespace EasyStart.Logic.Services.ConstructorProduct
 {
-    public class ConstructorProductLogic : ContainImageLogic, IConstructorProductLogic
+    public class ConstructorProductLogic : IConstructorProductLogic
     {
         private IBaseRepository<ConstructorCategory, int> categoryRepository;
         private IBaseRepository<IngredientModel, int> ingredientRepository;

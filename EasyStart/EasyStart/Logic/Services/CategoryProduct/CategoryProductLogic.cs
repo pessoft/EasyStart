@@ -9,17 +9,20 @@ using System.Web.Hosting;
 
 namespace EasyStart.Logic.Services.CategoryProduct
 {
-    public class CategoryProductLogic : ContainImageLogic, ICategoryProductLogic
+    public class CategoryProductLogic : ICategoryProductLogic
     {
         private readonly IBaseRepository<CategoryModel, int> categoryRepository;
         private readonly IBaseRepository<RecommendedProductModel, int> recommendedProductRepository;
+        private readonly IContainImageLogic imageLogic;
 
         public CategoryProductLogic(
             IBaseRepository<CategoryModel, int> categoryRepository,
-            IBaseRepository<RecommendedProductModel, int> recommendedProductRepository)
+            IBaseRepository<RecommendedProductModel, int> recommendedProductRepository,
+            IContainImageLogic imageLogic)
         {
             this.categoryRepository = categoryRepository;
             this.recommendedProductRepository = recommendedProductRepository;
+            this.imageLogic = imageLogic;
         }
 
         public CategoryModel Get(int id)
@@ -79,13 +82,13 @@ namespace EasyStart.Logic.Services.CategoryProduct
             var oldCategory = categoryRepository.Get(category.Id);
             CategoryModel savedCategory = null;
 
-            PrepareImage(category);
+            imageLogic.PrepareImage(category);
 
             if (oldCategory != null)
             {
                 category.OrderNumber = oldCategory.OrderNumber;
 
-                RemoveOldImage(oldCategory, category);
+                imageLogic.RemoveOldImage(oldCategory, category);
                 savedCategory = categoryRepository.Update(category);
             }
             else

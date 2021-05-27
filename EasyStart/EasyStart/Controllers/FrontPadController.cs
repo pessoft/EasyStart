@@ -1,6 +1,7 @@
 ﻿using EasyStart.Hubs;
 using EasyStart.Logic;
 using EasyStart.Logic.IntegrationSystem;
+using EasyStart.Logic.Services;
 using EasyStart.Logic.Services.Branch;
 using EasyStart.Logic.Services.Client;
 using EasyStart.Logic.Services.DeliverySetting;
@@ -37,6 +38,7 @@ namespace EasyStart.Controllers
         public FrontPadController()
         {
             var context = new AdminPanelContext();
+            var imageLogic = new ContainImageLogic();
 
             var orderRepository = new OrderRepository(context);
             var orderLogic = new OrderLogic(orderRepository);
@@ -56,7 +58,8 @@ namespace EasyStart.Controllers
                 additionalOptionRepository,
                 additionOptionItemRepository,
                 productAdditionalFillingRepository,
-                productAdditionOptionItemRepository);
+                productAdditionOptionItemRepository,
+                imageLogic);
 
             var deliverySettingRepository = new DeliverySettingRepository(context);
             var areaDeliverySettingRepository = new AreaDeliveryRepository(context);

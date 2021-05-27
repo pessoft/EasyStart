@@ -4,6 +4,7 @@ using EasyStart.Logic;
 using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.Notification;
 using EasyStart.Logic.Notification.EmailNotification;
+using EasyStart.Logic.Services;
 using EasyStart.Logic.Services.Branch;
 using EasyStart.Logic.Services.Client;
 using EasyStart.Logic.Services.DeliverySetting;
@@ -54,6 +55,7 @@ namespace EasyStart
         public AdminAppController()
         {
             var context = new AdminPanelContext();
+            var imageLogic = new ContainImageLogic();
 
             var orderRepository = new OrderRepository(context);
             var orderLogic = new OrderLogic(orderRepository);
@@ -73,7 +75,8 @@ namespace EasyStart
                 additionalOptionRepository,
                 additionOptionItemRepository,
                 productAdditionalFillingRepository,
-                productAdditionOptionItemRepository);
+                productAdditionOptionItemRepository,
+                imageLogic);
 
             var deliverySettingRepository = new DeliverySettingRepository(context);
             var areaDeliverySettingRepository = new AreaDeliveryRepository(context);

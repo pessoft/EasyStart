@@ -7,17 +7,20 @@ using System.Web;
 
 namespace EasyStart.Logic.Services.Promotion
 {
-    public class PromotionLogic : ContainImageLogic, IPromotionLogic
+    public class PromotionLogic : IPromotionLogic
     {
-        private IBaseRepository<PromotionNewsModel, int> newsRepository;
-        private IBaseRepository<StockModel, int> stockRepository;
-        
+        private readonly IBaseRepository<PromotionNewsModel, int> newsRepository;
+        private readonly IBaseRepository<StockModel, int> stockRepository;
+        private readonly IContainImageLogic imageLogic;
+
         public PromotionLogic(
             IBaseRepository<PromotionNewsModel, int> newsRepository,
-            IBaseRepository<StockModel, int> stockRepository)
+            IBaseRepository<StockModel, int> stockRepository,
+            IContainImageLogic imageLogic)
         {
             this.newsRepository = newsRepository;
             this.stockRepository = stockRepository;
+            this.imageLogic = imageLogic;
         }
 
         public List<PromotionNewsModel> GetNews(int branchId)
@@ -48,7 +51,7 @@ namespace EasyStart.Logic.Services.Promotion
 
         public PromotionNewsModel SaveNews(PromotionNewsModel promotionNews)
         {
-            PrepareImage(promotionNews);
+            imageLogic.PrepareImage(promotionNews);
 
             var oldNews = newsRepository.Get(promotionNews.Id);
             PromotionNewsModel savedNews;
@@ -62,7 +65,7 @@ namespace EasyStart.Logic.Services.Promotion
 
         public StockModel SaveStock(StockModel stock)
         {
-            PrepareImage(stock);
+            imageLogic.PrepareImage(stock);
 
             var oldStock = stockRepository.Get(stock.Id);
 

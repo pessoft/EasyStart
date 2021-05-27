@@ -319,6 +319,7 @@
     <Compile Include="Logic\Services\Branch\BranchAlreadyExistException.cs" />
     <Compile Include="Logic\Services\Branch\BranchActionPermissionDeniedException.cs" />
     <Compile Include="Logic\Services\Branch\BranchSelfDeletionException.cs" />
+    <Compile Include="Logic\Services\IContainImageLogic.cs" />
     <Compile Include="Logic\Services\ContainImageLogic.cs" />
     <Compile Include="Logic\Services\ConstructorProduct\ConstructorProductLogic.cs" />
     <Compile Include="Logic\Services\ConstructorProduct\IConstructorProductLogic.cs" />
@@ -576,6 +577,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
+    <Compile Include="Models\IOrderable.cs" />
     <Compile Include="Models\UniqIdEntity.cs" />
     <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\BranchModel.cs" />

@@ -1,6 +1,7 @@
 ﻿using EasyStart.Logic;
 using EasyStart.Logic.FCM;
 using EasyStart.Logic.IntegrationSystem;
+using EasyStart.Logic.Services;
 using EasyStart.Logic.Services.Branch;
 using EasyStart.Logic.Services.CategoryProduct;
 using EasyStart.Logic.Services.Client;
@@ -55,6 +56,7 @@ namespace EasyStart.Controllers
             base.Initialize(requestContext);
 
             var context = new AdminPanelContext();
+            var imageLogic = new ContainImageLogic();
 
             var orderRepository = new OrderRepository(context);
             var orderLogic = new OrderLogic(orderRepository);
@@ -74,7 +76,8 @@ namespace EasyStart.Controllers
                 additionalOptionRepository,
                 additionOptionItemRepository,
                 productAdditionalFillingRepository,
-                productAdditionOptionItemRepository);
+                productAdditionOptionItemRepository,
+                imageLogic);
 
             var deliverySettingRepository = new DeliverySettingRepository(context);
             var areaDeliverySettingRepository = new AreaDeliveryRepository(context);
@@ -96,7 +99,8 @@ namespace EasyStart.Controllers
             var recommendedProductRepository = new RecommendedProductRepository(context);
             var categoryProductLogic = new CategoryProductLogic(
                 categoryProductRepository,
-                recommendedProductRepository);
+                recommendedProductRepository,
+                imageLogic);
 
             var constructorCategoryRepository = new ConstructorCategoryRepository(context);
             var constructorIngredientRepository = new ConstructorIngredientRepository(context);
@@ -108,7 +112,8 @@ namespace EasyStart.Controllers
             var promotionStockRepository = new PromotionStockRepository(context);
             var promotionLogic = new Logic.Services.Promotion.PromotionLogic(
                 promotionNewsRepository,
-                promotionStockRepository);
+                promotionStockRepository,
+                imageLogic);
 
             orderService = new OrderService(
                 orderLogic,

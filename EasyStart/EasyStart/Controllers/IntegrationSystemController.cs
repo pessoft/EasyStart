@@ -23,6 +23,7 @@ using EasyStart.Logic.Services.Client;
 using EasyStart.Logic.Services.DeliverySetting;
 using EasyStart.Logic.Services.PushNotification;
 using EasyStart.Logic.Services.GeneralSettings;
+using EasyStart.Logic.Services;
 
 namespace EasyStart.Controllers
 {
@@ -37,6 +38,7 @@ namespace EasyStart.Controllers
         public IntegrationSystemController()
         {
             var context = new AdminPanelContext();
+            var imageLogic = new ContainImageLogic();
 
             var orderRepository = new OrderRepository(context);
             var orderLogic = new OrderLogic(orderRepository);
@@ -56,7 +58,8 @@ namespace EasyStart.Controllers
                 additionalOptionRepository,
                 additionOptionItemRepository,
                 productAdditionalFillingRepository,
-                productAdditionOptionItemRepository);
+                productAdditionOptionItemRepository,
+                imageLogic);
 
             var deliverySettingRepository = new DeliverySettingRepository(context);
             var areaDeliverySettingRepository = new AreaDeliveryRepository(context);
