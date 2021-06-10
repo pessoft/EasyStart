@@ -18,5 +18,6 @@ namespace EasyStart.Models.Integration
         public string PhoneCodeCountry { get; set; }
         public bool UsePhoneMask { get; set; } = true;
         public int Affiliate { get; set; }
+        public int StatusPrepared { get; set; }
     }
 }
