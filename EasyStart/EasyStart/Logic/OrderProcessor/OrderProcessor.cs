@@ -69,6 +69,13 @@ namespace EasyStart.Logic.OrderProcessor
             var deliverSetting = deliverySettingService.GetByBranchId(order.BranchId);
             var dateUpdate = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
 
+            if (order.DeliveryType == DeliveryType.TakeYourSelf
+                && order.IntegrationOrderStatus == IntegrationOrderStatus.Prepared
+                && status == IntegrationOrderStatus.Done)
+            {
+                dateUpdate = order.UpdateDate;
+            }
+
             orderService.ChangeIntegrationStatus(orderId, status, dateUpdate);
         }
 

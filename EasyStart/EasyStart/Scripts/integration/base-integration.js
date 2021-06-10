@@ -54,6 +54,7 @@ const frontPadIdsStore = {
     secret: 'frontpad-integration',
     statusNew: 'frontpad-integration-status-new',
     statusProcessed: 'frontpad-integration-status-processed',
+    statusPrepared: 'frontpad-integration-status-prepared',
     statusDelivery: 'frontpad-integration-status-delivery',
     statusDone: 'frontpad-integration-status-done',
     statusCancel: 'frontpad-integration-status-cancel',
@@ -97,6 +98,11 @@ function initFrontPadIntegration() {
             <input required type="text" id="${frontPadIdsStore.statusProcessed}" />
             <span class="bar"></span>
             <label>Статус в производстве (код api)</label>
+        </div>
+        <div class="group">
+            <input required type="text" id="${frontPadIdsStore.statusPrepared}" />
+            <span class="bar"></span>
+            <label>Статус произведен (код api)</label>
         </div>
         <div class="group">
             <input required type="text" id="${frontPadIdsStore.statusDelivery}" />
@@ -146,6 +152,7 @@ function initFrontPadIntegration() {
         const options = JSON.parse(IntegerationSystemSetting.Options)
         $template.find(`#${frontPadIdsStore.statusNew}`).val(options.statusNew || 1)
         $template.find(`#${frontPadIdsStore.statusProcessed}`).val(options.statusProcessed)
+        $template.find(`#${frontPadIdsStore.statusPrepared}`).val(options.statusPrepared || 12)
         $template.find(`#${frontPadIdsStore.statusDelivery}`).val(options.statusDelivery)
         $template.find(`#${frontPadIdsStore.statusDone}`).val(options.statusDone || 10)
         $template.find(`#${frontPadIdsStore.statusCancel}`).val(options.statusCancel)
@@ -318,6 +325,7 @@ function getFrontPadSetting() {
     const useAutomaticDispatch = $(`#${frontPadIdsStore.useAutomaticDispatch}`).is(':checked')
     const statusNew = $(`#${frontPadIdsStore.statusNew}`).val().trim()
     const statusProcessed = $(`#${frontPadIdsStore.statusProcessed}`).val().trim()
+    const statusPrepared = $(`#${frontPadIdsStore.statusPrepared}`).val().trim()
     const statusDelivery = $(`#${frontPadIdsStore.statusDelivery}`).val().trim()
     const statusDone = $(`#${frontPadIdsStore.statusDone}`).val().trim()
     const statusCancel = $(`#${frontPadIdsStore.statusCancel}`).val().trim()
@@ -336,6 +344,7 @@ function getFrontPadSetting() {
     const options = {
         statusNew: parseInt(statusNew),
         statusProcessed: parseInt(statusProcessed),
+        statusPrepared: parseInt(statusPrepared),
         statusDelivery: parseInt(statusDelivery),
         statusDone: parseInt(statusDone),
         statusCancel: parseInt(statusCancel),
@@ -351,6 +360,7 @@ function getFrontPadSetting() {
         || !options.phoneCodeCountry
         || options.statusNew === 0 || Number.isNaN(options.statusNew)
         || options.statusProcessed === 0 || Number.isNaN(options.statusProcessed)
+        || options.statusPrepared === 0 || Number.isNaN(options.statusPrepared)
         || options.statusDelivery === 0 || Number.isNaN(options.statusDelivery)
         || options.statusDone === 0 || Number.isNaN(options.statusDone)
         || options.statusCancel === 0 || Number.isNaN(options.statusCancel)) {
