@@ -13,5 +13,6 @@ namespace EasyStart.Logic.IntegrationSystem
         Deliverid = 3,
         Done = 4,
         Canceled = 5,
+        Prepared = 6
     }
 }

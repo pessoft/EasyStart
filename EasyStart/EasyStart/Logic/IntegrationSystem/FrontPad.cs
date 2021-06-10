@@ -29,16 +29,18 @@ namespace EasyStart.Logic.IntegrationSystem
         {
             var status = IntegrationOrderStatus.Unknown;
 
-            if (externalOrderStatusId == this.frontPadOptions.StatusNew)
+            if (externalOrderStatusId == frontPadOptions.StatusNew)
                 status = IntegrationOrderStatus.New;
-            else if (externalOrderStatusId == this.frontPadOptions.StatusProcessed)
+            else if (externalOrderStatusId == frontPadOptions.StatusProcessed)
                 status = IntegrationOrderStatus.Preparing;
-            else if (externalOrderStatusId == this.frontPadOptions.StatusDelivery)
+            else if (externalOrderStatusId == frontPadOptions.StatusDelivery)
                 status = IntegrationOrderStatus.Deliverid;
-            else if (externalOrderStatusId == this.frontPadOptions.StatusCancel)
+            else if (externalOrderStatusId == frontPadOptions.StatusCancel)
                 status = IntegrationOrderStatus.Canceled;
-            else if (externalOrderStatusId == this.frontPadOptions.StatusDone)
+            else if (externalOrderStatusId == frontPadOptions.StatusDone)
                 status = IntegrationOrderStatus.Done;
+            else if (externalOrderStatusId == frontPadOptions.StatusPrepared)
+                status = IntegrationOrderStatus.Prepared;
 
             return status;
         }
@@ -261,18 +263,19 @@ namespace EasyStart.Logic.IntegrationSystem
         private void PrepareHookUrlData(StringBuilder postData)
         {
             var hookStatus = "";
-            var hoolStatusList = new List<int>
+            var hookStatusList = new List<int>
             {
                 frontPadOptions.StatusNew,
                 frontPadOptions.StatusProcessed,
                 frontPadOptions.StatusDelivery,
                 frontPadOptions.StatusDone,
-                frontPadOptions.StatusCancel
+                frontPadOptions.StatusCancel,
+                frontPadOptions.StatusPrepared
             };
 
-            for (var i = 0; i < hoolStatusList.Count; ++i)
+            for (var i = 0; i < hookStatusList.Count; ++i)
             {
-                hookStatus += $"&hook_status[{i}]={hoolStatusList[i]}";
+                hookStatus += $"&hook_status[{i}]={hookStatusList[i]}";
             }
 
             var domainUrl = HttpContext.Current.Request.Url.GetBaseUrl();
