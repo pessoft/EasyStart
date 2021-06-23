@@ -24,5 +24,10 @@ namespace EasyStart.Services
         {
             productReviewLogic.UpdateVisible(update);
         }
+
+        public List<ProductReview> Get(int productId)
+        {
+            return productReviewLogic.Get(productId);
+        }
     }
 }

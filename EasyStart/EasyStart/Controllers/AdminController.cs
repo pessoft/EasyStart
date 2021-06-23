@@ -647,17 +647,15 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadProductReviews(int productId)
         {
-            result = new JsonResultModel();
-            var reviews = DataWrapper.GetProductReviews(productId);
-
-            if (reviews != null)
+            try
             {
-                result.Data = reviews;
-                result.Success = true;
+                var reviews = productReviewService.Get(productId);
+                result = JsonResultModel.CreateSuccess(reviews);
             }
-            else
+            catch (Exception ex)
             {
-                result.ErrorMessage = "При загрузке отзывов что-то пошло не так";
+                Logger.Log.Error(ex);
+                result = JsonResultModel.CreateError("При загрузке отзывов что-то пошло не так...");
             }
 
             return Json(result);

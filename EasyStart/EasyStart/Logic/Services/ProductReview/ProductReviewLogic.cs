@@ -8,7 +8,7 @@ using System.Web;
 
 namespace EasyStart.Logic.Services.ProductReview
 {
-    public class ProductReviewLogic: IProductReviewLogic
+    public class ProductReviewLogic : IProductReviewLogic
     {
         private readonly IBaseRepository<Models.ProductReview, int> productReviewRepository;
         private readonly IDisplayItemSettingLogic displayItemSettingLogic;
@@ -24,6 +24,14 @@ namespace EasyStart.Logic.Services.ProductReview
         public void UpdateVisible(UpdaterVisible update)
         {
             displayItemSettingLogic.UpdateVisible(productReviewRepository, update);
+        }
+
+        public List<Models.ProductReview> Get(int productId)
+        {
+            return productReviewRepository.Get(p => p.ProductId == productId)
+                         .OrderByDescending(p => p.Date)
+                         .Take(50)
+                         .ToList();
         }
     }
 }
