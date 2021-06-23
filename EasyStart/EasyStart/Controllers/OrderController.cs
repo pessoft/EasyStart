@@ -34,7 +34,7 @@ namespace EasyStart.Controllers
         {
             var context = new AdminPanelContext();
             var imageLogic = new ContainImageLogic();
-            var orderableLogic = new OrderableLogic();
+            var displayItemSettingLogic = new DisplayItemSettingLogic();
 
             var orderRepository = new OrderRepository(context);
             var orderLogic = new OrderLogic(orderRepository);
@@ -56,7 +56,7 @@ namespace EasyStart.Controllers
                 productAdditionalFillingRepository,
                 productAdditionOptionItemRepository,
                 imageLogic,
-                orderableLogic);
+                displayItemSettingLogic);
 
             var deliverySettingRepository = new DeliverySettingRepository(context);
             var areaDeliverySettingRepository = new AreaDeliveryRepository(context);

@@ -22,5 +22,6 @@ namespace EasyStart.Logic.Services.Product
         ProductModel SaveProduct(ProductModel product);
         void RemoveProductByCategory(int categoryId);
         void UpdateOrder(List<UpdaterOrderNumber> items);
+        void UpdateVisible(UpdaterVisible update);
     }
 }

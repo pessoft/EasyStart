@@ -328,8 +328,10 @@
     <Compile Include="Logic\Services\CategoryProduct\ICategoryProductLogic.cs" />
     <Compile Include="Logic\Services\CategoryProduct\CategoryProductLogic.cs" />
     <Compile Include="Logic\Services\IBranchRemoval.cs" />
-    <Compile Include="Logic\Services\IOrderableLogic.cs" />
-    <Compile Include="Logic\Services\OrderableLogic.cs" />
+    <Compile Include="Logic\Services\IDisplayItemSettingLogic.cs" />
+    <Compile Include="Logic\Services\DisplayItemSettingLogic.cs" />
+    <Compile Include="Logic\Services\ProductReview\IProductReviewLogic.cs" />
+    <Compile Include="Logic\Services\ProductReview\ProductReviewLogic.cs" />
     <Compile Include="Logic\Services\Promotion\IPromotionLogic.cs" />
     <Compile Include="Logic\Services\Promotion\PromotionLogic.cs" />
     <Compile Include="Logic\Services\Utils\UtilsLogic.cs" />
@@ -580,6 +582,7 @@
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
     <Compile Include="Models\IEntityOrderable.cs" />
+    <Compile Include="Models\IEntityVisible.cs" />
     <Compile Include="Models\UniqIdEntity.cs" />
     <Compile Include="Models\IBaseEntity.cs" />
     <Compile Include="Models\BranchModel.cs" />
@@ -673,6 +676,7 @@
     <Compile Include="Repositories\DeliverySettingRepository.cs" />
     <Compile Include="Repositories\GeneralSettingRepository.cs" />
     <Compile Include="Repositories\IBaseRepository.cs" />
+    <Compile Include="Repositories\ProductReviewRepository.cs" />
     <Compile Include="Repositories\PromotionStockRepository.cs" />
     <Compile Include="Repositories\PromotionNewsRepository.cs" />
     <Compile Include="Repositories\ProductAdditionalFillingRepository.cs" />
@@ -687,6 +691,7 @@
     <Compile Include="Services\ConstructorProductService.cs" />
     <Compile Include="Services\GeneralSettingsService.cs" />
     <Compile Include="Services\CategoryProductService.cs" />
+    <Compile Include="Services\ProductReviewService.cs" />
     <Compile Include="Services\PromotionService.cs" />
     <Compile Include="Services\UtilsService.cs" />
     <Compile Include="Services\DeliverySettingService.cs" />

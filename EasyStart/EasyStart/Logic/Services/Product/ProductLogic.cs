@@ -17,7 +17,7 @@ namespace EasyStart.Logic.Services.Product
         private readonly IBaseRepository<ProductAdditionalFillingModal, int> productAdditionalFillingRepository;
         private readonly IBaseRepository<ProductAdditionalOptionModal, int> productAdditionOptionItemRepository;
         private readonly IContainImageLogic imageLogic;
-        private readonly IOrderableLogic orderableLogic;
+        private readonly IDisplayItemSettingLogic displayItemSettingLogic;
 
         public ProductLogic(
             IBaseRepository<ProductModel, int> productRepository,
@@ -27,7 +27,7 @@ namespace EasyStart.Logic.Services.Product
             IBaseRepository<ProductAdditionalFillingModal, int> productAdditionalFillingRepository,
             IBaseRepository<ProductAdditionalOptionModal, int> productAdditionOptionItemRepository,
             IContainImageLogic imageLogic,
-            IOrderableLogic orderableLogic)
+            IDisplayItemSettingLogic displayItemSettingLogic)
         {
             this.productRepository = productRepository;
             this.additionalFillingRepository = additionalFillingRepository;
@@ -36,7 +36,7 @@ namespace EasyStart.Logic.Services.Product
             this.productAdditionalFillingRepository = productAdditionalFillingRepository;
             this.productAdditionOptionItemRepository = productAdditionOptionItemRepository;
             this.imageLogic = imageLogic;
-            this.orderableLogic = orderableLogic;
+            this.displayItemSettingLogic = displayItemSettingLogic;
         }
 
         public ProductModel Get(int id)
@@ -331,7 +331,12 @@ namespace EasyStart.Logic.Services.Product
 
         public void UpdateOrder(List<UpdaterOrderNumber> items)
         {
-            orderableLogic.UpdateOrder(productRepository, items);
+            displayItemSettingLogic.UpdateOrder(productRepository, items);
+        }
+
+        public void UpdateVisible(UpdaterVisible update)
+        {
+            displayItemSettingLogic.UpdateVisible(productRepository, update);
         }
     }
 }

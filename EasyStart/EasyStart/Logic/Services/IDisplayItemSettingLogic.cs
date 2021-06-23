@@ -8,9 +8,12 @@ using System.Threading.Tasks;
 
 namespace EasyStart.Logic.Services
 {
-    public interface IOrderableLogic
+    public interface IDisplayItemSettingLogic
     {
         void UpdateOrder<T>(IBaseRepository<T, int> repository, List<UpdaterOrderNumber> items)
             where T : class, IEntityOrderable<int>;
+
+        void UpdateVisible<T>(IBaseRepository<T, int> repository, UpdaterVisible update)
+            where T : class, IEntityVisible<int>;
     }
 }

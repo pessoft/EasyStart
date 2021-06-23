@@ -89,5 +89,10 @@ namespace EasyStart.Services
         {
             productLogic.UpdateOrder(items);
         }
+
+        public void UpdateVisible(UpdaterVisible update)
+        {
+            productLogic.UpdateVisible(update);
+        }
     }
 }

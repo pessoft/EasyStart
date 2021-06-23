@@ -11,6 +11,7 @@ using EasyStart.Logic.Services.GeneralSettings;
 using EasyStart.Logic.Services.IntegrationSystem;
 using EasyStart.Logic.Services.Order;
 using EasyStart.Logic.Services.Product;
+using EasyStart.Logic.Services.ProductReview;
 using EasyStart.Logic.Services.PushNotification;
 using EasyStart.Models;
 using EasyStart.Models.FCMNotification;
@@ -48,6 +49,7 @@ namespace EasyStart.Controllers
         private BranchRemovalService branchRemovalService;
         private PromotionService promotionService;
         private ConstructorProductService constructorProductService;
+        private ProductReviewService productReviewService;
 
         public AdminController()
         {}
@@ -58,7 +60,7 @@ namespace EasyStart.Controllers
 
             var context = new AdminPanelContext();
             var imageLogic = new ContainImageLogic();
-            var orderableLogic = new OrderableLogic();
+            var displayItemSettingLogic = new DisplayItemSettingLogic();
 
             var orderRepository = new OrderRepository(context);
             var orderLogic = new OrderLogic(orderRepository);
@@ -80,7 +82,7 @@ namespace EasyStart.Controllers
                 productAdditionalFillingRepository,
                 productAdditionOptionItemRepository,
                 imageLogic,
-                orderableLogic);
+                displayItemSettingLogic);
 
             var deliverySettingRepository = new DeliverySettingRepository(context);
             var areaDeliverySettingRepository = new AreaDeliveryRepository(context);
@@ -104,14 +106,14 @@ namespace EasyStart.Controllers
                 categoryProductRepository,
                 recommendedProductRepository,
                 imageLogic,
-                orderableLogic);
+                displayItemSettingLogic);
 
             var constructorCategoryRepository = new ConstructorCategoryRepository(context);
             var constructorIngredientRepository = new ConstructorIngredientRepository(context);
             var constructorProductLogic = new ConstructorProductLogic(
                 constructorCategoryRepository,
                 constructorIngredientRepository,
-                orderableLogic);
+                displayItemSettingLogic);
 
             var promotionNewsRepository = new PromotionNewsRepository(context);
             var promotionStockRepository = new PromotionStockRepository(context);
@@ -119,6 +121,9 @@ namespace EasyStart.Controllers
                 promotionNewsRepository,
                 promotionStockRepository,
                 imageLogic);
+
+            var productReviewRepository = new ProductReviewRepository(context);
+            var productReviewLogic = new ProductReviewLogic(productReviewRepository, displayItemSettingLogic);
 
             orderService = new OrderService(
                 orderLogic,
@@ -142,6 +147,7 @@ namespace EasyStart.Controllers
                 constructorProductLogic);
             promotionService = new PromotionService(promotionLogic, branchLogic);
             constructorProductService = new ConstructorProductService(constructorProductLogic);
+            productReviewService = new ProductReviewService(productReviewLogic);
         }
 
         // GET: Admin
@@ -627,20 +633,14 @@ namespace EasyStart.Controllers
         [Authorize]
         public void UpdateVisibleCategory(UpdaterVisible data)
         {
-            if (data != null && data.Id > 0)
-            {
-                DataWrapper.UpdateVisibleCategory(data);
-            }
+            categoryProductService.UpdateVisible(data);
         }
 
         [HttpPost]
         [Authorize]
         public void UpdateVisibleProduct(UpdaterVisible data)
         {
-            if (data != null && data.Id > 0)
-            {
-                DataWrapper.UpdateVisibleProduct(data);
-            }
+            productService.UpdateVisible(data);
         }
 
         [HttpPost]
@@ -667,10 +667,7 @@ namespace EasyStart.Controllers
         [Authorize]
         public void UpdateVisibleReview(UpdaterVisible data)
         {
-            if (data != null && data.Id > 0)
-            {
-                DataWrapper.UpdateVisibleReview(data);
-            }
+            productReviewService.UpdateVisible(data);
         }
 
         [HttpPost]

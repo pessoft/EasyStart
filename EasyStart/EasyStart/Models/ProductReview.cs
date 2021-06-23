@@ -5,7 +5,7 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class ProductReview
+    public class ProductReview: IEntityVisible<int>
     {
         public int Id { get; set; }
         public int ClientId { get; set; }

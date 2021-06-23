@@ -7,7 +7,7 @@ using System.Web;
 
 namespace EasyStart.Logic.Services
 {
-    public class OrderableLogic : IOrderableLogic
+    public class DisplayItemSettingLogic : IDisplayItemSettingLogic
     {
         public void UpdateOrder<T>(IBaseRepository<T, int> repository, List<UpdaterOrderNumber> items)
             where T : class, IEntityOrderable<int>
@@ -20,6 +20,24 @@ namespace EasyStart.Logic.Services
             var data = repository.Get(p => ids.Contains(p.Id)).ToList();
 
             data.ForEach(p => p.OrderNumber = dict[p.Id]);
+
+            repository.Update(data);
+        }
+
+        public void UpdateVisible<T>(IBaseRepository<T, int> repository, UpdaterVisible update)
+            where T : class, IEntityVisible<int>
+        {
+            if (update == null || update.Id < 1)
+                return;
+
+            var entity = repository.Get(update.Id);
+
+            if (entity != null)
+            {
+                entity.Visible = update.Visible;
+
+                repository.Update(entity);
+            }
         }
     }
 }

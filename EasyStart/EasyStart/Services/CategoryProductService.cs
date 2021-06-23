@@ -63,5 +63,10 @@ namespace EasyStart.Services
         {
             categoryProductLogic.UpdateOrder(items);
         }
+
+        public void UpdateVisible(UpdaterVisible update)
+        {
+            categoryProductLogic.UpdateVisible(update);
+        }
     }
 }

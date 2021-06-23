@@ -14,18 +14,18 @@ namespace EasyStart.Logic.Services.CategoryProduct
         private readonly IBaseRepository<CategoryModel, int> categoryRepository;
         private readonly IBaseRepository<RecommendedProductModel, int> recommendedProductRepository;
         private readonly IContainImageLogic imageLogic;
-        private readonly IOrderableLogic orderableLogic;
+        private readonly IDisplayItemSettingLogic displayItemSettingLogic;
 
         public CategoryProductLogic(
             IBaseRepository<CategoryModel, int> categoryRepository,
             IBaseRepository<RecommendedProductModel, int> recommendedProductRepository,
             IContainImageLogic imageLogic,
-            IOrderableLogic orderableLogic)
+            IDisplayItemSettingLogic displayItemSettingLogic)
         {
             this.categoryRepository = categoryRepository;
             this.recommendedProductRepository = recommendedProductRepository;
             this.imageLogic = imageLogic;
-            this.orderableLogic = orderableLogic;
+            this.displayItemSettingLogic = displayItemSettingLogic;
         }
 
         public CategoryModel Get(int id)
@@ -150,7 +150,12 @@ namespace EasyStart.Logic.Services.CategoryProduct
 
         public void UpdateOrder(List<UpdaterOrderNumber> items)
         {
-            orderableLogic.UpdateOrder(categoryRepository, items);
+            displayItemSettingLogic.UpdateOrder(categoryRepository, items);
+        }
+
+        public void UpdateVisible(UpdaterVisible update)
+        {
+            displayItemSettingLogic.UpdateVisible(categoryRepository, update);
         }
     }
 }
