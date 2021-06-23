@@ -633,14 +633,28 @@ namespace EasyStart.Controllers
         [Authorize]
         public void UpdateVisibleCategory(UpdaterVisible data)
         {
-            categoryProductService.UpdateVisible(data);
+            try
+            {
+                categoryProductService.UpdateVisible(data);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
         }
 
         [HttpPost]
         [Authorize]
         public void UpdateVisibleProduct(UpdaterVisible data)
         {
-            productService.UpdateVisible(data);
+            try
+            {
+                productService.UpdateVisible(data);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
         }
 
         [HttpPost]
@@ -665,7 +679,14 @@ namespace EasyStart.Controllers
         [Authorize]
         public void UpdateVisibleReview(UpdaterVisible data)
         {
-            productReviewService.UpdateVisible(data);
+            try
+            {
+                productReviewService.UpdateVisible(data);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
         }
 
         [HttpPost]
