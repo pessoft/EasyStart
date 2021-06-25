@@ -2647,9 +2647,9 @@ class OrderDetailsData {
     getDiscounText(order) {
         const prefixRub = "руб."
         const prefixPercent = "%"
-        const percent = order.DiscountPercent == 0 ? `0${prefixPercent}` : `${order.DiscountPercent}${prefixPercent} (${xFormatPrice(order.AmountPay * order.DiscountPercent / 100)} ${prefixRub})`
+        const percent = `${order.DiscountPercent}${prefixPercent}`
 
-        const ruble = order.DiscountRuble > 0 ? `${order.DiscountRuble} руб.` : ''
+        const ruble = order.DiscountRuble > 0 ? `${order.DiscountRuble} ${prefixRub}` : ''
         let text = percent && ruble ? `${percent} и ${ruble}` : percent || ruble
 
         return text
