@@ -32,7 +32,7 @@ namespace EasyStart.Controllers
             orderProcessor = new OrderProcessor();
 
             var context = new AdminPanelContext();
-            
+
             var deliverySettingRepository = new DeliverySettingRepository(context);
             var areaDeliverySettingRepository = new AreaDeliveryRepository(context);
             deliverySettingService = new DeliverySettingService(deliverySettingRepository, areaDeliverySettingRepository);
@@ -417,8 +417,8 @@ namespace EasyStart.Controllers
 
             if (categories != null)
             {
-                result.Data = new 
-                { 
+                result.Data = new
+                {
                     Categories = categories,
                     AdditionalOptions = additionalOptions,
                     AdditionalFillings = additionalFillings
@@ -664,6 +664,9 @@ namespace EasyStart.Controllers
             var branchId = DataWrapper.GetBranchId(User.Identity.Name);
             stock.BranchId = branchId;
             stock.IsDeleted = false;
+            stock.StockFromDate = stock.StockFromDate.Date;
+            stock.StockToDate = stock.StockToDate.Date;
+
             stock = DataWrapper.SaveStock(stock);
 
             if (stock != null)
