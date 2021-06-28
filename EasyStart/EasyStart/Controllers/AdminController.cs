@@ -538,6 +538,9 @@ namespace EasyStart.Controllers
         public JsonResult SaveStock(StockModel stock)
         {
             try
+            stock.StockFromDate = stock.StockFromDate.Date;
+            stock.StockToDate = stock.StockToDate.Date;
+
             {
                 var savedStock = promotionService.SaveStock(stock);
                 result = JsonResultModel.CreateSuccess(savedStock);

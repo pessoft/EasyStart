@@ -10,6 +10,8 @@ namespace EasyStart.Logic.AdditionalOptions
         Custom = 0,
         Grams = 1,
         Milliliters = 2,
-        Liters = 3
+        Liters = 3,
+        Kilograms = 4,
+        Pieces = 5
     }
 }
