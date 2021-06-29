@@ -538,9 +538,6 @@ namespace EasyStart.Controllers
         public JsonResult SaveStock(StockModel stock)
         {
             try
-            stock.StockFromDate = stock.StockFromDate.Date;
-            stock.StockToDate = stock.StockToDate.Date;
-
             {
                 var savedStock = promotionService.SaveStock(stock);
                 result = JsonResultModel.CreateSuccess(savedStock);
@@ -694,20 +691,21 @@ namespace EasyStart.Controllers
 
         [HttpPost]
         [Authorize]
-        public JsonResult LoadOrders(List<int> brnachIds)
+        public JsonResult LoadOrders(List<int> branchIds)
         {
-            result = new JsonResultModel();
-            var orders = DataWrapper.GetOrders(brnachIds);
-            var todayData = DataWrapper.GetDataOrdersByDate(brnachIds, DateTime.Now);
-
-            if (orders != null)
+            try
             {
-                result.Data = new { Orders = orders, TodayData = todayData };
-                result.Success = true;
+                var data = new
+                {
+                    Orders = orderService.GetByBranchIds(branchIds),
+                    TodayData = orderService.GetDataOrdersByDate(branchIds, DateTime.Now)
+                }; 
+                result = JsonResultModel.CreateSuccess(data);
             }
-            else
+            catch (Exception ex)
             {
-                result.ErrorMessage = "При загрузке заказов, что-то пошло не так";
+                Logger.Log.Error(ex);
+                result = JsonResultModel.CreateError("При загрузке заказов, что-то пошло не так");
             }
 
             return Json(result);

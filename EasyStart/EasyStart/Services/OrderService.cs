@@ -51,6 +51,16 @@ namespace EasyStart.Services
             return orderLogic.GetByExternalId(id);
         }
 
+        public IEnumerable<OrderModel> GetByBranchIds(IEnumerable<int> branchIds)
+        {
+            return orderLogic.GetByBranchIds(branchIds);
+        }
+
+        public TodayDataOrdersModel GetDataOrdersByDate(IEnumerable<int> branchIds, DateTime date)
+        {
+            return orderLogic.GetDataOrdersByDate(branchIds, date);
+        }
+
         public void MarkOrderSendToIntegrationSystem(int orderId, INewOrderResult orderResult)
         {
             orderLogic.MarkOrderSendToIntegrationSystem(orderId, orderResult);

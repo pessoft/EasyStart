@@ -13,6 +13,8 @@ namespace EasyStart.Logic.Services.Order
     {
         OrderModel Get(int id);
         OrderModel GetByExternalId(long id);
+        IEnumerable<OrderModel> GetByBranchIds(IEnumerable<int> branchIds);
+        TodayDataOrdersModel GetDataOrdersByDate(IEnumerable<int> branchIds, DateTime date);
         void MarkOrderSendToIntegrationSystem(int orderId, INewOrderResult orderResult);
         List<OrderModel> GetOrdersForClient(int clinetId);
         void ChangeIntegrationStatus(int orderId, IntegrationOrderStatus status, DateTime updateDate);

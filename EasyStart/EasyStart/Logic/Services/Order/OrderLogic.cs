@@ -34,6 +34,37 @@ namespace EasyStart.Logic.Services.Order
             return result;
         }
 
+        public IEnumerable<OrderModel> GetByBranchIds(IEnumerable<int> branchIds)
+        {
+            return repository.Get(p => branchIds.Contains(p.BranchId)
+                && p.OrderStatus == OrderStatus.Processing);
+        }
+
+        public TodayDataOrdersModel GetDataOrdersByDate(IEnumerable<int> branchIds, DateTime date)
+        {
+            var data = new TodayDataOrdersModel();
+
+            repository.Get(p => branchIds.Contains(p.BranchId)
+                && p.OrderStatus != OrderStatus.Processing
+                && p.OrderStatus != OrderStatus.Deleted
+                && p.OrderStatus != OrderStatus.PendingPay
+                && p.UpdateDate.Date == date.Date)
+                .ToList()
+                .ForEach(p =>
+                {
+                    if (p.OrderStatus == OrderStatus.Processed)
+                    {
+                        ++data.CountSuccesOrder;
+                        data.Revenue += p.AmountPayDiscountDelivery;
+                    }
+
+                    if (p.OrderStatus == OrderStatus.Cancellation)
+                        ++data.CountCancelOrder;
+                });
+
+            return data;
+        }
+
         public void MarkOrderSendToIntegrationSystem(int orderId, INewOrderResult orderResult)
         {
             if (!orderResult.Success)

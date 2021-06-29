@@ -1830,8 +1830,8 @@ function loadOrders(reload = false) {
 
     clearSearchInput(Pages.Order)
     let currentBranchId = getCurrentBranchId()
-    let brnachIds = [...AdditionalBranch]
-    brnachIds.push(currentBranchId)
+    let branchIds = [...AdditionalBranch]
+    branchIds.push(currentBranchId)
 
     let $list = $("#order .orders .order-list")
     $list.empty()
@@ -1857,7 +1857,7 @@ function loadOrders(reload = false) {
         loader.stop()
     }
 
-    $.post("/Admin/LoadOrders", { brnachIds: brnachIds }, successCallBack(successFunc, loader))
+    $.post("/Admin/LoadOrders", { branchIds }, successCallBack(successFunc, loader))
 }
 
 var HistoryOrders = []
