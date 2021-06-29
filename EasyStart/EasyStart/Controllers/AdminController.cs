@@ -715,17 +715,15 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadHistoryOrders(HistoryOrderFilter filter)
         {
-            result = new JsonResultModel();
-            var orders = DataWrapper.GetHistoryOrders(filter.BranchIds, filter.StartDate, filter.EndDate);
-
-            if (orders != null)
+            try
             {
-                result.Data = orders;
-                result.Success = true;
+                var orders = orderService.GetHistory(filter);
+                result = JsonResultModel.CreateSuccess(orders);
             }
-            else
+            catch (Exception ex)
             {
-                result.ErrorMessage = "При загрузке заказов, что-то пошло не так";
+                Logger.Log.Error(ex);
+                result = JsonResultModel.CreateError("При загрузке заказов, что-то пошло не так");
             }
 
             return Json(result);

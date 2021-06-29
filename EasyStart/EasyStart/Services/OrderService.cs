@@ -61,6 +61,11 @@ namespace EasyStart.Services
             return orderLogic.GetDataOrdersByDate(branchIds, date);
         }
 
+        public IEnumerable<OrderModel> GetHistory(HistoryOrderFilter filter)
+        {
+            return orderLogic.GetHistory(filter);
+        }
+
         public void MarkOrderSendToIntegrationSystem(int orderId, INewOrderResult orderResult)
         {
             orderLogic.MarkOrderSendToIntegrationSystem(orderId, orderResult);

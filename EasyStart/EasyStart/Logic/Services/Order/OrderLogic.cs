@@ -65,6 +65,16 @@ namespace EasyStart.Logic.Services.Order
             return data;
         }
 
+        public IEnumerable<OrderModel> GetHistory(HistoryOrderFilter filter)
+        {
+            return repository.Get(p => filter.BranchIds.Contains(p.BranchId)
+                && p.OrderStatus != OrderStatus.Processing
+                && p.OrderStatus != OrderStatus.Deleted
+                && p.OrderStatus != OrderStatus.PendingPay
+                && p.UpdateDate.Date >= filter.StartDate.Date
+                && p.UpdateDate.Date <= filter.EndDate.Date);
+        }
+
         public void MarkOrderSendToIntegrationSystem(int orderId, INewOrderResult orderResult)
         {
             if (!orderResult.Success)
