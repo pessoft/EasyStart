@@ -9,6 +9,10 @@ namespace EasyStart.Models
     {
         public int Id { get; set; }
         public int CategoryId { get; set; }
+
+        /// <summary>
+        /// Категория внутри конструктора
+        /// </summary>
         public int SubCategoryId { get; set; }
         public string Name { get; set; }
         public string AdditionalInfo { get; set; }

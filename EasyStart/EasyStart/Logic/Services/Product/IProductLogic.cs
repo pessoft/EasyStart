@@ -11,6 +11,7 @@ namespace EasyStart.Logic.Services.Product
     public interface IProductLogic: IBranchRemoval
     {
         ProductModel Get(int id);
+        IEnumerable<ProductModel> Get(IEnumerable<int> ids);
         List<ProductModel> Get(OrderModel order);
         List<ProductModel> GetByCategory(int categoryId);
         void RemoveProduct(int id);

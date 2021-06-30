@@ -2,6 +2,7 @@
 using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.Services;
 using EasyStart.Logic.Services.Branch;
+using EasyStart.Logic.Services.CategoryProduct;
 using EasyStart.Logic.Services.Client;
 using EasyStart.Logic.Services.DeliverySetting;
 using EasyStart.Logic.Services.GeneralSettings;
@@ -74,13 +75,20 @@ namespace EasyStart.Controllers
             var generalSettingRepository = new GeneralSettingRepository(context);
             var generalSettingLogic = new GeneralSettingsLogic(generalSettingRepository);
 
+            var categoryProductRepository = new CategoryProductRepository(context);
+            var recommendedProductRepository = new RecommendedProductRepository(context);
+            var categoryProductLogic = new CategoryProductLogic(categoryProductRepository,
+                recommendedProductRepository,
+                imageLogic,
+                displayItemSettingLogic);
+
             orderService = new OrderService(
                 orderLogic,
                 integrationSystemLogic,
                 productLogic,
                 deliverySettingLogic,
                 pushNotificationLogic);
-            productService = new ProductService(productLogic, branchLogic);
+            productService = new ProductService(productLogic, branchLogic, categoryProductLogic);
             clientService = new ClientService(clientLogic);
             branchService = new BranchService(branchLogic, generalSettingLogic);
         }

@@ -1996,7 +1996,7 @@ function getOrderIdFromItemOrdersDOM(e) {
 
 function getItemsIdsForLoad(order) {
     let productIds = []
-    let constructorCategoryIds = []
+    let categoryIds = []
 
     for (let id in order.ProductCount) {
         productIds.push(id)
@@ -2010,7 +2010,7 @@ function getItemsIdsForLoad(order) {
 
     if (order.ProductConstructorCount && order.ProductConstructorCount.length > 0) {
         for (let productConstructorOrder of order.ProductConstructorCount) {
-            constructorCategoryIds.push(productConstructorOrder.CategoryId)
+            categoryIds.push(productConstructorOrder.CategoryId)
         }
     }
 
@@ -2020,7 +2020,7 @@ function getItemsIdsForLoad(order) {
         }
     }
 
-    return { productIds, constructorCategoryIds }
+    return { productIds, categoryIds }
 }
 
 function isInteger(num) {
@@ -2038,7 +2038,7 @@ function getPriceValid(num) {
 var OrderProducts = {}
 var OrderConstructorProducts = {}
 function loadItemForOrder(idsCollection, callback) {
-    $.post("/Admin/LoadOrderItems", { productIds: idsCollection.productIds, constructorCategoryIds: idsCollection.constructorCategoryIds }, successCallBack(callback, null))
+    $.post("/Admin/LoadOrderItems", { productIds: idsCollection.productIds, categoryIds: idsCollection.categoryIds }, successCallBack(callback, null))
 }
 
 function getOrderById(orderId) {
@@ -2327,7 +2327,7 @@ function showOrderDetailsFromPromotionClient(order) {
 
     let itemsIdsforLoad = getItemsIdsForLoad(order)
 
-    if (itemsIdsforLoad.productIds.length == 0 && itemsIdsforLoad.constructorCategoryIds.length == 0) {
+    if (itemsIdsforLoad.productIds.length == 0 && itemsIdsforLoad.categoryIds.length == 0) {
         loader.stop()
         getOrderDetails().show()
     } else {
@@ -2371,7 +2371,7 @@ function showOrderDetails(orderId) {
 
     let itemsIdsforLoad = getItemsIdsForLoad(order)
 
-    if (itemsIdsforLoad.productIds.length == 0 && itemsIdsforLoad.constructorCategoryIds.length == 0) {
+    if (itemsIdsforLoad.productIds.length == 0 && itemsIdsforLoad.categoryIds.length == 0) {
         loader.stop()
         getOrderDetails().show()
     } else {

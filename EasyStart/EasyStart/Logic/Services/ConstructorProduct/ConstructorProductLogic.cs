@@ -25,6 +25,20 @@ namespace EasyStart.Logic.Services.ConstructorProduct
             this.displayItemSettingLogic = displayItemSettingLogic;
         }
 
+        public IEnumerable<IngredientModel> GetIngredients(IEnumerable<int> categoryIds)
+        {
+            if (categoryIds == null)
+                return new List<IngredientModel>();
+
+            return ingredientRepository.Get(p => categoryIds.Contains(p.CategoryId)
+            && !p.IsDeleted);
+        }
+
+        public void UpdateOrder(List<UpdaterOrderNumber> items)
+        {
+            displayItemSettingLogic.UpdateOrder(categoryRepository, items);
+        }
+
         public void RemoveByBranch(int branchId)
         {
             var removedSubCatigories = RemoveCategoriesByBranch(branchId);
@@ -47,11 +61,6 @@ namespace EasyStart.Logic.Services.ConstructorProduct
             
             ingredients.ForEach(p => p.IsDeleted = true);
             ingredientRepository.Update(ingredients);
-        }
-
-        public void UpdateOrder(List<UpdaterOrderNumber> items)
-        {
-            displayItemSettingLogic.UpdateOrder(categoryRepository, items);
         }
     }
 }

@@ -24,6 +24,7 @@ using EasyStart.Logic.Services.DeliverySetting;
 using EasyStart.Logic.Services.PushNotification;
 using EasyStart.Logic.Services.GeneralSettings;
 using EasyStart.Logic.Services;
+using EasyStart.Logic.Services.CategoryProduct;
 
 namespace EasyStart.Controllers
 {
@@ -79,6 +80,13 @@ namespace EasyStart.Controllers
             var generalSettingRepository = new GeneralSettingRepository(context);
             var generalSettingLogic = new GeneralSettingsLogic(generalSettingRepository);
 
+            var categoryProductRepository = new CategoryProductRepository(context);
+            var recommendedProductRepository = new RecommendedProductRepository(context);
+            var categoryProductLogic = new CategoryProductLogic(categoryProductRepository,
+                recommendedProductRepository,
+                imageLogic,
+                displayItemSettingLogic);
+
             orderService = new OrderService(
                 orderLogic,
                 integrationSystemLogic,
@@ -88,7 +96,7 @@ namespace EasyStart.Controllers
             integrationSystemService = new IntegrationSystemService(integrationSystemLogic);
             clientService = new ClientService(clientLogic);
             branchService = new BranchService(branchLogic, generalSettingLogic);
-            productService = new ProductService(productLogic, branchLogic);
+            productService = new ProductService(productLogic, branchLogic, categoryProductLogic);
         }
 
         [HttpGet]

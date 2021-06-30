@@ -47,6 +47,17 @@ namespace EasyStart.Logic.Services.Product
             return product;
         }
 
+        public IEnumerable<ProductModel> Get(IEnumerable<int> ids)
+        {
+            if (ids == null)
+                return new List<ProductModel>();
+
+            var products = productRepository.Get(p => ids.Contains(p.Id)).ToList();
+            AppendProductAdditionalItems(products);
+
+            return products;
+        }
+
         /// <summary>
         /// Возвращает продукты на основе ProductCount и ProductBonusCount
         /// </summary>

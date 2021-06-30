@@ -1,4 +1,5 @@
 ﻿using EasyStart.Logic.Services.Branch;
+using EasyStart.Logic.Services.CategoryProduct;
 using EasyStart.Logic.Services.Product;
 using EasyStart.Models;
 using EasyStart.Models.ProductOption;
@@ -14,18 +15,26 @@ namespace EasyStart.Services
     {
         private readonly IProductLogic productLogic;
         private readonly IBranchLogic branchLogic;
+        private readonly ICategoryProductLogic categoryProductLogic;
 
         public ProductService(
             IProductLogic productLogic,
-            IBranchLogic branchLogic)
+            IBranchLogic branchLogic,
+            ICategoryProductLogic categoryProductLogic)
         {
             this.productLogic = productLogic;
             this.branchLogic = branchLogic;
+            this.categoryProductLogic = categoryProductLogic;
         }
 
         public ProductModel Get(int id)
         {
             return productLogic.Get(id);
+        }
+
+        public IEnumerable<ProductModel> Get(IEnumerable<int> ids)
+        {
+            return productLogic.Get(ids);
         }
 
         /// <summary>
@@ -93,6 +102,32 @@ namespace EasyStart.Services
         public void UpdateVisible(UpdaterVisible update)
         {
             productLogic.UpdateVisible(update);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ids">product ids</param>
+        /// <returns></returns>
+        public IEnumerable<OrderDetailProduct> GetProductOrderDetails(IEnumerable<int> ids)
+        {
+            var products = Get(ids);
+
+            var idsDict = products
+                        .Select(p => p.CategoryId)
+                        .Distinct();
+            var categoryDict = categoryProductLogic.Get(idsDict).ToDictionary(p => p.Id);
+            var productDetails = products
+                .GroupBy(p => p.CategoryId)
+                .Select(p => new OrderDetailProduct
+                {
+                    CategoryId = p.Key,
+                    CategoryName = categoryDict[p.Key].Name,
+                    Products = p.ToList()
+                })
+                .ToList();
+
+            return productDetails;
         }
     }
 }

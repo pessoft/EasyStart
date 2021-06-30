@@ -36,6 +36,27 @@ namespace EasyStart.Logic.Services.CategoryProduct
             return category; 
         }
 
+        public IEnumerable<CategoryModel> Get(IEnumerable<int> ids)
+        {
+            if (ids == null)
+                return new List<CategoryModel>();
+
+            var categories = categoryRepository.Get(p => ids.Contains(p.Id));
+            var recommendedProduct = recommendedProductRepository.Get(p => ids.Contains(p.CategoryId))
+                .GroupBy(p => p.CategoryId)
+                .ToDictionary(
+                    p => p.Key,
+                    p => p.Select(x => x.ProductId));
+
+            foreach (var category in categories)
+            {
+                if (recommendedProduct.TryGetValue(category.Id, out IEnumerable<int> productIds))
+                    category.RecommendedProducts = productIds.ToList();
+            }
+
+            return categories;
+        }
+
         public List<CategoryModel> GetByBranch(int branchId)
         {
             var categories = categoryRepository
