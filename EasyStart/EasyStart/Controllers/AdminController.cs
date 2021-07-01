@@ -769,24 +769,17 @@ namespace EasyStart.Controllers
 
         [HttpPost]
         [Authorize]
-        public JsonResult GetTodayOrderData(List<int> brnachIds)
+        public JsonResult GetTodayOrderData(List<int> branchIds)
         {
-            result = new JsonResultModel();
-
             try
             {
-                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-                var deliverSetting = deliverySettingService.GetByBranchId(branchId);
-                var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
-                var data = DataWrapper.GetDataOrdersByDate(brnachIds, date);
-
-                result.Data = data;
-                result.Success = true;
+                var data = orderService.GetDataOrdersByDate(branchIds, DateTime.Now);
+                result = JsonResultModel.CreateSuccess(data);
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result.ErrorMessage = ex.Message;
+                result = JsonResultModel.CreateError("При информации о заказах, что-то пошло не так...");
             }
 
             return Json(result);

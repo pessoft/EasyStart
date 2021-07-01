@@ -2219,14 +2219,14 @@ function notifySoundNewOrder(isRepead = false) {
 
 function getTodayDataOrders(containerId) {
     let currentBranchId = getCurrentBranchId()
-    let brnachIds = [...AdditionalBranch]
-    brnachIds.push(currentBranchId)
+    let branchIds = [...AdditionalBranch]
+    branchIds.push(currentBranchId)
 
     let successFunct = data => {
         setTodayDataOrders(data.Data, containerId)
     }
 
-    $.post("/Admin/GetTodayOrderData", { brnachIds: brnachIds }, successCallBack(successFunct))
+    $.post("/Admin/GetTodayOrderData", { branchIds }, successCallBack(successFunct))
 }
 
 function changeHistoryOrderDataForStatusBar() {
