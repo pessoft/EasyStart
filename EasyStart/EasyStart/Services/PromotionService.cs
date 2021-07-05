@@ -22,8 +22,7 @@ namespace EasyStart.Services
 
         public PromotionNewsModel SaveNews(PromotionNewsModel promotionNews)
         {
-            var branch = branchLogic.Get();
-            promotionNews.BranchId = branch.Id;
+            promotionNews.BranchId = GetBranchId();
 
             return promotionLogic.SaveNews(promotionNews);
         }
@@ -35,15 +34,12 @@ namespace EasyStart.Services
 
         public List<PromotionNewsModel> GetNews()
         {
-            var branch = branchLogic.Get();
-
-            return promotionLogic.GetNews(branch.Id);
+            return promotionLogic.GetNews(GetBranchId());
         }
 
         public StockModel SaveStock(StockModel stock)
         {
-            var branch = branchLogic.Get();
-            stock.BranchId = branch.Id;
+            stock.BranchId = GetBranchId();
 
             return promotionLogic.SaveStock(stock);
         }
@@ -55,16 +51,29 @@ namespace EasyStart.Services
 
         public List<StockModel> GetStocks()
         {
-            var branch = branchLogic.Get();
-
-            return promotionLogic.GetStocks(branch.Id);
+            return promotionLogic.GetStocks(GetBranchId());
         }
 
         public IEnumerable<CouponModel> GetCoupons()
         {
-            var branch = branchLogic.Get();
+            return promotionLogic.GetCoupons(GetBranchId());
+        }
 
-            return promotionLogic.GetCoupons(branch.Id);
+        public CouponModel SaveCoupon(CouponModel coupon)
+        {
+            coupon.BranchId = GetBranchId();
+
+            return promotionLogic.SaveCoupon(coupon);
+        }
+
+        public void RemoveCoupon(int id)
+        {
+            promotionLogic.RemoveCoupon(id);
+        }
+
+        private int GetBranchId()
+        {
+            return branchLogic.Get().Id;
         }
     }
 }

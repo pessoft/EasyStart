@@ -57,6 +57,33 @@ namespace EasyStart.Logic.Services.Promotion
             stockRepository.Update(stock);
         }
 
+        public CouponModel SaveCoupon(CouponModel coupon)
+        {
+            coupon.IsDeleted = false;
+
+            var oldCoupon = couponRepository.Get(coupon.Id);
+
+            if (oldCoupon != null)
+            {
+                coupon.CountUsed = oldCoupon.CountUsed;
+                coupon.UniqId = oldCoupon.UniqId;
+
+                RemoveCoupon(oldCoupon.Id);
+            }
+            else
+                coupon.UniqId = Guid.NewGuid();
+
+
+            return couponRepository.Create(coupon);
+        }
+
+        public void RemoveCoupon(int id)
+        {
+            var forRemove = couponRepository.Get(id);
+
+            couponRepository.Remove(forRemove);
+        }
+
         public PromotionNewsModel SaveNews(PromotionNewsModel promotionNews)
         {
             imageLogic.PrepareImage(promotionNews);

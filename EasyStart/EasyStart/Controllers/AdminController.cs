@@ -809,23 +809,15 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SaveCoupon(CouponModel newCoupon)
         {
-            result = new JsonResultModel();
-
             try
             {
-                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-                newCoupon.BranchId = branchId;
-                newCoupon.IsDeleted = false;
-
-                var coupon = DataWrapper.SaveCoupon(newCoupon);
-
-                result.Data = coupon;
-                result.Success = true;
+                var coupon = promotionService.SaveCoupon(newCoupon);
+                result = JsonResultModel.CreateSuccess(coupon);
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result.ErrorMessage = ex.Message;
+                result = JsonResultModel.CreateError("При сохранении купона, что-то пошло не так...");
             }
 
             return Json(result);
@@ -835,19 +827,15 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult RemoveCoupon(int id)
         {
-            result = new JsonResultModel();
-
             try
             {
-                var success = DataWrapper.RemoveCoupon(id);
-
-                result.Data = success;
-                result.Success = true;
+                promotionService.RemoveCoupon(id);
+                result = JsonResultModel.CreateSuccess(true);
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result.ErrorMessage = ex.Message;
+                result = JsonResultModel.CreateError("При удалении купона, что-то пошло не так...");
             }
 
             return Json(result);
