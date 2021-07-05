@@ -677,6 +677,7 @@
     <Compile Include="Repositories\GeneralSettingRepository.cs" />
     <Compile Include="Repositories\IBaseRepository.cs" />
     <Compile Include="Repositories\ProductReviewRepository.cs" />
+    <Compile Include="Repositories\PromotionCouponRepository.cs" />
     <Compile Include="Repositories\PromotionStockRepository.cs" />
     <Compile Include="Repositories\PromotionNewsRepository.cs" />
     <Compile Include="Repositories\ProductAdditionalFillingRepository.cs" />

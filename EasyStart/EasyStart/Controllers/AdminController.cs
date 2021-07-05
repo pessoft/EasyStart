@@ -117,9 +117,11 @@ namespace EasyStart.Controllers
 
             var promotionNewsRepository = new PromotionNewsRepository(context);
             var promotionStockRepository = new PromotionStockRepository(context);
+            var promotionCouponRepository = new PromotionCouponRepository(context);
             var promotionLogic = new Logic.Services.Promotion.PromotionLogic(
                 promotionNewsRepository,
                 promotionStockRepository,
+                promotionCouponRepository,
                 imageLogic);
 
             var productReviewRepository = new ProductReviewRepository(context);
@@ -789,20 +791,15 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadCoupons()
         {
-            result = new JsonResultModel();
-
             try
             {
-                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-                var coupons = DataWrapper.GetCoupons(branchId);
-
-                result.Data = coupons;
-                result.Success = true;
+                var coupons = promotionService.GetCoupons();
+                result = JsonResultModel.CreateSuccess(coupons);
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result.ErrorMessage = ex.Message;
+                result = JsonResultModel.CreateError("При загрузки купонов, что-то пошло не так...");
             }
 
             return Json(result);

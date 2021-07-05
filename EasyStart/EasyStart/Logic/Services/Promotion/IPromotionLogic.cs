@@ -15,5 +15,6 @@ namespace EasyStart.Logic.Services.Promotion
         StockModel SaveStock(StockModel stock);
         List<StockModel> GetStocks(int branchId);
         void RemoveStock(int stockId);
+        IEnumerable<CouponModel> GetCoupons(int branchId);
     }
 }

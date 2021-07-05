@@ -11,16 +11,24 @@ namespace EasyStart.Logic.Services.Promotion
     {
         private readonly IBaseRepository<PromotionNewsModel, int> newsRepository;
         private readonly IBaseRepository<StockModel, int> stockRepository;
+        private readonly IBaseRepository<CouponModel, int> couponRepository;
         private readonly IContainImageLogic imageLogic;
 
         public PromotionLogic(
             IBaseRepository<PromotionNewsModel, int> newsRepository,
             IBaseRepository<StockModel, int> stockRepository,
+            IBaseRepository<CouponModel, int> couponRepository,
             IContainImageLogic imageLogic)
         {
             this.newsRepository = newsRepository;
             this.stockRepository = stockRepository;
+            this.couponRepository = couponRepository;
             this.imageLogic = imageLogic;
+        }
+
+        public IEnumerable<CouponModel> GetCoupons(int branchId)
+        {
+            return couponRepository.Get(p => !p.IsDeleted && p.BranchId == branchId);
         }
 
         public List<PromotionNewsModel> GetNews(int branchId)

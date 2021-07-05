@@ -59,5 +59,12 @@ namespace EasyStart.Services
 
             return promotionLogic.GetStocks(branch.Id);
         }
+
+        public IEnumerable<CouponModel> GetCoupons()
+        {
+            var branch = branchLogic.Get();
+
+            return promotionLogic.GetCoupons(branch.Id);
+        }
     }
 }
