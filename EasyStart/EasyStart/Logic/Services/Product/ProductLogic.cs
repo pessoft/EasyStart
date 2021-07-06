@@ -1,10 +1,10 @@
-﻿using EasyStart.Models;
+﻿using EasyStart.Logic.Services.RepositoryFactory;
+using EasyStart.Models;
 using EasyStart.Models.ProductOption;
-using EasyStart.Repositories;
+using EasyStart.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace EasyStart.Logic.Services.Product
 {
@@ -20,21 +20,16 @@ namespace EasyStart.Logic.Services.Product
         private readonly IDisplayItemSettingLogic displayItemSettingLogic;
 
         public ProductLogic(
-            IRepository<ProductModel, int> productRepository,
-            IRepository<AdditionalFilling, int> additionalFillingRepository,
-            IRepository<AdditionalOption, int> additionalOptionRepository,
-            IRepository<AdditionOptionItem, int> additionOptionItemRepository,
-            IRepository<ProductAdditionalFillingModal, int> productAdditionalFillingRepository,
-            IRepository<ProductAdditionalOptionModal, int> productAdditionOptionItemRepository,
+            IRepositoryFactory repositoryFactory,
             IContainImageLogic imageLogic,
             IDisplayItemSettingLogic displayItemSettingLogic)
         {
-            this.productRepository = productRepository;
-            this.additionalFillingRepository = additionalFillingRepository;
-            this.additionalOptionRepository = additionalOptionRepository;
-            this.additionOptionItemRepository = additionOptionItemRepository;
-            this.productAdditionalFillingRepository = productAdditionalFillingRepository;
-            this.productAdditionOptionItemRepository = productAdditionOptionItemRepository;
+            productRepository = repositoryFactory.GetRepository<ProductModel, int>();
+            additionalFillingRepository = repositoryFactory.GetRepository<AdditionalFilling, int>();
+            additionalOptionRepository = repositoryFactory.GetRepository<AdditionalOption, int>();
+            additionOptionItemRepository = repositoryFactory.GetRepository<AdditionOptionItem, int>();
+            productAdditionalFillingRepository = repositoryFactory.GetRepository<ProductAdditionalFillingModal, int>();
+            productAdditionOptionItemRepository = repositoryFactory.GetRepository<ProductAdditionalOptionModal, int>();
             this.imageLogic = imageLogic;
             this.displayItemSettingLogic = displayItemSettingLogic;
         }

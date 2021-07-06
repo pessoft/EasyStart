@@ -8,7 +8,7 @@ using EasyStart.Logic.Services.Product;
 using EasyStart.Logic.Services.PushNotification;
 using EasyStart.Models;
 using EasyStart.Models.Integration;
-using EasyStart.Repositories;
+using EasyStart.Repository;
 using EasyStart.Utils;
 using System;
 using System.Collections.Generic;

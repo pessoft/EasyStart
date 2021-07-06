@@ -1,9 +1,9 @@
-﻿using EasyStart.Models;
-using EasyStart.Repositories;
+﻿using EasyStart.Logic.Services.RepositoryFactory;
+using EasyStart.Models;
+using EasyStart.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace EasyStart.Logic.Services.Branch
 {
@@ -12,13 +12,13 @@ namespace EasyStart.Logic.Services.Branch
         private readonly IRepository<BranchModel, int> repository;
         private readonly string userLogin;
 
-        public BranchLogic(IRepository<BranchModel, int> repository, string userLogin)
+        public BranchLogic(IRepositoryFactory repositoryFactory, string userLogin)
         {
-            this.repository = repository;
+            repository = repositoryFactory.GetRepository<BranchModel, int>();
             this.userLogin = userLogin;
         }
 
-        public BranchLogic(IRepository<BranchModel, int> repository) : this(repository, null)
+        public BranchLogic(IRepositoryFactory repositoryFactory) : this(repositoryFactory, null)
         {}
 
         public BranchModel Save(BranchModel branch)

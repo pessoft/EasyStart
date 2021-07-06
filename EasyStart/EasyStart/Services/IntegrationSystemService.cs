@@ -3,7 +3,7 @@ using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
 using EasyStart.Logic.Services.IntegrationSystem;
 using EasyStart.Models;
 using EasyStart.Models.Integration;
-using EasyStart.Repositories;
+using EasyStart.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;

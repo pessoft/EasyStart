@@ -13,6 +13,7 @@ using EasyStart.Logic.Services.IntegrationSystem;
 using EasyStart.Logic.Services.Order;
 using EasyStart.Logic.Services.Product;
 using EasyStart.Logic.Services.PushNotification;
+using EasyStart.Logic.Services.RepositoryFactory;
 using EasyStart.Logic.Transaction;
 using EasyStart.Migrations;
 using EasyStart.Models;
@@ -22,7 +23,7 @@ using EasyStart.Models.OnlinePay;
 using EasyStart.Models.OnlinePay.Fondy;
 using EasyStart.Models.ProductOption;
 using EasyStart.Models.Transaction;
-using EasyStart.Repositories;
+using EasyStart.Repository;
 using EasyStart.Services;
 using EasyStart.Utils;
 using Newtonsoft.Json;
@@ -55,46 +56,21 @@ namespace EasyStart
         public AdminAppController()
         {
             var context = new AdminPanelContext();
+            var repositoryFactory = new RepositoryFactory(context);
             var imageLogic = new ContainImageLogic();
             var displayItemSettingLogic = new DisplayItemSettingLogic();
 
-            var orderRepository = new OrderRepository(context);
-            var orderLogic = new OrderLogic(orderRepository);
-
-            var inegrationSystemRepository = new InegrationSystemRepository(context);
-            var integrationSystemLogic = new IntegrationSystemLogic(inegrationSystemRepository);
-
-            var productRepository = new ProductRepository(context);
-            var additionalFillingRepository = new AdditionalFillingRepository(context);
-            var additionOptionItemRepository = new AdditionOptionItemRepository(context);
-            var productAdditionalFillingRepository = new ProductAdditionalFillingRepository(context);
-            var productAdditionOptionItemRepository = new ProductAdditionOptionItemRepository(context);
-            var additionalOptionRepository = new AdditionalOptionRepository(context);
+            var orderLogic = new OrderLogic(repositoryFactory);
+            var integrationSystemLogic = new IntegrationSystemLogic(repositoryFactory);
             var productLogic = new ProductLogic(
-                productRepository,
-                additionalFillingRepository,
-                additionalOptionRepository,
-                additionOptionItemRepository,
-                productAdditionalFillingRepository,
-                productAdditionOptionItemRepository,
+                repositoryFactory,
                 imageLogic,
                 displayItemSettingLogic);
-
-            var deliverySettingRepository = new DeliverySettingRepository(context);
-            var areaDeliverySettingRepository = new AreaDeliveryRepository(context);
-            var deliverySettingLogic = new DeliverySettingLogic(deliverySettingRepository, areaDeliverySettingRepository);
-
-            var fcmDeviveRepository = new FCMDeviceRepository(context);
-            var pushNotificationLogic = new PushNotificationLogic(fcmDeviveRepository);
-
-            var branchRepository = new BranchRepository(context);
-            var branchLogic = new BranchLogic(branchRepository);
-
-            var clientRepository = new ClientRepository(context);
-            var clientLogic = new ClientLogic(clientRepository);
-
-            var generalSettingRepository = new GeneralSettingRepository(context);
-            var generalSettingLogic = new GeneralSettingsLogic(generalSettingRepository);
+            var deliverySettingLogic = new DeliverySettingLogic(repositoryFactory);
+            var pushNotificationLogic = new PushNotificationLogic(repositoryFactory);
+            var branchLogic = new BranchLogic(repositoryFactory);
+            var clientLogic = new ClientLogic(repositoryFactory);
+            var generalSettingLogic = new GeneralSettingsLogic(repositoryFactory);
 
             orderService = new OrderService(
                 orderLogic,

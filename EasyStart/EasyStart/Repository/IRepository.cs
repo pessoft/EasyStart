@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace EasyStart.Repositories
+namespace EasyStart.Repository
 {
     public interface IRepository<T, U>
         where T: class

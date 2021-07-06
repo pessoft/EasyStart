@@ -4,7 +4,7 @@ using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
 using EasyStart.Logic.Services.PushNotification;
 using EasyStart.Models;
 using EasyStart.Models.FCMNotification;
-using EasyStart.Repositories;
+using EasyStart.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;

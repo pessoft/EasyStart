@@ -1,9 +1,9 @@
-﻿using EasyStart.Models;
-using EasyStart.Repositories;
+﻿using EasyStart.Logic.Services.RepositoryFactory;
+using EasyStart.Models;
+using EasyStart.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace EasyStart.Logic.Services.Promotion
 {
@@ -17,18 +17,14 @@ namespace EasyStart.Logic.Services.Promotion
         private readonly IContainImageLogic imageLogic;
 
         public PromotionLogic(
-            IRepository<PromotionNewsModel, int> newsRepository,
-            IRepository<StockModel, int> stockRepository,
-            IRepository<CouponModel, int> couponRepository,
-            IRepository<PromotionCashbackSetting, int> promotionCashbackSettingRepository,
-            IRepository<PromotionPartnerSetting, int> promotionPartnerSettingRepository,
+            IRepositoryFactory repositoryFactory,
             IContainImageLogic imageLogic)
         {
-            this.newsRepository = newsRepository;
-            this.stockRepository = stockRepository;
-            this.couponRepository = couponRepository;
-            this.promotionCashbackSettingRepository = promotionCashbackSettingRepository;
-            this.promotionPartnerSettingRepository = promotionPartnerSettingRepository;
+            newsRepository = repositoryFactory.GetRepository<PromotionNewsModel, int>();
+            stockRepository = repositoryFactory.GetRepository<StockModel, int>();
+            couponRepository = repositoryFactory.GetRepository<CouponModel, int>();
+            promotionCashbackSettingRepository = repositoryFactory.GetRepository<PromotionCashbackSetting, int>();
+            promotionPartnerSettingRepository = repositoryFactory.GetRepository<PromotionPartnerSetting, int>();
             this.imageLogic = imageLogic;
         }
 

@@ -1,11 +1,9 @@
-﻿using EasyStart.Models;
-using EasyStart.Models.ProductOption;
-using EasyStart.Repositories;
+﻿using EasyStart.Logic.Services.RepositoryFactory;
+using EasyStart.Models;
+using EasyStart.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Hosting;
 
 namespace EasyStart.Logic.Services.ConstructorProduct
 {
@@ -16,12 +14,11 @@ namespace EasyStart.Logic.Services.ConstructorProduct
         private readonly IDisplayItemSettingLogic displayItemSettingLogic;
 
         public ConstructorProductLogic(
-            IRepository<ConstructorCategory, int> categoryRepository,
-            IRepository<IngredientModel, int> ingredientRepository,
+            IRepositoryFactory repositoryFactory,
             IDisplayItemSettingLogic displayItemSettingLogic)
         {
-            this.categoryRepository = categoryRepository;
-            this.ingredientRepository = ingredientRepository;
+            categoryRepository = repositoryFactory.GetRepository<ConstructorCategory, int>();
+            ingredientRepository = repositoryFactory.GetRepository<IngredientModel, int>();
             this.displayItemSettingLogic = displayItemSettingLogic;
         }
 

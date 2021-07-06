@@ -1,12 +1,12 @@
 ﻿using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
+using EasyStart.Logic.Services.RepositoryFactory;
 using EasyStart.Models;
-using EasyStart.Repositories;
+using EasyStart.Repository;
 using EasyStart.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace EasyStart.Logic.Services.Order
 {
@@ -14,9 +14,9 @@ namespace EasyStart.Logic.Services.Order
     {
         private readonly IRepository<OrderModel, int> repository;
 
-        public OrderLogic(IRepository<OrderModel, int> repository)
+        public OrderLogic(IRepositoryFactory repositoryFactory)
         {
-            this.repository = repository;
+            repository = repositoryFactory.GetRepository<OrderModel, int>();
         }
 
         public OrderModel Get(int id)

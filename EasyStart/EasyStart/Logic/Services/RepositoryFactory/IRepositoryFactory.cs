@@ -1,10 +1,6 @@
 ﻿using EasyStart.Models;
-using EasyStart.Repositories;
+using EasyStart.Repository;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EasyStart.Logic.Services.RepositoryFactory
 {

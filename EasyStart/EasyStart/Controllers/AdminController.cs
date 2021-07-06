@@ -13,10 +13,11 @@ using EasyStart.Logic.Services.Order;
 using EasyStart.Logic.Services.Product;
 using EasyStart.Logic.Services.ProductReview;
 using EasyStart.Logic.Services.PushNotification;
+using EasyStart.Logic.Services.RepositoryFactory;
 using EasyStart.Models;
 using EasyStart.Models.FCMNotification;
 using EasyStart.Models.ProductOption;
-using EasyStart.Repositories;
+using EasyStart.Repository;
 using EasyStart.Services;
 using EasyStart.Utils;
 using Newtonsoft.Json;
@@ -52,84 +53,39 @@ namespace EasyStart.Controllers
         private ProductReviewService productReviewService;
 
         public AdminController()
-        {}
+        { }
 
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
 
             var context = new AdminPanelContext();
+            var repositoryFactory = new RepositoryFactory(context);
             var imageLogic = new ContainImageLogic();
             var displayItemSettingLogic = new DisplayItemSettingLogic();
 
-            var orderRepository = new OrderRepository(context);
-            var orderLogic = new OrderLogic(orderRepository);
-
-            var inegrationSystemRepository = new InegrationSystemRepository(context);
-            var integrationSystemLogic = new IntegrationSystemLogic(inegrationSystemRepository);
-
-            var productRepository = new ProductRepository(context);
-            var additionalFillingRepository = new AdditionalFillingRepository(context);
-            var additionOptionItemRepository = new AdditionOptionItemRepository(context);
-            var productAdditionalFillingRepository = new ProductAdditionalFillingRepository(context);
-            var productAdditionOptionItemRepository = new ProductAdditionOptionItemRepository(context);
-            var additionalOptionRepository = new AdditionalOptionRepository(context);
+            var orderLogic = new OrderLogic(repositoryFactory);
+            var integrationSystemLogic = new IntegrationSystemLogic(repositoryFactory);
             var productLogic = new ProductLogic(
-                productRepository,
-                additionalFillingRepository,
-                additionalOptionRepository,
-                additionOptionItemRepository,
-                productAdditionalFillingRepository,
-                productAdditionOptionItemRepository,
+               repositoryFactory,
                 imageLogic,
                 displayItemSettingLogic);
-
-            var deliverySettingRepository = new DeliverySettingRepository(context);
-            var areaDeliverySettingRepository = new AreaDeliveryRepository(context);
-            var deliverySettingLogic = new DeliverySettingLogic(deliverySettingRepository, areaDeliverySettingRepository);
-
-            var fcmDeviveRepository = new FCMDeviceRepository(context);
-            var pushNotificationLogic = new PushNotificationLogic(fcmDeviveRepository);
-
-            var branchRepository = new BranchRepository(context);
-            var branchLogic = new BranchLogic(branchRepository, User.Identity.Name);
-
-            var clientRepository = new ClientRepository(context);
-            var clientLogic = new ClientLogic(clientRepository);
-
-            var generalSettingRepository = new GeneralSettingRepository(context);
-            var generalSettingLogic = new GeneralSettingsLogic(generalSettingRepository);
-
-            var categoryProductRepository = new CategoryProductRepository(context);
-            var recommendedProductRepository = new RecommendedProductRepository(context);
+            var deliverySettingLogic = new DeliverySettingLogic(repositoryFactory);
+            var pushNotificationLogic = new PushNotificationLogic(repositoryFactory);
+            var branchLogic = new BranchLogic(repositoryFactory, User.Identity.Name);
+            var clientLogic = new ClientLogic(repositoryFactory);
+            var generalSettingLogic = new GeneralSettingsLogic(repositoryFactory);
             var categoryProductLogic = new CategoryProductLogic(
-                categoryProductRepository,
-                recommendedProductRepository,
+                repositoryFactory,
                 imageLogic,
                 displayItemSettingLogic);
-
-            var constructorCategoryRepository = new ConstructorCategoryRepository(context);
-            var constructorIngredientRepository = new ConstructorIngredientRepository(context);
             var constructorProductLogic = new ConstructorProductLogic(
-                constructorCategoryRepository,
-                constructorIngredientRepository,
+                repositoryFactory,
                 displayItemSettingLogic);
-
-            var promotionNewsRepository = new PromotionNewsRepository(context);
-            var promotionStockRepository = new PromotionStockRepository(context);
-            var promotionCouponRepository = new PromotionCouponRepository(context);
-            var promotionCashbackSettingRepository = new PromotionCashbackSettingRepository(context);
-            var promotionPartnerSettingRepository = new PromotionPartnerSettingRepository(context);
             var promotionLogic = new Logic.Services.Promotion.PromotionLogic(
-                promotionNewsRepository,
-                promotionStockRepository,
-                promotionCouponRepository,
-                promotionCashbackSettingRepository,
-                promotionPartnerSettingRepository,
+                repositoryFactory,
                 imageLogic);
-
-            var productReviewRepository = new ProductReviewRepository(context);
-            var productReviewLogic = new ProductReviewLogic(productReviewRepository, displayItemSettingLogic);
+            var productReviewLogic = new ProductReviewLogic(repositoryFactory, displayItemSettingLogic);
 
             orderService = new OrderService(
                 orderLogic,
@@ -312,7 +268,7 @@ namespace EasyStart.Controllers
         {
             try
             {
-                var viewBranch =  branchService.AddBranch(newBranch);
+                var viewBranch = branchService.AddBranch(newBranch);
                 result = JsonResultModel.CreateSuccess(viewBranch);
             }
             catch (Exception ex)
@@ -429,7 +385,7 @@ namespace EasyStart.Controllers
             try
             {
                 var products = productService.GetByCategory(idCategory);
-             
+
                 result = JsonResultModel.CreateSuccess(products);
             }
             catch (Exception ex)
@@ -705,7 +661,7 @@ namespace EasyStart.Controllers
                 {
                     Orders = orderService.GetByBranchIds(branchIds),
                     TodayData = orderService.GetDataOrdersByDate(branchIds, DateTime.Now)
-                }; 
+                };
                 result = JsonResultModel.CreateSuccess(data);
             }
             catch (Exception ex)
@@ -851,7 +807,8 @@ namespace EasyStart.Controllers
         {
             try
             {
-                var data = new { 
+                var data = new
+                {
                     CashbackSetting = promotionService.GetPromotionCashbackSetting(),
                     PartnersSetting = promotionService.GetPromotionPartnerSetting()
                 };

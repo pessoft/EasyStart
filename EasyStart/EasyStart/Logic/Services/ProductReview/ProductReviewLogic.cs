@@ -1,10 +1,8 @@
-﻿using EasyStart.Models;
-using EasyStart.Models.ProductOption;
-using EasyStart.Repositories;
-using System;
+﻿using EasyStart.Logic.Services.RepositoryFactory;
+using EasyStart.Models;
+using EasyStart.Repository;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace EasyStart.Logic.Services.ProductReview
 {
@@ -14,10 +12,10 @@ namespace EasyStart.Logic.Services.ProductReview
         private readonly IDisplayItemSettingLogic displayItemSettingLogic;
 
         public ProductReviewLogic(
-            IRepository<Models.ProductReview, int> productReviewRepository,
+            IRepositoryFactory repositoryFactory,
             IDisplayItemSettingLogic displayItemSettingLogic)
         {
-            this.productReviewRepository = productReviewRepository;
+            productReviewRepository = repositoryFactory.GetRepository<Models.ProductReview, int>();
             this.displayItemSettingLogic = displayItemSettingLogic;
         }
 

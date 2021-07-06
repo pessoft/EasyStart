@@ -6,7 +6,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
-namespace EasyStart.Repositories
+namespace EasyStart.Repository
 {
     public class Repository<T, U> : IRepository<T, U>
         where T : class, IBaseEntity<U>

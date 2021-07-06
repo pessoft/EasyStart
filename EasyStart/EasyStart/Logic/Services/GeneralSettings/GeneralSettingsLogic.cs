@@ -1,18 +1,17 @@
-﻿using EasyStart.Models;
-using EasyStart.Repositories;
-using System;
+﻿using EasyStart.Logic.Services.RepositoryFactory;
+using EasyStart.Models;
+using EasyStart.Repository;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace EasyStart.Logic.Services.GeneralSettings
 {
     public class GeneralSettingsLogic : IGeneralSettingsLogic
     {
         private readonly IRepository<SettingModel, int> settingRepository;
-        public GeneralSettingsLogic(IRepository<SettingModel, int> settingRepository)
+        public GeneralSettingsLogic(IRepositoryFactory repositoryFactory)
         {
-            this.settingRepository = settingRepository;
+            settingRepository = repositoryFactory.GetRepository<SettingModel, int>();
         }
 
         public IEnumerable<SettingModel> Get()

@@ -1,11 +1,9 @@
-﻿using EasyStart.Models;
-using EasyStart.Models.ProductOption;
-using EasyStart.Repositories;
+﻿using EasyStart.Logic.Services.RepositoryFactory;
+using EasyStart.Models;
+using EasyStart.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Hosting;
 
 namespace EasyStart.Logic.Services.CategoryProduct
 {
@@ -17,13 +15,12 @@ namespace EasyStart.Logic.Services.CategoryProduct
         private readonly IDisplayItemSettingLogic displayItemSettingLogic;
 
         public CategoryProductLogic(
-            IRepository<CategoryModel, int> categoryRepository,
-            IRepository<RecommendedProductModel, int> recommendedProductRepository,
+            IRepositoryFactory repositoryFactory,
             IContainImageLogic imageLogic,
             IDisplayItemSettingLogic displayItemSettingLogic)
         {
-            this.categoryRepository = categoryRepository;
-            this.recommendedProductRepository = recommendedProductRepository;
+            categoryRepository = repositoryFactory.GetRepository<CategoryModel, int>();
+            recommendedProductRepository = repositoryFactory.GetRepository<RecommendedProductModel, int>();
             this.imageLogic = imageLogic;
             this.displayItemSettingLogic = displayItemSettingLogic;
         }

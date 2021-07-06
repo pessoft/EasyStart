@@ -2,7 +2,7 @@
 using EasyStart.Logic.Services.Branch;
 using EasyStart.Logic.Services.GeneralSettings;
 using EasyStart.Models;
-using EasyStart.Repositories;
+using EasyStart.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;

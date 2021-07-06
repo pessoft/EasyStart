@@ -1,8 +1,8 @@
-﻿using EasyStart.Repositories;
+﻿using EasyStart.Logic.Services.RepositoryFactory;
+using EasyStart.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using ClientModel = EasyStart.Models.Client;
 
 namespace EasyStart.Logic.Services.Client
@@ -11,9 +11,9 @@ namespace EasyStart.Logic.Services.Client
     {
         private readonly IRepository<ClientModel, int> repository;
 
-        public ClientLogic(IRepository<ClientModel, int> repository)
+        public ClientLogic(IRepositoryFactory repositoryFactory)
         {
-            this.repository = repository;
+            repository = repositoryFactory.GetRepository<ClientModel, int>();
         }
 
         public List<ClientModel> GetAll(int branchId)

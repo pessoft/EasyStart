@@ -3,7 +3,7 @@ using EasyStart.Logic.Services.CategoryProduct;
 using EasyStart.Logic.Services.Product;
 using EasyStart.Models;
 using EasyStart.Models.ProductOption;
-using EasyStart.Repositories;
+using EasyStart.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;

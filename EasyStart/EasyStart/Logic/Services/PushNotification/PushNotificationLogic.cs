@@ -1,12 +1,11 @@
 ﻿using EasyStart.Logic.FCM;
 using EasyStart.Logic.IntegrationSystem;
+using EasyStart.Logic.Services.RepositoryFactory;
 using EasyStart.Models;
 using EasyStart.Models.FCMNotification;
-using EasyStart.Repositories;
-using System;
+using EasyStart.Repository;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Hosting;
 
 namespace EasyStart.Logic.Services.PushNotification
@@ -16,9 +15,9 @@ namespace EasyStart.Logic.Services.PushNotification
         private readonly IRepository<FCMDeviceModel, int> repository;
         private static readonly string fcmAuthKeyPath = HostingEnvironment.MapPath("/Resource/FCMAuthKey.json");
 
-        public PushNotificationLogic(IRepository<FCMDeviceModel, int> repository)
+        public PushNotificationLogic(IRepositoryFactory repositoryFactory)
         {
-            this.repository = repository;
+            this.repository = repositoryFactory.GetRepository<FCMDeviceModel, int>();
         }
 
         /// <summary>

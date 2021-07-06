@@ -1,9 +1,8 @@
-﻿using EasyStart.Models;
-using EasyStart.Repositories;
-using System;
+﻿using EasyStart.Logic.Services.RepositoryFactory;
+using EasyStart.Models;
+using EasyStart.Repository;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace EasyStart.Logic.Services.DeliverySetting
 {
@@ -12,12 +11,10 @@ namespace EasyStart.Logic.Services.DeliverySetting
         private readonly IRepository<DeliverySettingModel, int> repository;
         private readonly IRepository<AreaDeliveryModel, string> areaDeliveryRepository;
 
-        public DeliverySettingLogic(
-            IRepository<DeliverySettingModel, int> repository,
-            IRepository<AreaDeliveryModel, string> areaDeliveryRepository)
+        public DeliverySettingLogic(IRepositoryFactory repositoryFactory)
         {
-            this.repository = repository;
-            this.areaDeliveryRepository = areaDeliveryRepository;
+            repository = repositoryFactory.GetRepository<DeliverySettingModel, int>();
+            areaDeliveryRepository = repositoryFactory.GetRepository<AreaDeliveryModel, string>();
         }
 
         public DeliverySettingModel SaveDeliverySetting(DeliverySettingModel setting)

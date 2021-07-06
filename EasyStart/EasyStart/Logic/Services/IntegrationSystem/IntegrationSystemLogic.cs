@@ -1,12 +1,10 @@
 ﻿using EasyStart.Logic.IntegrationSystem;
 using EasyStart.Logic.IntegrationSystem.SendNewOrderResult;
+using EasyStart.Logic.Services.RepositoryFactory;
 using EasyStart.Models;
 using EasyStart.Models.Integration;
-using EasyStart.Repositories;
-using System;
-using System.Collections.Generic;
+using EasyStart.Repository;
 using System.Linq;
-using System.Web;
 
 namespace EasyStart.Logic.Services.IntegrationSystem
 {
@@ -14,9 +12,9 @@ namespace EasyStart.Logic.Services.IntegrationSystem
     {
         private readonly IRepository<IntegrationSystemModel, int> repository;
 
-        public IntegrationSystemLogic(IRepository<IntegrationSystemModel, int> repository)
+        public IntegrationSystemLogic(IRepositoryFactory repositoryFactory)
         {
-            this.repository = repository;
+            repository = repositoryFactory.GetRepository<IntegrationSystemModel, int>();
         }
 
         public IntegrationSystemModel Save(IntegrationSystemModel setting)
