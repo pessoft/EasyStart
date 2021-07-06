@@ -13,10 +13,10 @@ namespace EasyStart.Logic.Services.PushNotification
 {
     public class PushNotificationLogic: IPushNotificationLogic
     {
-        private readonly IBaseRepository<FCMDeviceModel, int> repository;
+        private readonly IRepository<FCMDeviceModel, int> repository;
         private static readonly string fcmAuthKeyPath = HostingEnvironment.MapPath("/Resource/FCMAuthKey.json");
 
-        public PushNotificationLogic(IBaseRepository<FCMDeviceModel, int> repository)
+        public PushNotificationLogic(IRepository<FCMDeviceModel, int> repository)
         {
             this.repository = repository;
         }

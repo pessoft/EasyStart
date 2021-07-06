@@ -7,7 +7,7 @@ using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public class ProductReviewRepository : BaseRepository<ProductReview, int>
+    public class ProductReviewRepository : Repository<ProductReview, int>
     {
         public ProductReviewRepository(DbContext dbContext) : base(dbContext)
         { }

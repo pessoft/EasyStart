@@ -11,14 +11,14 @@ namespace EasyStart.Logic.Services.CategoryProduct
 {
     public class CategoryProductLogic : ICategoryProductLogic
     {
-        private readonly IBaseRepository<CategoryModel, int> categoryRepository;
-        private readonly IBaseRepository<RecommendedProductModel, int> recommendedProductRepository;
+        private readonly IRepository<CategoryModel, int> categoryRepository;
+        private readonly IRepository<RecommendedProductModel, int> recommendedProductRepository;
         private readonly IContainImageLogic imageLogic;
         private readonly IDisplayItemSettingLogic displayItemSettingLogic;
 
         public CategoryProductLogic(
-            IBaseRepository<CategoryModel, int> categoryRepository,
-            IBaseRepository<RecommendedProductModel, int> recommendedProductRepository,
+            IRepository<CategoryModel, int> categoryRepository,
+            IRepository<RecommendedProductModel, int> recommendedProductRepository,
             IContainImageLogic imageLogic,
             IDisplayItemSettingLogic displayItemSettingLogic)
         {

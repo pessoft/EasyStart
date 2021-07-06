@@ -7,7 +7,7 @@ using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public class PromotionNewsRepository : BaseRepository<PromotionNewsModel, int>
+    public class PromotionNewsRepository : Repository<PromotionNewsModel, int>
     {
         public PromotionNewsRepository(DbContext dbContext) : base(dbContext)
         { }

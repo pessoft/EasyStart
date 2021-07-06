@@ -7,7 +7,7 @@ using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public class PromotionCashbackSettingRepository : BaseRepository<PromotionCashbackSetting, int>
+    public class PromotionCashbackSettingRepository : Repository<PromotionCashbackSetting, int>
     {
         public PromotionCashbackSettingRepository(DbContext dbContext) : base(dbContext)
         { }

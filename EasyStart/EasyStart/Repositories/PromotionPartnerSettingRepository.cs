@@ -7,7 +7,7 @@ using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public class PromotionPartnerSettingRepository : BaseRepository<PromotionPartnerSetting, int>
+    public class PromotionPartnerSettingRepository : Repository<PromotionPartnerSetting, int>
     {
         public PromotionPartnerSettingRepository(DbContext dbContext) : base(dbContext)
         { }

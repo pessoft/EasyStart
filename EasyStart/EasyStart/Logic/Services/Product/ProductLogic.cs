@@ -10,22 +10,22 @@ namespace EasyStart.Logic.Services.Product
 {
     public class ProductLogic: IProductLogic
     {
-        private readonly IBaseRepository<ProductModel, int> productRepository;
-        private readonly IBaseRepository<AdditionalFilling, int> additionalFillingRepository;
-        private readonly IBaseRepository<AdditionalOption, int> additionalOptionRepository;
-        private readonly IBaseRepository<AdditionOptionItem, int> additionOptionItemRepository;
-        private readonly IBaseRepository<ProductAdditionalFillingModal, int> productAdditionalFillingRepository;
-        private readonly IBaseRepository<ProductAdditionalOptionModal, int> productAdditionOptionItemRepository;
+        private readonly IRepository<ProductModel, int> productRepository;
+        private readonly IRepository<AdditionalFilling, int> additionalFillingRepository;
+        private readonly IRepository<AdditionalOption, int> additionalOptionRepository;
+        private readonly IRepository<AdditionOptionItem, int> additionOptionItemRepository;
+        private readonly IRepository<ProductAdditionalFillingModal, int> productAdditionalFillingRepository;
+        private readonly IRepository<ProductAdditionalOptionModal, int> productAdditionOptionItemRepository;
         private readonly IContainImageLogic imageLogic;
         private readonly IDisplayItemSettingLogic displayItemSettingLogic;
 
         public ProductLogic(
-            IBaseRepository<ProductModel, int> productRepository,
-            IBaseRepository<AdditionalFilling, int> additionalFillingRepository,
-            IBaseRepository<AdditionalOption, int> additionalOptionRepository,
-            IBaseRepository<AdditionOptionItem, int> additionOptionItemRepository,
-            IBaseRepository<ProductAdditionalFillingModal, int> productAdditionalFillingRepository,
-            IBaseRepository<ProductAdditionalOptionModal, int> productAdditionOptionItemRepository,
+            IRepository<ProductModel, int> productRepository,
+            IRepository<AdditionalFilling, int> additionalFillingRepository,
+            IRepository<AdditionalOption, int> additionalOptionRepository,
+            IRepository<AdditionOptionItem, int> additionOptionItemRepository,
+            IRepository<ProductAdditionalFillingModal, int> productAdditionalFillingRepository,
+            IRepository<ProductAdditionalOptionModal, int> productAdditionOptionItemRepository,
             IContainImageLogic imageLogic,
             IDisplayItemSettingLogic displayItemSettingLogic)
         {

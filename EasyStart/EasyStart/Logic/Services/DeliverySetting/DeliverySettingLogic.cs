@@ -9,12 +9,12 @@ namespace EasyStart.Logic.Services.DeliverySetting
 {
     public class DeliverySettingLogic: IDeliverySettingLogic
     {
-        private readonly IBaseRepository<DeliverySettingModel, int> repository;
-        private readonly IBaseRepository<AreaDeliveryModel, string> areaDeliveryRepository;
+        private readonly IRepository<DeliverySettingModel, int> repository;
+        private readonly IRepository<AreaDeliveryModel, string> areaDeliveryRepository;
 
         public DeliverySettingLogic(
-            IBaseRepository<DeliverySettingModel, int> repository,
-            IBaseRepository<AreaDeliveryModel, string> areaDeliveryRepository)
+            IRepository<DeliverySettingModel, int> repository,
+            IRepository<AreaDeliveryModel, string> areaDeliveryRepository)
         {
             this.repository = repository;
             this.areaDeliveryRepository = areaDeliveryRepository;

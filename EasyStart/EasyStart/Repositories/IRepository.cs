@@ -5,7 +5,7 @@ using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public interface IBaseRepository<T, U>
+    public interface IRepository<T, U>
         where T: class
         where U: IEquatable<U>
     {

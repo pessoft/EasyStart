@@ -11,13 +11,13 @@ namespace EasyStart.Logic.Services.ConstructorProduct
 {
     public class ConstructorProductLogic : IConstructorProductLogic
     {
-        private IBaseRepository<ConstructorCategory, int> categoryRepository;
-        private IBaseRepository<IngredientModel, int> ingredientRepository;
+        private IRepository<ConstructorCategory, int> categoryRepository;
+        private IRepository<IngredientModel, int> ingredientRepository;
         private readonly IDisplayItemSettingLogic displayItemSettingLogic;
 
         public ConstructorProductLogic(
-            IBaseRepository<ConstructorCategory, int> categoryRepository,
-            IBaseRepository<IngredientModel, int> ingredientRepository,
+            IRepository<ConstructorCategory, int> categoryRepository,
+            IRepository<IngredientModel, int> ingredientRepository,
             IDisplayItemSettingLogic displayItemSettingLogic)
         {
             this.categoryRepository = categoryRepository;

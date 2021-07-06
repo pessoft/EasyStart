@@ -9,19 +9,19 @@ namespace EasyStart.Logic.Services.Promotion
 {
     public class PromotionLogic : IPromotionLogic
     {
-        private readonly IBaseRepository<PromotionNewsModel, int> newsRepository;
-        private readonly IBaseRepository<StockModel, int> stockRepository;
-        private readonly IBaseRepository<CouponModel, int> couponRepository;
-        private readonly IBaseRepository<PromotionCashbackSetting, int> promotionCashbackSettingRepository;
-        private readonly IBaseRepository<PromotionPartnerSetting, int> promotionPartnerSettingRepository;
+        private readonly IRepository<PromotionNewsModel, int> newsRepository;
+        private readonly IRepository<StockModel, int> stockRepository;
+        private readonly IRepository<CouponModel, int> couponRepository;
+        private readonly IRepository<PromotionCashbackSetting, int> promotionCashbackSettingRepository;
+        private readonly IRepository<PromotionPartnerSetting, int> promotionPartnerSettingRepository;
         private readonly IContainImageLogic imageLogic;
 
         public PromotionLogic(
-            IBaseRepository<PromotionNewsModel, int> newsRepository,
-            IBaseRepository<StockModel, int> stockRepository,
-            IBaseRepository<CouponModel, int> couponRepository,
-            IBaseRepository<PromotionCashbackSetting, int> promotionCashbackSettingRepository,
-            IBaseRepository<PromotionPartnerSetting, int> promotionPartnerSettingRepository,
+            IRepository<PromotionNewsModel, int> newsRepository,
+            IRepository<StockModel, int> stockRepository,
+            IRepository<CouponModel, int> couponRepository,
+            IRepository<PromotionCashbackSetting, int> promotionCashbackSettingRepository,
+            IRepository<PromotionPartnerSetting, int> promotionPartnerSettingRepository,
             IContainImageLogic imageLogic)
         {
             this.newsRepository = newsRepository;

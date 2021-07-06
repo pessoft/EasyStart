@@ -7,7 +7,7 @@ using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public class PromotionCouponRepository : BaseRepository<CouponModel, int>
+    public class PromotionCouponRepository : Repository<CouponModel, int>
     {
         public PromotionCouponRepository(DbContext dbContext) : base(dbContext)
         { }

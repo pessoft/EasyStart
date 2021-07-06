@@ -7,7 +7,7 @@ using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public class RecommendedProductRepository: BaseRepository<RecommendedProductModel, int>
+    public class RecommendedProductRepository: Repository<RecommendedProductModel, int>
     {
         public RecommendedProductRepository(DbContext dbContext) : base(dbContext)
         { }

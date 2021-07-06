@@ -12,9 +12,9 @@ namespace EasyStart.Logic.Services.IntegrationSystem
 {
     public class IntegrationSystemLogic: IIntegrationSystemLogic
     {
-        private readonly IBaseRepository<IntegrationSystemModel, int> repository;
+        private readonly IRepository<IntegrationSystemModel, int> repository;
 
-        public IntegrationSystemLogic(IBaseRepository<IntegrationSystemModel, int> repository)
+        public IntegrationSystemLogic(IRepository<IntegrationSystemModel, int> repository)
         {
             this.repository = repository;
         }

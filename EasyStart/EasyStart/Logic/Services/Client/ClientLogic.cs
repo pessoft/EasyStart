@@ -9,9 +9,9 @@ namespace EasyStart.Logic.Services.Client
 {
     public class ClientLogic: IClientLogic
     {
-        private readonly IBaseRepository<ClientModel, int> repository;
+        private readonly IRepository<ClientModel, int> repository;
 
-        public ClientLogic(IBaseRepository<ClientModel, int> repository)
+        public ClientLogic(IRepository<ClientModel, int> repository)
         {
             this.repository = repository;
         }

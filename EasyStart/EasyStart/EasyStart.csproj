@@ -675,7 +675,7 @@
     <Compile Include="Repositories\FCMDeviceRepository.cs" />
     <Compile Include="Repositories\DeliverySettingRepository.cs" />
     <Compile Include="Repositories\GeneralSettingRepository.cs" />
-    <Compile Include="Repositories\IBaseRepository.cs" />
+    <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\ProductReviewRepository.cs" />
     <Compile Include="Repositories\PromotionPartnerSettingRepository.cs" />
     <Compile Include="Repositories\PromotionCashbackSettingRepository.cs" />
@@ -688,7 +688,7 @@
     <Compile Include="Repositories\OrderRepository.cs" />
     <Compile Include="Repositories\BranchRepository.cs" />
     <Compile Include="Repositories\InegrationSystemRepository.cs" />
-    <Compile Include="Repositories\BaseRepository.cs" />
+    <Compile Include="Repositories\Repository.cs" />
     <Compile Include="Repositories\RecommendedProductRepository.cs" />
     <Compile Include="Services\BranchRemovalService.cs" />
     <Compile Include="Services\ConstructorProductService.cs" />

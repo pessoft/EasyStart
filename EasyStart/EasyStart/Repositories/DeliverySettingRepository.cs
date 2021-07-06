@@ -7,7 +7,7 @@ using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public class DeliverySettingRepository : BaseRepository<DeliverySettingModel, int>
+    public class DeliverySettingRepository : Repository<DeliverySettingModel, int>
     {
         public DeliverySettingRepository(DbContext dbContext) : base(dbContext)
         { }

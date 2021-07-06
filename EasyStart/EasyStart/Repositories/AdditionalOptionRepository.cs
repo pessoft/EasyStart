@@ -8,7 +8,7 @@ using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public class AdditionalOptionRepository : BaseRepository<AdditionalOption, int>
+    public class AdditionalOptionRepository : Repository<AdditionalOption, int>
     {
         public AdditionalOptionRepository(DbContext dbContext) : base(dbContext)
         { }

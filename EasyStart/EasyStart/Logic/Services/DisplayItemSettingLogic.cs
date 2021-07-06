@@ -9,7 +9,7 @@ namespace EasyStart.Logic.Services
 {
     public class DisplayItemSettingLogic : IDisplayItemSettingLogic
     {
-        public void UpdateOrder<T>(IBaseRepository<T, int> repository, List<UpdaterOrderNumber> items)
+        public void UpdateOrder<T>(IRepository<T, int> repository, List<UpdaterOrderNumber> items)
             where T : class, IEntityOrderable<int>
         {
             if (items == null || !items.Any())
@@ -24,7 +24,7 @@ namespace EasyStart.Logic.Services
             repository.Update(data);
         }
 
-        public void UpdateVisible<T>(IBaseRepository<T, int> repository, UpdaterVisible update)
+        public void UpdateVisible<T>(IRepository<T, int> repository, UpdaterVisible update)
             where T : class, IEntityVisible<int>
         {
             if (update == null || update.Id < 1)

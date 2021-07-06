@@ -7,7 +7,7 @@ using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public class ConstructorCategoryRepository : BaseRepository<ConstructorCategory, int>
+    public class ConstructorCategoryRepository : Repository<ConstructorCategory, int>
     {
         public ConstructorCategoryRepository(DbContext dbContext) : base(dbContext)
         { }

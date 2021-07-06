@@ -10,11 +10,11 @@ namespace EasyStart.Logic.Services.ProductReview
 {
     public class ProductReviewLogic : IProductReviewLogic
     {
-        private readonly IBaseRepository<Models.ProductReview, int> productReviewRepository;
+        private readonly IRepository<Models.ProductReview, int> productReviewRepository;
         private readonly IDisplayItemSettingLogic displayItemSettingLogic;
 
         public ProductReviewLogic(
-            IBaseRepository<Models.ProductReview, int> productReviewRepository,
+            IRepository<Models.ProductReview, int> productReviewRepository,
             IDisplayItemSettingLogic displayItemSettingLogic)
         {
             this.productReviewRepository = productReviewRepository;

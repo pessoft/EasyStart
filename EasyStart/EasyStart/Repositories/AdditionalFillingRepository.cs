@@ -8,7 +8,7 @@ using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public class AdditionalFillingRepository : BaseRepository<AdditionalFilling, int>
+    public class AdditionalFillingRepository : Repository<AdditionalFilling, int>
     {
         public AdditionalFillingRepository(DbContext dbContext) : base(dbContext)
         { }

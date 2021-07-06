@@ -8,7 +8,7 @@ using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public class BaseRepository<T, U> : IBaseRepository<T, U>
+    public class Repository<T, U> : IRepository<T, U>
         where T : class, IBaseEntity<U>
         where U: IEquatable<U>
     {
@@ -16,7 +16,7 @@ namespace EasyStart.Repositories
         protected DbContext context;
         protected DbSet<T> db;
 
-        public BaseRepository(DbContext dbContext)
+        public Repository(DbContext dbContext)
         {
             context = dbContext;
             db = context.Set<T>();

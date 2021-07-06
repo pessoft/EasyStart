@@ -7,7 +7,7 @@ using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public class ConstructorIngredientRepository : BaseRepository<IngredientModel, int>
+    public class ConstructorIngredientRepository : Repository<IngredientModel, int>
     {
         public ConstructorIngredientRepository(DbContext dbContext) : base(dbContext)
         { }

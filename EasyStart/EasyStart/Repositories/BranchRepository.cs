@@ -7,7 +7,7 @@ using System.Web;
 
 namespace EasyStart.Repositories
 {
-    public class BranchRepository : BaseRepository<BranchModel, int>
+    public class BranchRepository : Repository<BranchModel, int>
     {
         public BranchRepository(DbContext dbContext) : base(dbContext)
         { }
