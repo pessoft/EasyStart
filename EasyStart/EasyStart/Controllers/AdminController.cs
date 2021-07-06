@@ -118,10 +118,14 @@ namespace EasyStart.Controllers
             var promotionNewsRepository = new PromotionNewsRepository(context);
             var promotionStockRepository = new PromotionStockRepository(context);
             var promotionCouponRepository = new PromotionCouponRepository(context);
+            var promotionCashbackSettingRepository = new PromotionCashbackSettingRepository(context);
+            var promotionPartnerSettingRepository = new PromotionPartnerSettingRepository(context);
             var promotionLogic = new Logic.Services.Promotion.PromotionLogic(
                 promotionNewsRepository,
                 promotionStockRepository,
                 promotionCouponRepository,
+                promotionCashbackSettingRepository,
+                promotionPartnerSettingRepository,
                 imageLogic);
 
             var productReviewRepository = new ProductReviewRepository(context);
@@ -845,22 +849,18 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadCashbackPartnerSettings()
         {
-            result = new JsonResultModel();
-
             try
             {
-                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-
-                var cashbackSetting = DataWrapper.GetPromotionCashbackSetting(branchId);
-                var partnersSetting = DataWrapper.GetPromotionPartnerSetting(branchId);
-
-                result.Data = new { CashbackSetting = cashbackSetting, PartnersSetting = partnersSetting };
-                result.Success = true;
+                var data = new { 
+                    CashbackSetting = promotionService.GetPromotionCashbackSetting(),
+                    PartnersSetting = promotionService.GetPromotionPartnerSetting()
+                };
+                result = JsonResultModel.CreateSuccess(data);
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result.ErrorMessage = ex.Message;
+                result = JsonResultModel.CreateError("При загрузке настроек кешбека, что-то пошло не так...");
             }
 
             return Json(result);

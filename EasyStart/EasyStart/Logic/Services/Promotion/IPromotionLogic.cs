@@ -18,5 +18,7 @@ namespace EasyStart.Logic.Services.Promotion
         IEnumerable<CouponModel> GetCoupons(int branchId);
         CouponModel SaveCoupon(CouponModel coupon);
         void RemoveCoupon(int id);
+        PromotionCashbackSetting GetPromotionCashbackSetting(int branchId);
+        PromotionPartnerSetting GetPromotionPartnerSetting(int branchId);
     }
 }

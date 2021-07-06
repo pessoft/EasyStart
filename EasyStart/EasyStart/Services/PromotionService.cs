@@ -71,6 +71,16 @@ namespace EasyStart.Services
             promotionLogic.RemoveCoupon(id);
         }
 
+        public PromotionCashbackSetting GetPromotionCashbackSetting()
+        {
+            return promotionLogic.GetPromotionCashbackSetting(GetBranchId());
+        }
+
+        public PromotionPartnerSetting GetPromotionPartnerSetting()
+        {
+            return promotionLogic.GetPromotionPartnerSetting(GetBranchId());
+        }
+
         private int GetBranchId()
         {
             return branchLogic.Get().Id;
