@@ -16,5 +16,6 @@ namespace EasyStart.Logic.Services.Promotion
         void RemoveCoupon(int id);
         PromotionCashbackSetting GetPromotionCashbackSetting(int branchId);
         PromotionPartnerSetting GetPromotionPartnerSetting(int branchId);
+        PromotionCashbackSetting SavePromotionCashbackSetting(PromotionCashbackSetting setting);
     }
 }

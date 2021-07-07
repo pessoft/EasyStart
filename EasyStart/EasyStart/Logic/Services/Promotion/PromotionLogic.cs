@@ -128,5 +128,15 @@ namespace EasyStart.Logic.Services.Promotion
 
             return stockRepository.Create(stock);
         }
+
+        public PromotionCashbackSetting SavePromotionCashbackSetting(PromotionCashbackSetting setting)
+        {
+            var isNewSetting = promotionCashbackSettingRepository.Get(setting.Id) == null;
+
+            if (isNewSetting)
+                return promotionCashbackSettingRepository.Create(setting);
+
+            return promotionCashbackSettingRepository.Update(setting);
+        }
     }
 }

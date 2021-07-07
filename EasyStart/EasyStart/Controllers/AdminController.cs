@@ -107,7 +107,7 @@ namespace EasyStart.Controllers
                 categoryProductLogic,
                 productLogic,
                 constructorProductLogic);
-            promotionService = new PromotionService(promotionLogic, branchLogic);
+            promotionService = new PromotionService(promotionLogic, branchLogic, deliverySettingLogic);
             constructorProductService = new ConstructorProductService(constructorProductLogic, categoryProductLogic);
             productReviewService = new ProductReviewService(productReviewLogic);
         }
@@ -827,25 +827,15 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SavePromotionCashbackSetting(PromotionCashbackSetting setting)
         {
-            result = new JsonResultModel();
-
             try
             {
-                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-                setting.BranchId = branchId;
-
-                var deliverSetting = deliverySettingService.GetByBranchId(branchId);
-                setting.DateSave = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
-
-                var newSetting = DataWrapper.SavePromotionCashbackSetting(setting);
-
-                result.Data = newSetting;
-                result.Success = true;
+                var data = promotionService.SavePromotionCashbackSetting(setting);
+                result = JsonResultModel.CreateSuccess(data);
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result.ErrorMessage = ex.Message;
+                result = JsonResultModel.CreateError("При сохранении настроек кешбека, что-то пошло не так...");
             }
 
             return Json(result);

@@ -1,6 +1,8 @@
 ﻿using EasyStart.Logic.Services.Branch;
+using EasyStart.Logic.Services.DeliverySetting;
 using EasyStart.Logic.Services.Promotion;
 using EasyStart.Models;
+using EasyStart.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,14 +12,17 @@ namespace EasyStart.Services
 {
     public class PromotionService
     {
-        private IPromotionLogic promotionLogic;
-        private IBranchLogic branchLogic;
+        private readonly IPromotionLogic promotionLogic;
+        private readonly IBranchLogic branchLogic;
+        private readonly IDeliverySettingLogic deliverySettingLogic;
         public PromotionService(
             IPromotionLogic promotionLogic,
-            IBranchLogic branchLogic)
+            IBranchLogic branchLogic,
+            IDeliverySettingLogic deliverySettingLogic)
         {
             this.promotionLogic = promotionLogic;
             this.branchLogic = branchLogic;
+            this.deliverySettingLogic = deliverySettingLogic;
         }
 
         public PromotionNewsModel SaveNews(PromotionNewsModel promotionNews)
@@ -79,6 +84,16 @@ namespace EasyStart.Services
         public PromotionPartnerSetting GetPromotionPartnerSetting()
         {
             return promotionLogic.GetPromotionPartnerSetting(GetBranchId());
+        }
+
+        public PromotionCashbackSetting SavePromotionCashbackSetting(PromotionCashbackSetting setting)
+        {
+            var branchId = GetBranchId();
+            var deliverSetting = deliverySettingLogic.GetByBranchId(branchId);
+            setting.DateSave = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
+            setting.BranchId = branchId;
+
+            return promotionLogic.SavePromotionCashbackSetting(setting);
         }
 
         private int GetBranchId()
