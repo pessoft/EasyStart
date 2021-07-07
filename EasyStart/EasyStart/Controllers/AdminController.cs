@@ -845,25 +845,15 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SavePromotionPartnerSetting(PromotionPartnerSetting setting)
         {
-            result = new JsonResultModel();
-
             try
             {
-                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-                setting.BranchId = branchId;
-
-                var deliverSetting = deliverySettingService.GetByBranchId(branchId);
-                setting.DateSave = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
-
-                var newSetting = DataWrapper.SavePromotionPartnerSetting(setting);
-
-                result.Data = newSetting;
-                result.Success = true;
+                var data = promotionService.SavePromotionPartnerSetting(setting);
+                result = JsonResultModel.CreateSuccess(data);
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result.ErrorMessage = ex.Message;
+                result = JsonResultModel.CreateError("При сохранении настроек партнерской программы, что-то пошло не так...");
             }
 
             return Json(result);

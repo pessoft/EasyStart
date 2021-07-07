@@ -17,5 +17,6 @@ namespace EasyStart.Logic.Services.Promotion
         PromotionCashbackSetting GetPromotionCashbackSetting(int branchId);
         PromotionPartnerSetting GetPromotionPartnerSetting(int branchId);
         PromotionCashbackSetting SavePromotionCashbackSetting(PromotionCashbackSetting setting);
+        PromotionPartnerSetting SavePromotionPartnerSetting(PromotionPartnerSetting setting);
     }
 }

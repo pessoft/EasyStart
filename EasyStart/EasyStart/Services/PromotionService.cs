@@ -88,17 +88,30 @@ namespace EasyStart.Services
 
         public PromotionCashbackSetting SavePromotionCashbackSetting(PromotionCashbackSetting setting)
         {
-            var branchId = GetBranchId();
-            var deliverSetting = deliverySettingLogic.GetByBranchId(branchId);
-            setting.DateSave = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
-            setting.BranchId = branchId;
+            setting.DateSave = GetDateTimeByZoneSetting();
+            setting.BranchId = GetBranchId();
 
             return promotionLogic.SavePromotionCashbackSetting(setting);
+        }
+
+        public PromotionPartnerSetting SavePromotionPartnerSetting(PromotionPartnerSetting setting)
+        {
+            setting.DateSave = GetDateTimeByZoneSetting();
+            setting.BranchId = GetBranchId();
+
+            return promotionLogic.SavePromotionPartnerSetting(setting);
         }
 
         private int GetBranchId()
         {
             return branchLogic.Get().Id;
+        }
+
+        private DateTime GetDateTimeByZoneSetting()
+        {
+            var deliverSetting = deliverySettingLogic.GetByBranchId(GetBranchId());
+
+            return DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
         }
     }
 }
