@@ -18,5 +18,8 @@ namespace EasyStart.Logic.Services.Promotion
         PromotionPartnerSetting GetPromotionPartnerSetting(int branchId);
         PromotionCashbackSetting SavePromotionCashbackSetting(PromotionCashbackSetting setting);
         PromotionPartnerSetting SavePromotionPartnerSetting(PromotionPartnerSetting setting);
+        PromotionGeneralSetting GetPromotionGeneralSetting(int branchId);
+        IEnumerable<PromotionSectionSetting> GetPromotionSectionSettings(int branchId);
+        PromotionSetting GetPromotionSetting(int branchId);
     }
 }

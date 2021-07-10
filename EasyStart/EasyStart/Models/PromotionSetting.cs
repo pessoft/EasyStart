@@ -6,7 +6,7 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class PromotionSetting
+    public class PromotionSetting : IBaseEntity<int>
     {
         public int Id { get; set; }
         public int BranchId { get; set; }

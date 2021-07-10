@@ -102,6 +102,11 @@ namespace EasyStart.Services
             return promotionLogic.SavePromotionPartnerSetting(setting);
         }
 
+        public PromotionGeneralSetting GetPromotionGeneralSetting()
+        {
+            return promotionLogic.GetPromotionGeneralSetting(GetBranchId());
+        }
+
         private int GetBranchId()
         {
             return branchLogic.Get().Id;

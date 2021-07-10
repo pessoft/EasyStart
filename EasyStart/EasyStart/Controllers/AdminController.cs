@@ -863,26 +863,15 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult LoadPromotionSettings()
         {
-            result = new JsonResultModel();
-
             try
             {
-                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-                var sections = DataWrapper.GetPromotionSectionSettings(branchId);
-                var setting = DataWrapper.GetPromotionSetting(branchId);
-
-                result.Data = new PromotionSettingWrapper
-                {
-                    Sections = sections,
-                    Setting = setting
-                };
-
-                result.Success = true;
+                var data = promotionService.GetPromotionGeneralSetting();
+                result = JsonResultModel.CreateSuccess(data);
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result.ErrorMessage = ex.Message;
+                result = JsonResultModel.CreateError("При сохранении настроек продвижения, что-то пошло не так...");
             }
 
             return Json(result);
@@ -890,7 +879,7 @@ namespace EasyStart.Controllers
 
         [HttpPost]
         [Authorize]
-        public JsonResult SavePromotionSettings(PromotionSettingWrapper setting)
+        public JsonResult SavePromotionSettings(PromotionGeneralSetting setting)
         {
             result = new JsonResultModel();
 
@@ -906,7 +895,7 @@ namespace EasyStart.Controllers
                 var newSectionSettings = DataWrapper.SavePromotionSectionSettings(setting.Sections);
                 var newSettings = DataWrapper.SavePromotionSetting(setting.Setting);
 
-                result.Data = new PromotionSettingWrapper
+                result.Data = new PromotionGeneralSetting
                 {
                     Sections = newSectionSettings,
                     Setting = newSettings

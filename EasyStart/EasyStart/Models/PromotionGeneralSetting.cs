@@ -5,7 +5,7 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class PromotionSettingWrapper
+    public class PromotionGeneralSetting
     {
         public List<PromotionSectionSetting> Sections { get; set; }
 

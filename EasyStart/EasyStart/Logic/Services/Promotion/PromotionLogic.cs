@@ -14,6 +14,8 @@ namespace EasyStart.Logic.Services.Promotion
         private readonly IRepository<CouponModel, int> couponRepository;
         private readonly IRepository<PromotionCashbackSetting, int> promotionCashbackSettingRepository;
         private readonly IRepository<PromotionPartnerSetting, int> promotionPartnerSettingRepository;
+        private readonly IRepository<PromotionSectionSetting, int> promotionSectionSettingRepository;
+        private readonly IRepository<PromotionSetting, int> promotionSettingRepository;
         private readonly IContainImageLogic imageLogic;
 
         public PromotionLogic(
@@ -147,6 +149,27 @@ namespace EasyStart.Logic.Services.Promotion
                 return promotionPartnerSettingRepository.Create(setting);
 
             return promotionPartnerSettingRepository.Update(setting);
+        }
+
+        public PromotionGeneralSetting GetPromotionGeneralSetting(int branchId)
+        {
+            return new PromotionGeneralSetting
+            {
+                Sections = GetPromotionSectionSettings(branchId).ToList(),
+                Setting = GetPromotionSetting(branchId)
+
+            };
+        }
+
+        public IEnumerable<PromotionSectionSetting> GetPromotionSectionSettings(int branchId)
+        {
+            return promotionSectionSettingRepository.Get(p => p.BranchId == branchId)
+                .OrderBy(p => p.Priorety);
+        }
+
+        public PromotionSetting GetPromotionSetting(int branchId)
+        {
+            return promotionSettingRepository.Get(p => p.BranchId == branchId).FirstOrDefault();
         }
     }
 }
