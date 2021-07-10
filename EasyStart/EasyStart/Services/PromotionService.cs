@@ -107,6 +107,18 @@ namespace EasyStart.Services
             return promotionLogic.GetPromotionGeneralSetting(GetBranchId());
         }
 
+        public PromotionGeneralSetting SavePromotionGeneralSettings(PromotionGeneralSetting setting)
+        {
+            if (setting == null || !setting.Sections.Any() || setting.Setting == null)
+                throw new EmptyPromotionGeneralSettingException();
+
+            var branchId = GetBranchId();
+            setting.Sections.ForEach(p => p.BranchId = branchId);
+            setting.Setting.BranchId = branchId;
+
+            return promotionLogic.SavePromotionGeneralSettings(setting);
+        }
+
         private int GetBranchId()
         {
             return branchLogic.Get().Id;

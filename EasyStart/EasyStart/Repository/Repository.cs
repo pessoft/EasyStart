@@ -46,17 +46,17 @@ namespace EasyStart.Repository
             return addedItem;
         }
 
-        public virtual List<T> Create(List<T> items)
+        public virtual IEnumerable<T> Create(IEnumerable<T> items)
         {
             if (items == null || !items.Any())
                 return items;
 
             var newItems = new List<T>();
-            items.ForEach(item =>
+            foreach (var item in items)
             {
                 var addedItem = CreateWithouSaveChanges(item);
                 newItems.Add(addedItem);
-            });
+            }
             
             context.SaveChanges();
 
@@ -83,12 +83,14 @@ namespace EasyStart.Repository
             RemoveWithotSaveChages(item);
             context.SaveChanges();
         }
-        public virtual void Remove(List<T> items)
+        public virtual void Remove(IEnumerable<T> items)
         {
             if (items == null || !items.Any())
                 return;
 
-            items.ForEach(p => RemoveWithotSaveChages(p));
+            foreach (var item in items)
+                RemoveWithotSaveChages(item);
+            
             context.SaveChanges();
         }
 
@@ -103,7 +105,7 @@ namespace EasyStart.Repository
             return Update(savedItem, item);
         }
 
-        public virtual List<T> Update(List<T> items)
+        public virtual IEnumerable<T> Update(IEnumerable<T> items)
         {
             if (items != null && items.Any())
             {
@@ -122,6 +124,38 @@ namespace EasyStart.Repository
             }
 
             return items;
+        }
+
+        public virtual T CreateOrUpdate(T item)
+        {
+            if (item.Id.Equals(0))
+                return Create(item);
+
+            return Update(item);
+        }
+
+        public virtual IEnumerable<T> CreateOrUpdate(IEnumerable<T> items)
+        {
+            var result = new List<T>();
+            if (items != null && items.Any())
+            {
+
+                var forCreate = new List<T>();
+                var forUpdate = new List<T>();
+
+                foreach (var item in items)
+                {
+                    if (item.Id.Equals(0))
+                        forCreate.Add(item);
+                    else
+                        forUpdate.Add(item);
+                }
+
+                result.AddRange(Create(forCreate));
+                result.AddRange(Update(forUpdate));
+            }
+
+            return result;
         }
 
         protected T Update(T savedItem, T item)

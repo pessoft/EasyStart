@@ -11,13 +11,15 @@ namespace EasyStart.Repository
         where U: IEquatable<U>
     {
         T Create(T item);
-        List<T> Create(List<T> items);
+        IEnumerable<T> Create(IEnumerable<T> items);
         IEnumerable<T> Get();
         T Get(U id);
         IEnumerable<T> Get(Func<T, bool> predicate);
         T Update(T item);
-        List<T> Update(List<T> items);
+        IEnumerable<T> Update(IEnumerable<T> items);
         void Remove(T item);
-        void Remove(List<T> items);
+        void Remove(IEnumerable<T> items);
+        T CreateOrUpdate(T item);
+        IEnumerable<T> CreateOrUpdate(IEnumerable<T> items);
     }
 }

@@ -332,6 +332,7 @@
     <Compile Include="Logic\Services\DisplayItemSettingLogic.cs" />
     <Compile Include="Logic\Services\ProductReview\IProductReviewLogic.cs" />
     <Compile Include="Logic\Services\ProductReview\ProductReviewLogic.cs" />
+    <Compile Include="Logic\Services\Promotion\EmptyPromotionGeneralSettingException.cs" />
     <Compile Include="Logic\Services\Promotion\IPromotionLogic.cs" />
     <Compile Include="Logic\Services\Promotion\PromotionLogic.cs" />
     <Compile Include="Logic\Services\RepositoryFactory\RepositoryFactory.cs" />

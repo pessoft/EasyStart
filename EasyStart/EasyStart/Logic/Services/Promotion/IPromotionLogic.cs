@@ -21,5 +21,9 @@ namespace EasyStart.Logic.Services.Promotion
         PromotionGeneralSetting GetPromotionGeneralSetting(int branchId);
         IEnumerable<PromotionSectionSetting> GetPromotionSectionSettings(int branchId);
         PromotionSetting GetPromotionSetting(int branchId);
+
+        PromotionGeneralSetting SavePromotionGeneralSettings(PromotionGeneralSetting setting);
+        IEnumerable<PromotionSectionSetting> SavePromotionSectionSettings(IEnumerable<PromotionSectionSetting> sectionSettings);
+        PromotionSetting SavePromotionSetting(PromotionSetting setting);
     }
 }

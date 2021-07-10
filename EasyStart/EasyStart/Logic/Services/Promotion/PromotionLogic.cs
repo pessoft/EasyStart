@@ -171,5 +171,27 @@ namespace EasyStart.Logic.Services.Promotion
         {
             return promotionSettingRepository.Get(p => p.BranchId == branchId).FirstOrDefault();
         }
+
+        public PromotionGeneralSetting SavePromotionGeneralSettings(PromotionGeneralSetting setting)
+        {
+            if (setting == null || !setting.Sections.Any() || setting.Setting == null)
+                throw new EmptyPromotionGeneralSettingException();
+
+            return new PromotionGeneralSetting
+            {
+                Sections = SavePromotionSectionSettings(setting.Sections).ToList(),
+                Setting = SavePromotionSetting(setting.Setting)
+            };
+        }
+
+        public IEnumerable<PromotionSectionSetting> SavePromotionSectionSettings(IEnumerable<PromotionSectionSetting> sectionSettings)
+        {
+            return promotionSectionSettingRepository.CreateOrUpdate(sectionSettings);
+        }
+
+        public PromotionSetting SavePromotionSetting(PromotionSetting setting)
+        {
+            return promotionSettingRepository.CreateOrUpdate(setting);
+        }
     }
 }

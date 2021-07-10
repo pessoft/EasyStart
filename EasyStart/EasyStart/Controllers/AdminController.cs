@@ -881,31 +881,15 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult SavePromotionSettings(PromotionGeneralSetting setting)
         {
-            result = new JsonResultModel();
-
             try
             {
-                if (setting == null || !setting.Sections.Any() || setting.Setting == null)
-                    throw new Exception("Пустая настрока");
-
-                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-                setting.Sections.ForEach(p => p.BranchId = branchId);
-                setting.Setting.BranchId = branchId;
-
-                var newSectionSettings = DataWrapper.SavePromotionSectionSettings(setting.Sections);
-                var newSettings = DataWrapper.SavePromotionSetting(setting.Setting);
-
-                result.Data = new PromotionGeneralSetting
-                {
-                    Sections = newSectionSettings,
-                    Setting = newSettings
-                };
-                result.Success = true;
+                var data = promotionService.SavePromotionGeneralSettings(setting);
+                result = JsonResultModel.CreateSuccess(data);
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result.ErrorMessage = ex.Message;
+                result = JsonResultModel.CreateError("При загузке настроек продвижения, что-то пошло не так...");
             }
 
             return Json(result);
