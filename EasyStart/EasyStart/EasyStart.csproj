@@ -584,6 +584,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdminPanelContext.cs" />
     <Compile Include="Models\AreaDeliveryModel.cs" />
+    <Compile Include="Models\IEntityMarkAsDeleted.cs" />
     <Compile Include="Models\IEntityOrderable.cs" />
     <Compile Include="Models\IEntityVisible.cs" />
     <Compile Include="Models\UniqIdEntity.cs" />
@@ -669,6 +670,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\IRepository.cs" />
     <Compile Include="Repository\Repository.cs" />
+    <Compile Include="Repository\RepositoryExtension.cs" />
     <Compile Include="Services\BranchRemovalService.cs" />
     <Compile Include="Services\ConstructorProductService.cs" />
     <Compile Include="Services\GeneralSettingsService.cs" />

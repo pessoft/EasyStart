@@ -7,7 +7,7 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class BranchModel: IBaseEntity<int>
+    public class BranchModel: IBaseEntity<int>, IEntityMarkAsDeleted<int>
     {
         public int Id { get; set; }
         public string Login { get; set; }
