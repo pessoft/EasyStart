@@ -6,7 +6,7 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class ConstructorCategory: IEntityOrderable<int>
+    public class ConstructorCategory: IEntityOrderable<int>, IEntityMarkAsDeleted<int>
     {
         public int Id { get; set; }
         public int CategoryId { get; set; }

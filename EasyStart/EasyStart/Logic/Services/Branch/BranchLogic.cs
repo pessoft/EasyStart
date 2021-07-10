@@ -59,9 +59,8 @@ namespace EasyStart.Logic.Services.Branch
         public void RemoveByBranch(int branchId)
         {
             var branch = repository.Get(branchId);
-            branch.IsDeleted = true;
 
-            repository.Update(branch);
+            repository.MarkAsDeleted(branch);
         }
 
         public List<BranchSettingViewModel> GetBranches(IEnumerable<SettingModel> generalSettings)

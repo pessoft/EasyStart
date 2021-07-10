@@ -172,11 +172,9 @@ namespace EasyStart.Logic.Services.Product
                     ProductId = product.Id
                 }).ToList();
             var oldItems = productAdditionOptionItemRepository
-                .Get(p => p.ProductId == product.Id && !p.IsDeleted)
-                .ToList();
-            oldItems.ForEach(p => p.IsDeleted = true);
+                .Get(p => p.ProductId == product.Id && !p.IsDeleted);
 
-            productAdditionOptionItemRepository.Update(oldItems);
+            productAdditionOptionItemRepository.MarkAsDeleted(oldItems);
 
             if(additionalOptions != null && additionalOptions.Any())
                 productAdditionOptionItemRepository.Create(additionalOptions);
@@ -196,11 +194,9 @@ namespace EasyStart.Logic.Services.Product
                 .ToList();
 
             var oldItems = productAdditionalFillingRepository
-                .Get(p => p.ProductId == product.Id && !p.IsDeleted)
-                .ToList();
-            oldItems.ForEach(p => p.IsDeleted = true);
+                .Get(p => p.ProductId == product.Id && !p.IsDeleted);
 
-            productAdditionalFillingRepository.Update(oldItems);
+            productAdditionalFillingRepository.MarkAsDeleted(oldItems);
 
             if (additionalFillings != null && additionalFillings.Any())
                 productAdditionalFillingRepository.Create(additionalFillings);
@@ -218,44 +214,43 @@ namespace EasyStart.Logic.Services.Product
 
         private void RemoveProductsByBranch(int branchId)
         {
-            var items = productRepository.Get(p => p.BranchId == branchId).ToList();
-            items.ForEach(p => p.IsDeleted = true);
-            productRepository.Update(items);
+            var items = productRepository.Get(p => p.BranchId == branchId);
+            productRepository.MarkAsDeleted(items);
         }
 
         private void RemoveAdditionalFillingsByBranch(int branchId)
         {
-            var items = additionalFillingRepository.Get(p => p.BranchId == branchId).ToList();
-            items.ForEach(p => p.IsDeleted = true);
-            additionalFillingRepository.Update(items);
+            var items = additionalFillingRepository.Get(p => p.BranchId == branchId);
+            
+            additionalFillingRepository.MarkAsDeleted(items);
         }
 
         private void RemoveAdditionOptionsByBranch(int branchId)
         {
-            var items = additionalOptionRepository.Get(p => p.BranchId == branchId).ToList();
-            items.ForEach(p => p.IsDeleted = true);
-            additionalOptionRepository.Update(items);
+            var items = additionalOptionRepository.Get(p => p.BranchId == branchId);
+            
+            additionalOptionRepository.MarkAsDeleted(items);
         }
 
         private void RemoveAdditionOptionItemsByBranch(int branchId)
         {
-            var items = additionOptionItemRepository.Get(p => p.BranchId == branchId).ToList();
-            items.ForEach(p => p.IsDeleted = true);
-            additionOptionItemRepository.Update(items);
+            var items = additionOptionItemRepository.Get(p => p.BranchId == branchId);
+            
+            additionOptionItemRepository.MarkAsDeleted(items);
         }
 
         private void RemoveProductAdditionalFillingsByBranch(int branchId)
         {
-            var items = productAdditionalFillingRepository.Get(p => p.BranchId == branchId).ToList();
-            items.ForEach(p => p.IsDeleted = true);
-            productAdditionalFillingRepository.Update(items);
+            var items = productAdditionalFillingRepository.Get(p => p.BranchId == branchId);
+            
+            productAdditionalFillingRepository.MarkAsDeleted(items);
         }
 
         private void RemoveProductAdditionOptionsByBranch(int branchId)
         {
-            var items = productAdditionOptionItemRepository.Get(p => p.BranchId == branchId).ToList();
-            items.ForEach(p => p.IsDeleted = true);
-            productAdditionOptionItemRepository.Update(items);
+            var items = productAdditionOptionItemRepository.Get(p => p.BranchId == branchId);
+            
+            productAdditionOptionItemRepository.MarkAsDeleted(items);
         }
 
         public List<AdditionalOption> GetAdditionalOptionsByBranchId(int branchId)
@@ -277,15 +272,14 @@ namespace EasyStart.Logic.Services.Product
 
         public void RemoveProductByCategory(int categoryId)
         {
-            var product = productRepository.Get(p => p.CategoryId == categoryId && !p.IsDeleted).ToList();
-            product.ForEach(p => 
+            var products = productRepository.Get(p => p.CategoryId == categoryId && !p.IsDeleted).ToList();
+            products.ForEach(p => 
             {
-                p.IsDeleted = true;
                 SaveProductAdditionalFilling(p);
                 SaveProductAdditionalOptions(p);
             });
 
-            productRepository.Update(product);
+            productRepository.MarkAsDeleted(products);
         }
 
         public List<ProductModel> GetByCategory(int categoryId)
@@ -300,8 +294,7 @@ namespace EasyStart.Logic.Services.Product
         {
             var product = productRepository.Get(id);
 
-            product.IsDeleted = true;
-            productRepository.Update(product);
+            productRepository.MarkAsDeleted(product);
 
             RecalcProductsOrderNumber(product.CategoryId);
             SaveProductAdditionalFilling(product);

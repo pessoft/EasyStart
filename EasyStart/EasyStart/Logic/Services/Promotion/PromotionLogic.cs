@@ -58,17 +58,15 @@ namespace EasyStart.Logic.Services.Promotion
         public void RemoveNews(int newsId)
         {
             var news = newsRepository.Get(newsId);
-            news.IsDeleted = true;
 
-            newsRepository.Update(news);
+            newsRepository.MarkAsDeleted(news);
         }
 
         public void RemoveStock(int stockId)
         {
             var stock = stockRepository.Get(stockId);
-            stock.IsDeleted = true;
 
-            stockRepository.Update(stock);
+            stockRepository.MarkAsDeleted(stock);
         }
 
         public CouponModel SaveCoupon(CouponModel coupon)
@@ -120,10 +118,9 @@ namespace EasyStart.Logic.Services.Promotion
 
             if (oldStock != null)
             {
-                oldStock.IsDeleted = true;
                 stock.UniqId = oldStock.UniqId;
 
-                stockRepository.Update(oldStock);
+                stockRepository.MarkAsDeleted(oldStock);
             }
             else
                 stock.UniqId = Guid.NewGuid();

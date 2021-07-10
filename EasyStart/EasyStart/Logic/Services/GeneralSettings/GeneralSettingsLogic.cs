@@ -23,11 +23,7 @@ namespace EasyStart.Logic.Services.GeneralSettings
         {
             var setting = settingRepository.Get(p => p.BranchId == branchId).FirstOrDefault();
 
-            if (setting != null)
-            {
-                setting.IsDeleted = true;
-                settingRepository.Update(setting);
-            }
+            settingRepository.MarkAsDeleted(setting);
         }
 
         public SettingModel SaveSetting(SettingModel setting)

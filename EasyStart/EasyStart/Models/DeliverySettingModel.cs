@@ -8,7 +8,7 @@ using System.Web;
 
 namespace EasyStart.Models
 {
-    public class DeliverySettingModel: IBaseEntity<int>
+    public class DeliverySettingModel: IBaseEntity<int>, IEntityMarkAsDeleted<int>
     {
         public int Id { get; set; }
         public int BranchId { get; set; }

@@ -46,8 +46,7 @@ namespace EasyStart.Logic.Services.ConstructorProduct
         {
             var categories = categoryRepository.Get(p => p.BranchId == branchId).ToList();
             
-            categories.ForEach(p => p.IsDeleted = true);
-            categoryRepository.Update(categories);
+            categoryRepository.MarkAsDeleted(categories);
 
             return categories.Select(p => p.Id);
         }
@@ -56,8 +55,7 @@ namespace EasyStart.Logic.Services.ConstructorProduct
         {
             var ingredients = ingredientRepository.Get(p => subCategoryIds.Contains(p.SubCategoryId)).ToList();
             
-            ingredients.ForEach(p => p.IsDeleted = true);
-            ingredientRepository.Update(ingredients);
+            ingredientRepository.MarkAsDeleted(ingredients);
         }
     }
 }

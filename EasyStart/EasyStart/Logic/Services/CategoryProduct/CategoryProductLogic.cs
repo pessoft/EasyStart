@@ -78,9 +78,8 @@ namespace EasyStart.Logic.Services.CategoryProduct
         public void RemoveByBranch(int branchId)
         {
             var categories = categoryRepository.Get(p => p.BranchId == branchId).ToList();
-            categories.ForEach(p => p.IsDeleted = true);
 
-            categoryRepository.Update(categories);
+            categoryRepository.MarkAsDeleted(categories);
         }
 
         public bool RemoveCategory(int id)
@@ -90,8 +89,7 @@ namespace EasyStart.Logic.Services.CategoryProduct
             if (category == null)
                 return false;
 
-            category.IsDeleted = true;
-            categoryRepository.Update(category);
+            categoryRepository.MarkAsDeleted(category);
 
             RecalculateOrderNumber(category.BranchId);
             SaveRecommendedProductsForCategory(null, category.BranchId, category.Id);

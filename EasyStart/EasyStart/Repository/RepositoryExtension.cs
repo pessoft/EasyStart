@@ -12,6 +12,9 @@ namespace EasyStart.Repository
             where T : class, IBaseEntity<U>
             where U : IEquatable<U>
         {
+            if (item == null)
+                return;
+
             item.IsDeleted = true;
             repository.Update((T)item);
         }
@@ -20,6 +23,9 @@ namespace EasyStart.Repository
             where T : class, IBaseEntity<U>
             where U : IEquatable<U>
         {
+            if (items == null || !items.Any())
+                return;
+
             foreach (var item in items)
                 item.IsDeleted = true;
 

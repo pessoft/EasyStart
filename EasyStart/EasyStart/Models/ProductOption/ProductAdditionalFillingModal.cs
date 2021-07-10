@@ -5,7 +5,7 @@ using System.Web;
 
 namespace EasyStart.Models.ProductOption
 {
-    public class ProductAdditionalFillingModal: IBaseEntity<int>
+    public class ProductAdditionalFillingModal: IBaseEntity<int>, IEntityMarkAsDeleted<int>
     {
         public int Id { get; set; }
         public int BranchId { get; set; }

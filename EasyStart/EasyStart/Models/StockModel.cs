@@ -9,7 +9,7 @@ using System.Web.Script.Serialization;
 
 namespace EasyStart.Models
 {
-    public class StockModel : IBaseEntity<int>, IContainImage
+    public class StockModel : IBaseEntity<int>, IContainImage, IEntityMarkAsDeleted<int>
     {
         public int Id { get; set; }
         public int BranchId { get; set; }
