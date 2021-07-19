@@ -57,5 +57,38 @@ namespace EasyStart.Logic.Services.ConstructorProduct
             
             ingredientRepository.MarkAsDeleted(ingredients);
         }
+
+        public void RemoveConstructorCategory(int id)
+        {
+            var entity = categoryRepository.Get(id);
+            categoryRepository.MarkAsDeleted(entity);
+
+            RecalcConstructorCategoryOrderNumber(entity.CategoryId);
+            RemoveIngredientsByCategoryConstructorId(id);
+        }
+
+        public void RemoveIngredientsByCategoryConstructorId(int categoryConstructorId)
+        {
+            var ingredients = ingredientRepository.Get(p =>
+                p.SubCategoryId == categoryConstructorId
+                && !p.IsDeleted)
+                .ToList();
+            ingredientRepository.MarkAsDeleted(ingredients);
+        }
+
+        private void RecalcConstructorCategoryOrderNumber(int categoryId)
+        {
+            var items = categoryRepository
+                        .Get(p => p.CategoryId == categoryId && !p.IsDeleted)
+                        .OrderBy(p => p.OrderNumber)
+                        .ToList();
+
+            for (var i = 0; i < items.Count; ++i)
+            {
+                items[i].OrderNumber = i + 1;
+            }
+
+            categoryRepository.Update(items);
+        }
     }
 }

@@ -54,5 +54,10 @@ namespace EasyStart.Services
 
             return constructorProductDetails;
         }
+
+        public void RemoveConstructorCategory(int id)
+        {
+            constructorProductLogic.RemoveConstructorCategory(id);
+        }
     }
 }

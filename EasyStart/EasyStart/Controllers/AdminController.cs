@@ -901,8 +901,7 @@ namespace EasyStart.Controllers
         {
             try
             {
-                DataWrapper.RemoveConstructorCategory(categoryConstructorId);
-                DataWrapper.RemoveIngredientsByCategoryConstructorId(categoryConstructorId);
+                constructorProductService.RemoveConstructorCategory(categoryConstructorId);
             }
             catch (Exception ex)
             {

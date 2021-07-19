@@ -7,5 +7,7 @@ namespace EasyStart.Logic.Services.ConstructorProduct
     {
         void UpdateOrder(List<UpdaterOrderNumber> items);
         IEnumerable<IngredientModel> GetIngredients(IEnumerable<int> categoryIds);
+        void RemoveConstructorCategory(int id);
+        void RemoveIngredientsByCategoryConstructorId(int categoryConstructorId);
     }
 }
