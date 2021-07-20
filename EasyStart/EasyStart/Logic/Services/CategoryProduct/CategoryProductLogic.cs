@@ -118,7 +118,6 @@ namespace EasyStart.Logic.Services.CategoryProduct
                 savedCategory = categoryRepository.Create(category);
             }
                 
-
             var recommendedProducts = SaveRecommendedProductsForCategory(
                 category.RecommendedProducts,
                 savedCategory.BranchId,

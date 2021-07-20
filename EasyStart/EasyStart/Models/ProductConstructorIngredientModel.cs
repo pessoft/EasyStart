@@ -16,5 +16,6 @@ namespace EasyStart.Models
         public StyleTypeIngredient StyleTypeIngredient { get; set; }
         public int OrderNumber { get; set; }
         public List<IngredientModel> Ingredients { get; set; }
+        public int BranchId { get; set; }
     }
 }

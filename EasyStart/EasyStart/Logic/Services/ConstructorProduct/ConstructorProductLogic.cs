@@ -12,14 +12,17 @@ namespace EasyStart.Logic.Services.ConstructorProduct
         private IRepository<ConstructorCategory, int> categoryRepository;
         private IRepository<IngredientModel, int> ingredientRepository;
         private readonly IDisplayItemSettingLogic displayItemSettingLogic;
+        private readonly IContainImageLogic imageLogic;
 
         public ConstructorProductLogic(
             IRepositoryFactory repositoryFactory,
-            IDisplayItemSettingLogic displayItemSettingLogic)
+            IDisplayItemSettingLogic displayItemSettingLogic,
+            IContainImageLogic imageLogic)
         {
             categoryRepository = repositoryFactory.GetRepository<ConstructorCategory, int>();
             ingredientRepository = repositoryFactory.GetRepository<IngredientModel, int>();
             this.displayItemSettingLogic = displayItemSettingLogic;
+            this.imageLogic = imageLogic;
         }
 
         public IEnumerable<IngredientModel> GetIngredients(IEnumerable<int> categoryIds)
@@ -74,6 +77,67 @@ namespace EasyStart.Logic.Services.ConstructorProduct
                 && !p.IsDeleted)
                 .ToList();
             ingredientRepository.MarkAsDeleted(ingredients);
+        }
+
+        public ProductConstructorIngredientModel AddOrUpdateCategoryConstructor(ProductConstructorIngredientModel category)
+        {
+            if (category.Ingredients == null || !category.Ingredients.Any())
+                throw new Exception("Отсутсвтуют ингредиенты");
+
+            imageLogic.PrepareImage(category.Ingredients);
+
+            var constructorCategory = AddOrUpdateConstructorCategory(category);
+            var ingredients = AddOrUpdateIngredients(constructorCategory, category.Ingredients);
+
+            return ConvertTotProductConstructorIngredientModel(constructorCategory, ingredients.ToList());
+        }
+
+        private ProductConstructorIngredientModel ConvertTotProductConstructorIngredientModel(ConstructorCategory category, List<IngredientModel> ingredients)
+        {
+            return new ProductConstructorIngredientModel
+            {
+                Id = category.Id,
+                CategoryId = category.CategoryId,
+                MinCountIngredient = category.MinCountIngredient,
+                MaxCountIngredient = category.MaxCountIngredient,
+                Name = category.Name,
+                OrderNumber = category.OrderNumber,
+                StyleTypeIngredient = category.StyleTypeIngredient,
+                Ingredients = ingredients
+            };
+        }
+
+        private ConstructorCategory AddOrUpdateConstructorCategory(ProductConstructorIngredientModel category)
+        {
+            var constructorCategory = ConvertToConstructorCategory(category);
+
+            return categoryRepository.CreateOrUpdate(constructorCategory);
+        }
+
+        private IEnumerable<IngredientModel> AddOrUpdateIngredients(ConstructorCategory constructorCategory, IEnumerable<IngredientModel> ingredients)
+        {
+            foreach (var ingredient in ingredients)
+            {
+                ingredient.SubCategoryId = constructorCategory.Id;
+                ingredient.CategoryId = constructorCategory.CategoryId;
+            }
+
+            return ingredientRepository.CreateOrUpdate(ingredients);
+        }
+
+        private ConstructorCategory ConvertToConstructorCategory(ProductConstructorIngredientModel data)
+        {
+            return new ConstructorCategory
+            {
+                Id = data.Id,
+                CategoryId = data.CategoryId,
+                MinCountIngredient = data.MinCountIngredient,
+                MaxCountIngredient = data.MaxCountIngredient,
+                Name = data.Name,
+                OrderNumber = data.OrderNumber,
+                StyleTypeIngredient = data.StyleTypeIngredient,
+                BranchId = data.BranchId
+            };
         }
 
         private void RecalcConstructorCategoryOrderNumber(int categoryId)

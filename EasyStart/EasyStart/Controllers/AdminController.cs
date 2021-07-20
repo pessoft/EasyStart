@@ -81,7 +81,8 @@ namespace EasyStart.Controllers
                 displayItemSettingLogic);
             var constructorProductLogic = new ConstructorProductLogic(
                 repositoryFactory,
-                displayItemSettingLogic);
+                displayItemSettingLogic,
+                imageLogic);
             var promotionLogic = new Logic.Services.Promotion.PromotionLogic(
                 repositoryFactory,
                 imageLogic);
@@ -108,7 +109,7 @@ namespace EasyStart.Controllers
                 productLogic,
                 constructorProductLogic);
             promotionService = new PromotionService(promotionLogic, branchLogic, deliverySettingLogic);
-            constructorProductService = new ConstructorProductService(constructorProductLogic, categoryProductLogic);
+            constructorProductService = new ConstructorProductService(constructorProductLogic, categoryProductLogic, branchLogic);
             productReviewService = new ProductReviewService(productReviewLogic);
         }
 
@@ -913,55 +914,15 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult AddOrUpdateCategoryConstructor(ProductConstructorIngredientModel category)
         {
-            result = new JsonResultModel();
-
-            if (category.Ingredients == null || !category.Ingredients.Any())
-            {
-                result.ErrorMessage = "Отсутсвтуют ингредиенты";
-
-                return Json(result);
-            }
-
             try
             {
-                category.Ingredients.ForEach(p =>
-                {
-                    if (!System.IO.File.Exists(Server.MapPath(p.Image)))
-                    {
-                        p.Image = "/images/default-image.jpg";
-                    }
-                });
-
-                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-
-                var constructorCategory = category.ConvertToConstructorCategory();
-                constructorCategory.BranchId = branchId;
-                constructorCategory = DataWrapper.AddOrUpdateConstructorCategory(constructorCategory);
-
-                if (constructorCategory != null)
-                {
-                    category.Ingredients.UpdateIngredientSubAndCategoryId(constructorCategory.Id, constructorCategory.CategoryId);
-                    var ingredients = DataWrapper.AddOrUpdateIngredients(category.Ingredients);
-
-                    if (ingredients == null)
-                    {
-                        result.ErrorMessage = "При добавлении ингредиентов что-то пошло не так...";
-                    }
-                    else
-                    {
-                        result.Data = ConstructorProductHelper.GetProductConstructorIngredient(constructorCategory, ingredients);
-                        result.Success = true;
-                    }
-                }
-                else
-                {
-                    result.ErrorMessage = "При добавлении категории конструктора что-то пошло не так...";
-                }
+                var data = constructorProductService.AddOrUpdateCategoryConstructor(category);
+                result = JsonResultModel.CreateSuccess(data);
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result.ErrorMessage = ex.Message;
+                result = JsonResultModel.CreateError("При добавлении категории конструктора, что-то пошло не так...");
             }
 
             return Json(result);

@@ -17,6 +17,13 @@ namespace EasyStart.Logic.Services
                 item.Image = defaultImage;
         }
 
+        public void PrepareImage(IEnumerable<IContainImage> items)
+        {
+            if (items != null && items.Any())
+                foreach (var item in items)
+                    PrepareImage(item);
+        }
+
         public void RemoveOldImage(IContainImage olditem, IContainImage newItem)
         {
             var oldImageVirtualPage = GetVirtualPath(olditem.Image);

@@ -9,5 +9,7 @@ namespace EasyStart.Logic.Services.ConstructorProduct
         IEnumerable<IngredientModel> GetIngredients(IEnumerable<int> categoryIds);
         void RemoveConstructorCategory(int id);
         void RemoveIngredientsByCategoryConstructorId(int categoryConstructorId);
+
+        ProductConstructorIngredientModel AddOrUpdateCategoryConstructor(ProductConstructorIngredientModel category);
     }
 }

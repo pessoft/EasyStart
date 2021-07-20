@@ -1,4 +1,5 @@
-﻿using EasyStart.Logic.Services.CategoryProduct;
+﻿using EasyStart.Logic.Services.Branch;
+using EasyStart.Logic.Services.CategoryProduct;
 using EasyStart.Logic.Services.ConstructorProduct;
 using EasyStart.Models;
 using System;
@@ -12,13 +13,16 @@ namespace EasyStart.Services
     {
         private readonly IConstructorProductLogic constructorProductLogic;
         private readonly ICategoryProductLogic categoryProductLogic;
+        private readonly IBranchLogic branchLogic;
 
         public ConstructorProductService(
             IConstructorProductLogic constructorProductLogic,
-            ICategoryProductLogic categoryProductLogic)
+            ICategoryProductLogic categoryProductLogic,
+            IBranchLogic branchLogic)
         {
             this.constructorProductLogic = constructorProductLogic;
             this.categoryProductLogic = categoryProductLogic;
+            this.branchLogic = branchLogic;
         }
 
         public void UpdateOrder(List<UpdaterOrderNumber> items)
@@ -58,6 +62,14 @@ namespace EasyStart.Services
         public void RemoveConstructorCategory(int id)
         {
             constructorProductLogic.RemoveConstructorCategory(id);
+        }
+
+        public ProductConstructorIngredientModel AddOrUpdateCategoryConstructor(ProductConstructorIngredientModel category)
+        {
+            var branch = branchLogic.Get();
+            category.BranchId = branch.Id;
+
+            return constructorProductLogic.AddOrUpdateCategoryConstructor(category);
         }
     }
 }

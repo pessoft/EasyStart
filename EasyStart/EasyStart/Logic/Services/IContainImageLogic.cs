@@ -10,6 +10,7 @@ namespace EasyStart.Logic.Services
     public interface IContainImageLogic
     {
         void PrepareImage(IContainImage item);
+        void PrepareImage(IEnumerable<IContainImage> items);
         void RemoveOldImage(IContainImage olditem, IContainImage newItem);
     }
 }
