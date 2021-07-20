@@ -32,7 +32,7 @@ namespace EasyStart.Services
 
         public IEnumerable<IngredientModel> GetIngredients(IEnumerable<int> categoryIds)
         {
-            return constructorProductLogic.GetIngredients(categoryIds);
+            return constructorProductLogic.GetIngredientsByCategoryIds(categoryIds);
         }
 
         public IEnumerable<OrderDetailConstructorProduct> GetConstructorProductOrderDetails(IEnumerable<int> categoryIds)
@@ -70,6 +70,11 @@ namespace EasyStart.Services
             category.BranchId = branch.Id;
 
             return constructorProductLogic.AddOrUpdateCategoryConstructor(category);
+        }
+
+        public IEnumerable<ProductConstructorIngredientModel> GetConstructorProducts(int categoryId)
+        {
+            return constructorProductLogic.GetConstructorProducts(categoryId);
         }
     }
 }

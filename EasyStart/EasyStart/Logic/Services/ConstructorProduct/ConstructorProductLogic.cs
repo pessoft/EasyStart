@@ -25,12 +25,21 @@ namespace EasyStart.Logic.Services.ConstructorProduct
             this.imageLogic = imageLogic;
         }
 
-        public IEnumerable<IngredientModel> GetIngredients(IEnumerable<int> categoryIds)
+        public IEnumerable<IngredientModel> GetIngredientsByCategoryIds(IEnumerable<int> categoryIds)
         {
             if (categoryIds == null)
                 return new List<IngredientModel>();
 
             return ingredientRepository.Get(p => categoryIds.Contains(p.CategoryId)
+            && !p.IsDeleted);
+        }
+
+        public IEnumerable<IngredientModel> GetIngredientsByConstructorCategoryIds(IEnumerable<int> constructorCategoryIds)
+        {
+            if (constructorCategoryIds == null)
+                return new List<IngredientModel>();
+
+            return ingredientRepository.Get(p => constructorCategoryIds.Contains(p.SubCategoryId)
             && !p.IsDeleted);
         }
 
@@ -90,6 +99,27 @@ namespace EasyStart.Logic.Services.ConstructorProduct
             var ingredients = AddOrUpdateIngredients(constructorCategory, category.Ingredients);
 
             return ConvertTotProductConstructorIngredientModel(constructorCategory, ingredients.ToList());
+        }
+
+        public IEnumerable<ProductConstructorIngredientModel> GetConstructorProducts(int categoryId)
+        {
+            var result = new List<ProductConstructorIngredientModel>();
+            var constructorCategories = categoryRepository.Get(p => p.CategoryId == categoryId && !p.IsDeleted);
+            var ids = constructorCategories.Select(p => p.Id);
+            var dictIngredients = GetIngredientsByConstructorCategoryIds(ids)
+                .GroupBy(p => p.SubCategoryId)
+                .ToDictionary(p => p.Key, p => p.ToList());
+
+            foreach(var constructorCategory in constructorCategories)
+            {
+                if (dictIngredients.TryGetValue(constructorCategory.Id, out List<IngredientModel> ingredients) && ingredients != null && ingredients.Any())
+                {
+                    var ProductConstructorIngredient = ConvertTotProductConstructorIngredientModel(constructorCategory, ingredients);
+                    result.Add(ProductConstructorIngredient);
+                }
+            }
+
+            return result.OrderBy(p => p.OrderNumber);
         }
 
         private ProductConstructorIngredientModel ConvertTotProductConstructorIngredientModel(ConstructorCategory category, List<IngredientModel> ingredients)

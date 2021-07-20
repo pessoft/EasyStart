@@ -668,7 +668,7 @@ namespace EasyStart.Controllers
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result = JsonResultModel.CreateError("При загрузке заказов, что-то пошло не так...");
+                result = JsonResultModel.CreateError("При загрузке заказов что-то пошло не так...");
             }
 
             return Json(result);
@@ -686,7 +686,7 @@ namespace EasyStart.Controllers
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result = JsonResultModel.CreateError("При загрузке заказов, что-то пошло не так...");
+                result = JsonResultModel.CreateError("При загрузке заказов что-то пошло не так...");
             }
 
             return Json(result);
@@ -709,7 +709,7 @@ namespace EasyStart.Controllers
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result = JsonResultModel.CreateError("При загрузке продуктов из заказа, что-то пошло не так...");
+                result = JsonResultModel.CreateError("При загрузке продуктов из заказа что-то пошло не так...");
             }
 
             return Json(result);
@@ -742,7 +742,7 @@ namespace EasyStart.Controllers
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result = JsonResultModel.CreateError("При информации о заказах, что-то пошло не так...");
+                result = JsonResultModel.CreateError("При информации о заказах что-то пошло не так...");
             }
 
             return Json(result);
@@ -760,7 +760,7 @@ namespace EasyStart.Controllers
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result = JsonResultModel.CreateError("При загрузки купонов, что-то пошло не так...");
+                result = JsonResultModel.CreateError("При загрузки купонов что-то пошло не так...");
             }
 
             return Json(result);
@@ -778,7 +778,7 @@ namespace EasyStart.Controllers
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result = JsonResultModel.CreateError("При сохранении купона, что-то пошло не так...");
+                result = JsonResultModel.CreateError("При сохранении купона что-то пошло не так...");
             }
 
             return Json(result);
@@ -796,7 +796,7 @@ namespace EasyStart.Controllers
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result = JsonResultModel.CreateError("При удалении купона, что-то пошло не так...");
+                result = JsonResultModel.CreateError("При удалении купона что-то пошло не так...");
             }
 
             return Json(result);
@@ -818,7 +818,7 @@ namespace EasyStart.Controllers
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result = JsonResultModel.CreateError("При загрузке настроек кешбека, что-то пошло не так...");
+                result = JsonResultModel.CreateError("При загрузке настроек кешбека что-то пошло не так...");
             }
 
             return Json(result);
@@ -836,7 +836,7 @@ namespace EasyStart.Controllers
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result = JsonResultModel.CreateError("При сохранении настроек кешбека, что-то пошло не так...");
+                result = JsonResultModel.CreateError("При сохранении настроек кешбека что-то пошло не так...");
             }
 
             return Json(result);
@@ -854,7 +854,7 @@ namespace EasyStart.Controllers
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result = JsonResultModel.CreateError("При сохранении настроек партнерской программы, что-то пошло не так...");
+                result = JsonResultModel.CreateError("При сохранении настроек партнерской программы что-то пошло не так...");
             }
 
             return Json(result);
@@ -872,7 +872,7 @@ namespace EasyStart.Controllers
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result = JsonResultModel.CreateError("При сохранении настроек продвижения, что-то пошло не так...");
+                result = JsonResultModel.CreateError("При сохранении настроек продвижения что-то пошло не так...");
             }
 
             return Json(result);
@@ -890,7 +890,7 @@ namespace EasyStart.Controllers
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result = JsonResultModel.CreateError("При загузке настроек продвижения, что-то пошло не так...");
+                result = JsonResultModel.CreateError("При загузке настроек продвижения что-то пошло не так...");
             }
 
             return Json(result);
@@ -922,7 +922,7 @@ namespace EasyStart.Controllers
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result = JsonResultModel.CreateError("При добавлении категории конструктора, что-то пошло не так...");
+                result = JsonResultModel.CreateError("При добавлении категории конструктора что-то пошло не так...");
             }
 
             return Json(result);
@@ -930,44 +930,17 @@ namespace EasyStart.Controllers
 
         [HttpPost]
         [Authorize]
-        public JsonResult LoadProductConstructorList(int idCategory)
+        public JsonResult LoadProductConstructorList(int categoryId)
         {
-            result = new JsonResultModel();
-            var constructorCategories = DataWrapper.GetConstructorCategoriesVisible(idCategory);
-
-            if (constructorCategories != null)
+            try
             {
-                result.Data = new List<int>();
-                if (constructorCategories.Any())
-                {
-
-                    var ids = constructorCategories.Select(p => p.Id).ToList();
-                    var dictIngredients = DataWrapper.GetIngredientsVisible(ids);
-                    var ProductConstructorIngredients = new List<ProductConstructorIngredientModel>();
-
-                    constructorCategories.ForEach(p =>
-                    {
-                        List<IngredientModel> ingredients = null;
-
-                        if (dictIngredients.TryGetValue(p.Id, out ingredients) && ingredients != null && ingredients.Any())
-                        {
-                            var ProductConstructorIngredient = ConstructorProductHelper.GetProductConstructorIngredient(p, ingredients);
-                            ProductConstructorIngredients.Add(ProductConstructorIngredient);
-                        }
-
-                    });
-
-                    if (ProductConstructorIngredients != null && ProductConstructorIngredients.Any())
-                    {
-                        result.Data = ProductConstructorIngredients.OrderBy(p => p.OrderNumber).ToList();
-                    }
-                }
-
-                result.Success = true;
+                var data = constructorProductService.GetConstructorProducts(categoryId);
+                result = JsonResultModel.CreateSuccess(data);
             }
-            else
+            catch (Exception ex)
             {
-                result.ErrorMessage = "При загрузке конструктора что-то пошло не так...";
+                Logger.Log.Error(ex);
+                result = JsonResultModel.CreateError("При загрузке конструктора что-то пошло не так...");
             }
 
             return Json(result);

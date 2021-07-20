@@ -65,7 +65,7 @@ namespace EasyStart.Repository
 
         public virtual IEnumerable<T> Get()
         {
-            return db.AsEnumerable();
+            return db;
         }
 
         public virtual T Get(U id)
@@ -75,7 +75,7 @@ namespace EasyStart.Repository
 
         public virtual IEnumerable<T> Get(Func<T, bool> predicate)
         {
-            return db.Where(predicate).AsEnumerable();
+            return db.Where(predicate);
         }
 
         public virtual void Remove(T item)

@@ -1301,7 +1301,7 @@ function getProductById(id) {
     return serchProduct
 }
 
-function loadProductConstructorList(idCategory) {
+function loadProductConstructorList(categoryId) {
     clearProductList()
     let loader = new Loader($(".product"))
     let successFunc = function (result, loader) {
@@ -1322,7 +1322,7 @@ function loadProductConstructorList(idCategory) {
     }
     loader.start()
 
-    $.post("/Admin/LoadProductConstructorList", { idCategory: idCategory }, successCallBack(successFunc, loader))
+    $.post("/Admin/LoadProductConstructorList", { categoryId }, successCallBack(successFunc, loader))
 }
 
 function loadProductList(idCategory) {
