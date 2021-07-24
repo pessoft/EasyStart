@@ -1,23 +1,39 @@
 ﻿using EasyStart.Logic.FCM;
 using EasyStart.Logic.IntegrationSystem;
+using EasyStart.Logic.Services.Branch;
+using EasyStart.Logic.Services.DeliverySetting;
 using EasyStart.Logic.Services.RepositoryFactory;
 using EasyStart.Models;
 using EasyStart.Models.FCMNotification;
 using EasyStart.Repository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Hosting;
 
 namespace EasyStart.Logic.Services.PushNotification
 {
     public class PushNotificationLogic: IPushNotificationLogic
     {
-        private readonly IRepository<FCMDeviceModel, int> repository;
+        private static readonly int LIMIT_PUSH_MESSAGE_TODAY = 5;
+
+        private readonly IRepository<FCMDeviceModel, int> fcmDeviceRepository;
+        private readonly IRepository<PushMessageModel, int> pushMessageRepository;
+
+        private readonly IBranchLogic branchLogic;
+        private readonly int branchId;
+
         private static readonly string fcmAuthKeyPath = HostingEnvironment.MapPath("/Resource/FCMAuthKey.json");
 
-        public PushNotificationLogic(IRepositoryFactory repositoryFactory)
+        public PushNotificationLogic(
+            IRepositoryFactory repositoryFactory,
+            IBranchLogic branchLogic)
         {
-            this.repository = repositoryFactory.GetRepository<FCMDeviceModel, int>();
+            fcmDeviceRepository = repositoryFactory.GetRepository<FCMDeviceModel, int>();
+            pushMessageRepository = repositoryFactory.GetRepository<PushMessageModel, int>();
+            
+            branchId = branchLogic.Get().Id;
         }
 
         /// <summary>
@@ -77,11 +93,67 @@ namespace EasyStart.Logic.Services.PushNotification
             fcm.SendMulticastMessage(fcfMessage);
         }
 
+        public PushNotificationInfo PushNotification(
+            Models.FCMNotification.PushNotification pushNotification,
+            string uriDomain)
+        {
+            var message = new FCMMessage(pushNotification);
+
+            if (string.IsNullOrEmpty(message.Title))
+                throw new PushNotifictionException("Отсутствует заголовок сообщения");
+            else if (string.IsNullOrEmpty(message.Body))
+                throw new PushNotifictionException("Отсутствует тело сообщения");
+
+            var countMessagesSentToday = GetCountMessagesSentToday();
+            if (countMessagesSentToday >= LIMIT_PUSH_MESSAGE_TODAY)
+                throw new PushNotifictionException("Превышен дневной лимит push уведомлений");
+
+            var pushMessage = new PushMessageModel(message, branchId, DateTime.Now.Date);//время не нужно
+            pushMessageRepository.Create(pushMessage);
+
+            if (!string.IsNullOrEmpty(message.ImageUrl))
+                message.ImageUrl = uriDomain + message.ImageUrl.Substring(2);
+
+            SendMulticastMessage(message);
+
+            return new PushNotificationInfo(
+                LIMIT_PUSH_MESSAGE_TODAY,
+                countMessagesSentToday + 1);
+        }
+
+        private void SendMulticastMessage(FCMMessage message)
+        {
+            Task.Run(() =>
+            {
+                var tokens = GetDiveceTokens();
+                if (tokens == null || !tokens.Any())
+                    return;
+
+                var fcm = new FCMNotification(fcmAuthKeyPath, tokens);
+                fcm.SendMulticastMessage(message);
+            });
+        }
+
+        private int GetCountMessagesSentToday()
+        {
+            var currentDate = DateTime.Now.Date;
+            return pushMessageRepository.Get(p => p.BranchId == branchId
+                && p.Date.Date == currentDate)
+                .Count();
+        }
+
         private string GetClientDiveceToken(int clinetId)
         {
-            var device = this.repository.Get(p => p.ClientId == clinetId).FirstOrDefault();
+            var device = fcmDeviceRepository.Get(p => p.ClientId == clinetId).FirstOrDefault();
 
             return device?.Token;
+        }
+
+        private List<string> GetDiveceTokens()
+        {
+            return fcmDeviceRepository.Get(p => p.BranchId == branchId)
+                .Select(p => p.Token)
+                .ToList(); ;
         }
     }
 }

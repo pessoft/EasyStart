@@ -51,6 +51,7 @@ namespace EasyStart.Controllers
         private PromotionService promotionService;
         private ConstructorProductService constructorProductService;
         private ProductReviewService productReviewService;
+        private PushNotificationService pushNotificationService;
 
         public AdminController()
         { }
@@ -71,8 +72,8 @@ namespace EasyStart.Controllers
                 imageLogic,
                 displayItemSettingLogic);
             var deliverySettingLogic = new DeliverySettingLogic(repositoryFactory);
-            var pushNotificationLogic = new PushNotificationLogic(repositoryFactory);
             var branchLogic = new BranchLogic(repositoryFactory, User.Identity.Name);
+            var pushNotificationLogic = new PushNotificationLogic(repositoryFactory, branchLogic);
             var clientLogic = new ClientLogic(repositoryFactory);
             var generalSettingLogic = new GeneralSettingsLogic(repositoryFactory);
             var categoryProductLogic = new CategoryProductLogic(
@@ -88,6 +89,7 @@ namespace EasyStart.Controllers
                 imageLogic);
             var productReviewLogic = new ProductReviewLogic(repositoryFactory, displayItemSettingLogic);
 
+            pushNotificationService = new PushNotificationService(pushNotificationLogic);
             orderService = new OrderService(
                 orderLogic,
                 integrationSystemLogic,
@@ -953,62 +955,22 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult PushNotification(PushNotification pushNotification)
         {
-            result = new JsonResultModel();
-            var message = new FCMMessage(pushNotification);
-
-            if (string.IsNullOrEmpty(message.Title))
-            {
-                result.ErrorMessage = "Отсутствует заголовок сообщения";
-                return Json(result);
-            }
-            else if (string.IsNullOrEmpty(message.Body))
-            {
-                result.ErrorMessage = "Отсутствует тело сообщения";
-                return Json(result);
-            }
-
             try
             {
-                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-                var deliverSetting = deliverySettingService.GetByBranchId(branchId);
-                var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
-                var countMessagesSentToday = DataWrapper.GetCountPushMessageByDate(branchId, date);
-
-                if (countMessagesSentToday >= LIMIT_PUSH_MESSAGE_TODAY)
+                var uriDomain = Request.Url.GetLeftPart(UriPartial.Authority);
+                var info = pushNotificationService.PushNotification(pushNotification, uriDomain);
+                var data = new
                 {
-                    result.ErrorMessage = "Превышен дневной лимит push уведомлений";
-                    return Json(result);
-                }
-
-                var pushMessage = new PushMessageModel(message, branchId, date);
-                var savedMessage = DataWrapper.SavePushMessage(pushMessage);
-
-                if (savedMessage == null)
-                    throw new Exception("Ошибка при сохранении PUSH сообщения");
-
-                if (!string.IsNullOrEmpty(message.ImageUrl))
-                {
-                    message.ImageUrl = Request.Url.GetLeftPart(UriPartial.Authority) + message.ImageUrl.Substring(2);
-                }
-
-                Task.Run(() =>
-                {
-                    var fcmAuthKeyPath = Server.MapPath("/Resource/FCMAuthKey.json");
-                    var tokens = DataWrapper.GetDeviceTokens(branchId);
-
-                    if (tokens == null || !tokens.Any())
-                        return;
-
-                    var fcm = new FCMNotification(fcmAuthKeyPath, tokens);
-                    fcm.SendMulticastMessage(message);
-                });
-
-                result.Success = true;
-                result.Data = new
-                {
-                    limitPushMessageToday = LIMIT_PUSH_MESSAGE_TODAY,
-                    countMessagesSentToday = countMessagesSentToday + 1
+                    limitPushMessageToday = info.LimitPushMessageToday,
+                    countMessagesSentToday = info.CountMessagesSentToday
                 };
+
+                result = JsonResultModel.CreateSuccess(data);
+            }
+            catch (PushNotifictionException ex)
+            {
+                Logger.Log.Error(ex);
+                result.ErrorMessage = ex.Message;
             }
             catch (Exception ex)
             {

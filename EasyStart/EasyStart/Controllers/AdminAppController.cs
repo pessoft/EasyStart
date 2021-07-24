@@ -67,8 +67,8 @@ namespace EasyStart
                 imageLogic,
                 displayItemSettingLogic);
             var deliverySettingLogic = new DeliverySettingLogic(repositoryFactory);
-            var pushNotificationLogic = new PushNotificationLogic(repositoryFactory);
             var branchLogic = new BranchLogic(repositoryFactory);
+            var pushNotificationLogic = new PushNotificationLogic(repositoryFactory, branchLogic);
             var clientLogic = new ClientLogic(repositoryFactory);
             var generalSettingLogic = new GeneralSettingsLogic(repositoryFactory);
 

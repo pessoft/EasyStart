@@ -85,7 +85,7 @@ namespace EasyStart.Logic.FCM
             }
         }
 
-        public async void SendMulticastMessage(FCMMessage message)
+        public void SendMulticastMessage(FCMMessage message)
         {
             try
             {
@@ -122,7 +122,7 @@ namespace EasyStart.Logic.FCM
                             Apns = apnsConfig
                         };
 
-                        var response =  await FirebaseMessaging.DefaultInstance.SendMulticastAsync(fcmMessage);
+                        var response = FirebaseMessaging.DefaultInstance.SendMulticastAsync(fcmMessage).Result;
                         Logger.Log.Info($"Suscess count: {response.SuccessCount}\n Failure count: {response.FailureCount}\n");
                         Thread.Sleep(sleepTimeMs);
                     }

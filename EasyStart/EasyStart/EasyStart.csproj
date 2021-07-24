@@ -335,6 +335,8 @@
     <Compile Include="Logic\Services\Promotion\EmptyPromotionGeneralSettingException.cs" />
     <Compile Include="Logic\Services\Promotion\IPromotionLogic.cs" />
     <Compile Include="Logic\Services\Promotion\PromotionLogic.cs" />
+    <Compile Include="Logic\Services\PushNotification\PushNotificationInfo.cs" />
+    <Compile Include="Logic\Services\PushNotification\PushNotifictionException.cs" />
     <Compile Include="Logic\Services\RepositoryFactory\RepositoryFactory.cs" />
     <Compile Include="Logic\Services\RepositoryFactory\IRepositoryFactory.cs" />
     <Compile Include="Logic\Services\Utils\UtilsLogic.cs" />

@@ -10,5 +10,9 @@ namespace EasyStart.Logic.Services.PushNotification
             IntegrationOrderStatus orderStatus,
             OrderModel order,
             EasyStart.Models.FCMNotification.PushNotification message);
+
+        PushNotificationInfo PushNotification(
+            EasyStart.Models.FCMNotification.PushNotification pushNotification,
+            string uriDomain);
     }
 }

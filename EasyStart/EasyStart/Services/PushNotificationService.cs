@@ -38,5 +38,10 @@ namespace EasyStart.Services
         {
             pushNotificationLogic.ChangeOrderStatus(orderStatus, order, message);
         }
+
+        public PushNotificationInfo PushNotification(PushNotification pushNotification, string uriDomain)
+        {
+            return pushNotificationLogic.PushNotification(pushNotification, uriDomain);
+        }
     }
 }

@@ -8,7 +8,7 @@ using System.Web.Script.Serialization;
 
 namespace EasyStart.Models.FCMNotification
 {
-    public class PushMessageModel
+    public class PushMessageModel: IBaseEntity<int>
     {
         public PushMessageModel()
         {  }
