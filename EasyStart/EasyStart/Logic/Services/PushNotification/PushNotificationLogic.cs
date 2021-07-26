@@ -116,9 +116,16 @@ namespace EasyStart.Logic.Services.PushNotification
 
             SendMulticastMessage(message);
 
+            return GetPushNotificationInfo();
+        }
+
+        public PushNotificationInfo GetPushNotificationInfo()
+        {
+            var countMessagesSentToday = GetCountMessagesSentToday();
             return new PushNotificationInfo(
                 LIMIT_PUSH_MESSAGE_TODAY,
-                countMessagesSentToday + 1);
+                ++countMessagesSentToday
+                );
         }
 
         private void SendMulticastMessage(FCMMessage message)

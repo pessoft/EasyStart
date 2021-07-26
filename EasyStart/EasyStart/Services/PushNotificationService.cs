@@ -43,5 +43,10 @@ namespace EasyStart.Services
         {
             return pushNotificationLogic.PushNotification(pushNotification, uriDomain);
         }
+
+        public PushNotificationInfo GetPushNotificationInfo()
+        {
+            return pushNotificationLogic.GetPushNotificationInfo();
+        }
     }
 }

@@ -14,5 +14,7 @@ namespace EasyStart.Logic.Services.PushNotification
         PushNotificationInfo PushNotification(
             EasyStart.Models.FCMNotification.PushNotification pushNotification,
             string uriDomain);
+
+        PushNotificationInfo GetPushNotificationInfo();
     }
 }

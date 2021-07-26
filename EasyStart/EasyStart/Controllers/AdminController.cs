@@ -948,9 +948,6 @@ namespace EasyStart.Controllers
             return Json(result);
         }
 
-        //To Do:Сделать опцинольной
-        private static readonly int LIMIT_PUSH_MESSAGE_TODAY = 5;
-
         [HttpPost]
         [Authorize]
         public JsonResult PushNotification(PushNotification pushNotification)
@@ -975,7 +972,7 @@ namespace EasyStart.Controllers
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result.ErrorMessage = "При отправке PUSH сообщения что-то пошло не так...";
+                result = JsonResultModel.CreateError("При отправке PUSH сообщения что-то пошло не так...");
             }
 
             return Json(result);
@@ -985,27 +982,21 @@ namespace EasyStart.Controllers
         [Authorize]
         public JsonResult GetPushNotificationLimits()
         {
-            result = new JsonResultModel();
-
             try
             {
-                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-                var deliverSetting = deliverySettingService.GetByBranchId(branchId);
-                var date = DateTime.Now.GetDateTimeNow(deliverSetting.ZoneId);
-                var countMessagesSentToday = DataWrapper.GetCountPushMessageByDate(branchId, date);
-
-
-                result.Success = true;
-                result.Data = new
+                var info = pushNotificationService.GetPushNotificationInfo();
+                var data = new
                 {
-                    limitPushMessageToday = LIMIT_PUSH_MESSAGE_TODAY,
-                    countMessagesSentToday
+                    limitPushMessageToday = info.LimitPushMessageToday,
+                    countMessagesSentToday = info.CountMessagesSentToday
                 };
+
+                result = JsonResultModel.CreateSuccess(data);
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result.ErrorMessage = "При получении лимитов push уведомлений что-то пошло не так...";
+                result = JsonResultModel.CreateError("При получении лимитов PUSH уведомлений что-то пошло не так...");
             }
 
             return Json(result);
