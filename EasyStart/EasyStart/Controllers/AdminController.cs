@@ -1002,8 +1002,6 @@ namespace EasyStart.Controllers
             return Json(result);
         }
 
-        private readonly int PAGE_PUSH_MESSAGE_SIZE = 10;
-
         [HttpPost]
         [Authorize]
         public JsonResult LoadPushNotification(int pageNumber)
@@ -1012,26 +1010,14 @@ namespace EasyStart.Controllers
 
             try
             {
-                var branchId = DataWrapper.GetBranchId(User.Identity.Name);
-                var messagesCount = DataWrapper.GetCountPushMessage(branchId);
-                var messagesMaxPage = messagesCount == 0 ? 1 : Convert.ToInt32(Math.Ceiling((double)messagesCount / PAGE_PUSH_MESSAGE_SIZE));
-                pageNumber = pageNumber < 1 ? 1 : pageNumber;
+                var data = pushNotificationService.GetPagingPushMessageHistory(pageNumber);
+                result= JsonResultModel.CreateSuccess(data);
 
-                var historyMessage = DataWrapper.GetPushMessage(branchId, pageNumber, PAGE_PUSH_MESSAGE_SIZE);
-
-                result.Success = true;
-                result.Data = new PagingPushMessageHistory
-                {
-                    HistoryMessages = historyMessage,
-                    PageNumber = pageNumber,
-                    PageSize = PAGE_PUSH_MESSAGE_SIZE,
-                    IsLast = messagesMaxPage == pageNumber
-                };
             }
             catch (Exception ex)
             {
                 Logger.Log.Error(ex);
-                result.ErrorMessage = "При загрузге истории PUSH сообщений что-то пошло не так...";
+                result = JsonResultModel.CreateError("При загрузге истории PUSH сообщений что-то пошло не так...");
             }
 
             return Json(result);

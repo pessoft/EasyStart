@@ -16,5 +16,7 @@ namespace EasyStart.Logic.Services.PushNotification
             string uriDomain);
 
         PushNotificationInfo GetPushNotificationInfo();
+
+        PagingPushMessageHistory GetPagingPushMessageHistory(int pageNumber);
     }
 }

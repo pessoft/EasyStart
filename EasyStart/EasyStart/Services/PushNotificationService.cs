@@ -48,5 +48,10 @@ namespace EasyStart.Services
         {
             return pushNotificationLogic.GetPushNotificationInfo();
         }
+
+        public PagingPushMessageHistory GetPagingPushMessageHistory(int pageNumber)
+        {
+            return pushNotificationLogic.GetPagingPushMessageHistory(pageNumber);
+        }
     }
 }

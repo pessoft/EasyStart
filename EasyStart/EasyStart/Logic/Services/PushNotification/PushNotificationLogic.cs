@@ -17,11 +17,11 @@ namespace EasyStart.Logic.Services.PushNotification
     public class PushNotificationLogic: IPushNotificationLogic
     {
         private static readonly int LIMIT_PUSH_MESSAGE_TODAY = 5;
+        private readonly int PAGE_PUSH_MESSAGE_SIZE = 10;
 
         private readonly IRepository<FCMDeviceModel, int> fcmDeviceRepository;
         private readonly IRepository<PushMessageModel, int> pushMessageRepository;
 
-        private readonly IBranchLogic branchLogic;
         private readonly int branchId;
 
         private static readonly string fcmAuthKeyPath = HostingEnvironment.MapPath("/Resource/FCMAuthKey.json");
@@ -126,6 +126,28 @@ namespace EasyStart.Logic.Services.PushNotification
                 LIMIT_PUSH_MESSAGE_TODAY,
                 ++countMessagesSentToday
                 );
+        }
+
+        public PagingPushMessageHistory GetPagingPushMessageHistory(int pageNumber)
+        {
+            var messagesCount = pushMessageRepository.Get(p => p.BranchId == branchId).Count();
+            var messagesMaxPage = messagesCount == 0 ? 1 : Convert.ToInt32(Math.Ceiling((double)messagesCount / PAGE_PUSH_MESSAGE_SIZE));
+            pageNumber = pageNumber < 1 ? 1 : pageNumber;
+
+            var history = pushMessageRepository
+                .Get(p => p.BranchId == branchId)
+                .OrderByDescending(p => p.Date)
+                .Skip(PAGE_PUSH_MESSAGE_SIZE * (pageNumber - 1))
+                .Take(PAGE_PUSH_MESSAGE_SIZE)
+                .ToList();
+
+            return new PagingPushMessageHistory
+            {
+                HistoryMessages = history,
+                PageNumber = pageNumber,
+                PageSize = PAGE_PUSH_MESSAGE_SIZE,
+                IsLast = messagesMaxPage == pageNumber
+            };
         }
 
         private void SendMulticastMessage(FCMMessage message)
