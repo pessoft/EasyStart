@@ -25,7 +25,7 @@ namespace EasyStart.Logic.IntegrationSystem
 
         public abstract INewOrderResult SendOrder(IOrderDetails orderDetails);
         
-        public abstract double GetClinetVirtualMoney(string phoneNumber);
+        public abstract double GetClinetVirtualMoney(string phoneNumber, double defaultValue);
 
         protected async Task<string> Post(string url, string postData)
         {
