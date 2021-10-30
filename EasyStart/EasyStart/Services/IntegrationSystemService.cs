@@ -64,11 +64,12 @@ namespace EasyStart.Services
         public double GetClientVirtualMoney(
             string phoneNumber,
             int branchId,
-            IIntegrationSystemFactory integrationSystemFactory)
+            IIntegrationSystemFactory integrationSystemFactory,
+            double defaultValue = 0)
         {
             var integrationSystemSetting = Get(branchId);
             var integrationSystem = integrationSystemFactory.GetIntegrationSystem(integrationSystemSetting);
-            var result = integrationSystem.GetClinetVirtualMoney(phoneNumber);
+            var result = integrationSystem.GetClinetVirtualMoney(phoneNumber, defaultValue);
 
             return result;
         }
