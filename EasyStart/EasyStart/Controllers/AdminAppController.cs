@@ -1335,6 +1335,23 @@ namespace EasyStart
                     return result;
                 }
 
+                var branchId = client.BranchId == 0 ? branchService.GetMainBranch().Id : client.BranchId;
+
+                try
+                {
+                    Thread.Sleep(1500);
+                    var virtualMoney = integrationSystemService.GetClientVirtualMoney(
+                        client.PhoneNumber,
+                        branchId, new IntegrationSystemFactory(),
+                        client.VirtualMoney);
+                    clientService.SetVirtualMoney(client.Id, virtualMoney);
+                    client.VirtualMoney = virtualMoney;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log.Error(ex);
+                }
+                
                 result.Success = true;
                 result.Data = new
                 {

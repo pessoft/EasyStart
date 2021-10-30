@@ -24,7 +24,7 @@ namespace EasyStart.Logic.IntegrationSystem
             throw new NotImplementedException();
         }
 
-        public override double GetClinetVirtualMoney(string phoneNumber)
+        public override double GetClinetVirtualMoney(string phoneNumber, double defaultValue)
         {
             throw new NotImplementedException();
         }

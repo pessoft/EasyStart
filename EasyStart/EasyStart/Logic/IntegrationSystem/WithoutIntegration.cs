@@ -13,9 +13,9 @@ namespace EasyStart.Logic.IntegrationSystem
         public WithoutIntegration(IntegrationSystemModel integrationSystemSetting) : base(integrationSystemSetting)
         {}
 
-        public override double GetClinetVirtualMoney(string phoneNumber)
+        public override double GetClinetVirtualMoney(string phoneNumber, double defaultValue)
         {
-            return 0.0;
+            return defaultValue;
         }
 
         public override IntegrationOrderStatus GetIntegrationOrderStatus(int externalOrderStatusId)

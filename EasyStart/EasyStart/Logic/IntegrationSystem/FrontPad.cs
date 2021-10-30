@@ -61,7 +61,7 @@ namespace EasyStart.Logic.IntegrationSystem
             return result;
         }
 
-        public override double GetClinetVirtualMoney(string phoneNumber)
+        public override double GetClinetVirtualMoney(string phoneNumber, double defaultValue)
         {
             var postData = new StringBuilder();
 
@@ -69,9 +69,18 @@ namespace EasyStart.Logic.IntegrationSystem
             PreparePhoneNumber(phoneNumber, postData, true);
 
             string responseResult = base.Post(getClientUrl, postData.ToString()).Result;
-            var frontpadClientVirtualMoney = JsonConvert.DeserializeAnonymousType(responseResult, new { Score = 0.0 });
+            var frontpadClientVirtualMoney = JsonConvert.DeserializeAnonymousType(
+                responseResult,
+                new {
+                    Score = 0.0,
+                    Result= ""
+                });
 
-            return frontpadClientVirtualMoney.Score;
+            var virtualMoney = frontpadClientVirtualMoney.Result == "success"
+                ? frontpadClientVirtualMoney.Score
+                : defaultValue;
+
+            return virtualMoney;
         }
 
         private INewOrderResult SendOrder(string postData)
