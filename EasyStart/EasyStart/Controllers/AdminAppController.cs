@@ -1300,6 +1300,12 @@ namespace EasyStart
         }
 
         [HttpPost]
+        public void DeleteClient([FromBody] int clientId)
+        {
+            DataWrapper.DeleteClient(clientId);
+        }
+
+        [HttpPost]
         public JsonResultModel Login([FromBody] UserDataPhoneApp userData)
         {
             var result = new JsonResultModel();
