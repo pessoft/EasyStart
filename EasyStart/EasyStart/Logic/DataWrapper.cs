@@ -2155,6 +2155,31 @@ namespace EasyStart.Logic
             return newClient;
         }
 
+        public static void DeleteClient(int clientId)
+        {
+            Client newClient = null;
+
+            try
+            {
+                using (var db = new AdminPanelContext())
+                {
+                    newClient = db.Clients.FirstOrDefault(p => p.Id == clientId);
+
+                    if (newClient != null)
+                    {
+                        newClient.Blocked = true;
+                        newClient.PhoneNumber += "_deleted";
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
+
         public static void ClientUpdateVirtualMoney(int clientId, double virtualMoney)
         {
             try

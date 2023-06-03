@@ -241,11 +241,11 @@ namespace EasyStart.Logic.IntegrationSystem
             nfi.NumberDecimalSeparator = ".";
             var amountPayCashback = order.AmountPayCashBack.ToString(nfi);
             
-            postData.Append($"&street={HttpUtility.UrlEncode(order.Street)}");
-            postData.Append($"&home={HttpUtility.UrlEncode(order.HomeNumber)}");
-            postData.Append($"&pod={HttpUtility.UrlEncode(order.EntranceNumber)}");
-            postData.Append($"&et={HttpUtility.UrlEncode(order.Level)}");
-            postData.Append($"&apart={HttpUtility.UrlEncode(order.ApartamentNumber)}");
+            postData.Append($"&street={HttpUtility.UrlEncode(order.DeliveryType == DeliveryType.TakeYourSelf ? string.Empty : order.Street)}");
+            postData.Append($"&home={HttpUtility.UrlEncode(order.DeliveryType == DeliveryType.TakeYourSelf ? string.Empty : order.HomeNumber)}");
+            postData.Append($"&pod={HttpUtility.UrlEncode(order.DeliveryType == DeliveryType.TakeYourSelf ? string.Empty : order.EntranceNumber)}");
+            postData.Append($"&et={HttpUtility.UrlEncode(order.DeliveryType == DeliveryType.TakeYourSelf ? string.Empty : order.Level)}");
+            postData.Append($"&apart={HttpUtility.UrlEncode(order.DeliveryType == DeliveryType.TakeYourSelf ? string.Empty : order.ApartamentNumber)}");
             postData.Append($"&descr={HttpUtility.UrlEncode(order.Comment)}");
             postData.Append($"&name={HttpUtility.UrlEncode(order.Name)}");
             postData.Append($"&score={HttpUtility.UrlEncode(amountPayCashback)}");
